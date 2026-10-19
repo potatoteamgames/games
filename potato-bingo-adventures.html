@@ -276,6 +276,9 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
 .lvdots i.on{background:var(--gold)}
 /* more */
 .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.afkopts{display:flex;gap:12px;justify-content:center;margin:10px 0}
+.afkb{font-size:44px;width:80px;height:80px;border-radius:20px;background:#0005;border:3px solid var(--line)}
+.afkb:hover{border-color:var(--gold);transform:scale(1.06)}
 .tile{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:18px 8px;border-radius:18px;background:var(--card);border:2px solid var(--line);font-size:15px;text-align:center}
 .tile .te{font-size:40px}
 .tile small{color:var(--muted);font-size:11px;font-weight:700}
@@ -716,7 +719,7 @@ function fresh(){return{
   cards:1,speed:0,boost:0,
   st:{rounds:0,bingos:0,daubs:0,events:0,coins:0,gems:0,chests:0,powerups:0,souvenirs:0,bestCombo:0,specials:0,upgrades:0,best1:0,playMs:0},
   ach:{},achSeen:0,daily:null,login:{last:'',streak:0,total:0},
-  tours:0,last:Date.now(),sound:true,music:true,call:true,spd:2,spot:false,spotOn:true,autoB:false,autoBOn:true,tokens:0,tut:false,tab:'bingo'
+  tours:0,last:Date.now(),sound:true,music:true,call:true,spd:2,spot:false,spotOn:true,autoB:false,autoBOn:true,tokens:0,menuT:0,afk:false,tut:false,tab:'bingo'
 }}
 let S=fresh();
 function load(){
@@ -827,8 +830,21 @@ function checkAch(){let n=0;ACH.forEach(a=>{if(!S.ach[a.id]&&a.f()){S.ach[a.id]=
 
 /* ---------- IDLE ---------- */
 let idleAcc=0;
-function idleTick(dt){if(!ST.farmMin)return;idleAcc+=ST.farmMin*dt/60;if(idleAcc>=1){const n=Math.floor(idleAcc);idleAcc-=n;addCoins(n,'idle')}}
-function offline(quiet){const ms=Date.now()-(S.last||Date.now());if(ms<60000||!ST.farmMin)return;const mins=Math.min(ms/60000,8*60);const c=addCoins(ST.farmMin*mins,'idle');S.last=Date.now();
+/* ---------- AFK CHECK ----------
+   Farms only keep earning while you play: after 10 minutes in the menus without a bingo game,
+   they pause until you prove you are there by tapping the right button. */
+const AFK_LIMIT=600,AFK_PICKS=[['🥔','potato'],['🎱','bingo ball'],['🪙','coin'],['🍀','clover'],['💎','gem'],['🎁','gift']];
+let afkWant=null;
+function afkTick(dt){if(R&&!R.over){S.menuT=0;return}if(S.afk){if(!modalOn)showAfk();return}S.menuT+=dt;if(S.menuT>=AFK_LIMIT){S.afk=true;save();showAfk()}}
+function showAfk(){const opts=shuffle(AFK_PICKS.slice()).slice(0,3);afkWant=pick(opts)[0];UI.afk=true;
+  const h=`<div class="me">😴</div><h2>Are you still there?</h2><p>You have been in the menus for 10 minutes, so your farms are taking a nap 🌾💤<br>Tap the <b style="color:var(--txt)">${AFK_PICKS.find(x=>x[0]===afkWant)[1]}</b> to wake them up.</p>
+   <div class="afkopts">${opts.map(([e])=>`<button class="afkb" data-a="afk" data-e="${e}">${e}</button>`).join('')}</div>
+   <p class="small">Tip: playing bingo keeps your farms awake.</p>`;
+  if(modalOn)$('#mbox').innerHTML=h;else modal(h)}
+function afkAnswer(e){if(!S.afk)return;if(e!==afkWant){SFX.bad();toast('❌ Not that one – try again!');return showAfk()}
+  S.afk=false;S.menuT=0;UI.afk=false;afkWant=null;closeModalAll();SFX.coin();toast('🌾 Welcome back! Your farms are working again.');save();rerender()}
+function idleTick(dt){if(!ST.farmMin||S.afk)return;idleAcc+=ST.farmMin*dt/60;if(idleAcc>=1){const n=Math.floor(idleAcc);idleAcc-=n;addCoins(n,'idle')}}
+function offline(quiet){const ms=Date.now()-(S.last||Date.now());if(ms<60000||!ST.farmMin||S.afk)return;const mins=Math.min(ms/60000,8*60);const c=addCoins(ST.farmMin*mins,'idle');S.last=Date.now();
   if(quiet){toast(`🌾 Your farms earned <b>+${fmt(c)} 🪙</b> while you were away`);return}
   modal(`<div class="me">🌾</div><h2>Welcome back!</h2><p>Your farms worked hard for <b>${mins>=60?(mins/60).toFixed(1)+' hours':Math.floor(mins)+' minutes'}</b> while you were away.</p><div class="rl"><span>Farm income</span><b>+${fmt(c)} 🪙</b></div><p class="small">Farms store up to 8 hours of income.</p><div class="acts"><button class="btn big" data-a="close">Collect!</button></div>`)}
 
@@ -893,7 +909,7 @@ function vTown(){
       ${afford(k)?'<i class="up">⬆</i>':''}<span class="pe" style="font-size:${lm?(lv?62+lv*4:50):(lv?30+lv*2.2:28)}px">${lv?e:(lm?e:'🚧')}</span><span class="pl ${lv||lm?'':'nb'}">${lv?`Lv ${lv}`:(lm?'Landmark':'🏗️ New')}</span></button>`};
   let h=`<div class="pad">
    <div class="townhead"><div><div class="small muted">${L.e} Your town in</div><h2 class="lil" style="margin:0;font-size:30px">${L.n}</h2></div>
-     <div class="row"><span class="pill">🌾 ${fmt(ST.farmMin)}/min</span><span class="pill">🏘️ Town ${Math.round(tot/max*100)}%</span><button class="btn dk" data-a="tab" data-t="map">🗺️ Map</button></div></div>
+     <div class="row">${S.afk?'<span class="pill" style="background:#ff5a5a55">😴 Farms asleep</span>':`<span class="pill">🌾 ${fmt(ST.farmMin)}/min</span>`}<span class="pill">🏘️ Town ${Math.round(tot/max*100)}%</span><button class="btn dk" data-a="tab" data-t="map">🗺️ Map</button></div></div>
    <div class="townscene" style="--c1:${L.c1};--c2:${L.c2}">
      <div class="tsky">${L.sky.split('').length?L.sky:''}</div><div class="cloud c1">☁️</div><div class="cloud c2">☁️</div><div class="tground"></div>
      ${plot(7,50,26)}${PLOTS.map(([x,y],k)=>plot(k,x,y)).join('')}
@@ -1192,7 +1208,7 @@ function genCard(){
   for(let j=0;j<k&&j<idx.length;j++){cells[idx[j]].d=true;cells[idx[j]].magic=true;cells[idx[j]].pre=true}
   return card;
 }
-function startRound(){
+function startRound(){if(S.afk)return showAfk();
   const i=S.cur,fee=(S.cards-1)*FEE(i);if(S.coins<fee)return;S.coins-=fee;closeModalAll();
   const pt=ri(10,16);
   R={land:i,cards:[],order:shuffle([...Array(75)].map((_,k)=>k+1)),called:new Set(),hist:[],idx:0,maxBalls:50+Math.floor(ST.balls),poolTotal:pt,pool:pt,
@@ -1372,7 +1388,7 @@ function tipAfter(){const i=S.cur;if(canBuildAny())return '🏗️ You can affor
 let lastT=performance.now(),saveT=0,achT=0;
 function loop(){
   const now=performance.now();const dt=Math.min(0.25,(now-lastT)/1000);lastT=now;
-  idleTick(dt);S.st.playMs+=dt*1000;
+  afkTick(dt);idleTick(dt);S.st.playMs+=dt*1000;
   if(R&&!R.over){
     R.time+=dt;
     if(R.ev&&R.ev.tick)R.ev.tick();
@@ -1393,6 +1409,7 @@ function refreshAfford(){document.querySelectorAll('[data-cost]').forEach(b=>{b.
 /* ---------- INPUT ---------- */
 const ACT={
   tab:d=>{if(R&&!R.over)return;closeModalAll();S.tab=d.t;render();view.scrollTop=0},
+  afk:d=>afkAnswer(d.e),
   settings:()=>{closeModalAll();if(R&&!R.over)R.paused=true;showSettings()},
   howBingo:()=>{closeModalAll();howToBingo()},
   go:d=>{if(R&&!R.over)return;UI[d.k]=d.v;S.tab=d.t;UI.sell=null;render();view.scrollTop=0},
@@ -1445,7 +1462,7 @@ const ACT={
 // daub/claim respond on pointerdown for snappy play; everything else on click
 document.addEventListener('pointerdown',e=>{const el=e.target.closest('[data-a="daub"],[data-a="claim"],[data-a="usePw"]');if(!el||el.disabled)return;e.preventDefault();ACT[el.dataset.a](el.dataset)});
 document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el||el.disabled)return;const a=el.dataset.a;if(a==='daub'||a==='claim'||a==='usePw')return;if(ACT[a])ACT[a](el.dataset);if(UI.settings&&modalOn)$('#mbox').innerHTML=settingsHtml()});
-$('#modal').addEventListener('click',e=>{if(e.target.id==='modal'&&!R){UI.item=null;UI.sell=null;UI.settings=false;closeModal()}});
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal'&&!R&&!UI.afk){UI.item=null;UI.sell=null;UI.settings=false;closeModal()}});
 document.addEventListener('keydown',e=>{if(!R||R.over)return;if(e.key===' '||e.key==='Enter'){e.preventDefault();R.cards.forEach((_,ci)=>{if(newLines(ci).length)claim(ci)})}if(e.key==='p'||e.key==='P')usePw()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){save();musicStop()}else{if(S.music)musicStart();offline(true);lastT=performance.now()}});
 window.addEventListener('beforeunload',save);
