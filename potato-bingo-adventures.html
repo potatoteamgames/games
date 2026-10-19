@@ -318,6 +318,8 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
   .home .hl{display:none}
   .pill{font-size:13px;padding:0 8px}
   .lvl{width:70px;font-size:12px}
+  .ibtn{width:32px;height:32px;font-size:15px}
+  #top{gap:6px;padding:8px}
   .slots{grid-template-columns:repeat(3,1fr)}
   .alb{grid-template-columns:repeat(5,1fr)}
   .scene .bigE{font-size:56px}
@@ -337,7 +339,8 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
       <div class="pill" title="Coins">🪙 <b id="hCoins">0</b></div>
       <div class="pill" title="Gems">💎 <b id="hGems">0</b></div>
       <div class="lvl" title="Player level"><i id="hXp"></i><span id="hLvl">Lv 1</span></div>
-      <button class="ibtn" id="sndBtn" data-a="sound" aria-label="Toggle sound">🔊</button>
+      <button class="ibtn" id="musBtn" data-a="music" aria-label="Toggle music" title="Music">🎵</button>
+      <button class="ibtn" id="sndBtn" data-a="sound" aria-label="Toggle sound effects" title="Sound effects">🔊</button>
     </div>
   </header>
   <main id="view"></main>
@@ -531,7 +534,7 @@ function fresh(){return{
   cards:1,speed:0,boost:0,
   st:{rounds:0,bingos:0,daubs:0,events:0,coins:0,gems:0,chests:0,powerups:0,souvenirs:0,bestCombo:0,specials:0,upgrades:0,best1:0,playMs:0},
   ach:{},achSeen:0,daily:null,login:{last:'',streak:0,total:0},
-  tours:0,last:Date.now(),sound:true,voice:false,tut:false,tab:'bingo'
+  tours:0,last:Date.now(),sound:true,music:true,voice:false,tut:false,tab:'bingo'
 }}
 let S=fresh();
 function load(){
@@ -560,7 +563,8 @@ const xpNeed=l=>Math.floor(40*Math.pow(l,1.55));
 
 /* ---------- AUDIO ---------- */
 let AC=null;
-function tone(f,d=0.1,type='sine',v=0.12,delay=0){if(!S.sound)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const t=AC.currentTime+delay,o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(0.001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d)}catch(e){}}
+const ac=()=>AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+function tone(f,d=0.1,type='sine',v=0.12,delay=0){if(!S.sound)return;try{ac();const t=AC.currentTime+delay,o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(0.001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d)}catch(e){}}
 const SFX={
   ball:()=>{tone(660,.08,'triangle',.1);tone(880,.1,'triangle',.08,.07)},
   daub:()=>tone(420+rnd()*80,.07,'square',.05),
@@ -572,6 +576,44 @@ const SFX={
   level:()=>[523,784,1047,784,1047,1568].forEach((f,i)=>tone(f,.16,'triangle',.11,i*.1)),
   buy:()=>{tone(523,.08,'triangle',.1);tone(784,.14,'triangle',.1,.08)}
 };
+/* ---------- COZY BACKGROUND MUSIC ----------
+   Generated live with WebAudio: soft lo-fi chords, a warm bass, a gentle music-box
+   melody that wanders over the chords, a quiet shaker and a little echo. ~70 BPM. */
+const MZ={on:false,next:0,step:0,timer:null,out:null,fx:null,noise:null,last:76};
+const mtof=m=>440*Math.pow(2,(m-69)/12);
+const STEP=60/70/2;                                   // eighth note
+const PROG=[[48,[60,64,67,71]],[45,[60,64,67,69]],[41,[57,60,64,65]],[43,[59,62,65,67]],
+            [48,[60,64,67,71]],[45,[60,64,67,69]],[38,[57,60,62,65]],[43,[55,59,62,65]]];
+const MEL=[67,69,72,74,76,79,81,84];                  // C major pentatonic
+function musicInit(){const a=ac();if(MZ.out)return;
+  MZ.out=a.createGain();MZ.out.gain.value=0;
+  const lp=a.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2600;MZ.out.connect(lp);lp.connect(a.destination);
+  // soft echo send
+  MZ.fx=a.createGain();MZ.fx.gain.value=0.35;const d=a.createDelay(1);d.delayTime.value=STEP*3;const fb=a.createGain();fb.gain.value=0.32;const dl=a.createBiquadFilter();dl.type='lowpass';dl.frequency.value=1400;
+  MZ.fx.connect(d);d.connect(dl);dl.connect(fb);fb.connect(d);dl.connect(MZ.out);
+  const len=a.sampleRate*0.2,buf=a.createBuffer(1,len,a.sampleRate),ch=buf.getChannelData(0);for(let i=0;i<len;i++)ch[i]=(Math.random()*2-1)*Math.pow(1-i/len,3);MZ.noise=buf}
+function mVoice(type,f,t,dur,vol,att,cut,send){const a=AC,o=a.createOscillator(),g=a.createGain(),fl=a.createBiquadFilter();o.type=type;o.frequency.value=f;fl.type='lowpass';fl.frequency.value=cut;
+  g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(vol,t+att);g.gain.setTargetAtTime(0.0001,t+Math.max(att,dur-att),dur/4);
+  o.connect(fl);fl.connect(g);g.connect(MZ.out);if(send)g.connect(MZ.fx);o.start(t);o.stop(t+dur*1.6+1)}
+function mStep(k,t){
+  const [root,ch]=PROG[Math.floor(k/16)%PROG.length],b=k%16;
+  if(b===0)ch.forEach((n,i)=>{mVoice('sine',mtof(n),t+i*0.03,STEP*16,0.045,1.4,900,false);mVoice('triangle',mtof(n)*1.004,t+i*0.03,STEP*16,0.018,1.6,700,false)});
+  if(b===0||b===8)mVoice('sine',mtof(root),t,STEP*6,0.13,0.04,400,false);
+  if(b===6||b===14)mVoice('sine',mtof(root+(b===6?7:12)),t,STEP*2,0.07,0.04,400,false);
+  // melody: drifts stepwise, rests often, leans on chord tones
+  if(rnd()<(b%2?0.18:0.42)){let i=MEL.indexOf(MZ.last);if(i<0)i=3;i=clamp(i+pick([-2,-1,-1,1,1,2,0]),0,MEL.length-1);let n=MEL[i];
+    if(b%4===0){const tones=ch.map(x=>x+12).filter(x=>Math.abs(x-n)<=4);if(tones.length)n=pick(tones)}MZ.last=n;
+    const v=0.05+rnd()*0.025;mVoice('triangle',mtof(n),t,STEP*3,v,0.008,2400,true);mVoice('sine',mtof(n*1)*2,t,STEP*1.5,v*0.25,0.005,3000,true)}
+  // quiet shaker on the off-beats
+  if(b%4===2||(b%4===3&&rnd()<0.3)){const a=AC,src=a.createBufferSource(),hp=a.createBiquadFilter(),g=a.createGain();src.buffer=MZ.noise;hp.type='highpass';hp.frequency.value=6000;g.gain.value=b%4===2?0.035:0.018;src.connect(hp);hp.connect(g);g.connect(MZ.out);src.start(t)}
+}
+function musicStart(){if(MZ.on||!S.music)return;try{musicInit();if(AC.state==='suspended')AC.resume();MZ.on=true;MZ.next=AC.currentTime+0.15;
+  MZ.out.gain.cancelScheduledValues(AC.currentTime);MZ.out.gain.setTargetAtTime(0.42,AC.currentTime,1.5);
+  MZ.timer=setInterval(()=>{if(!MZ.on)return;while(MZ.next<AC.currentTime+0.4){mStep(MZ.step++,MZ.next);MZ.next+=STEP}},100)}catch(e){}}
+function musicStop(){if(!MZ.on)return;MZ.on=false;clearInterval(MZ.timer);try{MZ.out.gain.cancelScheduledValues(AC.currentTime);MZ.out.gain.setTargetAtTime(0,AC.currentTime,0.3)}catch(e){}}
+// browsers only allow audio after the first tap/key press
+['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,e=>{if(S.music&&!document.hidden&&!(e.target.closest&&e.target.closest('[data-a=music]')))musicStart()},{passive:true}));
+
 function speak(t){if(!S.voice||!window.speechSynthesis)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=1.15;speechSynthesis.speak(u)}catch(e){}}
 
 /* ---------- FX / UI HELPERS ---------- */
@@ -611,7 +653,7 @@ function offline(quiet){const ms=Date.now()-(S.last||Date.now());if(ms<60000||!S
 /* ---------- RENDER ROOT ---------- */
 const view=$('#view');
 function setTheme(){const L=LANDS[S.cur];document.documentElement.style.setProperty('--c1',L.c1);document.documentElement.style.setProperty('--c2',L.c2)}
-function updHUD(){$('#hCoins').textContent=fmt(S.coins);$('#hGems').textContent=fmt(S.gems);$('#hLvl').textContent='Lv '+S.level;$('#hXp').style.width=(S.xp/xpNeed(S.level)*100)+'%';$('#sndBtn').textContent=S.sound?'🔊':'🔇'}
+function updHUD(){$('#hCoins').textContent=fmt(S.coins);$('#hGems').textContent=fmt(S.gems);$('#hLvl').textContent='Lv '+S.level;$('#hXp').style.width=(S.xp/xpNeed(S.level)*100)+'%';$('#sndBtn').textContent=S.sound?'🔊':'🔇';const mb=$('#musBtn');mb.style.opacity=S.music?1:0.4;mb.title=S.music?'Music on':'Music off'}
 function updDots(){
   const d=quests();const qn=d.q.filter(q=>q.p>=q.n&&!q.c).length+(d.spins===0?1:0)+(S.login.last!==today()?1:0);
   const dd=$('#dDaily');dd.textContent=qn;dd.classList.toggle('on',qn>0);
@@ -757,7 +799,7 @@ function vTrophy(){
     <p class="muted small">Build the Spud King's Palace on Potato Planet to start a new World Tour. You restart from Ireland (coins, buildings and lands reset) but keep your <b>level, gems, gear, albums, power-ups and trophies</b> – and all coins are multiplied by <b>×${(1+0.75*(S.tours+1)).toFixed(2)}</b> forever.</p>
     <button class="btn p" data-a="tour" ${can?'':'disabled'}>${can?'Start World Tour!':'🔒 Reach Potato Planet first'}</button></div>`;
   h+=`<h3 class="sec">🏅 Trophies</h3><div class="grid">${ACH.map(a=>`<div class="ach ${S.ach[a.id]?'':'no'}"><div class="ae">${S.ach[a.id]?a.e:'🔒'}</div><div><b>${a.n}</b><div class="small muted">${a.d} · 💎 ${a.g}</div></div></div>`).join('')}</div>
-   <h3 class="sec">⚙️ Settings</h3><div class="box row"><button class="btn dk" data-a="sound">${S.sound?'🔊 Sound on':'🔇 Sound off'}</button><button class="btn dk" data-a="voice">${S.voice?'🗣️ Caller voice on':'🤐 Caller voice off'}</button><button class="btn dk" data-a="help">❓ How to play</button><span class="sp"></span><button class="btn dk" data-a="reset" style="color:#ff9a9a">Reset game</button></div>
+   <h3 class="sec">⚙️ Settings</h3><div class="box row"><button class="btn dk" data-a="sound">${S.sound?'🔊 Sound on':'🔇 Sound off'}</button><button class="btn dk" data-a="music">${S.music?'🎵 Music on':'🎵 Music off'}</button><button class="btn dk" data-a="voice">${S.voice?'🗣️ Caller voice on':'🤐 Caller voice off'}</button><button class="btn dk" data-a="help">❓ How to play</button><span class="sp"></span><button class="btn dk" data-a="reset" style="color:#ff9a9a">Reset game</button></div>
    <p class="small muted" style="margin-top:10px">Progress is saved automatically in this browser.</p></div>`;
   view.innerHTML=h;
 }
@@ -993,6 +1035,7 @@ const ACT={
   tab:d=>{if(R&&!R.over)return;S.tab=d.t;render();view.scrollTop=0},
   close:()=>closeModal(),
   sound:()=>{S.sound=!S.sound;save();if(S.tab==='trophy')rerender();updHUD()},
+  music:()=>{S.music=!S.music;if(S.music)musicStart();else musicStop();save();if(S.tab==='trophy')rerender();updHUD()},
   voice:()=>{S.voice=!S.voice;save();rerender()},
   travel:d=>travel(+d.i),
   build:d=>build(+d.k),
@@ -1027,7 +1070,7 @@ document.addEventListener('pointerdown',e=>{const el=e.target.closest('[data-a="
 document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el||el.disabled)return;const a=el.dataset.a;if(a==='daub'||a==='claim'||a==='usePw')return;if(ACT[a])ACT[a](el.dataset)});
 $('#modal').addEventListener('click',e=>{if(e.target.id==='modal'&&!(R&&R.over))closeModal()});
 document.addEventListener('keydown',e=>{if(!R||R.over)return;if(e.key===' '||e.key==='Enter'){e.preventDefault();R.cards.forEach((_,ci)=>{if(newLines(ci).length)claim(ci)})}if(e.key==='p'||e.key==='P')usePw()});
-document.addEventListener('visibilitychange',()=>{if(document.hidden)save();else{offline(true);lastT=performance.now()}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){save();musicStop()}else{if(S.music)musicStart();offline(true);lastT=performance.now()}});
 window.addEventListener('beforeunload',save);
 
 function tutorial(){
