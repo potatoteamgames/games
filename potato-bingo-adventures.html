@@ -396,6 +396,13 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
 .cards.n1{grid-template-columns:minmax(0,440px)}
 .cards.n2{grid-template-columns:repeat(2,minmax(0,380px))}
 .cards.n3,.cards.n4{grid-template-columns:repeat(2,minmax(0,330px))}
+.cards.n5,.cards.n6{grid-template-columns:repeat(3,minmax(0,300px))}
+.cards.n7,.cards.n8{grid-template-columns:repeat(4,minmax(0,270px))}
+.cards.n5 .cinfo,.cards.n6 .cinfo,.cards.n7 .cinfo,.cards.n8 .cinfo{display:none}
+.cards.n7 .bingo,.cards.n8 .bingo{font-size:17px;padding:7px}
+.addcard{width:38px;height:34px;border-radius:10px;background:#0005;border:2px dashed #ffffff40;font-size:14px}
+.addcard.ready{border:2px solid #fff;background:var(--pink);animation:glow 1.2s ease-in-out infinite}
+.addcard:disabled{opacity:.5}
 .card{background:#fff8ec;border-radius:18px;padding:8px;border:4px solid #0006;box-shadow:0 8px 20px #0006;color:var(--ink)}
 .chd{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:4px}
 .chd span{font-family:'Lilita One',sans-serif;font-size:clamp(16px,2.6vw,24px);text-align:center;border-radius:8px;color:#fff;text-shadow:1px 1px 0 #0005}
@@ -503,11 +510,11 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
   .feed{flex-basis:100%;min-height:0;margin-top:2px!important;font-size:11px}
   .feed div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .feed div+div{display:none}
-  .cards.n2,.cards.n3,.cards.n4{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
-  .cards.n2 .card,.cards.n3 .card,.cards.n4 .card{padding:4px;border-width:3px;border-radius:12px}
-  .cards.n2 .cg,.cards.n3 .cg,.cards.n4 .cg,.cards.n2 .chd,.cards.n3 .chd,.cards.n4 .chd{gap:2px}
-  .cards.n2 .cell,.cards.n3 .cell,.cards.n4 .cell{border-radius:6px;border-width:1px;font-size:clamp(11px,3.4vw,18px)}
-  .cards.n2 .bingo,.cards.n3 .bingo,.cards.n4 .bingo{font-size:16px;padding:7px;margin-top:4px}
+  .cards.multi{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px}
+  .cards.multi .card{padding:4px;border-width:3px;border-radius:12px}
+  .cards.multi .cg,.cards.multi .chd{gap:2px}
+  .cards.multi .cell{border-radius:6px;border-width:1px;font-size:clamp(11px,3.4vw,18px)}
+  .cards.multi .bingo{font-size:16px;padding:7px;margin-top:4px}
   .cards .cinfo{display:none}
 }
 @media (max-width:560px){
@@ -741,11 +748,11 @@ function fresh(){return{
   cards:1,speed:0,boost:0,
   st:{rounds:0,bingos:0,daubs:0,events:0,coins:0,gems:0,chests:0,powerups:0,souvenirs:0,bestCombo:0,specials:0,upgrades:0,best1:0,playMs:0},
   ach:{},achSeen:0,daily:null,login:{last:'',streak:0,total:0},
-  tours:0,last:Date.now(),sound:true,music:true,call:true,spd:2,spot:false,spotOn:true,autoB:false,autoBOn:true,tokens:0,menuT:0,afk:false,tut:false,tab:'bingo'
+  tours:0,last:Date.now(),sound:true,music:true,call:true,spd:2,spot:false,spotOn:true,autoB:false,autoBOn:true,tokens:0,slots:1,cardOffers:0,menuT:0,afk:false,tut:false,tab:'bingo'
 }}
 let S=fresh();
 function load(){
-  try{const d=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(d&&d.v===1){const f=fresh();S=Object.assign(f,d);S.st=Object.assign(f.st,d.st);S.eq=Object.assign(f.eq,d.eq);S.pl=Object.assign(f.pl,d.pl);S.login=Object.assign(f.login,d.login);
+  try{const d=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(d&&d.v===1){const f=fresh();S=Object.assign(f,d);if(d.slots===undefined)S.slots=S.level>=12?4:S.level>=7?3:S.level>=3?2:1;S.st=Object.assign(f.st,d.st);S.eq=Object.assign(f.eq,d.eq);S.pl=Object.assign(f.pl,d.pl);S.login=Object.assign(f.login,d.login);
     LANDS.forEach((_,i)=>{S.b[i]=S.b[i]||Array(8).fill(0);S.souv[i]=S.souv[i]||Array(9).fill(0)});}}catch(e){}
 }
 function save(){S.last=Date.now();try{localStorage.setItem(SAVE_KEY,JSON.stringify(S))}catch(e){}}
@@ -764,7 +771,17 @@ function calc(){
   s.farmMin=s.farm*s.all*(1+s.idle/100);           // coins per minute
   ST=s;
 }
-const maxCards=()=>S.level>=12?4:S.level>=7?3:S.level>=3?2:1;
+const MAX_CARDS=8,maxCards=()=>Math.min(MAX_CARDS,S.slots);
+// gem price of bingo card number n (cards are bought one at a time, one chance per level-up)
+const cardCost=n=>[0,0,15,30,50,80,120,170,230][n];
+function cardOfferHtml(){const n=S.slots+1,c=cardCost(n);
+  return `<div class="me">🎫</div><h2>Level ${S.level}! New bingo card?</h2><p>Every level-up lets you unlock one more bingo card <b style="color:var(--txt)">forever</b>. More cards = more chances to win every game. (Max ${MAX_CARDS} cards.)</p>
+   <div class="rl"><span>Unlock card #${n}</span><b>💎 ${c}</b></div><div class="rl"><span>Your gems</span><b>💎 ${fmt(S.gems)}</b></div>
+   ${S.cardOffers>1?`<p class="small">You have ${S.cardOffers} card chances saved up.</p>`:''}
+   <div class="acts"><button class="btn big p" data-a="buyCard" ${S.gems<c?'disabled':''}>Unlock card #${n}</button><button class="btn dk" data-a="close">Later</button></div>
+   <p class="small">${S.gems<c?`You need 💎 ${c-S.gems} more. `:''}You can also buy it later with the ➕ button in the bingo hall.</p>`}
+function buyCard(){const n=S.slots+1,c=cardCost(n);if(S.slots>=MAX_CARDS||S.cardOffers<1||S.gems<c)return;
+  S.gems-=c;S.slots++;S.cardOffers--;S.cards=S.slots;SFX.level();confetti(50);closeModalAll();toast(`🎫 <b>Card #${n} unlocked!</b> You now play with ${S.slots} cards.`);save();rerender()}
 const SPEEDS=[{n:'Very slow',e:'🐌',t:4.2},{n:'Slow',e:'🐢',t:3.2},{n:'Normal',e:'🥔',t:2.4},{n:'Fast',e:'🐇',t:1.8},{n:'Very fast',e:'🏎️',t:1.3},{n:'Turbo',e:'🚀',t:0.9}];
 const xpNeed=l=>Math.floor(40*Math.pow(l,1.55));
 
@@ -841,9 +858,10 @@ const statTxt=o=>Object.keys(o).map(k=>k==='claim'?'🤖 Auto-BINGO':`+${o[k]}${
 /* ---------- ECONOMY ---------- */
 function addCoins(n,src){n=Math.floor(n);if(n<=0)return 0;S.coins+=n;S.st.coins+=n;if(src!=='idle')track('coins',n);return n}
 function addGems(n){S.gems+=n;S.st.gems+=n}
-function addXP(n){n=Math.ceil(n*(1+ST.xp/100));S.xp+=n;let up=false;while(S.xp>=xpNeed(S.level)){S.xp-=xpNeed(S.level);S.level++;up=true;levelUp()}if(up)calc()}
+function addXP(n){n=Math.ceil(n*(1+ST.xp/100));S.xp+=n;let up=false;while(S.xp>=xpNeed(S.level)){S.xp-=xpNeed(S.level);S.level++;up=true;levelUp()}if(up){calc();if(S.slots<MAX_CARDS&&S.slots+S.cardOffers<MAX_CARDS+1)modalLater(cardOfferHtml())}}
 function levelUp(){const g=5+Math.floor(S.level/2);addGems(g);const c=addCoins(Bv(S.unlocked-1)*2*ST.cm);SFX.level();
-  const un=[];if(S.level===3)un.push('🎱 2 bingo cards');if(S.level===7)un.push('🎱 3 bingo cards');if(S.level===12)un.push('🎱 4 bingo cards');if(S.level===5)un.push('⏩ Fast speed');if(S.level===15)un.push('🚀 Turbo speed');if(S.level===4)un.push('👕 Outfit slot');if(S.level===8)un.push('🐾 Pet slot');
+  if(S.slots+S.cardOffers<MAX_CARDS)S.cardOffers++;
+  const un=[];if(S.level===5)un.push('⏩ Fast speed');if(S.level===15)un.push('🚀 Turbo speed');if(S.level===4)un.push('👕 Outfit slot');if(S.level===8)un.push('🐾 Pet slot');
   toast(`🎓 <b>LEVEL ${S.level}!</b> +${g} 💎 +${fmt(c)} 🪙 · +1% bingo coins${un.length?'<br>Unlocked: '+un.join(', '):''}`);if(un.length)confetti(40)}
 
 function quests(){const t=today();if(!S.daily||S.daily.day!==t){const ks=shuffle(QUESTS.slice()).slice(0,3);S.daily={day:t,spins:0,bonus:false,q:ks.map(q=>({k:q.k,n:Math.ceil(q.b*(q.max?1+S.level/40:1+S.level/12)),p:0,c:false}))}}return S.daily}
@@ -1174,6 +1192,7 @@ function nextGoal(){
   if(!S.st.rounds)return['👋','Welcome! Press <b>PLAY BINGO</b> to start your very first game – it\'s free.',null];
   if(canBuildAny())return['🏗️','You have enough coins to build in your town!',['tab','town','Go to Town']];
   if(S.bronze>0)return['🎁',`You have ${S.bronze} unopened chest${S.bronze>1?'s':''} with gear inside.`,['tab','bag','Open in Bag']];
+  if(S.cardOffers&&S.slots<MAX_CARDS&&S.gems>=cardCost(S.slots+1))return['🎫',`You can unlock bingo card #${S.slots+1} for 💎 ${cardCost(S.slots+1)}!`,['cardOffer','','Unlock']];
   if(!S.spot&&S.gems>=SPOT_COST)return['🔍','Tip: the <b>Number Spotter</b> shows you where to put your marker.',['tab','up','Upgrades']];
   if(S.b[i][7]===0){const r=REQ(i),done=S.b[i].slice(0,7).filter(l=>l>=r).length;
     return['🎯',`Goal: build the <b>${L.b[7][1]}</b> to unlock ${i<NL-1?LANDS[i+1].n:'the World Tour'}. Buildings at level ${r}: <b>${done}/7</b>. Win bingos to earn the coins!`,['tab','town','See Town']]}
@@ -1205,7 +1224,7 @@ function vLobby(){
      <div class="bigE">🎱</div>
      <div class="lh-txt"><div class="small" style="opacity:.9">${L.e} ${L.n} · Bingo hall</div><h2>${L.b[1][1]}</h2>
        <div class="row" style="margin-top:8px"><span class="pill">🪙 ${fmt(Bv(i)*ST.cm*(S.boost>0?2:1))} per bingo</span><span class="pill">${sp.e} ${sp.n}</span>${S.boost>0?`<span class="pill" style="background:#ff5fa2aa">⚡ 2× coins · ${S.boost} games</span>`:''}</div>
-       <div class="cardpick"><span>🎫 Cards</span>${[1,2,3,4].map(n=>`<button class="${S.cards===n?'on':''}" data-a="cards" data-n="${n}" ${n>mc?'disabled':''} title="${n>mc?'Unlocks at level '+[3,7,12][n-2]:n+' card'+(n>1?'s':'')}">${n>mc?'🔒':n}</button>`).join('')}</div></div>
+       <div class="cardpick"><span>🎫 Cards</span>${[...Array(mc)].map((_,j)=>`<button class="${S.cards===j+1?'on':''}" data-a="cards" data-n="${j+1}" title="Play with ${j+1} card${j?'s':''}">${j+1}</button>`).join('')}${mc<MAX_CARDS?`<button class="addcard ${S.cardOffers?'ready':''}" data-a="${S.cardOffers?'cardOffer':''}" ${S.cardOffers?'':'disabled'} title="${S.cardOffers?'Unlock card #'+(mc+1)+' for 💎 '+cardCost(mc+1):'Level up to unlock another card'}">➕</button><span class="small">${S.cardOffers?`Card #${mc+1}: 💎 ${cardCost(mc+1)}`:`${mc}/${MAX_CARDS} · next at level ${S.level+1}`}</span>`:`<span class="small">⭐ All ${MAX_CARDS} cards!</span>`}</div></div>
      <div class="lh-play"><button class="btn big playbtn" data-a="play" ${S.coins<fee?'disabled':''}>▶ PLAY</button><div class="small">${fee?`Entry: 🪙 ${fmt(fee)}`:'Free to play!'}${S.coins<fee?'<br>Not enough coins – pick fewer cards':''}</div></div>
    </div>
    <div class="box goal"><div class="ge">${g[0]}</div><div style="flex:1">${g[1]}</div>${g[2]?`<button class="btn" data-a="${g[2][0]}" ${g[2][0]==='tab'?`data-t="${g[2][1]}"`:`data-i="${g[2][1]}"`}>${g[2][2]} →</button>`:''}</div>`;
@@ -1270,7 +1289,7 @@ function renderRound(){
     <div class="cbox c-ball"><div class="ballwrap"><div class="ball" id="ball"><span class="bl">🥔</span><span class="bn">…</span></div></div></div>
     <div class="cbox"><div class="hist" id="hist"></div><div class="rstat" style="margin-top:8px"><div>Ball<b id="rBall">0/${R.maxBalls}</b></div><div class="pool">Bingos left<b id="rPool">${R.pool}</b></div><div>Won<b id="rWon">🪙 0</b></div><div>Players<b>👥 ${R.players}</b></div></div></div>
     <div class="cbox c-pw"><div class="combo" id="rCombo"></div><button class="pwbtn" id="pwBtn" data-a="usePw"><i id="pwFill"></i><span id="pwTxt">⚡ Power-up</span></button><div class="feed" id="feed" style="margin-top:8px"></div></div>
-    </div><div class="cards n${nc}" id="cards">`;
+    </div><div class="cards n${nc} ${nc>1?'multi':''}" id="cards">`;
   R.cards.forEach((cd,ci)=>{h+=`<div class="card"><div class="chd">${[...LET].map((l,c)=>`<span style="background:${LCOL[c]}">${l}</span>`).join('')}</div><div class="cg">`;
     cd.cells.forEach((cl,j)=>{h+=`<button class="cell" id="c${ci}_${j}" data-a="daub" data-c="${ci}" data-j="${j}"></button>`});
     h+=`</div><button class="bingo" id="bg${ci}" data-a="claim" data-c="${ci}">BINGO!</button><div class="cinfo"><span id="ci${ci}">Card ${ci+1}</span><span>🎉 <b id="cb${ci}">0</b></span></div></div>`});
@@ -1452,6 +1471,8 @@ const ACT={
   tab:d=>{if(R&&!R.over)return;closeModalAll();S.tab=d.t;render();view.scrollTop=0},
   afk:d=>afkAnswer(d.e),
   wf:d=>{UI[d.k]=d.v;rerender()},
+  buyCard:()=>buyCard(),
+  cardOffer:()=>{closeModalAll();modal(cardOfferHtml())},
   settings:()=>{closeModalAll();if(R&&!R.over)R.paused=true;showSettings()},
   howBingo:()=>{closeModalAll();howToBingo()},
   go:d=>{if(R&&!R.over)return;UI[d.k]=d.v;S.tab=d.t;UI.sell=null;render();view.scrollTop=0},
