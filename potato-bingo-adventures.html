@@ -153,6 +153,54 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
 .req b.ok{color:var(--mint)}
 .req b.no{color:#ff9a9a}
 
+/* ===== TOWN SCENE ===== */
+.townhead{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.townscene{position:relative;height:340px;border-radius:24px;overflow:hidden;border:3px solid #0006;box-shadow:0 12px 28px #0007;
+  background:linear-gradient(180deg,#8fd3ff 0%,#cdeeff 45%,var(--c1) 46%,var(--c2) 100%)}
+.tground{position:absolute;left:-10%;right:-10%;top:40%;height:30%;border-radius:50%;background:radial-gradient(ellipse at 50% 40%,#ffffff22,transparent 70%)}
+.tsky{position:absolute;right:14px;top:10px;font-size:26px;opacity:.8;letter-spacing:6px}
+.cloud{position:absolute;font-size:44px;opacity:.85;animation:drift 40s linear infinite}
+.cloud.c1{top:6%;left:-10%}.cloud.c2{top:18%;left:-30%;font-size:32px;animation-duration:55s;animation-delay:-20s}
+@keyframes drift{to{transform:translateX(130vw)}}
+.plot{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px;border-radius:16px;transition:transform .15s;z-index:1}
+.plot:hover{transform:translate(-50%,-50%) scale(1.08)}
+.plot .pe{line-height:1;filter:drop-shadow(0 6px 4px #0006);transition:font-size .3s}
+.plot.empty .pe{opacity:.75}
+.plot.lmk.empty .pe{filter:grayscale(1) brightness(.6) drop-shadow(0 6px 4px #0006);opacity:.6}
+.plot .pl{font-size:11px;background:#0008;color:#fff;padding:1px 8px;border-radius:999px;white-space:nowrap}
+.plot.rec .pl{background:var(--gold);color:var(--ink)}
+.plot .up{position:absolute;top:-6px;right:-4px;font-style:normal;font-size:13px;width:22px;height:22px;border-radius:50%;background:var(--mint);color:#063;display:flex;align-items:center;justify-content:center;animation:bounce 1s ease-in-out infinite;border:2px solid #fff}
+@keyframes bounce{50%{transform:translateY(-5px)}}
+.plot.pop .pe{animation:bpop .5s cubic-bezier(.2,1.8,.4,1)}
+@keyframes bpop{0%{transform:scale(.4)}100%{transform:scale(1)}}
+.howtown{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin:12px 0;font-size:12px;color:var(--muted)}
+.howtown span{background:var(--card);border:2px solid var(--line);border-radius:999px;padding:4px 10px}
+.howtown b{color:var(--gold)}
+.mission{display:flex;align-items:center;gap:14px;flex-wrap:wrap;border-color:#ffcf4a66;background:linear-gradient(135deg,#4a3410,#2e2266 70%)}
+.mission .me2{font-size:40px}
+.mbar{position:relative;height:22px;background:#0006;border-radius:999px;overflow:hidden;margin:8px 0 6px}
+.mbar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#ff9b3a)}
+.mbar span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;text-shadow:1px 1px 0 #000a}
+.mchk{display:flex;gap:4px;flex-wrap:wrap}
+.mchk span{font-size:11px;padding:2px 7px;border-radius:999px;background:#0005;border:1px solid var(--line)}
+.mchk span.ok{background:#2bb38a55;border-color:var(--mint)}
+.blist{display:flex;flex-direction:column;gap:8px}
+.brow{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:16px;background:var(--card);border:2px solid var(--line)}
+.brow.rec{border-color:var(--gold);box-shadow:0 0 0 2px #ffcf4a33}
+.brow.lmrow{background:linear-gradient(90deg,#4a3410,var(--card) 60%)}
+.be2{font-size:30px;width:52px;height:52px;border-radius:14px;background:#0004;flex-shrink:0}
+.bt{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left}
+.bt b{font-size:15px}
+.bt span{font-size:12px;color:var(--muted);font-weight:700}
+.bt em{font-style:normal;color:var(--mint)}
+.rtag{font-size:10px;background:var(--gold);color:var(--ink);padding:1px 6px;border-radius:999px;vertical-align:middle}
+.lvd{display:flex;gap:3px}
+.lvd i{width:10px;height:5px;border-radius:3px;background:#ffffff22}
+.lvd i.on{background:var(--gold)}
+.lvd.big{margin:4px 0 8px}.lvd.big i{width:18px;height:8px}
+.mission>div:nth-child(2){flex:1 1 240px}
+@media (max-width:560px){.townscene{height:270px}.mission .btn.big{width:100%;font-size:20px}.mission .me2{display:none}.howtown{display:grid;grid-template-columns:1fr 1fr;gap:6px}.howtown b{display:none}.howtown span{text-align:center;border-radius:12px}.brow .btn{padding:8px 10px;font-size:12px}.bt span:not(.lvd){font-size:11px}}
+
 /* ===== ITEMS ===== */
 .item{position:relative;display:flex;gap:10px;align-items:center;text-align:left;border-radius:16px;padding:10px;background:var(--card);border:2px solid var(--line);width:100%;color:var(--txt)}
 .item .ie{font-size:32px;width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:#0004;border:2px solid currentColor}
@@ -822,24 +870,55 @@ function vMap(){
 }
 
 /* ---------- TOWN ---------- */
+const B_WHAT=['Makes coins for you every minute – even while you are away (up to 8 hours).','Every bingo you win pays more coins.','More bonus squares (🪙 💎 🧩 ⚡ 🎁) on your bingo cards, and more souvenirs.','You earn more XP, so you level up faster and unlock more bingo cards.','Your ⚡ power-up meter fills up faster.','Better chance to win 💎 gems in bingo.','Bonus events during bingo give bigger rewards.','The pride of the town! Building it unlocks the next land, and every level boosts ALL your coins.'];
+const B_SHORT=['Coins while you are away','More coins per bingo','More bonus squares','More XP','Faster power-ups','More gems','Bigger event rewards','Unlocks next land · boosts all coins'];
+const PLOTS=[[13,58],[33,52],[67,52],[87,58],[24,82],[50,86],[76,82]];
+function bonusTxt(k,lv){const i=S.cur;if(k===0)return `+${fmt(lv*0.15*Bv(i)*ST.all*(1+ST.idle/100))} coins/min`;return BT[k].d(lv).replace(/\s*\(.*\)/,'')}
+function recBuilding(){const i=S.cur,b=S.b[i],r=REQ(i);let best=-1,bc=Infinity;
+  for(let k=0;k<7;k++){if(b[k]>=bMax(k))continue;if(!b[7]&&b[k]>=r)continue;const c=bCost(i,k,b[k]);if(c<bc){bc=c;best=k}}
+  if(!b[7]&&lmReady(i))return 7;return best}
 function vTown(){
-  const i=S.cur,L=LANDS[i],b=S.b[i],r=REQ(i),lmOk=lmReady(i),done=b.slice(0,7).filter(l=>l>=r).length;
-  const idleK=0.15*Bv(i)*ST.all*(1+ST.idle/100);
-  let h=`<div class="pad"><div class="scene" style="background:linear-gradient(140deg,${L.c1},${L.c2})"><div class="bigE">${L.e}</div><div><h2>${L.n}</h2><div class="small" style="opacity:.9">${L.sub}</div>
-    <div class="row" style="margin-top:8px"><span class="pill">🌾 ${fmt(ST.farmMin)}/min</span><span class="pill">🎱 ${fmt(Bv(i)*ST.cm)}/bingo</span></div></div><div class="skyline">${L.sky}</div></div>
-    <p class="note" style="margin-top:14px">🏗️ Spend the coins you win in bingo on buildings here. <b>Every building gives a bonus that lasts forever</b> – even after you travel on. ${b[7]?'':`Get all 7 buildings to <b>level ${r}</b> (${done}/7 done), then build the <b>${L.b[7][1]}</b> to unlock ${i<NL-1?LANDS[i+1].n:'the World Tour'}.`}</p>
-    <div class="grid">`;
-  const nowNext=(k,lv)=>{if(k===0)return [`+${fmt(lv*idleK)}/min`,`+${fmt((lv+1)*idleK)}/min`];const t=BT[k].d(lv),n=BT[k].d(lv+1);return [t,n]};
-  const what=['🌾 Earns coins every minute, even when you are away','🪙 More coins from every bingo','✨ More bonus squares & souvenirs on your cards','🎓 More XP, so you level up faster','⚡ Your power-up meter fills faster','💎 More gems from bingo','🎉 Bigger rewards from bonus events','🌍 More coins from EVERYTHING'];
-  for(let k=0;k<8;k++){const lv=b[k],mx=bMax(k),c=lv<mx?bCost(i,k,lv):0,[e,n]=L.b[k];
-    const lm=k===7,ready=!lm||lmOk,[now,next]=nowNext(k,lv);
-    h+=`<div class="box bld ${lm?'lm':''}"><div class="top"><div class="be">${e}</div><div style="min-width:0"><h4>${n}</h4><div class="stars">${'★'.repeat(lv)}<span style="opacity:.3">${'★'.repeat(mx-lv)}</span></div></div></div>
-      <div class="eff">${what[k]}${lm&&lv===0?`<br>🔓 <b style="color:var(--txt)">Unlocks ${i<NL-1?LANDS[i+1].n:'the World Tour'}!</b>`:''}</div>
-      ${k===0||lv>0?`<div class="small" style="color:var(--mint)">${lv?`Now: ${k===0?now:now.replace(/\s*\(.*\)/,'')}`:''}${lv<mx?`${lv?' → ':''}Next: ${k===0?next:next.replace(/\s*\(.*\)/,'')}`:''}</div>`:''}
-      ${lm&&!lmOk?`<div class="req">First get every building to level ${r}: ${L.b.slice(0,7).map((x,j)=>`<b class="${b[j]>=r?'ok':'no'}">${x[0]}${b[j]}</b>`).join(' ')}</div>`:''}
-      ${lv>=mx?`<button class="btn g" disabled>✔ MAXED</button>`:`<button class="btn" data-a="build" data-k="${k}" ${ready?`data-cost="${c}"`:''} ${(!ready||S.coins<c)?'disabled':''}>${lv===0?'Build':'Upgrade'} · 🪙 ${fmt(c)}</button>`}</div>`}
-  h+=`</div><div class="box goal"><div class="ge">🛍️</div><div style="flex:1">${L.n} sells its own gear. Find it in the <b>Shop</b>.</div><button class="btn" data-a="shopLand" data-i="${i}">Open Shop →</button></div></div>`;view.innerHTML=h;
+  const i=S.cur,L=LANDS[i],b=S.b[i],r=REQ(i),lmOk=lmReady(i),done=b.slice(0,7).filter(l=>l>=r).length,rec=recBuilding();
+  const next=i<NL-1?LANDS[i+1]:null,tot=b.reduce((a,x)=>a+x,0),max=7*10+5;
+  const afford=k=>b[k]<bMax(k)&&(k<7||lmOk)&&S.coins>=bCost(i,k,b[k]);
+  const plot=(k,x,y)=>{const lv=b[k],[e,n]=L.b[k],lm=k===7;
+    return `<button class="plot ${lv?'':'empty'} ${lm?'lmk':''} ${k===rec?'rec':''}" style="left:${x}%;top:${y}%" data-a="bld" data-k="${k}" title="${n}">
+      ${afford(k)?'<i class="up">⬆</i>':''}<span class="pe" style="font-size:${lm?(lv?62+lv*4:50):(lv?30+lv*2.2:28)}px">${lv?e:(lm?e:'🚧')}</span><span class="pl">${lv?`Lv ${lv}`:(lm?'Landmark':'Build')}</span></button>`};
+  let h=`<div class="pad">
+   <div class="townhead"><div><div class="small muted">${L.e} Your town in</div><h2 class="lil" style="margin:0;font-size:30px">${L.n}</h2></div>
+     <div class="row"><span class="pill">🌾 ${fmt(ST.farmMin)}/min</span><span class="pill">🏘️ Town ${Math.round(tot/max*100)}%</span><button class="btn dk" data-a="tab" data-t="map">🗺️ Map</button></div></div>
+   <div class="townscene" style="--c1:${L.c1};--c2:${L.c2}">
+     <div class="tsky">${L.sky.split('').length?L.sky:''}</div><div class="cloud c1">☁️</div><div class="cloud c2">☁️</div><div class="tground"></div>
+     ${plot(7,50,26)}${PLOTS.map(([x,y],k)=>plot(k,x,y)).join('')}
+   </div>
+   <div class="howtown"><span>🎱 Win coins in bingo</span><b>→</b><span>🏗️ Tap a building to upgrade it</span><b>→</b><span>🏆 Build the landmark</span><b>→</b><span>✈️ New land!</span></div>`;
+  // mission
+  if(!b[7]){
+    h+=`<div class="box mission"><div class="me2">🎯</div><div style="flex:1;min-width:0"><b class="lil" style="font-size:20px">Mission: build the ${L.b[7][1]}</b>
+      <div class="small muted">${lmOk?`All buildings are ready – build it to unlock <b style="color:var(--txt)">${next?next.e+' '+next.n:'the World Tour'}</b>!`:`Get every building to <b style="color:var(--txt)">level ${r}</b>. Then you can build it and unlock ${next?next.e+' '+next.n:'the World Tour'}.`}</div>
+      <div class="mbar"><i style="width:${done/7*100}%"></i><span>${done}/7 buildings ready</span></div>
+      <div class="mchk">${L.b.slice(0,7).map((x,j)=>`<span class="${b[j]>=r?'ok':''}" title="${x[1]}">${x[0]} ${Math.min(b[j],r)}/${r}</span>`).join('')}</div></div>
+      ${lmOk?`<button class="btn big p" data-a="build" data-k="7" data-cost="${bCost(i,7,0)}" ${S.coins<bCost(i,7,0)?'disabled':''}>🏆 Build · 🪙 ${fmt(bCost(i,7,0))}</button>`:''}</div>`;
+  }else h+=`<div class="box mission"><div class="me2">✅</div><div style="flex:1"><b class="lil" style="font-size:20px">${L.b[7][1]} is built!</b><div class="small muted">${next?`${next.e} ${next.n} is unlocked. Keep upgrading here – bonuses work in every land.`:'You can start a World Tour from Trophies.'}</div></div>${next&&S.cur<S.unlocked-1?`<button class="btn" data-a="travel" data-i="${i+1}">✈️ Travel</button>`:''}</div>`;
+  // list
+  h+=`<h3 class="sec">🏗️ Buildings <span class="small muted" style="font-family:Nunito">· tap one to see what it does</span></h3><div class="blist">`;
+  [7,0,1,2,3,4,5,6].forEach(k=>{const lv=b[k],mx=bMax(k),[e,n]=L.b[k],c=lv<mx?bCost(i,k,lv):0,lock=k===7&&!lmOk&&!lv;
+    h+=`<div class="brow ${k===rec?'rec':''} ${k===7?'lmrow':''}"><button class="be2" data-a="bld" data-k="${k}">${lv||k===7?e:'🚧'}</button>
+      <button class="bt" data-a="bld" data-k="${k}"><b>${n}${k===rec?' <span class="rtag">👍 Next</span>':''}</b><span>${B_SHORT[k]}${lv?` · <em>${bonusTxt(k,lv)}</em>`:''}</span><span class="lvd">${[...Array(mx)].map((_,j)=>`<i class="${j<lv?'on':''}"></i>`).join('')}</span></button>
+      ${lv>=mx?'<span class="small" style="color:var(--gold)">★ MAX</span>':lock?`<span class="small muted">🔒 Lv ${r} first</span>`:`<button class="btn ${S.coins>=c?'':'dk'}" data-a="build" data-k="${k}" data-cost="${c}" ${S.coins<c?'disabled':''}>${lv?'⬆':'Build'} 🪙 ${fmt(c)}</button>`}</div>`});
+  h+=`</div><div class="box goal"><div class="ge">🛍️</div><div style="flex:1">${L.n} also sells its own gear. Find it in the <b>Shop</b>.</div><button class="btn" data-a="shopLand" data-i="${i}">Open Shop →</button></div></div>`;
+  view.innerHTML=h;
 }
+function bldHtml(k){
+  const i=S.cur,L=LANDS[i],lv=S.b[i][k],mx=bMax(k),[e,n]=L.b[k],c=lv<mx?bCost(i,k,lv):0,lock=k===7&&!lmReady(i)&&!lv,r=REQ(i);
+  return `<div class="me">${lv||k===7?e:'🚧'}</div><h2>${n}</h2><p style="margin:0 0 6px">Level <b style="color:var(--txt)">${lv}/${mx}</b></p>
+   <div class="lvd big" style="justify-content:center">${[...Array(mx)].map((_,j)=>`<i class="${j<lv?'on':''}"></i>`).join('')}</div>
+   <p>${B_WHAT[k]}</p>
+   ${lv?`<div class="statline"><span>Now</span><b>${bonusTxt(k,lv)}</b></div>`:''}${lv<mx?`<div class="statline"><span>${lv?'After upgrade':'When built'}</span><b><em>${bonusTxt(k,lv+1)}</em></b></div>`:''}
+   ${lock?`<p class="small">🔒 First get every other building to level ${r}.</p>`:''}
+   <div class="acts">${lv>=mx?'<span style="color:var(--gold)">★ Fully upgraded!</span>':lock?'':`<button class="btn big" data-a="build" data-k="${k}" ${S.coins<c?'disabled':''}>${lv?'⬆ Upgrade':'🏗️ Build'} · 🪙 ${fmt(c)}</button>`}<button class="btn dk" data-a="close">Close</button></div>
+   ${lv<mx&&!lock&&S.coins<c?`<p class="small">You need 🪙 ${fmt(c-S.coins)} more – win some bingo!</p>`:''}`}
+function showBld(k){UI.bld=k;const h=bldHtml(k);if(modalOn)$('#mbox').innerHTML=h;else modal(h)}
 function build(k){const i=S.cur,lv=S.b[i][k];if(lv>=bMax(k))return;if(k===7&&!lmReady(i))return;const c=bCost(i,k,lv);if(S.coins<c)return;
   S.coins-=c;S.b[i][k]++;S.st.upgrades++;track('upgrades');SFX.buy();calc();
   if(k===7&&lv===0){confetti(90);bigTxt(LANDS[i].b[7][0]+' BUILT!');
@@ -1310,7 +1389,7 @@ const ACT={
   itemInfo:d=>{UI.sell=null;closeModalAll();showItem(d.id)},
   sell:d=>sellItem(d.id),
   tbuy:d=>{const t=TSHOP[+d.j];if(S.tokens<t.c)return;S.tokens-=t.c;t.f();SFX.buy();checkAch();save();rerender()},
-  close:()=>{if(UI.settings&&R&&!R.over)R.paused=false;UI.item=null;UI.sell=null;UI.settings=false;closeModal()},
+  close:()=>{if(UI.settings&&R&&!R.over)R.paused=false;UI.bld=null;UI.item=null;UI.sell=null;UI.settings=false;closeModal()},
   sound:()=>{S.sound=!S.sound;save();if(S.tab==='more')rerender();updHUD()},
   music:()=>{S.music=!S.music;if(S.music)musicStart();else musicStop();save();if(S.tab==='more')rerender();updHUD()},
   call:()=>{S.call=!S.call;if(!S.call&&window.speechSynthesis)speechSynthesis.cancel();save();if(R&&!R.over)updCtl();else rerender()},
@@ -1323,7 +1402,8 @@ const ACT={
   leaveNo:()=>{closeModal();if(R)R.paused=false},
   leaveGo:()=>{closeModalAll();if(!R||R.over)return;R.over=true;evDone(false);if(window.speechSynthesis)speechSynthesis.cancel();addXP(R.xp);checkAch();save();const won=R.coins;R=null;S.tab='bingo';render();view.scrollTop=0;if(won)toast(`🚪 You left the hall with <b>${fmt(won)} 🪙</b>`)},
   travel:d=>travel(+d.i),
-  build:d=>build(+d.k),
+  build:d=>{const k=+d.k,first=k===7&&!S.b[S.cur][7],lv=S.b[S.cur][k];build(k);if(S.b[S.cur][k]>lv){const el=document.querySelector(`.plot[data-k="${k}"]`);if(el){el.classList.add('pop');floatAt(el,lv?'⬆ Level '+(lv+1):'🏗️ Built!','#ffcf4a')}confetti(lv?14:30)}if(UI.bld===k&&modalOn&&!first)showBld(k);else if(first)UI.bld=null},
+  bld:d=>{closeModalAll();showBld(+d.k)},
   buyItem:d=>{const it=ITEMS[d.id];if(S.gear[d.id]||S.coins<it.price)return;S.coins-=it.price;giveItem(d.id);calc();SFX.buy();toast(`🛍️ Bought <b>${it.e} ${it.n}</b>! ${S.eq[it.slot]===d.id?'You are wearing it now.':'Find it in your Bag.'}`);checkAch();save();rerender()},
   equip:d=>{const it=ITEMS[d.id];S.eq[it.slot]=d.id;calc();SFX.buy();save();afterItem()},
   unequip:d=>{S.eq[d.s]=null;calc();save();afterItem()},
