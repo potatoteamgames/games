@@ -410,15 +410,20 @@ button:disabled{cursor:not-allowed;opacity:.45}
   .side{width:auto;border-left:0;border-top:2px solid #000;padding-bottom:150px;overflow:visible}
   .actions{position:fixed;left:8px;right:8px;bottom:8px;z-index:30;box-shadow:0 -6px 24px rgba(0,0,0,.6)}
   .logBox{max-height:260px}
-  .back span{display:none}
+  .back{padding:6px 8px;font-size:13px;background:var(--card);color:var(--txt)}
   .ttl{font-size:20px}
 }
 @media (max-width:520px){
-  .tbtns button{width:34px;height:34px;font-size:16px}
+  .top{gap:6px;padding:0 8px}
+  .tbtns{gap:4px}
+  .tbtns button{width:32px;height:32px;font-size:15px;border-radius:9px}
+  .ttl{font-size:16px;letter-spacing:1px;padding:1px 8px 0}
+  .back{font-size:12px;padding:5px 7px}
   .opts{grid-template-columns:1fr}
   .trCols{grid-template-columns:1fr}
   .btn.go{font-size:17px}
 }
+@media (max-width:400px){.ttl{font-size:14px;letter-spacing:.5px;padding:1px 6px 0}.tbtns button{width:30px;height:30px;font-size:14px}.top{gap:5px;padding:0 6px}}
 @media (prefers-reduced-motion:reduce){.lidTop::before,.btn.go{animation:none}}
 </style>
 </head>
@@ -428,7 +433,7 @@ button:disabled{cursor:not-allowed;opacity:.45}
 </defs></svg>
 
 <header class="top">
-  <a class="back" href="./" aria-label="Back to Potato Team Games">← <span>Potato Team Games</span></a>
+  <a class="back" href="./" aria-label="Back to all Potato Team Games">← <span>All games</span></a>
   <h1 class="ttl" style="margin:0 auto">MONONGOLY</h1>
   <div class="tbtns">
     <button id="bView" title="Switch between table view and top view" aria-label="Switch camera view">🎥</button>
@@ -1466,7 +1471,7 @@ async function gameOver(w,byWorth){
   await modal({title:'🏆 Game over!',html:`<div style="text-align:center"><div style="width:90px;height:90px;margin:4px auto 8px;border-radius:50%;border:3px solid #000;background:${w.color};display:flex;align-items:center;justify-content:center">${tokSVG(w.token,64)}</div>
     <p style="font-size:20px">${pName(w)} ${byWorth?'is the richest tycoon':'owns all of Mononga'}! 🎉</p></div>
     <div class="mg">${rank.map((p,k)=>`<div class="mgRow"><span class="sw" style="background:${p.color}"></span><div class="nm2">${k+1}. ${esc(p.name)}<small>${p.left?'🚪 Left':p.out?'Bankrupt':'Net worth '+M(netWorth(p))}</small></div><div></div></div>`).join('')}</div>`,
-    buttons:[{k:'again',label:'🎲 Play again',cls:'go'},{k:'home',label:'🥔 More games'}]}).then(k=>{if(k==='home')location.href='./';else location.reload()});
+    buttons:[{k:'again',label:'🎲 Play again',cls:'go'},{k:'home',label:'← All games'}]}).then(k=>{if(k==='home')location.href='./';else location.reload()});
   REDRAW.clear();
 }
 function confetti(){const c=['#e63946','#ffcb52','#2fb35a','#2a7de1','#ff6fae','#fff'];for(let i=0;i<90;i++){const e=document.createElement('div');e.className='conf';e.style.left=Math.random()*100+'vw';e.style.background=c[i%6];e.style.animationDuration=(2+Math.random()*2.5)+'s';e.style.animationDelay=Math.random()*.8+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),5500)}}
@@ -1476,7 +1481,7 @@ async function openMenu(){
   const inGame=G&&!G.over;
   const note=!inGame?'':NET.role==='host'?'You are hosting: leaving ends the game for everyone.':NET.role==='guest'?'Leaving removes you from the game – the others keep playing.':'Your game is saved automatically at the start of every turn.';
   const k=await modal({title:'☰ Menu',dismiss:'x',html:`<p style="color:var(--muted);font-size:13px">${note}</p>`,
-    buttons:[...(inGame?[{k:'leave',label:'🚪 Leave to menu',cls:'green'}]:[]),{k:'rules',label:'📖 Rules'},...(G&&!G.over&&NET.role!=='guest'?[{k:'finish',label:'🏁 Finish now – richest wins'}]:[]),{k:'new',label:'🆕 New game',cls:'danger'},{k:'home',label:'🥔 More games'},{k:'x',label:'Close',cls:'go'}]});
+    buttons:[...(inGame?[{k:'leave',label:'🚪 Leave to menu',cls:'green'}]:[]),{k:'rules',label:'📖 Rules'},...(G&&!G.over&&NET.role!=='guest'?[{k:'finish',label:'🏁 Finish now – richest wins'}]:[]),{k:'new',label:'🆕 New game',cls:'danger'},{k:'home',label:'← All games'},{k:'x',label:'Close',cls:'go'}]});
   if(k==='rules')showRules();
   else if(k==='leave')leaveGame();
   else if(k==='home'){if(!inGame||!NET.role||await confirmLeave()){quitOnline();location.href='./'}}
