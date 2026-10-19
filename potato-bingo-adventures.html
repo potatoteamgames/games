@@ -283,22 +283,62 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
 .wsearch:focus-within{border-color:var(--gold)}
 .wsearch input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--txt);font:inherit;font-size:16px;padding:12px 0}
 .wsearch input::placeholder{color:var(--muted);font-weight:700}
-.bphead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px;background:linear-gradient(135deg,#4b2fb0,#2e2266 70%);border-color:#b36bff88}
-.bptrack{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
-.bpt{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;padding:14px 8px 10px;border-radius:16px;background:var(--card);border:2px solid var(--line)}
-.bpt .bpn{position:absolute;top:6px;left:8px;font-size:11px;background:#0006;padding:1px 7px;border-radius:999px}
-.bpt .bpe{font-size:36px;line-height:1.1}
-.bpt b{font-size:13px}
-.bpt small{font-size:11px;color:var(--muted);font-weight:700;min-height:28px}
-.bpt .bps{font-size:11px;color:var(--muted)}
-.bpt.ready{border-color:var(--mint);background:linear-gradient(180deg,#2bb38a33,var(--card))}
-.bpt.got{opacity:.55}
-.bpt.got .bps{color:var(--mint)}
-.bpt.lock .bpe{filter:grayscale(.6)}
-.bpt.big{border-color:var(--gold);background:linear-gradient(180deg,#ffcf4a33,var(--card))}
-.bpt.big .bpe{font-size:44px}
-.bpt.next{box-shadow:0 0 0 3px #b36bff}
-.bpt.next::after{content:'NEXT';position:absolute;top:6px;right:8px;font-size:10px;background:#b36bff;padding:1px 7px;border-radius:999px}
+.bpbanner{position:relative;display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding:20px;border-radius:24px;overflow:hidden;border:3px solid #ffffff22;
+  background:radial-gradient(circle at 85% 20%,#ff5fa255,transparent 45%),radial-gradient(circle at 10% 110%,#5cc2ff44,transparent 50%),linear-gradient(135deg,#5b2fd0,#2a1670 60%,#180c45);box-shadow:0 14px 30px #0008}
+.bpbanner::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(115deg,#ffffff08 0 18px,transparent 18px 36px);pointer-events:none}
+.bpb-l{flex:1 1 260px;position:relative}
+.bpb-l h2{margin:6px 0 2px;font-family:'Lilita One',sans-serif;font-weight:400;font-size:clamp(28px,4vw,40px);text-shadow:2px 3px 0 #0006}
+.bpb-l p{margin:0;font-size:13px;opacity:.9}
+.bpseason{font-size:11px;letter-spacing:2px;background:var(--gold);color:var(--ink);padding:3px 10px;border-radius:999px}
+.bpb-r{flex:1 1 320px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;position:relative}
+.bptier{display:flex;flex-direction:column;align-items:center;justify-content:center;width:84px;height:84px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe27a,#d9962a);color:var(--ink);box-shadow:0 0 0 4px #ffffff55,0 8px 16px #0006;flex-shrink:0}
+.bptier b{font-family:'Lilita One',sans-serif;font-weight:400;font-size:34px;line-height:1}
+.bptier small{font-size:10px;letter-spacing:1px}
+.bpxp{height:12px;background:#0006;border-radius:999px;overflow:hidden;margin:4px 0}
+.bpxp i{display:block;height:100%;background:linear-gradient(90deg,#4fe0a6,#5cc2ff)}
+.bppager{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0 10px}
+.bparrow{width:48px;height:48px;border-radius:14px;background:var(--card2);border:2px solid var(--line);font-size:20px;box-shadow:0 3px 0 #0006}
+.bparrow:hover:not(:disabled){border-color:var(--gold)}
+.bparrow:disabled{opacity:.3}
+.bppage{display:flex;flex-direction:column;align-items:center}
+.bppage b{font-family:'Lilita One',sans-serif;font-weight:400;font-size:22px}
+.bppage span{font-size:12px;color:var(--muted)}
+.bprow{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:8px}
+.bpc{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:4px;padding:26px 4px 8px;border-radius:16px;min-height:150px;
+  background:linear-gradient(180deg,#3a2c7c,#241a5a);border:3px solid #ffffff18;transition:transform .15s,border-color .15s}
+.bpc:hover{transform:translateY(-4px)}
+.bpc-t{position:absolute;top:6px;left:50%;transform:translateX(-50%);font-size:12px;background:#0007;padding:1px 9px;border-radius:999px}
+.bpc-e{font-size:clamp(28px,3.2vw,40px);line-height:1;filter:drop-shadow(0 4px 4px #0007)}
+.bpc-n{font-size:11px;line-height:1.2;text-align:center;min-height:26px;display:flex;align-items:center}
+.bpc-s{font-size:11px;padding:3px 6px;border-radius:999px;background:#0006;width:100%;text-align:center}
+.bpc.ready{border-color:var(--mint);background:linear-gradient(180deg,#1f7a62,#174a4a)}
+.bpc.ready .bpc-s{background:var(--mint);color:#063;animation:pulse 1.2s ease-in-out infinite}
+.bpc.got{opacity:.5}
+.bpc.got .bpc-s{color:var(--mint)}
+.bpc.lock .bpc-e{filter:grayscale(.7) brightness(.8)}
+.bpc.big{border-color:var(--gold);background:linear-gradient(180deg,#8a5a12,#3a2160)}
+.bpc.big::after{content:'★';position:absolute;top:4px;right:6px;color:var(--gold);font-size:13px}
+.bpc.sel{box-shadow:0 0 0 3px #fff,0 10px 20px #0007;transform:translateY(-4px)}
+.bprail{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:8px;margin-top:10px}
+.bprail span{position:relative;height:16px;display:flex;align-items:center;justify-content:center}
+.bprail span::before{content:'';position:absolute;left:-4px;right:-4px;top:6px;height:4px;background:#ffffff22}
+.bprail span.on::before{background:linear-gradient(90deg,var(--gold),#ff9b3a)}
+.bprail i{position:relative;width:12px;height:12px;border-radius:50%;background:#3a2c7c;border:2px solid #ffffff44}
+.bprail span.on i{background:var(--gold);border-color:#fff}
+.bprail span.cur i{width:16px;height:16px;box-shadow:0 0 12px var(--gold)}
+.bpdots{display:flex;justify-content:center;gap:8px;margin:14px 0}
+.bpdots button{width:12px;height:12px;border-radius:50%;background:#ffffff30;padding:0}
+.bpdots button.on{background:#fff;width:28px;border-radius:999px}
+.bpdots button.rd{box-shadow:0 0 0 2px var(--mint)}
+.bpdetail{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:16px;border-radius:20px;background:var(--card);border:2px solid var(--line)}
+.bpdetail.big{border-color:var(--gold);background:linear-gradient(135deg,#4a3410,var(--card) 70%)}
+.bpd-e{font-size:58px;width:90px;height:90px;border-radius:22px;background:#0004;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bpd-tag{font-size:11px;letter-spacing:1px;color:var(--gold)}
+.bpdetail h3{margin:2px 0 4px;font-family:'Lilita One',sans-serif;font-weight:400;font-size:24px}
+.bpdetail p{margin:0;font-size:13px;color:var(--muted);font-weight:700;line-height:1.45}
+.bpdetail p b{color:var(--txt)}
+.bpd-st{font-size:14px;color:var(--muted)}
+@media (max-width:700px){.bpc{min-height:126px;padding-top:24px}.bpc-n{font-size:10px}.bpc-s{font-size:9px}.bpbanner{padding:16px}.bpb-r .btn.big{width:100%}.bpd-act{width:100%}.bpd-act .btn{width:100%}.bpd-e{width:70px;height:70px;font-size:44px}}
 .idesc{font-size:14px;margin:4px 0 10px}
 .idesc b{color:var(--txt)}
 .wdesc{font-size:12px;color:var(--muted);font-weight:700;line-height:1.4}
@@ -554,7 +594,7 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
   .scene .skyline{display:none}
   #nav button{font-size:9px}
   #nav{gap:2px;padding-left:4px;padding-right:4px}
-  .bphead>div{flex-basis:100%}.bphead .btn.big{width:100%;font-size:20px}.bptrack{grid-template-columns:repeat(2,minmax(0,1fr))}
+
   #nav button .e{font-size:20px}
 }
 @media (prefers-reduced-motion:reduce){.scene .bigE,.ball.pop{animation:none}}
@@ -1072,19 +1112,35 @@ function bpReward(t){const top=S.unlocked-1,coinAmt=()=>Bv(top)*ST.cm*(4+t*0.5);
 const bpReady=()=>{let n=0;for(let t=1;t<=Math.min(S.level,BP_MAX);t++)if(!S.bp[t])n++;return n};
 function bpClaim(t){if(t>S.level||t>BP_MAX||S.bp[t])return;const r=bpReward(t);S.bp[t]=1;const msg=r.f();SFX.coin();if(r.big)confetti(70);toast(`🎖️ Tier ${t}: ${msg}`);checkAch();save();if(!modalOn)rerender();else render()}
 function bpClaimAll(){const msgs=[];for(let t=1;t<=Math.min(S.level,BP_MAX);t++)if(!S.bp[t]){const r=bpReward(t);S.bp[t]=1;msgs.push(r.f())}if(!msgs.length)return;SFX.level();confetti(60);toast(`🎖️ Claimed ${msgs.length} reward${msgs.length>1?'s':''}!`);checkAch();save();render()}
+const bpPer=()=>window.innerWidth<700?5:10;
 function vPass(){
-  const lv=Math.min(S.level,BP_MAX),ready=bpReady(),claimed=Object.keys(S.bp).length;
-  let h=`<div class="pad">${phead('🎖️','Battle Pass','100% free! Every level you reach unlocks the next tier. Claim rewards, and see what is coming next. Exclusive items at tiers 10, 20, 30, 40 and 50.')}
-   <div class="box bphead"><div style="flex:1;min-width:0"><b class="lil" style="font-size:22px">Tier ${lv}/${BP_MAX}</b> <span class="small muted">· ${claimed}/${BP_MAX} claimed</span>
-     <div class="mbar"><i style="width:${lv/BP_MAX*100}%"></i><span>${S.level>=BP_MAX?'Pass complete! 🏆':`Level up to reach tier ${lv+1}`}</span></div></div>
-     ${ready?`<button class="btn big p" data-a="bpAll">Claim all (${ready})</button>`:''}</div>
-   <div class="bptrack">`;
-  for(let t=1;t<=BP_MAX;t++){const r=bpReward(t),got=S.bp[t],open=t<=S.level;
-    h+=`<div class="bpt ${got?'got':open?'ready':'lock'} ${r.big?'big':''} ${t===lv+1?'next':''}" id="bpt${t}">
-      <div class="bpn">${t}</div><div class="bpe">${r.e}</div><b>${r.n}</b><small>${r.d}</small>
-      ${got?'<span class="bps">✔ Claimed</span>':open?`<button class="btn g" data-a="bpClaim" data-t="${t}">Claim</button>`:`<span class="bps">🔒 Level ${t}</span>`}</div>`}
-  h+=`</div></div>`;view.innerHTML=h;
-  const tgt=document.getElementById('bpt'+Math.max(1,Math.min(BP_MAX,lv)));if(tgt&&!UI.bpScrolled){UI.bpScrolled=true;tgt.scrollIntoView({block:'center'})}
+  const lv=Math.min(S.level,BP_MAX),ready=bpReady(),claimed=Object.keys(S.bp).length,per=bpPer(),pages=Math.ceil(BP_MAX/per);
+  // open on the page with the first unclaimed tier, or else the next tier to reach
+  if(UI.bpPage==null||UI.bpPer!==per){UI.bpPer=per;let f=1;while(f<=lv&&S.bp[f])f++;UI.bpPage=Math.min(pages-1,Math.floor((Math.min(f,BP_MAX)-1)/per))}
+  const pg=clamp(UI.bpPage,0,pages-1),t0=pg*per+1,t1=Math.min(BP_MAX,t0+per-1);
+  if(UI.bpSel==null||UI.bpSel<t0||UI.bpSel>t1)UI.bpSel=clamp(S.level<BP_MAX?S.level+1:BP_MAX,t0,t1);
+  const xpPct=S.level>=BP_MAX?100:S.xp/xpNeed(S.level)*100;
+  let h=`<div class="pad">
+   <div class="bpbanner"><div class="bpb-l"><span class="bpseason">SEASON 1 · FREE PASS</span><h2>🎖️ Spud Pass</h2><p>Level up to unlock rewards. Exclusive items at tiers 10, 20, 30, 40 &amp; 50!</p></div>
+     <div class="bpb-r"><div class="bptier"><small>TIER</small><b>${lv}</b><small>of ${BP_MAX}</small></div>
+       <div style="flex:1;min-width:150px"><div class="small" style="opacity:.9">${S.level>=BP_MAX?'Pass complete! 🏆':`Next tier: level ${S.level+1}`}</div><div class="bpxp"><i style="width:${xpPct}%"></i></div><div class="small" style="opacity:.8">${claimed}/${BP_MAX} rewards claimed</div></div>
+       ${ready?`<button class="btn big p" data-a="bpAll">🎁 Claim all (${ready})</button>`:''}</div></div>
+   <div class="bppager"><button class="bparrow" data-a="bpPg" data-d="-1" ${pg<=0?'disabled':''} aria-label="Previous page">◀</button>
+     <div class="bppage"><b>Tiers ${t0}–${t1}</b><span>Page ${pg+1} of ${pages}</span></div>
+     <button class="bparrow" data-a="bpPg" data-d="1" ${pg>=pages-1?'disabled':''} aria-label="Next page">▶</button></div>
+   <div class="bprow" style="--n:${t1-t0+1}">`;
+  for(let t=t0;t<=t1;t++){const r=bpReward(t),got=S.bp[t],open=t<=S.level,st=got?'got':open?'ready':'lock';
+    h+=`<button class="bpc ${st} ${r.big?'big':''} ${t===UI.bpSel?'sel':''}" data-a="bpSel" data-t="${t}">
+      <span class="bpc-t">${t}</span><span class="bpc-e">${r.e}</span><span class="bpc-n">${r.n}</span>
+      <span class="bpc-s">${got?'✔':open?'CLAIM':'🔒'}</span></button>`}
+  h+=`</div><div class="bprail" style="--n:${t1-t0+1}">`;
+  for(let t=t0;t<=t1;t++)h+=`<span class="${t<=S.level?'on':''} ${t===S.level?'cur':''}"><i></i></span>`;
+  h+=`</div><div class="bpdots">${[...Array(pages)].map((_,j)=>{const a=j*per+1,b2=Math.min(BP_MAX,a+per-1);let rd=0;for(let t=a;t<=b2;t++)if(t<=S.level&&!S.bp[t])rd++;return `<button class="${j===pg?'on':''} ${rd?'rd':''}" data-a="bpGo" data-p="${j}" title="Tiers ${a}–${b2}"></button>`}).join('')}</div>`;
+  const t=UI.bpSel,r=bpReward(t),got=S.bp[t],open=t<=S.level,it=PASS_ITEMS[t]&&ITEMS['P'+t];
+  h+=`<div class="bpdetail ${r.big?'big':''}"><div class="bpd-e">${r.e}</div><div style="flex:1;min-width:0"><span class="bpd-tag">TIER ${t}${r.big?' · EXCLUSIVE':''}</span><h3>${r.n}</h3>
+      <p>${it?`${itemDesc(it).flavor} <b>${itemDesc(it).does}</b>`:r.d}</p></div>
+      <div class="bpd-act">${got?'<span class="bpd-st">✔ Claimed</span>':open?`<button class="btn big g" data-a="bpClaim" data-t="${t}">Claim</button>`:`<span class="bpd-st">🔒 Reach level ${t}</span>`}</div></div></div>`;
+  view.innerHTML=h;
 }
 const ITEM_DESC={"Leprechaun Hat": "A tiny green hat said to hide a pot of gold under the brim.", "Shamrock Dauber": "A dauber with a shamrock tip that marks numbers with a lucky green splat.", "Clover Charm": "A four-leaf clover pressed in glass. Irish grannies swear by it.", "Wool Sweater": "A cosy hand-knitted sweater from the hills of Ireland.", "Sheep Buddy": "A fluffy sheep that happily trims the grass on your farms.", "Chullo Beanie": "A colourful Andean hat with ear flaps, knitted from alpaca wool.", "Inca Gold Dauber": "An ancient golden dauber found near Machu Picchu.", "Sun Disc": "A shining disc of Inti, the Inca sun god. Festivals love it.", "Alpaca Poncho": "A warm poncho that seems to attract shiny bonus squares.", "Llama Pal": "A friendly llama that spits power into your power-up meter.", "Beret Magnifique": "The chicest beret in all of Paris. Très lucky!", "Baguette Dauber": "A crunchy baguette that doubles as a surprisingly good dauber.", "Eiffel Keychain": "A little Eiffel Tower souvenir that helps you find more souvenirs.", "Striped Marinière": "The classic striped French shirt, perfect for festivals.", "Poodle Pierre": "A fancy poodle with a nose for sparkling gems.", "Gondolier Hat": "A straw hat from the canals of Venice.", "Gnocchi Fork": "A fork made for gnocchi – and for stabbing bingo numbers fast.", "Lucky Cornicello": "A little red horn from Naples that keeps bad luck away.", "Opera Cape": "A dramatic cape from the opera house. Bravissimo!", "Vespa Cat": "A cool cat on a scooter that zooms past the other players.", "Pharaoh Crown": "A golden crown fit for the ruler of the Nile.", "Scarab Dauber": "A sacred scarab dauber that rolls straight to the right number.", "Eye of Horus": "An ancient protective eye that spots hidden bonus squares.", "Desert Robe": "A flowing robe for hot desert festivals.", "Royal Camel": "A royal camel that carries extra bingo balls for you.", "Maharaja Turban": "A jewelled turban worn by Indian kings.", "Spice Dauber": "A dauber dipped in spices – it marks numbers red-hot fast.", "Lotus Charm": "A sacred lotus flower that blooms with gems.", "Festival Sari": "A dazzling sari made for Diwali celebrations.", "Baby Elephant": "A cute baby elephant that helps on the farm and never forgets a number.", "Samurai Kabuto": "The fearsome helmet of a samurai warrior.", "Sakura Brush": "A calligraphy brush made of cherry wood.", "Lucky Lantern": "A paper lantern that lights up lucky squares before the game starts.", "Ninja Garb": "Silent ninja clothes that slow down the other players.", "Shiba Inu": "A loyal Shiba that fetches power for your power-ups.", "Cork Bush Hat": "A classic outback hat with corks to keep the flies away.", "Boomerang Dauber": "A dauber that always comes back – faster every time.", "Opal Stone": "A rainbow opal from deep under the Australian desert.", "Surf Wetsuit": "A wetsuit for riding the biggest event waves.", "Koala Kevin": "A sleepy koala who somehow makes your farms work harder.", "Carnival Headdress": "A huge feathered headdress from the Rio carnival.", "Samba Dauber": "A dauber that dances across the card to the samba beat.", "Football Charm": "A tiny football that kicks extra bonus squares onto your cards.", "Carnival Costume": "A sparkling costume made for dancing all night.", "Toucan Tico": "A colourful toucan that sniffs out souvenirs.", "Viking Helmet": "A real Viking helmet. (Vikings never had horns, sorry!)", "Aurora Dauber": "A dauber glowing with the northern lights.", "Volcano Crystal": "A crystal formed in a volcano, full of lucky energy.", "Puffin Parka": "A warm parka that makes rivals waddle slower.", "Arctic Fox": "A snowy fox that charges your power-ups.", "Grand Sombrero": "The biggest sombrero in all of Mexico.", "Piñata Dauber": "Whack a number and bonus squares fly out!", "Sugar Skull Charm": "A colourful sugar skull from the Day of the Dead festival.", "Mariachi Suit": "A shiny mariachi suit. Trumpets not included.", "Chihuahua Chico": "A tiny dog with a big bark that brings extra balls.", "Spud Cowboy Hat": "The official hat of Idaho potato farmers.", "Golden Fry Dauber": "A dauber shaped like a perfect golden French fry.", "Liberty Torch": "A shining torch that lights the way to gems.", "Astronaut Prep Suit": "Training gear for your trip to the Moon.", "Bald Eagle": "A proud eagle that swoops past the other players.", "Lunar Helmet": "A space helmet scratched by moon dust.", "Crater Dauber": "A dauber made from a meteorite. Hits like one too.", "Moon Rock": "A real piece of the Moon that glitters with gems.", "Zero-G Suit": "A floaty suit that leaves rivals spinning in space.", "Robo Rover": "A little moon robot that presses BINGO for you.", "Cosmic Crown": "A crown of starlight from the edge of the galaxy.", "Quantum Dauber": "It marks numbers in two places at once – and calls BINGO for you.", "Star Potato Core": "The glowing heart of a star potato. Pure luck.", "Galaxy Suit": "A suit woven from galaxies, made for epic events.", "Alien Spud": "A friendly alien potato from Potato Planet.", "Potato Sack Hat": "An old potato sack turned into a hat. Humble but handy.", "Crayon Dauber": "A wax crayon. Not fancy, but it works!", "Rabbit Foot": "A classic lucky charm (a fluffy toy one – no rabbits were harmed).", "Garden Overalls": "Muddy overalls that make your farms grow faster.", "Pet Rock": "It doesn't do much... but it believes in you.", "Fancy Top Hat": "A tall top hat for a classy bingo night.", "Neon Dauber": "A glowing neon dauber that makes numbers pop.", "Lucky Horseshoe": "A horseshoe that marks a lucky square before each game.", "Bingo Tuxedo": "A sharp tuxedo for the serious bingo player.", "Hamster Hank": "A hamster running in a wheel – powering the events!", "Wizard Hat": "A pointy hat full of coin and gem magic.", "Laser Dauber": "Pew pew! Marks numbers at the speed of light.", "Dice of Fate": "Roll it and the bingo gods smile on you.", "Super Cape": "A hero's cape that leaves rivals in the dust.", "Dragon Whelp": "A baby dragon that breathes coins instead of fire.", "Golden Crown": "Solid gold. Very heavy. Very rich.", "Butler Bot": "A polite robot butler that marks numbers and calls BINGO for you.", "Genie Lamp": "Rub it for gems and a lucky head start.", "Diamond Suit": "A suit covered in diamonds. Blinding!", "Phoenix": "A fiery bird that is reborn with power at every event.", "Crown of the Spud King": "The crown of the legendary Spud King himself.", "Infinity Dauber": "A dauber with endless ink that hardly misses a number – and calls BINGO for you.", "Rainbow Charm": "Every colour of luck in one charm.", "Cosmic Robe": "A robe of stardust that slows rivals and boosts events.", "Unicorn": "A magical unicorn that finds gems and souvenirs everywhere.", "Baseball Cap": "A comfy cap for long bingo sessions.", "Pencil Dauber": "A sharp pencil for careful markers.", "Old Key": "A rusty key that unlocks hidden bonus squares.", "Raincoat": "Stay dry when it rains coins at events.", "Explorer Helmet": "An explorer's helmet for finding souvenirs on your travels.", "Paintbrush Dauber": "An artist's brush that paints numbers and bonus squares.", "Evil Eye": "A blue charm that keeps rivals away and draws gems in.", "Turtle Tim": "Slow and steady – and he makes the rivals slow too.", "Graduation Cap": "Proof that you studied bingo very hard. Lots of XP!", "Bingo Gi": "A martial-arts outfit for focused, powerful players.", "Hourglass": "Bends time to give you extra balls and slow the rivals.", "Wise Owl": "A clever owl that teaches you XP and finds souvenirs.", "Royal Tiara": "A sparkling tiara for bingo royalty.", "Magic Wand": "Wave it and numbers mark themselves.", "Vampire Cloak": "A spooky cloak that drains the rivals' speed.", "Golden Dragon": "A mighty golden dragon hoarding coins and power.", "Halo of Luck": "A glowing halo that blesses every card with lucky squares.", "Starlight Dauber": "Made from a falling star. Lightning fast.", "Bingo Hero Suit": "The suit of a true bingo hero.", "Cosmic Chick": "A baby chick hatched from a star, bringing extra balls.", "Pass Cadet Cap": "Awarded to every Battle Pass cadet at tier 10.", "Medal of Bingo": "A shiny medal for reaching tier 20 of the Battle Pass.", "Champion Dauber": "The champion's dauber, only for Battle Pass tier 30.", "Legend Jersey": "A jersey only true legends earn at tier 40.", "Pass Dragon Spud": "The ultimate Battle Pass reward: a mythic dragon potato."};
 const STAT_DO={coin:'win more coins from every bingo',xp:'earn more XP',auto:'mark some called numbers for you automatically',charge:'fill your power-up meter faster',event:'get bigger rewards from bonus events',gem:'find gems more often',luck:'start every card with lucky squares already marked',special:'get more bonus squares on your cards',souv:'find souvenirs more often',balls:'get extra balls in every game',rival:'slow down the other players',idle:'make your farms earn more coins',claim:'press BINGO for you automatically'};
@@ -1540,7 +1596,10 @@ function refreshAfford(){document.querySelectorAll('[data-cost]').forEach(b=>{b.
 /* ---------- INPUT ---------- */
 const ACT={
   bpClaim:d=>bpClaim(+d.t),bpAll:()=>bpClaimAll(),
-  tab:d=>{if(R&&!R.over)return;closeModalAll();if(d.t==='pass')UI.bpScrolled=false;S.tab=d.t;render();view.scrollTop=0},
+  bpSel:d=>{const t=+d.t;UI.bpSel=t;if(t<=S.level&&!S.bp[t])return bpClaim(t);rerender()},
+  bpPg:d=>{UI.bpPage=clamp((UI.bpPage||0)+(+d.d),0,Math.ceil(BP_MAX/bpPer())-1);UI.bpSel=null;rerender()},
+  bpGo:d=>{UI.bpPage=+d.p;UI.bpSel=null;rerender()},
+  tab:d=>{if(R&&!R.over)return;closeModalAll();if(d.t==='pass'){UI.bpPage=null;UI.bpSel=null}S.tab=d.t;render();view.scrollTop=0},
   afk:d=>afkAnswer(d.e),
   wf:d=>{UI[d.k]=d.v;rerender()},
   buyCard:()=>buyCard(),
@@ -1601,6 +1660,7 @@ $('#modal').addEventListener('click',e=>{if(e.target.id==='modal'&&!R&&!UI.afk){
 document.addEventListener('keydown',e=>{if(!R||R.over)return;if(e.key===' '||e.key==='Enter'){e.preventDefault();R.cards.forEach((_,ci)=>{if(newLines(ci).length)claim(ci)})}if(e.key==='p'||e.key==='P')usePw()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){save();musicStop()}else{if(S.music)musicStart();lastT=performance.now()}});
 window.addEventListener('beforeunload',save);
+window.addEventListener('resize',()=>{if(S.tab==='pass'&&UI.bpPer!==bpPer()){UI.bpPage=null;rerender()}});
 
 function tutorial(){
   modal(`<div class="me">🥔🎱✈️</div><h2>Potato Bingo Adventures</h2><p>Travel the world – from Ireland to Potato Planet – and build amazing towns. But there's a catch: <b>the only way to earn coins is to win at bingo!</b></p>
