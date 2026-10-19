@@ -925,6 +925,18 @@ function loadVoices(){try{VOICES=window.speechSynthesis?speechSynthesis.getVoice
 if(window.speechSynthesis){loadVoices();try{speechSynthesis.addEventListener('voiceschanged',()=>{loadVoices();if(UI.settings&&modalOn)$('#mbox').innerHTML=settingsHtml()})}catch(e){}}
 function pickVoice(){if(!VOICES.length)loadVoices();if(!VOICES.length)return null;
   return VOICES.find(v=>v.name===S.voiceName)||VOICES.find(v=>/^en[-_]US/i.test(v.lang)&&v.localService)||VOICES.find(v=>/^en[-_]GB/i.test(v.lang)&&v.localService)||VOICES.find(v=>/^en/i.test(v.lang))||VOICES.find(v=>v.default)||VOICES[0]}
+/* Recorded caller: audio/caller/1.mp3 … 75.mp3 ("B. 1" … "O. 75"), played through WebAudio like the
+   music and sound effects, so it works on computers where the browser's own text-to-speech is silent. */
+const CALL_BUF={},CALL_LOAD={};
+function loadCall(n){if(CALL_BUF[n]||CALL_LOAD[n])return CALL_LOAD[n];
+  CALL_LOAD[n]=fetch('audio/caller/'+n+'.mp3').then(r=>{if(!r.ok)throw 0;return r.arrayBuffer()}).then(b=>new Promise((ok,no)=>ac().decodeAudioData(b,ok,no))).then(buf=>{CALL_BUF[n]=buf;return buf}).catch(()=>{delete CALL_LOAD[n];return null});return CALL_LOAD[n]}
+function preloadCalls(){for(let n=1;n<=75;n++)loadCall(n)}
+let callSrc=null;
+function playCallBuf(buf){try{const a=ac();if(a.state==='suspended')a.resume();if(callSrc)try{callSrc.stop()}catch(e){}const src=a.createBufferSource(),g=a.createGain();g.gain.value=1.1;src.buffer=buf;src.playbackRate.value=R&&!R.over&&R.speed<1.3?1.15:1;src.connect(g);g.connect(a.destination);src.start();callSrc=src;return true}catch(e){return false}}
+function callNumber(n,force){if(!S.call&&!force)return;const useTTS=S.voiceName&&S.voiceName!=='game';const text=LET[ballLetter(n)]+'. '+n;
+  if(useTTS)return speak(text,force);
+  if(CALL_BUF[n])return playCallBuf(CALL_BUF[n]);
+  const t0=performance.now();loadCall(n).then(buf=>{if(buf){if(performance.now()-t0<1500)playCallBuf(buf)}else speak(text,force)})}
 function speak(t,force){if((!S.call&&!force)||!window.speechSynthesis)return;try{const ss=speechSynthesis,busy=ss.speaking||ss.pending;if(busy)ss.cancel();ss.resume();
   const u=new SpeechSynthesisUtterance(t),v=pickVoice();if(v){u.voice=v;u.lang=v.lang}else u.lang='en-US';
   u.rate=R&&!R.over&&R.speed<1.6?1.3:1.0;u.pitch=1.05;u.volume=1;
@@ -1363,9 +1375,8 @@ function settingsHtml(){
    <div class="set"><div class="sl"><b>🎵 Music</b><span>Calm background music.</span></div>${onOff(S.music,'music')}</div>
    <div class="set"><div class="sl"><b>🔊 Sound effects</b><span>Clicks, coins and bingo sounds.</span></div>${onOff(S.sound,'sound')}</div>
    <div class="set"><div class="sl"><b>🗣️ Read numbers aloud</b><span>The caller says each number, e.g. "B 12".</span></div>${onOff(S.call,'call')}
-     ${!window.speechSynthesis?'<span class="small" style="color:#ff9a9a">Your browser can\'t read text aloud. Try Chrome or Edge.</span>'
-      :`<div class="row" style="width:100%">${VOICES.length?`<select id="voiceSel" class="vsel" aria-label="Caller voice">${VOICES.map(v=>`<option value="${v.name.replace(/"/g,'&quot;')}" ${(pickVoice()||{}).name===v.name?'selected':''}>${v.name} (${v.lang})</option>`).join('')}</select>`:''}<button class="btn dk" data-a="testVoice">🔊 Test voice</button></div>
-       ${VOICES.length?'<span class="small muted">No sound? Pick another voice and press Test. English voices sound best.</span>':'<span class="small" style="color:#ff9a9a">No voices found yet. Press Test – if it stays silent, add a voice in your computer settings (Windows: Settings → Time &amp; language → Speech) or try Chrome/Edge.</span>'}`}</div>
+     <div class="row" style="width:100%"><select id="voiceSel" class="vsel" aria-label="Caller voice"><option value="game" ${!S.voiceName||S.voiceName==='game'?'selected':''}>🎙️ Game caller (works everywhere)</option>${window.speechSynthesis?VOICES.map(v=>`<option value="${v.name.replace(/"/g,'&quot;')}" ${S.voiceName===v.name?'selected':''}>Browser: ${v.name} (${v.lang})</option>`).join(''):''}</select><button class="btn dk" data-a="testVoice">🔊 Test voice</button></div>
+     <span class="small muted">The game caller works on every computer. Browser voices depend on your computer.</span></div>
    <div class="set"><div class="sl"><b>⏱️ Calling speed</b><span>How fast numbers are drawn. You can also change it during a game.</span></div>
      <div class="opt">${SPEEDS.map((x,j)=>`<button class="${S.spd===j?'on':''}" data-a="speed" data-n="${j}">${x.e} ${x.n}</button>`).join('')}</div></div>
    ${S.spot?`<div class="set"><div class="sl"><b>🔍 Number Spotter</b><span>Missed numbers glow after about 3 seconds.</span></div>${onOff(S.spotOn,'spotToggle')}</div>`:''}
@@ -1430,7 +1441,7 @@ function genCard(){
   for(let j=0;j<k&&j<idx.length;j++){cells[idx[j]].d=true;cells[idx[j]].magic=true;cells[idx[j]].pre=true}
   return card;
 }
-function startRound(){if(S.afk)return showAfk();
+function startRound(){if(S.afk)return showAfk();if(S.call)preloadCalls();
   const i=S.cur,fee=(S.cards-1)*FEE(i);if(S.coins<fee)return;S.coins-=fee;closeModalAll();
   const pt=ri(10,16);
   R={land:i,cards:[],order:shuffle([...Array(75)].map((_,k)=>k+1)),called:new Set(),hist:[],idx:0,maxBalls:50+Math.floor(ST.balls),poolTotal:pt,pool:pt,
@@ -1492,7 +1503,7 @@ function callBall(){
   if(R.frozen>0)R.frozen--;else if(R.idx>8){const x=0.016*(R.idx-8)*(1-ST.rival/100)*(R.poolTotal/13)*Math.min(1,0.6+S.level*0.04);let k=Math.floor(x)+(rnd()<x%1?1:0);while(k-->0&&R.pool>0){R.pool--;feed(`🏆 ${pick(RIVALS)} got BINGO!`)}if(R.pool<=0){endRound('All bingos have been claimed!');return}}
   // events
   R.evCd--;if(!R.ev&&R.evCd<=0&&R.idx>4&&R.idx<R.maxBalls-3&&rnd()<0.09*(1+Math.min(ST.event,300)/400)){startEvent()}
-  SFX.ball();speak(LET[ballLetter(n)]+'. '+n);
+  SFX.ball();callNumber(n);
   const b=$('#ball');if(b){b.classList.remove('pop','gold');void b.offsetWidth;b.classList.add('pop');if(gold)b.classList.add('gold')}
   R.cards.forEach((cd,ci)=>cd.cells.forEach((cl,j)=>{if(cl.ca&&!cl.d)updCell(ci,j)}));
   updCaller();
@@ -1641,7 +1652,7 @@ const ACT={
   wf:d=>{UI[d.k]=d.v;rerender()},
   buyCard:()=>buyCard(),
   cardOffer:()=>{closeModalAll();modal(cardOfferHtml())},
-  testVoice:()=>speak('B. 12. Bingo!',true),
+  testVoice:()=>callNumber(12,true),
   settings:()=>{closeModalAll();if(R&&!R.over)R.paused=true;showSettings()},
   howBingo:()=>{closeModalAll();howToBingo()},
   go:d=>{if(R&&!R.over)return;UI[d.k]=d.v;S.tab=d.t;UI.sell=null;render();view.scrollTop=0},
@@ -1700,7 +1711,7 @@ $('#modal').addEventListener('click',e=>{if(e.target.id==='modal'&&!R&&!UI.afk){
 document.addEventListener('keydown',e=>{if(!R||R.over)return;if(e.key==='Escape'){e.preventDefault();if(modalOn&&R.paused&&UI.patterns){UI.patterns=false;R.paused=false;closeModal()}else if(!modalOn)showPause();return}if(modalOn)return;if(e.key===' '||e.key==='Enter'){e.preventDefault();R.cards.forEach((_,ci)=>{if(newLines(ci).length)claim(ci)})}if(e.key==='p'||e.key==='P')usePw()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){save();musicStop()}else{if(S.music)musicStart();lastT=performance.now()}});
 window.addEventListener('beforeunload',save);
-document.addEventListener('change',e=>{if(e.target.id==='voiceSel'){S.voiceName=e.target.value;save();speak('B. 12',true)}});
+document.addEventListener('change',e=>{if(e.target.id==='voiceSel'){S.voiceName=e.target.value;save();callNumber(12,true)}});
 window.addEventListener('resize',()=>{if(S.tab==='pass'&&UI.bpPer!==bpPer()){UI.bpPage=null;rerender()}});
 
 function tutorial(){
