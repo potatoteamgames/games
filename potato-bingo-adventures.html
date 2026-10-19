@@ -382,6 +382,8 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
 .rstat b{display:block;font-size:17px}
 .pool b{color:var(--gold)}
 .feed{font-size:12px;color:var(--muted);min-height:34px;line-height:1.4}
+.feed div:first-child{color:var(--txt)}
+.feed.flash div:first-child{animation:tin .3s ease-out}
 .pwbtn{width:100%;padding:12px;border-radius:14px;font-size:16px;background:#0005;border:2px solid var(--line);position:relative;overflow:hidden}
 .pwbtn i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#4a3aa0,#7a5cff);transition:width .25s}
 .pwbtn span{position:relative}
@@ -497,7 +499,10 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
   .hist .mb:nth-child(n+7){display:none}
   .rstat{grid-template-columns:repeat(4,1fr);gap:4px;font-size:10px;margin-top:4px!important}
   .rstat div{padding:3px 5px}.rstat b{font-size:13px}
-  .feed{display:none}
+  .caller .c-pw{flex-wrap:wrap}
+  .feed{flex-basis:100%;min-height:0;margin-top:2px!important;font-size:11px}
+  .feed div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .feed div+div{display:none}
   .cards.n2,.cards.n3,.cards.n4{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
   .cards.n2 .card,.cards.n3 .card,.cards.n4 .card{padding:4px;border-width:3px;border-radius:12px}
   .cards.n2 .cg,.cards.n3 .cg,.cards.n4 .cg,.cards.n2 .chd,.cards.n3 .chd,.cards.n4 .chd{gap:2px}
@@ -824,7 +829,7 @@ function floatTxt(x,y,t,c){const d=document.createElement('div');d.className='fl
 function floatAt(el,t,c){const r=el.getBoundingClientRect();floatTxt(r.left+r.width/2,r.top,t,c)}
 function confetti(n=60){for(let i=0;i<n;i++){const d=document.createElement('div');d.className='conf';d.style.left=(rnd()*100)+'vw';d.style.top=(-20-rnd()*80)+'px';d.style.background=pick(LCOL.concat(['#fff','#ffcf4a']));d.style.setProperty('--dx',(rnd()*200-100)+'px');d.style.setProperty('--r',(rnd()*900)+'deg');d.style.animationDelay=(rnd()*.4)+'s';d.style.animationDuration=(1.2+rnd()*1)+'s';fxEl.appendChild(d);setTimeout(()=>d.remove(),2800)}}
 function bigTxt(t){const d=document.createElement('div');d.className='bigtxt';d.textContent=t;fxEl.appendChild(d);setTimeout(()=>d.remove(),1300)}
-function toast(t){const d=document.createElement('div');d.className='toast';d.innerHTML=t;$('#toasts').appendChild(d);setTimeout(()=>d.remove(),2600);while($('#toasts').children.length>4)$('#toasts').firstChild.remove()}
+function toast(t){if(R&&!R.over&&document.getElementById('feed')){feed(t.replace(/<br>/g,' · '));return}const d=document.createElement('div');d.className='toast';d.innerHTML=t;$('#toasts').appendChild(d);setTimeout(()=>d.remove(),2600);while($('#toasts').children.length>4)$('#toasts').firstChild.remove()}
 let modalQ=[],modalOn=false;
 function modal(html){modalQ.push(html);if(!modalOn)nextModal()}
 function nextModal(){const h=modalQ.shift();if(!h){$('#modal').classList.remove('on');modalOn=false;return}modalOn=true;$('#mbox').innerHTML=h;$('#modal').classList.add('on')}
@@ -1292,7 +1297,7 @@ function updCtl(){const c=$('#ctl');if(!c)return;const sp=SPEEDS[S.spd];
    <button class="cb ${S.call?'on':''}" data-a="call" title="Read numbers aloud">${S.call?'🗣️':'🤐'}<i class="cl"> Voice</i></button>${S.spot?`<button class="cb ${S.spotOn?'on':''}" data-a="spotToggle" title="Number Spotter">🔍<i class="cl"> Spotter</i></button>`:''}${hasAutoB()?`<button class="cb ${S.autoBOn?'on':''}" data-a="autoBToggle" title="Auto-BINGO">🤖<i class="cl"> Auto</i></button>`:''}`}
 function updPw(){const btn=$('#pwBtn');if(!btn)return;const ready=R.charge>=R.need;btn.classList.toggle('ready',ready);$('#pwFill').style.width=Math.min(100,R.charge/R.need*100)+'%';$('#pwTxt').textContent=ready?'⚡ USE POWER-UP!':`⚡ Power ${Math.floor(Math.min(100,R.charge/R.need*100))}%`}
 function updClaim(ci){const el=document.getElementById('bg'+ci);if(!el)return;const has=newLines(ci).length>0;el.classList.toggle('ready',has);const cb=document.getElementById('cb'+ci);if(cb)cb.textContent=R.cards[ci].bingos}
-function feed(t){R.feed.unshift(t);R.feed=R.feed.slice(0,2);const f=$('#feed');if(f)f.innerHTML=R.feed.join('<br>')}
+function feed(t){R.feed.unshift(t);R.feed=R.feed.slice(0,3);const f=$('#feed');if(f){f.innerHTML=R.feed.map(x=>`<div>${x}</div>`).join('');f.classList.remove('flash');void f.offsetWidth;f.classList.add('flash')}}
 function newLines(ci){const cd=R.cards[ci];return LINES.map((ln,k)=>k).filter(k=>!cd.claimed.has(k)&&LINES[k].every(j=>cd.cells[j].d))}
 
 function callBall(){
