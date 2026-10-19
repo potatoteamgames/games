@@ -268,6 +268,32 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
 .spd{display:flex;align-items:center;gap:4px;font-size:13px;white-space:nowrap}
 .spd .cb{font-size:20px;padding:0;width:34px;line-height:1}
 
+.cardpick{display:flex;align-items:center;gap:6px;margin-top:10px;flex-wrap:wrap}
+.cardpick span{font-size:13px;opacity:.9;margin-right:2px}
+.cardpick button{width:38px;height:34px;border-radius:10px;background:#0005;border:2px solid #ffffff30;font-size:15px}
+.cardpick button.on{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.cardpick button:disabled{opacity:.5}
+.feat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.fban{position:relative;display:flex;align-items:center;gap:12px;padding:16px;border-radius:20px;border:3px solid #0004;text-align:left;min-height:96px;box-shadow:0 8px 18px #0005;overflow:hidden;transition:transform .15s}
+.fban::after{content:'';position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:#ffffff14}
+.fban:hover{transform:translateY(-3px)}
+.fban .fe{font-size:42px;filter:drop-shadow(0 4px 4px #0006);flex-shrink:0}
+.fban .ft{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+.fban .ft b{font-family:'Lilita One',sans-serif;font-weight:400;font-size:20px;text-shadow:1px 2px 0 #0005}
+.fban .ft span{font-size:12px;opacity:.95}
+.fban .fcta{font-size:12px;background:#0005;padding:5px 10px;border-radius:999px;white-space:nowrap;position:relative;z-index:1}
+.fban.hot{border-color:#fff;animation:glow 1.6s ease-in-out infinite}
+.fnew{position:absolute;top:8px;right:10px;background:#fff;color:var(--red);font-size:10px;padding:2px 7px;border-radius:999px;z-index:1}
+.fban.hot .fcta{margin-top:14px}
+.stiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.stile{display:flex;flex-direction:column;align-items:center;gap:3px;padding:14px 6px;border-radius:18px;background:var(--card);border:2px solid var(--line);text-align:center;transition:transform .15s,border-color .15s;min-width:0}
+.stile:hover{transform:translateY(-2px);border-color:var(--gold)}
+.stile .se{font-size:34px}
+.stile b{font-size:14px}
+.stile small{font-size:11px;color:var(--muted);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+@media (max-width:1100px){.feat{grid-template-columns:repeat(2,minmax(0,1fr))}.stiles{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:560px){.lhero .bigE{display:none}.cardpick button{width:34px;height:32px}.feat{grid-template-columns:1fr}.fban{min-height:78px;padding:12px}.fban .fe{font-size:34px}.stiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
 /* ===== BINGO ROUND ===== */
 #round{display:grid;grid-template-columns:250px minmax(0,1fr);gap:12px;padding:12px;min-height:100%;position:relative}
 .caller{display:flex;flex-direction:column;gap:10px}
@@ -436,6 +462,7 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
       <div class="pill" title="Coins">🪙 <b id="hCoins">0</b></div>
       <div class="pill" title="Gems">💎 <b id="hGems">0</b></div>
       <div class="lvl" title="Player level"><i id="hXp"></i><span id="hLvl">Lv 1</span></div>
+      <button class="ibtn" data-a="settings" aria-label="Settings" title="Settings">⚙️</button>
       <button class="ibtn" id="musBtn" data-a="music" aria-label="Toggle music" title="Music">🎵</button>
       <button class="ibtn" id="sndBtn" data-a="sound" aria-label="Toggle sound effects" title="Sound effects">🔊</button>
     </div>
@@ -820,7 +847,7 @@ function build(k){const i=S.cur,lv=S.b[i][k];if(lv>=bMax(k))return;if(k===7&&!lm
     else if(i===NL-1)modal(`<div class="me">🌍👑</div><h2>You conquered the universe!</h2><p>The Spud King bows to you. You can now start a <b>World Tour</b> from the Trophies tab: restart the journey with a permanent coin multiplier, keeping your gear, level, gems, albums and powers.</p><div class="acts"><button class="btn big" data-a="close">Amazing!</button></div>`)}
   checkAch();save();rerender()}
 function travel(i){if(i>=S.unlocked)return;S.cur=i;closeModalAll();S.tab='town';toast(`✈️ Welcome to <b>${LANDS[i].n}</b> ${LANDS[i].e}`);save();render();view.scrollTop=0}
-function closeModalAll(){modalQ=[];nextModal()}
+function closeModalAll(){modalQ=[];UI.settings=false;nextModal()}
 
 /* ---------- GEAR ---------- */
 function vBag(){
@@ -910,12 +937,7 @@ function vMore(){
   const tile=(t,e,n,sub,dot)=>`<button class="tile" data-a="tab" data-t="${t}"><span class="te">${e}</span>${n}<small>${sub}</small>${dot?`<span class="dot on">${dot}</span>`:''}</button>`;
   view.innerHTML=`<div class="pad">${phead('☰','More','Everything else in one place.')}
    <div class="tiles">${tile('map','🗺️','World Map','Travel between lands')}${tile('album','🧩','Album','Collect souvenirs')}${tile('daily','📅','Daily','Free daily rewards',qn)}${tile('trophy','🏆','Trophies','Goals & stats',an)}</div>
-   <h3 class="sec">⚙️ Settings</h3><div class="box">
-    <div class="set"><div class="sl"><b>🎵 Music</b><span>Calm background music.</span></div><div class="opt"><button class="${S.music?'on':''}" data-a="${S.music?'':'music'}">On</button><button class="${S.music?'':'on'}" data-a="${S.music?'music':''}">Off</button></div></div>
-    <div class="set"><div class="sl"><b>🔊 Sound effects</b><span>Clicks, coins and bingo sounds.</span></div><div class="opt"><button class="${S.sound?'on':''}" data-a="${S.sound?'':'sound'}">On</button><button class="${S.sound?'':'on'}" data-a="${S.sound?'sound':''}">Off</button></div></div>
-    <div class="set"><div class="sl"><b>🗣️ Read numbers aloud</b><span>The caller says each number in bingo.</span></div><div class="opt"><button class="${S.call?'on':''}" data-a="${S.call?'':'call'}">On</button><button class="${S.call?'':'on'}" data-a="${S.call?'call':''}">Off</button></div></div>
-   </div>
-   <div class="row" style="margin-top:14px"><button class="btn dk" data-a="help">❓ How to play</button><span class="sp"></span><button class="btn dk" data-a="reset" style="color:#ff9a9a">Reset game</button></div>
+   <div class="row" style="margin-top:14px"><button class="btn" data-a="settings">⚙️ Settings</button><button class="btn dk" data-a="help">❓ Game guide</button><button class="btn dk" data-a="howBingo">🎱 Bingo rules</button></div>
    <p class="small muted" style="margin-top:10px">Your progress is saved automatically in this browser.</p></div>`;
 }
 function upCost(it,lv){return it.chest?3*(1+it.r*0.6)*Bv(S.unlocked-1)*Dv(S.unlocked-1)*Math.pow(1.3,lv-1):it.price*0.3*Math.pow(1.35,lv-1)}
@@ -1011,44 +1033,61 @@ function nextGoal(){
   if(i<S.unlocked-1)return['✈️',`${LANDS[S.unlocked-1].n} is unlocked – bingo pays much more there!`,['travel',S.unlocked-1,'Travel']];
   return['⭐','Keep winning bingos to max out your town, gear and albums!',null]}
 function setSpeed(n){S.spd=clamp(n,0,SPEEDS.length-1);if(R&&!R.over){R.speed=SPEEDS[S.spd].t;R.tNext=Math.min(R.tNext,R.speed);updCtl()}else rerender();save()}
+const BINGO_STEPS=[['🎱','<b>Numbers are drawn</b> one at a time, like <b>B 7</b> or <b>O 68</b>.'],['👆','<b>Find it on your card and tap it</b> to place your marker. Only called numbers count!'],['🎉','Get <b>5 in a row</b> – across, down or diagonal (the 🥔 is free). Then press <b>BINGO!</b>'],['⚡','<b>Be quick!</b> Other players race you and earlier bingos pay up to 2×.'],['🎁','Squares with icons give <b>bonus coins, gems, souvenirs and chests</b>.'],['🏘️','<b>Spend your coins in Town</b> to build and unlock new lands.']];
+function howToBingo(){modal(`<div class="me">🎱</div><h2>How to play bingo</h2><ol class="steps" style="text-align:left">${BINGO_STEPS.map(([e,t])=>`<li><span>${e}</span><div>${t}</div></li>`).join('')}</ol><p class="small">Keys: <b>Space</b> = BINGO · <b>P</b> = power-up</p><div class="acts"><button class="btn big" data-a="close">Got it!</button></div>`)}
+const onOff=(on,act)=>`<div class="opt"><button class="${on?'on':''}" data-a="${on?'':act}">On</button><button class="${on?'':'on'}" data-a="${on?act:''}">Off</button></div>`;
+function settingsHtml(){
+  return `<div class="me">⚙️</div><h2>Settings</h2><div style="text-align:left">
+   <div class="set"><div class="sl"><b>🎵 Music</b><span>Calm background music.</span></div>${onOff(S.music,'music')}</div>
+   <div class="set"><div class="sl"><b>🔊 Sound effects</b><span>Clicks, coins and bingo sounds.</span></div>${onOff(S.sound,'sound')}</div>
+   <div class="set"><div class="sl"><b>🗣️ Read numbers aloud</b><span>The caller says each number, e.g. "B 12".</span></div>${onOff(S.call,'call')}</div>
+   <div class="set"><div class="sl"><b>⏱️ Calling speed</b><span>How fast numbers are drawn. You can also change it during a game.</span></div>
+     <div class="opt">${SPEEDS.map((x,j)=>`<button class="${S.spd===j?'on':''}" data-a="speed" data-n="${j}">${x.e} ${x.n}</button>`).join('')}</div></div>
+   ${S.spot?`<div class="set"><div class="sl"><b>🔍 Number Spotter</b><span>Called numbers glow on your cards.</span></div>${onOff(S.spotOn,'spotToggle')}</div>`:''}
+   ${hasAutoB()?`<div class="set"><div class="sl"><b>🤖 Auto-BINGO</b><span>BINGO is pressed for you.</span></div>${onOff(S.autoBOn,'autoBToggle')}</div>`:''}
+  </div><div class="acts"><button class="btn dk" data-a="help">❓ Game guide</button><button class="btn dk" data-a="howBingo">🎱 Bingo rules</button><button class="btn dk" data-a="reset" style="color:#ff9a9a">Reset game</button></div>
+  <div class="acts"><button class="btn big" data-a="close">Done</button></div>`}
+function showSettings(){UI.settings=true;const h=settingsHtml();if(modalOn)$('#mbox').innerHTML=h;else modal(h)}
 function vLobby(){
   const i=S.cur,L=LANDS[i],mc=maxCards();if(S.cards>mc)S.cards=mc;
-  const fee=(S.cards-1)*FEE(i),sp=SPEEDS[S.spd],g=nextGoal(),newbie=S.st.rounds<8;
+  const fee=(S.cards-1)*FEE(i),sp=SPEEDS[S.spd],g=nextGoal(),d=quests();
+  const loginReady=S.login.last!==today(),spinReady=d.spins===0,qDone=d.q.filter(q=>q.c).length,qReady=d.q.filter(q=>q.p>=q.n&&!q.c).length;
+  const r=REQ(i),done=S.b[i].slice(0,7).filter(l=>l>=r).length,albumN=S.souv[i].filter(x=>x).length;
   let h=`<div class="pad">
    <div class="scene lhero" style="background:linear-gradient(140deg,${L.c1},${L.c2})">
      <div class="bigE">🎱</div>
      <div class="lh-txt"><div class="small" style="opacity:.9">${L.e} ${L.n} · Bingo hall</div><h2>${L.b[1][1]}</h2>
-       <div class="row" style="margin-top:8px"><span class="pill">🪙 ${fmt(Bv(i)*ST.cm*(S.boost>0?2:1))} per bingo</span><span class="pill">🎫 ${S.cards} card${S.cards>1?'s':''}</span><span class="pill">${sp.e} ${sp.n}</span>${S.boost>0?`<span class="pill" style="background:#ff5fa2aa">⚡ 2× coins · ${S.boost} rounds</span>`:''}</div></div>
-     <div class="lh-play"><button class="btn big playbtn" data-a="play" ${S.coins<fee?'disabled':''}>▶ PLAY BINGO</button><div class="small">${fee?`Entry: 🪙 ${fmt(fee)}`:'Free to play!'}${S.coins<fee?' – not enough coins, choose fewer cards':''}</div></div>
+       <div class="row" style="margin-top:8px"><span class="pill">🪙 ${fmt(Bv(i)*ST.cm*(S.boost>0?2:1))} per bingo</span><span class="pill">${sp.e} ${sp.n}</span>${S.boost>0?`<span class="pill" style="background:#ff5fa2aa">⚡ 2× coins · ${S.boost} games</span>`:''}</div>
+       <div class="cardpick"><span>🎫 Cards</span>${[1,2,3,4].map(n=>`<button class="${S.cards===n?'on':''}" data-a="cards" data-n="${n}" ${n>mc?'disabled':''} title="${n>mc?'Unlocks at level '+[3,7,12][n-2]:n+' card'+(n>1?'s':'')}">${n>mc?'🔒':n}</button>`).join('')}</div></div>
+     <div class="lh-play"><button class="btn big playbtn" data-a="play" ${S.coins<fee?'disabled':''}>▶ PLAY</button><div class="small">${fee?`Entry: 🪙 ${fmt(fee)}`:'Free to play!'}${S.coins<fee?'<br>Not enough coins – pick fewer cards':''}</div></div>
    </div>
-   <div class="box goal"><div class="ge">${g[0]}</div><div style="flex:1">${g[1]}</div>${g[2]?`<button class="btn" data-a="${g[2][0]}" ${g[2][0]==='tab'?`data-t="${g[2][1]}"`:`data-i="${g[2][1]}"`}>${g[2][2]} →</button>`:''}</div>
-   <div class="lobby">
-    <div class="box"><h3 class="lil bh">⚙️ Game settings</h3>
-     <div class="set"><div class="sl"><b>🎫 Bingo cards</b><span>More cards = more chances to win. The 1st card is free, extra cards cost 🪙 ${fmt(FEE(i))} each.</span></div>
-       <div class="opt">${[1,2,3,4].map(n=>`<button class="${S.cards===n?'on':''}" data-a="cards" data-n="${n}" ${n>mc?'disabled':''} title="${n>mc?'Unlocks at level '+[3,7,12][n-2]:''}">${n>mc?'🔒':n}</button>`).join('')}</div>
-       ${mc<4?`<span class="small muted">🔒 Card ${mc+1} unlocks at level ${[3,7,12][mc-1]}</span>`:''}</div>
-     <div class="set"><div class="sl"><b>⏱️ Calling speed</b><span>How fast the numbers are drawn. You can also change it during the game.</span></div>
-       <div class="opt">${SPEEDS.map((x,j)=>`<button class="${S.spd===j?'on':''}" data-a="speed" data-n="${j}" title="${x.t}s per number">${x.e} ${x.n}</button>`).join('')}</div>
-       <span class="small muted">${sp.e} ${sp.n}: a new number every ${sp.t} seconds</span></div>
-     <div class="set"><div class="sl"><b>🗣️ Read numbers aloud</b><span>The caller says each number, e.g. "B 12".</span></div>
-       <div class="opt"><button class="${S.call?'on':''}" data-a="${S.call?'':'call'}">On</button><button class="${S.call?'':'on'}" data-a="${S.call?'call':''}">Off</button></div></div>
-     ${S.spot?`<div class="set"><div class="sl"><b>🔍 Number Spotter</b><span>Called numbers glow softly on your cards.</span></div><div class="opt"><button class="${S.spotOn?'on':''}" data-a="${S.spotOn?'':'spotToggle'}">On</button><button class="${S.spotOn?'':'on'}" data-a="${S.spotOn?'spotToggle':''}">Off</button></div></div>`:''}
-     ${hasAutoB()?`<div class="set"><div class="sl"><b>🤖 Auto-BINGO</b><span>BINGO is pressed for you when you finish a line.</span></div><div class="opt"><button class="${S.autoBOn?'on':''}" data-a="${S.autoBOn?'':'autoBToggle'}">On</button><button class="${S.autoBOn?'':'on'}" data-a="${S.autoBOn?'autoBToggle':''}">Off</button></div></div>`:''}
-     ${S.spot&&hasAutoB()?'':`<div class="set"><div class="sl"><b>🧰 Need a little help?</b><span>${!S.spot?'🔍 Number Spotter shows where to put your marker. ':''}${!hasAutoB()?'🤖 Auto-BINGO presses BINGO for you.':''}</span></div><button class="btn dk" data-a="tab" data-t="up">See Upgrades →</button></div>`}
-    </div>
-    <details class="box howto" ${newbie?'open':''}><summary class="lil bh">📖 How to play bingo</summary>
-     <ol class="steps">
-      <li><span>🎱</span><div><b>Numbers are drawn</b> one at a time, like <b>B 7</b> or <b>O 68</b>. The big ball shows the newest one.</div></li>
-      <li><span>👆</span><div><b>Find it on your card and tap it</b> to place your marker. Only numbers that have been called count!</div></li>
-      <li><span>🎉</span><div>Get <b>5 in a row</b> – across, down or diagonal. The 🥔 in the middle is free. Then press <b>BINGO!</b></div></li>
-      <li><span>⚡</span><div><b>Be quick!</b> Other players race you, and earlier bingos pay up to 2×. Fast taps build a 🔥 combo.</div></li>
-      <li><span>🎁</span><div>Squares with icons give <b>bonus coins, gems, souvenirs and chests</b>. Grab surprise events too!</div></li>
-      <li><span>🏘️</span><div><b>Spend your coins in Town</b> to build, unlock new lands and become a bingo legend.</div></li>
-     </ol>
-     <div class="small muted">Keys: <b>Space</b> = BINGO · <b>P</b> = power-up</div>
-    </details>
-   </div>`;
-  h+=`<div class="box goal"><div class="ge">🔮</div><div style="flex:1">Power-ups help you win faster. Unlock and upgrade them in <b>Upgrades</b>.</div><button class="btn dk" data-a="sub" data-k="up" data-v="power">Power-ups →</button></div></div>`;
+   <div class="box goal"><div class="ge">${g[0]}</div><div style="flex:1">${g[1]}</div>${g[2]?`<button class="btn" data-a="${g[2][0]}" ${g[2][0]==='tab'?`data-t="${g[2][1]}"`:`data-i="${g[2][1]}"`}>${g[2][2]} →</button>`:''}</div>`;
+  // featured banners: the things worth doing right now come first
+  const feats=[
+   {hot:loginReady,a:'tab',t:'daily',e:'🎁',n:'Daily Gift',s:loginReady?'Your free gift is ready!':`🔥 ${S.login.streak} day streak – come back tomorrow`,c:['#ff9a3a','#b33a12'],cta:loginReady?'Claim':'View'},
+   {hot:spinReady,a:'tab',t:'daily',e:'🎡',n:'Lucky Wheel',s:spinReady?'Free spin ready – win gems & coins!':'Extra spins cost 💎 15',c:['#ff5fa2','#7a1a52'],cta:'Spin'},
+   {hot:S.bronze>0,a:'tab',t:'bag',e:'🧰',n:'Treasure Chests',s:S.bronze?`${S.bronze} chest${S.bronze>1?'s':''} waiting to be opened!`:'Win chests on 🎁 squares or buy them',c:['#ffcf4a','#a1530b'],cta:S.bronze?'Open':'Shop',t2:S.bronze?'bag':'shop'},
+   {hot:qReady>0,a:'tab',t:'daily',e:'📜',n:'Daily Quests',s:qReady?`${qReady} reward${qReady>1?'s':''} ready to claim!`:`${qDone}/3 done today`,c:['#4fd1a5','#0f5e4a'],cta:qReady?'Claim':'View'},
+   {hot:canBuildAny(),a:'tab',t:'town',e:L.b[7][0],n:S.b[i][7]?`${L.n} town`:`Build ${L.b[7][1]}`,s:canBuildAny()?'You can afford a new building!':S.b[i][7]?'Upgrade buildings for bonuses':`${done}/7 buildings at level ${r}`,c:[L.c1,L.c2],cta:'Build'},
+   {hot:false,a:'tab',t:'map',e:'✈️',n:'Next Adventure',s:i<NL-1?(S.unlocked>i+1?`${LANDS[i+1].e} ${LANDS[i+1].n} is open – travel now!`:`${LANDS[i+1].e} ${LANDS[i+1].n} is waiting for you`):'You reached the last land!',c:['#5cc2ff','#1d3a8a'],cta:'Map'}
+  ].sort((a,b)=>b.hot-a.hot);
+  h+=`<h3 class="sec">⭐ Featured</h3><div class="feat">${feats.map(f=>`<button class="fban ${f.hot?'hot':''}" style="background:linear-gradient(135deg,${f.c[0]},${f.c[1]})" data-a="${f.a}" data-t="${f.t2||f.t}">
+      ${f.hot?'<span class="fnew">NEW!</span>':''}<span class="fe">${f.e}</span><span class="ft"><b>${f.n}</b><span>${f.s}</span></span><span class="fcta">${f.cta} →</span></button>`).join('')}</div>`;
+  // all features as shortcuts
+  const items=Object.keys(S.gear).length;
+  const tiles=[
+   ['go','shop','shop','gear','🛍️','Shop','Gear for every slot'],
+   ['tab','bag','','','🎒','My Bag',`${items} item${items===1?'':'s'}`],
+   ['go','up','up','power','🔮','Power-ups','Unlock & upgrade'],
+   ['go','up','up','helpers','🧰','Helpers',`${S.spot?'🔍':''}${hasAutoB()?'🤖':''}${S.spot||hasAutoB()?' owned':'Spotter & Auto-BINGO'}`],
+   ['go','shop','shop','tokens','🎟️','Token Shop',`${S.tokens} tokens`],
+   ['tab','album','','','🧩','Album',`${albumN}/9 in ${L.n}`],
+   ['tab','trophy','','','🏆','Trophies',`${Object.keys(S.ach).length}/${ACH.length}`],
+   ['tab','map','','','🗺️','World Map',`${S.unlocked}/${NL} lands`],
+   ['howBingo','','','','❓','Bingo rules','How to play'],
+   ['settings','','','','⚙️','Settings','Sound, speed & more']
+  ];
+  h+=`<h3 class="sec">🎮 Explore</h3><div class="stiles">${tiles.map(([a,t,k,v,e,n,sub])=>`<button class="stile" data-a="${a}" ${t?`data-t="${t}"`:''} ${k?`data-k="${k}" data-v="${v}"`:''}><span class="se">${e}</span><b>${n}</b><small>${sub}</small></button>`).join('')}</div></div>`;
   view.innerHTML=h;
 }
 function genCard(){
@@ -1263,12 +1302,15 @@ function refreshAfford(){document.querySelectorAll('[data-cost]').forEach(b=>{b.
 /* ---------- INPUT ---------- */
 const ACT={
   tab:d=>{if(R&&!R.over)return;closeModalAll();S.tab=d.t;render();view.scrollTop=0},
+  settings:()=>{closeModalAll();if(R&&!R.over)R.paused=true;showSettings()},
+  howBingo:()=>{closeModalAll();howToBingo()},
+  go:d=>{if(R&&!R.over)return;UI[d.k]=d.v;S.tab=d.t;UI.sell=null;render();view.scrollTop=0},
   sub:d=>{if(R&&!R.over)return;UI[d.k]=d.v;if(d.k==='up')S.tab='up';UI.sell=null;rerender()},
   shopLand:d=>{UI.shopLand=+d.i;UI.shop='gear';S.tab='shop';rerender()},
   itemInfo:d=>{UI.sell=null;closeModalAll();showItem(d.id)},
   sell:d=>sellItem(d.id),
   tbuy:d=>{const t=TSHOP[+d.j];if(S.tokens<t.c)return;S.tokens-=t.c;t.f();SFX.buy();checkAch();save();rerender()},
-  close:()=>{UI.item=null;UI.sell=null;closeModal()},
+  close:()=>{if(UI.settings&&R&&!R.over)R.paused=false;UI.item=null;UI.sell=null;UI.settings=false;closeModal()},
   sound:()=>{S.sound=!S.sound;save();if(S.tab==='more')rerender();updHUD()},
   music:()=>{S.music=!S.music;if(S.music)musicStart();else musicStop();save();if(S.tab==='more')rerender();updHUD()},
   call:()=>{S.call=!S.call;if(!S.call&&window.speechSynthesis)speechSynthesis.cancel();save();if(R&&!R.over)updCtl();else rerender()},
@@ -1304,14 +1346,14 @@ const ACT={
   spin:()=>spin(),
   tour:()=>startTour(),
   tourGo:()=>tourGo(),
-  help:()=>tutorial(),
-  reset:()=>modal(`<div class="me">⚠️</div><h2>Reset everything?</h2><p>All progress in Potato Bingo Adventures will be deleted forever.</p><div class="acts"><button class="btn p" data-a="resetGo">Yes, reset</button><button class="btn dk" data-a="close">Cancel</button></div>`),
+  help:()=>{closeModalAll();tutorial()},
+  reset:()=>(closeModalAll(),modal)(`<div class="me">⚠️</div><h2>Reset everything?</h2><p>All progress in Potato Bingo Adventures will be deleted forever.</p><div class="acts"><button class="btn p" data-a="resetGo">Yes, reset</button><button class="btn dk" data-a="close">Cancel</button></div>`),
   resetGo:()=>{localStorage.removeItem(SAVE_KEY);S=fresh();R=null;calc();closeModalAll();save();render()}
 };
 // daub/claim respond on pointerdown for snappy play; everything else on click
 document.addEventListener('pointerdown',e=>{const el=e.target.closest('[data-a="daub"],[data-a="claim"],[data-a="usePw"]');if(!el||el.disabled)return;e.preventDefault();ACT[el.dataset.a](el.dataset)});
-document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el||el.disabled)return;const a=el.dataset.a;if(a==='daub'||a==='claim'||a==='usePw')return;if(ACT[a])ACT[a](el.dataset)});
-$('#modal').addEventListener('click',e=>{if(e.target.id==='modal'&&!R){UI.item=null;UI.sell=null;closeModal()}});
+document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el||el.disabled)return;const a=el.dataset.a;if(a==='daub'||a==='claim'||a==='usePw')return;if(ACT[a])ACT[a](el.dataset);if(UI.settings&&modalOn)$('#mbox').innerHTML=settingsHtml()});
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal'&&!R){UI.item=null;UI.sell=null;UI.settings=false;closeModal()}});
 document.addEventListener('keydown',e=>{if(!R||R.over)return;if(e.key===' '||e.key==='Enter'){e.preventDefault();R.cards.forEach((_,ci)=>{if(newLines(ci).length)claim(ci)})}if(e.key==='p'||e.key==='P')usePw()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){save();musicStop()}else{if(S.music)musicStart();offline(true);lastT=performance.now()}});
 window.addEventListener('beforeunload',save);
