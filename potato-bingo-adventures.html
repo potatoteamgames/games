@@ -94,7 +94,7 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
 .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#ff9b3a);border-radius:999px}
 
 /* ===== NAV ===== */
-#nav{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:6px 8px calc(6px + env(safe-area-inset-bottom));background:#120b2e;border-top:2px solid var(--line);z-index:5}
+#nav{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:6px 8px calc(6px + env(safe-area-inset-bottom));background:#120b2e;border-top:2px solid var(--line);z-index:5}
 #nav button{position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;padding:5px 2px;border-radius:12px;font-size:11px;color:var(--muted)}
 #nav button .e{font-size:22px;line-height:1.1}
 #nav button.on{background:var(--card2);color:var(--txt)}
@@ -283,6 +283,22 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
 .wsearch:focus-within{border-color:var(--gold)}
 .wsearch input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--txt);font:inherit;font-size:16px;padding:12px 0}
 .wsearch input::placeholder{color:var(--muted);font-weight:700}
+.bphead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px;background:linear-gradient(135deg,#4b2fb0,#2e2266 70%);border-color:#b36bff88}
+.bptrack{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.bpt{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;padding:14px 8px 10px;border-radius:16px;background:var(--card);border:2px solid var(--line)}
+.bpt .bpn{position:absolute;top:6px;left:8px;font-size:11px;background:#0006;padding:1px 7px;border-radius:999px}
+.bpt .bpe{font-size:36px;line-height:1.1}
+.bpt b{font-size:13px}
+.bpt small{font-size:11px;color:var(--muted);font-weight:700;min-height:28px}
+.bpt .bps{font-size:11px;color:var(--muted)}
+.bpt.ready{border-color:var(--mint);background:linear-gradient(180deg,#2bb38a33,var(--card))}
+.bpt.got{opacity:.55}
+.bpt.got .bps{color:var(--mint)}
+.bpt.lock .bpe{filter:grayscale(.6)}
+.bpt.big{border-color:var(--gold);background:linear-gradient(180deg,#ffcf4a33,var(--card))}
+.bpt.big .bpe{font-size:44px}
+.bpt.next{box-shadow:0 0 0 3px #b36bff}
+.bpt.next::after{content:'NEXT';position:absolute;top:6px;right:8px;font-size:10px;background:#b36bff;padding:1px 7px;border-radius:999px}
 .wiki{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
 .wcard{display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:16px;background:var(--card);border:2px solid var(--line);border-left:5px solid var(--rc)}
 .wcard.own{cursor:pointer;background:linear-gradient(135deg,#2bb38a22,var(--card) 50%)}
@@ -533,6 +549,8 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
   .scene .bigE{font-size:56px}
   .scene .skyline{display:none}
   #nav button{font-size:9px}
+  #nav{gap:2px;padding-left:4px;padding-right:4px}
+  .bphead>div{flex-basis:100%}.bphead .btn.big{width:100%;font-size:20px}.bptrack{grid-template-columns:repeat(2,minmax(0,1fr))}
   #nav button .e{font-size:20px}
 }
 @media (prefers-reduced-motion:reduce){.scene .bigE,.ball.pop{animation:none}}
@@ -554,6 +572,7 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
   </header>
   <main id="view"></main>
   <nav id="nav" aria-label="Game menu">
+    <button data-a="tab" data-t="pass" style="--o:1.5"><span class="e">🎖️</span>Pass<span class="dot" id="dPass"></span></button>
     <button data-a="tab" data-t="town" style="--o:2"><span class="e">🏘️</span>Town<span class="dot" id="dTown"></span></button>
     <button data-a="tab" data-t="map" class="dk-only" style="--o:3"><span class="e">🗺️</span>Map</button>
     <button data-a="tab" data-t="shop" style="--o:4"><span class="e">🛍️</span>Shop</button>
@@ -687,6 +706,8 @@ const CHEST_ITEMS=[
  ['hat','😇','Halo of Luck',4,{luck:3,gem:30}],['dauber','🌟','Starlight Dauber',4,{auto:70,charge:30}],['outfit','🦸','Bingo Hero Suit',4,{coin:35,rival:25}],['pet','🐣','Cosmic Chick',4,{balls:4,xp:30}]
 ];
 CHEST_ITEMS.forEach(([slot,e,n,r,st],j)=>{ITEMS['C'+j]={id:'C'+j,slot,e,n,r,st,chest:true}});
+const PASS_ITEMS={10:['hat','🎖️','Pass Cadet Cap',1,{coin:8,xp:8}],20:['charm','🏅','Medal of Bingo',2,{gem:15,event:15}],30:['dauber','🗡️','Champion Dauber',3,{auto:35,charge:15}],40:['outfit','🎽','Legend Jersey',3,{coin:25,rival:15}],50:['pet','🐲','Pass Dragon Spud',4,{coin:30,xp:30,luck:2}]};
+for(const t in PASS_ITEMS){const [slot,e,n,r,st]=PASS_ITEMS[t];ITEMS['P'+t]={id:'P'+t,slot,e,n,r,st,bp:+t}}
 const CHESTS=[
  {k:'bronze',e:'🎁',n:'Bronze Chest',w:[70,25,5,0,0]},
  {k:'silver',e:'🧰',n:'Silver Chest',w:[25,52,20,3,0],gems:60},
@@ -752,11 +773,11 @@ function fresh(){return{
   cards:1,speed:0,boost:0,
   st:{rounds:0,bingos:0,daubs:0,events:0,coins:0,gems:0,chests:0,powerups:0,souvenirs:0,bestCombo:0,specials:0,upgrades:0,best1:0,playMs:0},
   ach:{},achSeen:0,daily:null,login:{last:'',streak:0,total:0},
-  tours:0,last:Date.now(),sound:true,music:true,call:true,spd:2,spot:false,spotOn:true,autoB:false,autoBOn:true,tokens:0,slots:1,cardOffers:0,menuT:0,afk:false,tut:false,tab:'bingo'
+  tours:0,last:Date.now(),sound:true,music:true,call:true,spd:2,spot:false,spotOn:true,autoB:false,autoBOn:true,tokens:0,bp:{},slots:1,cardOffers:0,menuT:0,afk:false,tut:false,tab:'bingo'
 }}
 let S=fresh();
 function load(){
-  try{const d=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(d&&d.v===1){const f=fresh();S=Object.assign(f,d);if(d.slots===undefined)S.slots=S.level>=12?4:S.level>=7?3:S.level>=3?2:1;S.st=Object.assign(f.st,d.st);S.eq=Object.assign(f.eq,d.eq);S.pl=Object.assign(f.pl,d.pl);S.login=Object.assign(f.login,d.login);
+  try{const d=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(d&&d.v===1){const f=fresh();S=Object.assign(f,d);if(d.slots===undefined)S.slots=S.level>=12?4:S.level>=7?3:S.level>=3?2:1;S.st=Object.assign(f.st,d.st);S.eq=Object.assign(f.eq,d.eq);S.pl=Object.assign(f.pl,d.pl);S.login=Object.assign(f.login,d.login);S.bp=d.bp||{};
     LANDS.forEach((_,i)=>{S.b[i]=S.b[i]||Array(8).fill(0);S.souv[i]=S.souv[i]||Array(9).fill(0)});}}catch(e){}
 }
 function save(){S.last=Date.now();try{localStorage.setItem(SAVE_KEY,JSON.stringify(S))}catch(e){}}
@@ -908,6 +929,7 @@ function updDots(){
   const tb=$('#dTown');const cn=canBuildAny();tb.textContent='!';tb.classList.toggle('on',cn);
   const gb=$('#dBag');gb.textContent=S.bronze;gb.classList.toggle('on',S.bronze>0);
   const ab=$('#dAch');const an=Object.keys(S.ach).length-S.achSeen;ab.textContent=an;ab.classList.toggle('on',an>0);
+  const bpn=bpReady(),pd=$('#dPass');pd.textContent=bpn;pd.classList.toggle('on',bpn>0);
   const mo=$('#dMore');mo.textContent=qn+an;mo.classList.toggle('on',qn+an>0);
 }
 function canBuildAny(){const i=S.cur;for(let k=0;k<8;k++){const L=S.b[i][k];if(L<bMax(k)&&(k<7||lmReady(i))&&S.coins>=bCost(i,k,L))return true}return false}
@@ -917,7 +939,7 @@ function render(){
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===S.tab));
   $('#nav').classList.toggle('lock',!!(R&&!R.over));$('#app').classList.toggle('inround',!!(R&&!R.over));
   setTheme();
-  const f={map:vMap,town:vTown,bingo:vBingo,shop:vShop,bag:vBag,up:vUp,more:vMore,wiki:vWiki,album:vAlbum,daily:vDaily,trophy:vTrophy}[S.tab]||vBingo;
+  const f={map:vMap,town:vTown,bingo:vBingo,shop:vShop,bag:vBag,up:vUp,more:vMore,wiki:vWiki,pass:vPass,album:vAlbum,daily:vDaily,trophy:vTrophy}[S.tab]||vBingo;
   f();updHUD();updDots();
 }
 function rerender(){const st=view.scrollTop;render();view.scrollTop=st}
@@ -1021,17 +1043,44 @@ function vBag(){
 function itemHtml(id){
   const it=ITEMS[id],lv=S.gear[id],mx=RAR[it.r].max,eq=S.eq[it.slot]===id,sl=slotOf(it.slot),uc=upCost(it,lv);
   const now=itemStat(it,lv),nx=lv<mx?itemStat(it,lv+1):null;
-  return `<div class="me">${it.e}</div><h2 style="color:${RAR[it.r].c}">${it.n}</h2><p style="margin:0 0 8px">${rarTag(it.r)} · ${sl.e} ${sl.n} · Level ${lv}/${mx}${it.chest?'':` · from ${LANDS[it.land].n}`}</p>
+  return `<div class="me">${it.e}</div><h2 style="color:${RAR[it.r].c}">${it.n}</h2><p style="margin:0 0 8px">${rarTag(it.r)} · ${sl.e} ${sl.n} · Level ${lv}/${mx}${it.chest?'':it.bp?` · Battle Pass tier ${it.bp}`:` · from ${LANDS[it.land].n}`}</p>
    ${Object.keys(now).map(k=>`<div class="statline"><span>${k==='claim'?'🤖 Auto-BINGO':STAT[k][0]}</span><b>${k==='claim'?'Yes':'+'+now[k]+STAT[k][1]}${nx&&k!=='claim'&&nx[k]!==now[k]?` <em>→ +${nx[k]}${STAT[k][1]}</em>`:''}</b></div>`).join('')}
    <div class="acts">${eq?`<button class="btn dk" data-a="unequip" data-s="${it.slot}">Take off</button>`:`<button class="btn g" data-a="equip" data-id="${id}" ${S.level<sl.lv?'disabled':''}>${S.level<sl.lv?'🔒 Level '+sl.lv:'Wear it'}</button>`}
     ${lv<mx?`<button class="btn" data-a="upItem" data-id="${id}" ${S.coins<uc?'disabled':''}>⬆ Upgrade · 🪙 ${fmt(uc)}</button>`:'<span class="small" style="color:var(--gold)">★ MAX LEVEL</span>'}</div>
    <div class="acts" style="margin-top:8px">${it.chest?`<button class="btn ${UI.sell===id?'p':'dk'}" data-a="sell" data-id="${id}">${UI.sell===id?`Tap again to sell for 🎟️ ${sellVal(it,lv)}`:`Sell · 🎟️ ${sellVal(it,lv)}`}</button>`:''}<button class="btn dk" data-a="close">Close</button></div>
-   ${it.chest?'':'<p class="small" style="margin:8px 0 0">Shop items can\'t be sold.</p>'}`}
+   ${it.chest?'':`<p class="small" style="margin:8px 0 0">${it.bp?'Battle Pass':'Shop'} items can't be sold.</p>`}`}
 function showItem(id){UI.item=id;const h=itemHtml(id);if(modalOn)$('#mbox').innerHTML=h;else modal(h)}
 function afterItem(){if(UI.item&&modalOn&&S.gear[UI.item])showItem(UI.item);rerender()}
 function sellItem(id){const it=ITEMS[id],lv=S.gear[id];if(!it||!lv||!it.chest)return;if(UI.sell!==id){UI.sell=id;return showItem(id)}
   const v=sellVal(it,lv);delete S.gear[id];if(S.eq[it.slot]===id)S.eq[it.slot]=null;S.tokens+=v;UI.sell=null;UI.item=null;calc();SFX.coin();closeModalAll();toast(`🎟️ Sold <b>${it.e} ${it.n}</b> for <b>${v} tokens</b>`);save();rerender()}
 
+/* ---------- BATTLE PASS (free, tiers 1-50 follow your player level) ---------- */
+const BP_MAX=50;
+function bpReward(t){const top=S.unlocked-1,coinAmt=()=>Bv(top)*ST.cm*(4+t*0.5);
+  if(PASS_ITEMS[t]){const it=ITEMS['P'+t];return{e:it.e,n:it.n,big:true,d:`Exclusive ${RAR[it.r].n} ${slotOf(it.slot).n.toLowerCase()} – only in the Battle Pass`,f:()=>{const r=giveItem(it.id);calc();return `${it.e} ${it.n}${r==='new'?' is in your Bag!':''}`}}}
+  if(t%5===0)return t>=25?{e:'💰',n:'Gold Chest',d:'Epic & Legendary gear',f:()=>{openChest(2,true);return '💰 Gold Chest opened!'}}:{e:'🧰',n:'Silver Chest',d:'Rare & Epic gear',f:()=>{openChest(1,true);return '🧰 Silver Chest opened!'}};
+  if(t%7===0)return{e:'⚡',n:'2× Coin Boost',d:'Double coins for 3 games',f:()=>{S.boost+=3;return '⚡ 2× coins for your next 3 games!'}};
+  if(t%3===0)return{e:'💎',n:`${10+t} Gems`,d:'For upgrades & cards',f:()=>{addGems(10+t);return `💎 +${10+t} gems`}};
+  if(t%4===0)return{e:'🎟️',n:`${5+Math.floor(t/2)} Tokens`,d:'Spend in the Token Shop',f:()=>{S.tokens+=5+Math.floor(t/2);return `🎟️ +${5+Math.floor(t/2)} tokens`}};
+  if(t%2===0)return{e:'🎁',n:'Bronze Chest',d:'A random gear item',f:()=>{S.bronze++;return '🎁 +1 Bronze Chest (open it in your Bag)'}};
+  return{e:'🪙',n:'Coin Bag',d:`About 🪙 ${fmt(coinAmt())} right now`,f:()=>`🪙 +${fmt(addCoins(coinAmt()))} coins`}}
+const bpReady=()=>{let n=0;for(let t=1;t<=Math.min(S.level,BP_MAX);t++)if(!S.bp[t])n++;return n};
+function bpClaim(t){if(t>S.level||t>BP_MAX||S.bp[t])return;const r=bpReward(t);S.bp[t]=1;const msg=r.f();SFX.coin();if(r.big)confetti(70);toast(`🎖️ Tier ${t}: ${msg}`);checkAch();save();if(!modalOn)rerender();else render()}
+function bpClaimAll(){const msgs=[];for(let t=1;t<=Math.min(S.level,BP_MAX);t++)if(!S.bp[t]){const r=bpReward(t);S.bp[t]=1;msgs.push(r.f())}if(!msgs.length)return;SFX.level();confetti(60);toast(`🎖️ Claimed ${msgs.length} reward${msgs.length>1?'s':''}!`);checkAch();save();render()}
+function vPass(){
+  const lv=Math.min(S.level,BP_MAX),ready=bpReady(),claimed=Object.keys(S.bp).length;
+  let h=`<div class="pad">${phead('🎖️','Battle Pass','100% free! Every level you reach unlocks the next tier. Claim rewards, and see what is coming next. Exclusive items at tiers 10, 20, 30, 40 and 50.')}
+   <div class="box bphead"><div style="flex:1;min-width:0"><b class="lil" style="font-size:22px">Tier ${lv}/${BP_MAX}</b> <span class="small muted">· ${claimed}/${BP_MAX} claimed</span>
+     <div class="mbar"><i style="width:${lv/BP_MAX*100}%"></i><span>${S.level>=BP_MAX?'Pass complete! 🏆':`Level up to reach tier ${lv+1}`}</span></div></div>
+     ${ready?`<button class="btn big p" data-a="bpAll">Claim all (${ready})</button>`:''}</div>
+   <div class="bptrack">`;
+  for(let t=1;t<=BP_MAX;t++){const r=bpReward(t),got=S.bp[t],open=t<=S.level;
+    h+=`<div class="bpt ${got?'got':open?'ready':'lock'} ${r.big?'big':''} ${t===lv+1?'next':''}" id="bpt${t}">
+      <div class="bpn">${t}</div><div class="bpe">${r.e}</div><b>${r.n}</b><small>${r.d}</small>
+      ${got?'<span class="bps">✔ Claimed</span>':open?`<button class="btn g" data-a="bpClaim" data-t="${t}">Claim</button>`:`<span class="bps">🔒 Level ${t}</span>`}</div>`}
+  h+=`</div></div>`;view.innerHTML=h;
+  const tgt=document.getElementById('bpt'+Math.max(1,Math.min(BP_MAX,lv)));if(tgt&&!UI.bpScrolled){UI.bpScrolled=true;tgt.scrollIntoView({block:'center'})}
+}
 const TSHOP=[
  {e:'🎁',n:'Bronze Chest',d:'A random gear item.',c:6,f:()=>{S.bronze++;toast('🎁 +1 Bronze Chest – open it in your Bag')}},
  {e:'⚡',n:'2× Coin Boost',d:'Double bingo coins for your next 3 games.',c:12,f:()=>{S.boost+=3;toast('⚡ 2× coins for your next 3 games!')}},
@@ -1092,15 +1141,15 @@ function vWiki(){
   let h=`<div class="pad">${phead('📖','Item Wiki',`All <b>${all.length}</b> items in the game: where to get them, what they do and what they sell for. You have found <b>${own}</b>.`)}
    <div class="bar" style="margin-bottom:14px"><i style="width:${own/all.length*100}%"></i></div>
    <div class="wsearch"><span>🔍</span><input id="wq" type="search" placeholder="Search items – e.g. dragon, auto-daub, mythic, hat, Peru…" value="${UI.wq.replace(/"/g,'&quot;')}" autocomplete="off"></div>
-   <div class="seg">${[['all','All'],['chest','🎁 From chests'],['shop','🛍️ From shops']].map(([v,l])=>`<button class="${UI.wsrc===v?'on':''}" data-a="wf" data-k="wsrc" data-v="${v}">${l}</button>`).join('')}</div>
+   <div class="seg">${[['all','All'],['chest','🎁 Chests'],['shop','🛍️ Shops'],['pass','🎖️ Pass']].map(([v,l])=>`<button class="${UI.wsrc===v?'on':''}" data-a="wf" data-k="wsrc" data-v="${v}">${l}</button>`).join('')}</div>
    <div class="landchips">${chip('wslot','all','All slots')}${SLOTS.map(x=>chip('wslot',x.k,x.e+' '+x.n)).join('')}</div>
    <div class="landchips">${chip('wrar','all','All rarities')}${RAR.map((r,j)=>`<button class="${UI.wrar===String(j)?'on':''}" data-a="wf" data-k="wrar" data-v="${j}" style="color:${r.c}">● ${r.n}</button>`).join('')}</div>`;
-  const list=all.filter(it=>(UI.wsrc==='all'||(UI.wsrc==='chest')===!!it.chest)&&(UI.wslot==='all'||it.slot===UI.wslot)&&(UI.wrar==='all'||it.r===+UI.wrar))
+  const list=all.filter(it=>(UI.wsrc==='all'||UI.wsrc===(it.bp?'pass':it.chest?'chest':'shop'))&&(UI.wslot==='all'||it.slot===UI.wslot)&&(UI.wrar==='all'||it.r===+UI.wrar))
     .sort((a,b)=>a.r-b.r||(a.chest?1:0)-(b.chest?1:0)||(a.land||0)-(b.land||0));
   h+=`<p class="note"><span id="wcount">Showing ${list.length} item${list.length===1?'':'s'}.</span> Tap an item you own to wear, upgrade or sell it.</p><div class="empty" id="wempty" style="display:none"><div class="ee">🔎</div>No items match your search.</div><div class="wiki">`;
   list.forEach(it=>{const lv=S.gear[it.id],mx=RAR[it.r].max,sl=slotOf(it.slot),s1=itemStat(it,1),sM=itemStat(it,mx);
-    const src=it.chest?`🎁 ${CHESTS.filter(c=>c.w[it.r]).map(c=>c.n.replace(' Chest','')).join(', ')} chest`:(it.land<S.unlocked?`🛍️ Shop in ${LANDS[it.land].e} ${LANDS[it.land].n} · 🪙 ${fmt(it.price)}`:`🔒 Shop in ${LANDS[it.land].n} (not unlocked yet)`);
-    const q=[it.n,sl.n,RAR[it.r].n,it.chest?'chest':'shop '+LANDS[it.land].n,lv?'owned':'',...Object.keys(it.st).map(k=>k==='claim'?'auto-bingo autobingo':STAT[k][0])].join(' ').toLowerCase();
+    const src=it.bp?`🎖️ Battle Pass tier ${it.bp}`:it.chest?`🎁 ${CHESTS.filter(c=>c.w[it.r]).map(c=>c.n.replace(' Chest','')).join(', ')} chest`:(it.land<S.unlocked?`🛍️ Shop in ${LANDS[it.land].e} ${LANDS[it.land].n} · 🪙 ${fmt(it.price)}`:`🔒 Shop in ${LANDS[it.land].n} (not unlocked yet)`);
+    const q=[it.n,sl.n,RAR[it.r].n,it.bp?'battle pass':it.chest?'chest':'shop '+LANDS[it.land].n,lv?'owned':'',...Object.keys(it.st).map(k=>k==='claim'?'auto-bingo autobingo':STAT[k][0])].join(' ').toLowerCase();
     h+=`<div class="wcard ${lv?'own':''}" style="--rc:${RAR[it.r].c}" data-q="${q.replace(/"/g,'')}" ${lv?`data-a="itemInfo" data-id="${it.id}"`:''}>
       <div class="wtop"><div class="wie">${it.e}</div><div style="min-width:0"><b>${it.n}</b><div>${rarTag(it.r)} <span class="small muted">${sl.e} ${sl.n}</span></div></div>${lv?`<span class="wown">✔ Lv ${lv}</span>`:''}</div>
       <div class="wst">${Object.keys(s1).map(k=>k==='claim'?'<span>🤖 Auto-BINGO</span>':`<span>${STAT[k][0]}: <b>+${s1[k]}${STAT[k][1]}</b> → <b style="color:var(--mint)">+${sM[k]}${STAT[k][1]}</b></span>`).join('')}<span class="small muted">Level 1 → max level ${mx}</span></div>
@@ -1116,7 +1165,7 @@ function vMore(){
    <div class="row" style="margin-top:14px"><button class="btn" data-a="settings">⚙️ Settings</button><button class="btn dk" data-a="help">❓ Game guide</button><button class="btn dk" data-a="howBingo">🎱 Bingo rules</button></div>
    <p class="small muted" style="margin-top:10px">Your progress is saved automatically in this browser.</p></div>`;
 }
-function upCost(it,lv){return it.chest?3*(1+it.r*0.6)*Bv(S.unlocked-1)*Dv(S.unlocked-1)*Math.pow(1.3,lv-1):it.price*0.3*Math.pow(1.35,lv-1)}
+function upCost(it,lv){return it.chest||it.bp?3*(1+it.r*0.6)*Bv(S.unlocked-1)*Dv(S.unlocked-1)*Math.pow(1.3,lv-1):it.price*0.3*Math.pow(1.35,lv-1)}
 function giveItem(id){const it=ITEMS[id];if(!S.gear[id]){S.gear[id]=1;if(!S.eq[it.slot]&&S.level>=SLOTS.find(s=>s.k===it.slot).lv)S.eq[it.slot]=id;return 'new'}if(S.gear[id]<RAR[it.r].max){S.gear[id]++;return 'up'}const g=5+it.r*10;addGems(g);return 'gems:'+g}
 function openChest(j,free){const c=CHESTS[j];if(!free){if(j===0){if(S.bronze<1)return;S.bronze--}else{if(S.gems<c.gems)return;S.gems-=c.gems}}
   const r=wpick(c.w);const pool=CHEST_ITEMS.map((_,x)=>'C'+x).filter(id=>ITEMS[id].r===r);const id=pick(pool),it=ITEMS[id];const res=giveItem(id);S.st.chests++;
@@ -1240,7 +1289,9 @@ function vLobby(){
    </div>
    <div class="box goal"><div class="ge">${g[0]}</div><div style="flex:1">${g[1]}</div>${g[2]?`<button class="btn" data-a="${g[2][0]}" ${g[2][0]==='tab'?`data-t="${g[2][1]}"`:`data-i="${g[2][1]}"`}>${g[2][2]} →</button>`:''}</div>`;
   // featured banners: the things worth doing right now come first
+  const bpn=bpReady();
   const feats=[
+   {hot:bpn>0,a:'tab',t:'pass',e:'🎖️',n:'Battle Pass',s:bpn?`${bpn} free reward${bpn>1?'s':''} ready to claim!`:S.level>=BP_MAX?'Pass complete!':`Next reward at level ${S.level+1}`,c:['#7a5cff','#2a1670'],cta:bpn?'Claim':'View'},
    {hot:loginReady,a:'tab',t:'daily',e:'🎁',n:'Daily Gift',s:loginReady?'Your free gift is ready!':`🔥 ${S.login.streak} day streak – come back tomorrow`,c:['#ff9a3a','#b33a12'],cta:loginReady?'Claim':'View'},
    {hot:spinReady,a:'tab',t:'daily',e:'🎡',n:'Lucky Wheel',s:spinReady?'Free spin ready – win gems & coins!':'Extra spins cost 💎 15',c:['#ff5fa2','#7a1a52'],cta:'Spin'},
    {hot:S.bronze>0,a:'tab',t:'bag',e:'🧰',n:'Treasure Chests',s:S.bronze?`${S.bronze} chest${S.bronze>1?'s':''} waiting to be opened!`:'Win chests on 🎁 squares or buy them',c:['#ffcf4a','#a1530b'],cta:S.bronze?'Open':'Shop',t2:S.bronze?'bag':'shop'},
@@ -1479,7 +1530,8 @@ function refreshAfford(){document.querySelectorAll('[data-cost]').forEach(b=>{b.
 
 /* ---------- INPUT ---------- */
 const ACT={
-  tab:d=>{if(R&&!R.over)return;closeModalAll();S.tab=d.t;render();view.scrollTop=0},
+  bpClaim:d=>bpClaim(+d.t),bpAll:()=>bpClaimAll(),
+  tab:d=>{if(R&&!R.over)return;closeModalAll();if(d.t==='pass')UI.bpScrolled=false;S.tab=d.t;render();view.scrollTop=0},
   afk:d=>afkAnswer(d.e),
   wf:d=>{UI[d.k]=d.v;rerender()},
   buyCard:()=>buyCard(),
