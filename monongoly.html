@@ -78,7 +78,7 @@ button:disabled{cursor:not-allowed;opacity:.45}
 
 /* ===== LAYOUT ===== */
 .layout{display:flex;height:calc(100% - 52px)}
-.stage{position:relative;flex:1;overflow:hidden;background:#1d1009}
+.stage{position:relative;flex:1;overflow:hidden;background:#1d1009;user-select:none;-webkit-user-select:none}
 .side{width:350px;flex:none;display:flex;flex-direction:column;gap:10px;padding:12px;background:linear-gradient(180deg,#24160c,#1a0f08);border-left:2px solid #000;overflow:auto}
 
 /* ===== 3D TABLE SCENE ===== */
@@ -114,8 +114,15 @@ button:disabled{cursor:not-allowed;opacity:.45}
 .ic.big{font-size:calc(var(--u)*.62)}
 .qm{font-family:'Lilita One',sans-serif;font-size:calc(var(--u)*.85);line-height:1;margin:auto 0;color:#e2562b;transform:rotate(-8deg);text-shadow:1px 1px 0 #000}
 .qm.b{color:#1f6fbf}
-.own{position:absolute;left:0;right:0;bottom:0;height:calc(var(--u)*.11);display:none}
+.own{position:absolute;left:0;right:0;bottom:0;height:calc(var(--u)*.2);display:none;background:var(--oc);border-top:1px solid rgba(0,0,0,.55);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35)}
+.own i{position:absolute;left:50%;top:0;transform:translate(-50%,-62%);width:calc(var(--u)*.36);height:calc(var(--u)*.36);border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff8,transparent 55%),var(--oc);border:1.5px solid #000;
+  display:flex;align-items:center;justify-content:center}
+.own i svg{width:78%;height:78%}
+.tile.owned{background:color-mix(in srgb,var(--oc) 24%,var(--paper));box-shadow:inset 0 0 0 calc(var(--u)*.035) var(--oc)}
+.tile.owned:hover{background:color-mix(in srgb,var(--oc) 34%,#fff8e4)}
 .tile.owned .own{display:block}
+.tile.owned .pr{visibility:hidden}
 .tile.mort .ti>*:not(.own){opacity:.35}
 .tile.mort .ti::after{content:'MORTGAGED';position:absolute;left:50%;top:55%;transform:translate(-50%,-50%) rotate(-58deg);white-space:nowrap;
   font-size:calc(var(--u)*.17);color:#b31d1d;border:2px solid #b31d1d;padding:1px 4px;border-radius:3px;background:rgba(255,248,230,.85)}
@@ -166,13 +173,21 @@ button:disabled{cursor:not-allowed;opacity:.45}
 .tokSh{position:absolute;width:calc(var(--u)*.46);height:calc(var(--u)*.46);left:calc(var(--u)*-.23);top:calc(var(--u)*-.23);border-radius:50%;
   background:radial-gradient(circle,rgba(0,0,0,.5),transparent 70%);transform:translateZ(1px)}
 .tokL{position:absolute;left:0;top:0;transform-style:preserve-3d}
-.tokB{position:absolute;width:calc(var(--u)*.62);height:calc(var(--u)*.62);left:calc(var(--u)*-.31);top:calc(var(--u)*-.62);transform-origin:50% 100%;
-  transform:translateZ(2px) rotateZ(calc(var(--rz) * -1)) rotateX(calc(var(--tilt) * -1));transition:transform .9s cubic-bezier(.3,.7,.25,1)}
-.flat .tokB{top:calc(var(--u)*-.31);transform-origin:50% 50%}
+.tokB{position:absolute;width:calc(var(--u)*.8);height:calc(var(--u)*.8);left:calc(var(--u)*-.4);top:calc(var(--u)*-.8);transform-origin:50% 100%;
+  transform:translateZ(calc(var(--u)*.1 + 1px)) rotateZ(calc(var(--rz) * -1)) rotateX(calc(var(--tilt) * -1));transition:transform .9s cubic-bezier(.3,.7,.25,1)}
+.flat .tokB{top:calc(var(--u)*-.4);transform-origin:50% 50%}
 .tokB svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 1px 0 rgba(0,0,0,.5))}
-.tokRing{position:absolute;width:calc(var(--u)*.42);height:calc(var(--u)*.42);left:calc(var(--u)*-.21);top:calc(var(--u)*-.21);border-radius:50%;
-  background:radial-gradient(circle at 35% 30%,#fff8,transparent 50%),var(--pc);border:2px solid #000;transform:translateZ(1.5px)}
-.tok.cur .tokRing{animation:ringPulse 1.2s ease-in-out infinite}
+.tokBase{position:absolute;left:0;top:0;transform-style:preserve-3d}
+.tokBase i{position:absolute;width:calc(var(--u)*.48);height:calc(var(--u)*.48);left:calc(var(--u)*-.24);top:calc(var(--u)*-.24);border-radius:50%;
+  background:color-mix(in srgb,var(--pc) 70%,#000);border:1px solid #000}
+.tokBase i.top{background:radial-gradient(circle at 35% 30%,#fff9,transparent 50%),var(--pc);border:2px solid #000}
+.tok.cur .tokBase i.top{animation:ringPulse 1.2s ease-in-out infinite}
+.tokB{transform-style:preserve-3d}
+.tok3{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateY(-30deg);transform-origin:50% 100%}
+.tok.cur .tok3{animation:spin3 5s linear infinite}
+@keyframes spin3{from{transform:rotateY(0)}to{transform:rotateY(360deg)}}
+.tok3 .sl{position:absolute;inset:0}
+.tok3 .sl svg{filter:none}
 @keyframes ringPulse{50%{box-shadow:0 0 0 calc(var(--u)*.08) var(--pc),0 0 calc(var(--u)*.3) var(--pc)}}
 .tok.gone{opacity:0;transition:opacity .8s}
 
@@ -237,12 +252,18 @@ button:disabled{cursor:not-allowed;opacity:.45}
 @keyframes flt{0%{opacity:0;margin-top:10px}15%{opacity:1}100%{opacity:0;margin-top:-60px}}
 
 /* ===== MODALS ===== */
-.ov{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(10,5,2,.55);backdrop-filter:blur(2px);opacity:0;transition:opacity .2s}
+.ov{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(10,5,2,.18);opacity:0;transition:opacity .2s}
 .ov.in{opacity:1}
 .mdl{width:min(440px,100%);max-height:calc(100vh - 32px);overflow:auto;background:linear-gradient(#3d2716,#2a1a0e);border:3px solid #000;border-radius:20px;padding:18px;
   box-shadow:0 20px 60px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.08);transform:scale(.9) translateY(10px);transition:transform .25s cubic-bezier(.3,1.5,.5,1)}
 .ov.in .mdl{transform:none}
 .mdl.wide{width:min(720px,100%)}
+.mdl{cursor:grab}.mdl.dragging,.flyCard.dragging{cursor:grabbing;transition:none}
+.mdl button,.mdl input,.mdl .trItem{cursor:pointer}
+.grip{display:flex;justify-content:center;align-items:center;gap:6px;margin:-8px auto 6px;width:120px;height:18px;border-radius:999px;font-size:11px;color:var(--muted);touch-action:none;user-select:none}
+.grip::before{content:'';width:36px;height:5px;border-radius:9px;background:#ffffff40}
+.mdl h2{touch-action:none;user-select:none}
+.fcFront{cursor:grab;touch-action:none;user-select:none}
 .mdl h2{margin:0 0 10px;font-family:'Lilita One',sans-serif;font-weight:400;font-size:26px}
 .mb{font-size:15px;line-height:1.5;color:#f2e2c4}
 .mb p{margin:6px 0}
@@ -349,6 +370,12 @@ button:disabled{cursor:not-allowed;opacity:.45}
 .hint{font-size:12px;color:#6b5a3e;margin-top:10px;text-align:center}
 
 /* modes / online lobby */
+.tokPick{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 2px}
+.tokPick button{width:46px;height:46px;border-radius:50%;border:2px solid #000;background:radial-gradient(circle at 35% 30%,#fff8,transparent 55%),#d8c9a3;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 3px 0 #000;transition:transform .15s}
+.tokPick button svg{width:32px;height:32px}
+.tokPick button.on{background:radial-gradient(circle at 35% 30%,#fff8,transparent 55%),var(--pc,#ffcb52);outline:3px solid #ffcb52;transform:scale(1.12)}
+.tokPick button:disabled{opacity:.25}
+.tokPickL{font-size:12.5px;color:#6b5a3e}
 .modes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px}
 .modes button{padding:10px 8px;border-radius:14px;border:3px solid #000;background:#efe4c8;font-family:'Lilita One',sans-serif;font-size:17px;color:#1d1a16;box-shadow:0 4px 0 #000;line-height:1.15}
 .modes button small{display:block;font-family:Nunito;font-weight:800;font-size:11.5px;color:#6b5a3e;margin-top:2px}
@@ -479,7 +506,7 @@ button:disabled{cursor:not-allowed;opacity:.45}
 const SAVE_KEY='monongoly_save_v1', PREF_KEY='monongoly_prefs_v1';
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const rnd=n=>Math.floor(Math.random()*n);
-const M=n=>(n<0?'−':'')+'₥'+Math.abs(Math.round(n)).toLocaleString('en-US');
+const M=n=>(n<0?'−':'')+'₱'+Math.abs(Math.round(n)).toLocaleString('en-US');
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 const GROUPS=[
@@ -534,39 +561,39 @@ const BUYABLE=SPACES.map((s,i)=>s.p?i:-1).filter(i=>i>=0);
 const colorOf=i=>{const s=SPACES[i];return s.t==='prop'?GROUPS[s.g].c:s.t==='rail'?'#2b2b2b':'#8a8f96'};
 
 const CHANCE=[
-  {x:'Advance to GO. Collect ₥200.',k:'move',to:0,ic:'🏁'},
+  {x:'Advance to GO. Collect ₱200.',k:'move',to:0,ic:'🏁'},
   {x:'Take a royal stroll to Potato Palace.',k:'move',to:39,ic:'👑'},
-  {x:'Advance to Gallery Road. If you pass GO, collect ₥200.',k:'move',to:24,ic:'🖼️'},
-  {x:'Advance to Rose Avenue. If you pass GO, collect ₥200.',k:'move',to:11,ic:'🌹'},
+  {x:'Advance to Gallery Road. If you pass GO, collect ₱200.',k:'move',to:24,ic:'🖼️'},
+  {x:'Advance to Rose Avenue. If you pass GO, collect ₱200.',k:'move',to:11,ic:'🌹'},
   {x:'All aboard! Advance to the nearest Station. If it is owned, pay the owner twice the rent.',k:'near',t:'rail',ic:'🚂'},
   {x:'All aboard! Advance to the nearest Station. If it is owned, pay the owner twice the rent.',k:'near',t:'rail',ic:'🚂'},
   {x:'Advance to the nearest Utility. If it is owned, pay the owner 10× the dice.',k:'near',t:'util',ic:'💡'},
-  {x:'The Potato Bank pays you a dividend of ₥50.',k:'cash',a:50,ic:'🏦'},
+  {x:'The Potato Bank pays you a dividend of ₱50.',k:'cash',a:50,ic:'🏦'},
   {x:'GET OUT OF JAIL FREE. Keep this card until you need it.',k:'free',ic:'🗝️'},
   {x:'You slipped on a potato peel! Go back 3 spaces.',k:'back',n:3,ic:'🍌'},
-  {x:'Go directly to Jail. Do not pass GO, do not collect ₥200.',k:'jail',ic:'🚓'},
-  {x:'Make general repairs on all your property: pay ₥25 per house and ₥100 per hotel.',k:'rep',h:25,H:100,ic:'🔧'},
-  {x:'Caught speeding on your tractor! Fine ₥15.',k:'cash',a:-15,ic:'🚜'},
-  {x:'Take a trip to North Station. If you pass GO, collect ₥200.',k:'move',to:5,ic:'🎫'},
-  {x:'You have been elected Mayor of Mononga. Pay each player ₥50.',k:'each',a:-50,ic:'🎖️'},
-  {x:'Your building loan matures. Collect ₥150.',k:'cash',a:150,ic:'🏗️'}];
+  {x:'Go directly to Jail. Do not pass GO, do not collect ₱200.',k:'jail',ic:'🚓'},
+  {x:'Make general repairs on all your property: pay ₱25 per house and ₱100 per hotel.',k:'rep',h:25,H:100,ic:'🔧'},
+  {x:'Caught speeding on your tractor! Fine ₱15.',k:'cash',a:-15,ic:'🚜'},
+  {x:'Take a trip to North Station. If you pass GO, collect ₱200.',k:'move',to:5,ic:'🎫'},
+  {x:'You have been elected Mayor of Mononga. Pay each player ₱50.',k:'each',a:-50,ic:'🎖️'},
+  {x:'Your building loan matures. Collect ₱150.',k:'cash',a:150,ic:'🏗️'}];
 const CHEST=[
-  {x:'Advance to GO. Collect ₥200.',k:'move',to:0,ic:'🏁'},
-  {x:'Bank error in your favour! Collect ₥200.',k:'cash',a:200,ic:'🤑'},
-  {x:"Doctor's fee for a sprained spud. Pay ₥50.",k:'cash',a:-50,ic:'🩺'},
-  {x:'You sold your prize potatoes at the market. Collect ₥50.',k:'cash',a:50,ic:'🥔'},
+  {x:'Advance to GO. Collect ₱200.',k:'move',to:0,ic:'🏁'},
+  {x:'Bank error in your favour! Collect ₱200.',k:'cash',a:200,ic:'🤑'},
+  {x:"Doctor's fee for a sprained spud. Pay ₱50.",k:'cash',a:-50,ic:'🩺'},
+  {x:'You sold your prize potatoes at the market. Collect ₱50.',k:'cash',a:50,ic:'🥔'},
   {x:'GET OUT OF JAIL FREE. Keep this card until you need it.',k:'free',ic:'🗝️'},
-  {x:'Go directly to Jail. Do not pass GO, do not collect ₥200.',k:'jail',ic:'🚓'},
-  {x:'Harvest festival fund matures. Collect ₥100.',k:'cash',a:100,ic:'🎪'},
-  {x:'Income tax refund. Collect ₥20.',k:'cash',a:20,ic:'🧾'},
-  {x:'It is your birthday! Collect ₥10 from every player.',k:'each',a:10,ic:'🎂'},
-  {x:'Life insurance matures. Collect ₥100.',k:'cash',a:100,ic:'📜'},
-  {x:'Hospital fees. Pay ₥100.',k:'cash',a:-100,ic:'🏥'},
-  {x:'School fees. Pay ₥50.',k:'cash',a:-50,ic:'🎒'},
-  {x:'Consultancy fee for your famous mash recipe. Collect ₥25.',k:'cash',a:25,ic:'👨‍🍳'},
-  {x:'You are assessed for street repairs: pay ₥40 per house and ₥115 per hotel.',k:'rep',h:40,H:115,ic:'🚧'},
-  {x:'You won second prize in a beauty contest. Collect ₥10.',k:'cash',a:10,ic:'🏆'},
-  {x:'You inherit a small potato farm. Collect ₥100.',k:'cash',a:100,ic:'🌾'}];
+  {x:'Go directly to Jail. Do not pass GO, do not collect ₱200.',k:'jail',ic:'🚓'},
+  {x:'Harvest festival fund matures. Collect ₱100.',k:'cash',a:100,ic:'🎪'},
+  {x:'Income tax refund. Collect ₱20.',k:'cash',a:20,ic:'🧾'},
+  {x:'It is your birthday! Collect ₱10 from every player.',k:'each',a:10,ic:'🎂'},
+  {x:'Life insurance matures. Collect ₱100.',k:'cash',a:100,ic:'📜'},
+  {x:'Hospital fees. Pay ₱100.',k:'cash',a:-100,ic:'🏥'},
+  {x:'School fees. Pay ₱50.',k:'cash',a:-50,ic:'🎒'},
+  {x:'Consultancy fee for your famous mash recipe. Collect ₱25.',k:'cash',a:25,ic:'👨‍🍳'},
+  {x:'You are assessed for street repairs: pay ₱40 per house and ₱115 per hotel.',k:'rep',h:40,H:115,ic:'🚧'},
+  {x:'You won second prize in a beauty contest. Collect ₱10.',k:'cash',a:10,ic:'🏆'},
+  {x:'You inherit a small potato farm. Collect ₱100.',k:'cash',a:100,ic:'🌾'}];
 const DECKS={chance:CHANCE,chest:CHEST};
 
 const TOKENS=[
@@ -577,6 +604,12 @@ const TOKENS=[
   {n:'Boot',s:'<path d="M17 5h19v30c0 4 4 6 10 8 8 2 13 5 13 11v4H9V48c0-4 2-6 4-8l4-6z"/><path d="M17 5h19v6H17zM9 53h50v5H9z" class="d"/>'},
   {n:'Duck',s:'<ellipse cx="30" cy="45" rx="23" ry="13"/><circle cx="42" cy="22" r="11"/><path d="M51 20l12 4-12 4z" class="b"/><circle cx="45" cy="19" r="2.2" class="d"/><path d="M14 41c6 5 18 5 23-2" fill="none" stroke="#4b5058" stroke-width="2"/>'}];
 const tokSVG=(t,sz)=>`<svg viewBox="0 0 64 64" ${sz?`width="${sz}" height="${sz}"`:''}><g fill="url(#pw)" stroke="#2f343a" stroke-width="1.6" stroke-linejoin="round">${TOKENS[t].s.replace(/class="d"/g,'fill="#525961"').replace(/class="b"/g,'fill="#e3a83a"')}</g></svg>`;
+// solid metal piece: stacked slices of the silhouette give it real thickness on the 3D table
+function tok3D(t){
+  const N=9,inner=`<svg viewBox="0 0 64 64"><g fill="#7c848d" stroke="#59606a" stroke-width="2" stroke-linejoin="round">${TOKENS[t].s.replace(/ class="[a-z]"/g,'')}</g></svg>`;
+  let h='';for(let k=0;k<N;k++){const z=((k-(N-1)/2)*.028).toFixed(3);h+=`<div class="sl" style="transform:translateZ(calc(var(--u)*${z}))${k===0?' rotateY(180deg)':''}">${k===0||k===N-1?tokSVG(t):inner}</div>`}
+  return h;
+}
 const PCOLORS=['#e63946','#2a7de1','#2fb35a','#f2a516','#9b5de5','#ff6fae'];
 const CPU_NAMES=['Bella','Carlos','Dora','Egon','Frida','Gus'];
 
@@ -647,7 +680,7 @@ function buildBoard(){
     else if(s.t==='tax')h=`<div class="nm">${s.n}</div><div class="ic big">${s.ic}</div><div class="pr">Pay ${M(s.a)}</div>`;
     else if(s.t==='chance')h=`<div class="nm">Chance</div><div class="qm">?</div>`;
     else if(s.t==='chest')h=`<div class="nm">Potato<br>Sack</div><div class="ic big" style="margin:auto 0">💰</div>`;
-    else if(s.t==='go'){rot=-45;h=`<div class="cin cgo"><div class="sm">COLLECT ₥200 SALARY AS YOU PASS</div><div class="big">GO</div><div class="arrow">⬅</div></div>`}
+    else if(s.t==='go'){rot=-45;h=`<div class="cin cgo"><div class="sm">COLLECT ₱200 SALARY AS YOU PASS</div><div class="big">GO</div><div class="arrow">⬅</div></div>`}
     else if(s.t==='jail'){rot=0;h=`<div class="jailcell"><div class="bars"></div><b>IN</b><b style="font-size:1.6em">🚔</b><b>JAIL</b></div><div class="jv1"><span>JUST</span></div><div class="jv2">VISITING</div>`}
     else if(s.t==='park'){rot=135;h=`<div class="cin"><div>FREE</div><div class="ic big">🚗</div><div>PARKING</div></div>`}
     else if(s.t==='gojail'){rot=225;h=`<div class="cin"><div>GO TO</div><div class="ic big">👮</div><div>JAIL</div></div>`}
@@ -659,7 +692,7 @@ function buildBoard(){
   cen.innerHTML=`<div class="deck chest" id="deckChest"><div class="cb chest"><i>💰</i>POTATO SACK</div></div>
     <div class="logo"><span class="lgP">🥔</span><div class="lgB">MONONGOLY</div><div class="lgS">The Potato Property Trading Game</div></div>
     <div class="deck chance" id="deckChance"><div class="cb chance"><i>?</i>CHANCE</div></div>
-    <div class="pot" id="pot">🅿️ Jackpot ₥0</div>`;
+    <div class="pot" id="pot">🅿️ Jackpot ₱0</div>`;
   grid.appendChild(cen);
   const lay=$('#layer');lay.innerHTML='';
   for(let k=0;k<2;k++){
@@ -706,16 +739,17 @@ function makeTokens(){
   G.players.forEach(p=>{
     if(p.out)return;
     const t=document.createElement('div');t.className='tok';t.id='tok'+p.id;t.style.setProperty('--pc',p.color);
-    t.innerHTML=`<div class="tokSh"></div><div class="tokRing"></div><div class="tokL"><div class="tokB">${tokSVG(p.token)}</div></div>`;
+    t.innerHTML=`<div class="tokSh"></div><div class="tokBase">${[0,1,2,3].map(k=>`<i class="${k===3?'top':''}" style="transform:translateZ(calc(var(--u)*${(.025*(k+1)).toFixed(3)}))"></i>`).join('')}</div><div class="tokL"><div class="tokB"><div class="tok3">${tok3D(p.token)}</div></div></div>`;
     $('#layer').appendChild(t);
   });
   layoutTokens(true);
 }
 const SLOTS=[[0,0],[-.24,-.2],[.24,.2],[.24,-.2],[-.24,.2],[0,.32]];
 function spotFor(p,pos,slot){
-  if(pos===10){
-    if(p.jail){const s=SLOTS[slot%6];return{x:(1.6-.56+s[0]*.7)*U,y:(.56+s[1]*.7)*U}}
-    const v=[[.24,.5],[.24,.95],[.6,1.36],[1.05,1.36],[.24,1.36],[1.4,1.36]][slot%6];return{x:v[0]*U,y:v[1]*U}
+  if(pos===10){ // spots are relative to the Jail tile (bottom-left corner), not the board origin
+    const j=tileRect(10);
+    if(p.jail){const s=SLOTS[slot%6];return{x:(j.x+1.6-.56+s[0]*.7)*U,y:(j.y+.56+s[1]*.7)*U}}
+    const v=[[.24,.5],[.24,.95],[.6,1.36],[1.05,1.36],[.24,1.36],[1.4,1.36]][slot%6];return{x:(j.x+v[0])*U,y:(j.y+v[1])*U}
   }
   const r=tileRect(pos);let cx=r.x+r.w/2,cy=r.y+r.h/2;
   if(pos%10){const o=.14;if(pos<10)cy+=o;else if(pos<20)cx-=o;else if(pos<30)cy-=o;else cx+=o}
@@ -740,7 +774,7 @@ async function hopTo(p,from,to,dur){
   const t=tokEl(p);if(!t)return;
   t.classList.add('moving');
   const a=spotFor(p,from,0),b=spotFor(p,to,0);
-  const lift=t.querySelector('.tokL'),hh=U*(dur>200?1.6:.7);
+  const lift=t.querySelector('.tokL'),hh=U*(dur>200?1.1:.7);
   lift.animate([{transform:'translateZ(0)'},{transform:`translateZ(${hh}px)`,offset:.45},{transform:'translateZ(0)'}],{duration:dur,easing:'ease-in-out'});
   t.querySelector('.tokSh').animate([{transform:'translateZ(1px) scale(1)',opacity:1},{transform:'translateZ(1px) scale(.6)',opacity:.4,offset:.45},{transform:'translateZ(1px) scale(1)',opacity:1}],{duration:dur});
   const an=t.animate([{left:a.x+'px',top:a.y+'px'},{left:b.x+'px',top:b.y+'px'}],{duration:dur,easing:'ease-in-out',fill:'forwards'});
@@ -749,16 +783,17 @@ async function hopTo(p,from,to,dur){
   t.classList.remove('moving');
 }
 async function moveSteps(p,n){
-  const dur=(n>12?95:n>7?140:175)*(p.human?1:Math.max(.6,SP()));
+  const dur=(n>12?250:360)*(p.human?1:Math.max(.65,SP()));
   for(let k=0;k<n;k++){
     const from=p.pos;p.pos=(p.pos+1)%40;
     await hopTo(p,from,p.pos,dur);SFX.hop();
     if(p.pos===0){addMoney(p,200);log(`${pName(p)} passed GO and collected ${M(200)}.`);SFX.coin()}
+    await sleep(dur*.15);
   }
   layoutTokens();flashTile(p.pos);await sleep(250);
 }
 async function moveBack(p,n){
-  for(let k=0;k<n;k++){const from=p.pos;p.pos=(p.pos+39)%40;await hopTo(p,from,p.pos,190);SFX.hop()}
+  for(let k=0;k<n;k++){const from=p.pos;p.pos=(p.pos+39)%40;await hopTo(p,from,p.pos,360);SFX.hop();await sleep(60)}
   layoutTokens();flashTile(p.pos);await sleep(250);
 }
 async function moveTo(p,target){await moveSteps(p,(target-p.pos+40)%40)}
@@ -844,14 +879,16 @@ function moneyFx(p,d){
   fx('money',[p.id,d]);
   const card=$(`.pc[data-id="${p.id}"] .pMoney`);
   floatAt(card,(d>0?'+':'−')+M(Math.abs(d)),d>0?'plus':'minus');
-  const t=tokEl(p);if(t)floatAt(t.querySelector('.tokRing'),(d>0?'+':'−')+M(Math.abs(d)),d>0?'plus':'minus');
+  const t=tokEl(p);if(t)floatAt(t.querySelector('.tokBase .top'),(d>0?'+':'−')+M(Math.abs(d)),d>0?'plus':'minus');
   if(card){card.classList.add('bump');setTimeout(()=>card.classList.remove('bump'),200)}
 }
 function renderTile(i){
   syncSoon();
   const t=$('#t'+i);if(!t)return;const o=G.owner[i];
   t.classList.toggle('owned',o>=0);t.classList.toggle('mort',!!G.mort[i]);
-  t.querySelector('.own').style.background=o>=0?G.players[o].color:'';
+  const own=t.querySelector('.own'),key=o>=0?o+':'+G.players[o].token:'';
+  t.style.setProperty('--oc',o>=0?G.players[o].color:'transparent');
+  if(own.dataset.k!==key){own.innerHTML=o>=0?`<i>${tokSVG(G.players[o].token)}</i>`:'';own.dataset.k=key;own.title=o>=0?'Owned by '+G.players[o].name:''}
   const band=t.querySelector('.band');
   if(band){const h=G.houses[i],cur=band.dataset.h|0;if(cur!==h){band.innerHTML=h===5?'<i class="htl"></i>':'<i class="hse"></i>'.repeat(h);band.dataset.h=h}}
 }
@@ -875,7 +912,7 @@ function renderPlayers(){
 function modal({title='',html='',buttons=[],cls='',render,dismiss}){
   return new Promise(res=>{
     const ov=document.createElement('div');ov.className='ov';
-    ov.innerHTML=`<div class="mdl ${cls}" role="dialog" aria-modal="true">${title?`<h2>${title}</h2>`:''}<div class="mb">${html}</div><div class="mbtns"></div></div>`;
+    ov.innerHTML=`<div class="mdl ${cls}" role="dialog" aria-modal="true"><div class="grip" title="Drag to move">move</div>${title?`<h2>${title}</h2>`:''}<div class="mb">${html}</div><div class="mbtns"></div></div>`;
     document.body.appendChild(ov);requestAnimationFrame(()=>ov.classList.add('in'));
     let done=false;
     const close=k=>{if(done)return;done=true;ov.classList.remove('in');setTimeout(()=>ov.remove(),200);res(k)};
@@ -883,10 +920,26 @@ function modal({title='',html='',buttons=[],cls='',render,dismiss}){
     const bb=$('.mbtns',ov);
     buttons.forEach(b=>{const e=document.createElement('button');e.className='btn '+(b.cls||'');e.innerHTML=b.label;e.disabled=!!b.dis;e.onclick=()=>{SFX.click();close(b.k)};bb.appendChild(e)});
     if(render)render(ov,close);
+    makeDraggable($('.mdl',ov),MOFF);
     if(dismiss!==undefined)ov.addEventListener('click',e=>{if(e.target===ov)close(dismiss)});
   });
 }
 
+// drag pop-ups and cards aside to look at the board; pop-ups remember where you left them
+const MOFF={x:0,y:0},COFF={x:0,y:0};
+function makeDraggable(el,off,lateClamp,handle){
+  const clamp=()=>{const r=el.getBoundingClientRect(),bx=r.left-off.x,by=r.top-off.y;
+    off.x=Math.max(-bx-r.width+80,Math.min(innerWidth-bx-80,off.x));off.y=Math.max(-by,Math.min(innerHeight-by-60,off.y));el.style.translate=`${off.x}px ${off.y}px`};
+  if(!lateClamp)requestAnimationFrame(clamp);
+  (handle||el).addEventListener('pointerdown',e=>{
+    if(e.button>0||e.target.closest('button,input,a,select,textarea,.trItem,.mg,.trList'))return;
+    if(e.pointerType!=='mouse'&&!e.target.closest('.grip,h2,.fcFront'))return;
+    e.preventDefault();const sx=e.clientX-off.x,sy=e.clientY-off.y;el.classList.add('dragging');const h=handle||el;h.setPointerCapture(e.pointerId);
+    const mv=ev=>{off.x=ev.clientX-sx;off.y=ev.clientY-sy;el.style.translate=`${off.x}px ${off.y}px`};
+    const up=()=>{el.classList.remove('dragging');h.removeEventListener('pointermove',mv);h.removeEventListener('pointerup',up);h.removeEventListener('pointercancel',up);clamp()};
+    h.addEventListener('pointermove',mv);h.addEventListener('pointerup',up);h.addEventListener('pointercancel',up);
+  });
+}
 /* ---- action bar ---- */
 let ACT=null;
 function setActions(fn,msg){
@@ -1124,6 +1177,8 @@ function showCardUI(type,card,mode){
     el.innerHTML=`<div class="fcIn"><div class="fcBack ${type}"><i>${type==='chance'?'?':'💰'}</i>${type==='chance'?'CHANCE':'POTATO SACK'}</div>
       <div class="fcFront"><div class="fcHead">${type==='chance'?'CHANCE':'POTATO SACK'}</div><div class="fcIcon">${card.ic}</div><div class="fcText">${card.x}</div>${mode==='ok'?'<button class="btn go fcOk">OK</button>':''}</div></div>`;
     document.body.appendChild(el);
+    el.style.translate=`${COFF.x}px ${COFF.y}px`;
+    makeDraggable(el,COFF,true,$('.fcFront',el));
     const dx=r.left+r.width/2-innerWidth/2,dy=r.top+r.height/2-innerHeight/2,sc=Math.max(.15,r.width/el.offsetWidth);
     const a1=el.animate([{transform:`translate(-50%,-50%) translate(${dx}px,${dy}px) scale(${sc}) rotate(-45deg)`},{transform:'translate(-50%,-50%) translateY(-30px) scale(1.08) rotate(4deg)',offset:.7},{transform:'translate(-50%,-50%) scale(1) rotate(0)'}],{duration:750,easing:'cubic-bezier(.3,.8,.3,1)',fill:'forwards'});
     $('.fcIn',el).animate([{transform:'rotateY(0)'},{transform:'rotateY(180deg)'}],{duration:650,delay:150,easing:'ease-in-out',fill:'forwards'});
@@ -1370,9 +1425,9 @@ function deedHTML(i){
 function showSpace(i){
   const s=SPACES[i];
   if(s.p){modal({html:deedHTML(i),buttons:[{k:'x',label:'Close'}],dismiss:'x'});return}
-  const D={go:['🏁 GO','Collect ₥200 salary every time you pass or land on GO.'],jail:['🔒 Jail','Just visiting? Relax. In Jail? Roll doubles, pay ₥50 bail or use a Get Out of Jail Free card. After three failed tries you must pay.'],
+  const D={go:['🏁 GO','Collect ₱200 salary every time you pass or land on GO.'],jail:['🔒 Jail','Just visiting? Relax. In Jail? Roll doubles, pay ₱50 bail or use a Get Out of Jail Free card. After three failed tries you must pay.'],
     park:['🅿️ Free Parking',G&&G.set.pot?`Jackpot house rule: taxes and fines go to the middle of the board. Land here to win it all! Current jackpot: <b>${M(G.pot)}</b>.`:'A free resting place. Nothing happens here.'],
-    gojail:['👮 Go To Jail','Go directly to Jail. Do not pass GO, do not collect ₥200.'],chance:['❓ Chance','Draw the top Chance card and do what it says.'],chest:['💰 Potato Sack','Draw the top Potato Sack card and do what it says.'],
+    gojail:['👮 Go To Jail','Go directly to Jail. Do not pass GO, do not collect ₱200.'],chance:['❓ Chance','Draw the top Chance card and do what it says.'],chest:['💰 Potato Sack','Draw the top Potato Sack card and do what it says.'],
     tax:[s.ic+' '+s.n,`Pay ${M(s.a||0)} to the bank${G&&G.set.pot?' (it goes into the Free Parking jackpot)':''}.`]};
   const d=D[s.t];modal({title:d[0],html:`<p>${d[1]}</p>`,buttons:[{k:'x',label:'Close'}],dismiss:'x'});
 }
@@ -1392,7 +1447,7 @@ function showRules(){
   <p>🏨 <b>Build:</b> houses must be built evenly across a set. Four houses can become a hotel. Rents skyrocket!</p>
   <p>🚂 <b>Stations</b> earn more the more you own. 💡 <b>Utilities</b> earn 4× or 10× the dice.</p>
   <p>❓ <b>Chance</b> & 💰 <b>Potato Sack</b> cards can help… or hurt.</p>
-  <p>🔒 <b>Jail:</b> roll doubles, pay ₥50 or use a Get Out of Jail Free card. Visitors are safe.</p>
+  <p>🔒 <b>Jail:</b> roll doubles, pay ₱50 or use a Get Out of Jail Free card. Visitors are safe.</p>
   <p>🤝 <b>Trade</b> streets and cash with other players at any time on your turn. Mortgage property for quick cash when you're broke.</p>
   <p>🅿️ <b>House rule:</b> with the jackpot on, all taxes and fines go to Free Parking – land there to win the pile!</p>`});
 }
@@ -1448,6 +1503,10 @@ function guestCmd(m){return new Promise(res=>{const id=++NET.seq;NET.cmds[id]=re
 function loadPeer(){return window.Peer?Promise.resolve():new Promise((res,rej)=>{const sc=document.createElement('script');sc.src=PEERJS;sc.onload=res;sc.onerror=()=>rej(new Error('Could not load the online module. Check your internet connection.'));document.head.appendChild(sc)})}
 const newCode=()=>Array.from({length:4},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[rnd(32)]).join('');
 
+function tokPicker(sel,taken,color){
+  return`<div class="tokPickL">Choose your piece</div><div class="tokPick" style="--pc:${color}">${TOKENS.map((t,k)=>`<button data-tok="${k}" class="${k===sel?'on':''}" ${taken.includes(k)&&k!==sel?'disabled':''} title="${t.n}" aria-label="${t.n}">${tokSVG(k)}</button>`).join('')}</div>`;
+}
+const freeTok=(taken,want)=>!taken.includes(want)?want:[...TOKENS.keys()].find(k=>!taken.includes(k));
 /* ---- host ---- */
 async function hostGame(){
   const box=$('#onlineBox');box.innerHTML='<p>⏳ Opening a table…</p>';
@@ -1469,8 +1528,11 @@ function hostMsg(c,m){
     if(!NET.started&&NET.lobby.length+1+CFG.cpu>=7&&CFG.cpu>0)CFG.cpu--;
     if(NET.started||NET.lobby.length+1+CFG.cpu>=7){c.send({t:'full',why:NET.started?'The game has already started.':'The table is full.'});setTimeout(()=>c.close(),300);return}
     NET.conns[c.peer]=c;NET.lobby=NET.lobby.filter(g=>g.peer!==c.peer);
-    NET.lobby.push({peer:c.peer,name:String(m.name||'Guest').slice(0,14),token:+m.token||0});SFX.bid();drawHostLobby();return;
+    const taken=[CFG.players[0].token,...NET.lobby.map(g=>g.token)];
+    NET.lobby.push({peer:c.peer,name:String(m.name||'Guest').slice(0,14),token:freeTok(taken,+m.token||0)});SFX.bid();drawHostLobby();return;
   }
+  if(m.t==='tok'&&!NET.started){const g=NET.lobby.find(g=>g.peer===c.peer),t=+m.token;
+    if(g&&TOKENS[t]&&![CFG.players[0].token,...NET.lobby.filter(x=>x!==g).map(x=>x.token)].includes(t))g.token=t;drawHostLobby();return}
   if(m.t==='ans'){const x=NET.pend[m.id];if(x&&G&&G.players[x.pid].ctl===c.peer){delete NET.pend[m.id];x.res(m.v)}return}
   if(m.t==='cmd')hostCmd(c,m);
 }
@@ -1500,14 +1562,16 @@ function lobbySeats(){
 function drawHostLobby(){
   const seats=lobbySeats();
   $('#onlineBox').innerHTML=`<div class="codeBox"><small>Table code</small><span class="code">${NET.code}</span><small>Your friends open <u>Monongoly</u> on their own device, choose <b>Join</b> and type this code.</small></div>
+    ${tokPicker(CFG.players[0].token,NET.lobby.map(g=>g.token),PCOLORS[0])}
     <div class="lob">${seats.map((s,i)=>`<div class="lobRow" style="--pc:${PCOLORS[i]}"><span class="tk">${s.cpu?'🤖':tokSVG(s.token)}</span><b>${esc(s.name)}</b><small>${s.host?'🏠 You (host)':s.cpu?'Computer':'🌐 Joined'}</small></div>`).join('')}</div>
     <div class="opt" style="margin-top:8px">🤖 Computer players<div class="seg" id="cpuSeg">${[0,1,2,3,4].map(n=>`<button class="${CFG.cpu===n?'on':''}" ${NET.lobby.length+1+n>6?'disabled':''}>${n}</button>`).join('')}</div></div>
     <div class="lidBtns"><button class="btn danger" id="leaveBtn">✖ Close table</button><button class="btn go" id="hostStart" ${seats.length<2?'disabled':''}>🎲 Start online game</button></div>
     <p class="hint">${seats.length<2?'Waiting for players… (add a computer player to play right away)':'Everyone in? Press start!'}</p>`;
   $$('#cpuSeg button').forEach((b,n)=>b.onclick=()=>{CFG.cpu=n;SFX.click();drawHostLobby()});
+  $$('#onlineBox .tokPick button').forEach(b=>b.onclick=()=>{CFG.players[0].token=+b.dataset.tok;SFX.click();drawHostLobby()});
   $('#leaveBtn').onclick=()=>location.reload();
   $('#hostStart').onclick=hostStart;
-  bcast({t:'lobby',seats:seats.map(s=>({name:s.name,token:s.token,cpu:!!s.cpu,host:!!s.host}))});
+  bcast({t:'lobby',seats:seats.map(s=>({name:s.name,token:s.token,cpu:!!s.cpu,host:!!s.host,peer:s.peer||null}))});
 }
 function hostStart(){
   const seats=lobbySeats();if(seats.length<2)return;
@@ -1546,9 +1610,13 @@ function guestLost(){
 async function guestMsg(m){
   switch(m.t){
     case'full':$('#onlineBox').innerHTML=`<p class="err">${esc(m.why)}</p><div class="lidBtns"><button class="btn" onclick="location.reload()">↩ Back</button></div>`;break;
-    case'lobby':if(!NET.started)$('#onlineBox').innerHTML=`<div class="codeBox"><small>Table</small><span class="code">${esc(NET.code)}</span><small>✅ You're in! Waiting for the host to start…</small></div>
+    case'lobby':if(!NET.started){const meS=m.seats.find(x=>x.peer===NET.id),myI=m.seats.indexOf(meS);
+      $('#onlineBox').innerHTML=`<div class="codeBox"><small>Table</small><span class="code">${esc(NET.code)}</span><small>✅ You're in! Waiting for the host to start…</small></div>
+      ${meS?tokPicker(meS.token,m.seats.filter(x=>x!==meS&&!x.cpu).map(x=>x.token),PCOLORS[myI]):''}
       <div class="lob">${m.seats.map((s,i)=>`<div class="lobRow" style="--pc:${PCOLORS[i]}"><span class="tk">${s.cpu?'🤖':tokSVG(s.token)}</span><b>${esc(s.name)}</b><small>${s.host?'🏠 Host':s.cpu?'Computer':'🌐 Player'}</small></div>`).join('')}</div>
-      <div class="lidBtns"><button class="btn danger" onclick="location.reload()">✖ Leave</button></div>`;break;
+      <div class="lidBtns"><button class="btn danger" onclick="location.reload()">✖ Leave</button></div>`;
+      $$('#onlineBox .tokPick button').forEach(b=>b.onclick=()=>{CFG.players[0].token=+b.dataset.tok;SFX.click();NET.conn.send({t:'tok',token:+b.dataset.tok})});}
+      break;
     case'start':NET.started=true;$('#log').innerHTML='';break;
     case'state':applyState(m.G);break;
     case'fx':await guestFx(m.e,m.d);break;
@@ -1616,16 +1684,16 @@ function guestAsk(m){
 /* ---- setup screen: online panel ---- */
 function drawOnline(){
   const me=CFG.players[0];
-  $('#onlineBox').innerHTML=`<div class="prow" style="--pc:${PCOLORS[0]};grid-template-columns:auto 1fr">
-      <button class="tk" id="onTok" aria-label="Change token">${tokSVG(me.token)}</button>
+  $('#onlineBox').innerHTML=`<div class="prow" style="--pc:${PCOLORS[0]};grid-template-columns:1fr">
       <input id="onName" value="${esc(me.name==='You'?'':me.name)}" placeholder="Your name" maxlength="14" aria-label="Your name"></div>
+    ${tokPicker(me.token,[],'#ffcb52')}
     <div class="onGrid">
       <div class="onCard"><h4>🏠 Host a table</h4><p>Get a code and let friends join from their own PC, tablet or phone.</p><button class="btn go" id="hostBtn">Host game</button></div>
       <div class="onCard"><h4>🔑 Join a table</h4><p>Type the 4-letter code from the host.</p>
         <div style="display:flex;gap:6px"><input id="joinCode" maxlength="4" placeholder="CODE" autocapitalize="characters" autocomplete="off"><button class="btn green" id="joinBtn" style="flex:0 0 auto">Join</button></div><div class="err" id="joinErr"></div></div>
     </div>
     <p class="hint">Works on the same Wi-Fi and over the internet. A free matchmaking service connects the browsers, then the game runs directly between your devices.</p>`;
-  $('#onTok').onclick=()=>{me.token=(me.token+1)%TOKENS.length;SFX.click();drawOnline()};
+  $$('#onlineBox .tokPick button').forEach(b=>b.onclick=()=>{me.token=+b.dataset.tok;SFX.click();$$('#onlineBox .tokPick button').forEach(x=>x.classList.toggle('on',x===b))});
   $('#onName').oninput=e=>{me.name=e.target.value};
   $('#hostBtn').onclick=()=>{SFX.ac();hostGame()};
   $('#joinBtn').onclick=()=>{SFX.ac();joinGame()};
@@ -1650,7 +1718,7 @@ function drawSetup(){
     const j=CFG.players.findIndex((p,k)=>k!==i&&p.token===t);if(j>=0)CFG.players[j].token=CFG.players[i].token;CFG.players[i].token=t;SFX.click();drawSetup()});
   $$('#prows input').forEach(e=>e.oninput=()=>{CFG.players[+e.dataset.i].name=e.value});
   $$('#prows .hc').forEach(b=>b.onclick=()=>{const p=CFG.players[+b.dataset.i];p.human=!p.human;SFX.click();drawSetup()});
-  seg('optMoney',[[1000,'₥1000'],[1500,'₥1500'],[2000,'₥2000']],'money');
+  seg('optMoney',[[1000,'₱1000'],[1500,'₱1500'],[2000,'₱2000']],'money');
   seg('optPot',[[true,'On'],[false,'Off']],'pot');
   seg('optSpeed',[['normal','Normal'],['fast','Fast']],'speed');
   seg('optAuc',[[true,'On'],[false,'Off']],'auc');
