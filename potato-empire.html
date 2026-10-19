@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>The Potato Empire – Free Property Trading Board Game | Play Online, No Download</title>
-<meta name="description" content="Play The Potato Empire free in your browser! A classic property trading board game on a real-looking 3D table: roll the dice, buy streets, build houses and hotels, trade and bankrupt your rivals. Play against the computer or friends. No download.">
-<meta name="keywords" content="the potato empire, potato empire, potato monopoly, board game, brætspil, property trading game, monopoly style game, matador, free board game, dice game, play board game online, browser game, potato game">
+<title>The Potato Empire – Free Property Trading Board Game | Play in Your Browser, No Download</title>
+<meta name="description" content="Play The Potato Empire free in your browser! A classic property trading board game on a real-looking 3D table: roll the dice, buy streets, build houses and hotels, trade and bankrupt your rivals. Play against the computer, with friends on one device, or on your own devices over the same Wi-Fi. No download.">
+<meta name="keywords" content="the potato empire, potato empire, potato monopoly, board game, brætspil, property trading game, monopoly style game, matador, free board game, dice game, wifi board game, lan multiplayer, browser game, potato game">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#2a170c">
 <meta name="application-name" content="The Potato Empire">
@@ -35,7 +35,7 @@
   "url": "https://potatoteamgames.github.io/games/potato-empire.html",
   "image": "https://potatoteamgames.github.io/games/images/og-potato-empire.jpg",
   "author": {"@type": "Organization", "name": "Potato Team Games", "url": "https://potatoteamgames.github.io/games/"},
-  "description": "A free property trading board game in your browser. Roll the dice, buy streets, build houses and hotels, trade with rivals and drive them to bankruptcy on a realistic 3D table.",
+  "description": "A free property trading board game in your browser. Roll the dice, buy streets, build houses and hotels, trade with rivals and drive them to bankruptcy on a realistic 3D table. Play against the computer, pass-and-play on one device, or with friends on the same Wi-Fi.",
   "genre": ["Board game", "Property trading game", "Dice game"],
   "gamePlatform": ["Web browser", "Mobile browser"],
   "applicationCategory": "Game",
@@ -492,7 +492,7 @@ button:disabled{cursor:not-allowed;opacity:.45}
     <div class="lidBody">
       <div class="langSeg" id="langSeg"><button data-l="en">🇬🇧 English</button><button data-l="da">🇩🇰 Dansk</button></div>
       <div id="contBox"></div>
-      <div class="modes" id="modes"><button data-m="local">🪑 Same device<small>Pass the dice around · vs computer</small></button><button data-m="online">🌐 Play online<small>Each on own device · host / join</small></button></div>
+      <div class="modes" id="modes"><button data-m="local">🪑 Same device<small>Pass the dice around · vs computer</small></button><button data-m="online">🌐 Play on Wi-Fi<small>Each on own device · same Wi-Fi</small></button></div>
       <div id="localBox">
         <h3>Players</h3>
         <div class="cnt" id="cnt"></div>
@@ -951,7 +951,7 @@ function renderPlayers(){
   if(!G)return;syncSoon();
   $('#players').innerHTML=G.players.map(p=>`<div class="pc${p.id===G.turn&&!p.out?' cur':''}${p.out?' out':''}" data-id="${p.id}" style="--pc:${p.color}">
     <div class="pTok">${tokSVG(p.token)}</div>
-    <div class="pName">${esc(p.name)}<small>${p.disc?L('📶 Reconnecting…','📶 Forbinder…'):p.left?L('🚪 Left','🚪 Gået'):p.out?L('Bankrupt','Konkurs'):!p.human?L('CPU','Computer'):NET.role&&p.ctl!=='host'?'🌐 Online':NET.role?'🏠 Host':L('Player','Spiller')}</small></div>
+    <div class="pName">${esc(p.name)}<small>${p.disc?L('📶 Reconnecting…','📶 Forbinder…'):p.left?L('🚪 Left','🚪 Gået'):p.out?L('Bankrupt','Konkurs'):!p.human?L('CPU','Computer'):NET.role&&p.ctl!=='host'?'📶 Wi-Fi':NET.role?'🏠 Host':L('Player','Spiller')}</small></div>
     <div class="pMoney">${p.out?'—':M(p.money)}</div>
     <div class="pChips">${CHIP_ORDER.map(ids=>`<span>${ids.map(i=>`<i class="${G.owner[i]===p.id?'on':''}${G.mort[i]?' m':''}" style="--c:${colorOf(i)}"></i>`).join('')}</span>`).join('')}</div>
     <div class="pFlags">${p.jail?`🔒 ${p.jailTries}/3 `:''}${p.cards.length?'🗝️'.repeat(p.cards.length):''}</div></div>`).join('');
@@ -1578,11 +1578,8 @@ addEventListener('beforeunload',()=>{if(NET.role&&!NET.leaving&&G&&!G.over)quitO
 /* ================= ONLINE (WebRTC via PeerJS) ================= */
 // The host's browser runs the game. Guests receive the state + visual effects and answer when it's their move.
 const PEER_PREFIX='potato-empire-ptg-',PEERJS='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js';
-// Phones on mobile data sit behind carrier NAT and usually need a relay (TURN) to reach each other.
-const ICE={sdpSemantics:'unified-plan',iceServers:[
-  {urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']},{urls:'stun:stun.cloudflare.com:3478'},
-  {urls:['turn:eu-0.turn.peerjs.com:3478','turn:us-0.turn.peerjs.com:3478'],username:'peerjs',credential:'peerjsp'},
-  {urls:['turn:openrelay.metered.ca:80','turn:openrelay.metered.ca:443','turn:openrelay.metered.ca:443?transport=tcp'],username:'openrelayproject',credential:'openrelayproject'}]};
+// Online play is for devices on the same Wi-Fi: they reach each other directly, so no relay (STUN/TURN) servers are used.
+const ICE={sdpSemantics:'unified-plan',iceServers:[]};
 const peerOpts=()=>window.__PEER_OPTS||{config:ICE,pingInterval:4000};
 // a per-tab id so a guest whose connection drops can get their seat back
 NET.cid=(()=>{try{let c=sessionStorage.getItem('pe_cid');if(!c){c=Math.random().toString(36).slice(2,12);sessionStorage.setItem('pe_cid',c)}return c}catch(e){return Math.random().toString(36).slice(2,12)}})();
@@ -1643,7 +1640,7 @@ async function hostGame(){
   const box=$('#onlineBox');box.innerHTML=L('<p>⏳ Opening a table…</p>','<p>⏳ Åbner et bord…</p>');
   try{await loadPeer()}catch(e){box.innerHTML=`<p class="err">${e.message}</p>`;return}
   const tryOpen=()=>new Promise((res,rej)=>{NET.code=newCode();const pr=new Peer(PEER_PREFIX+NET.code,peerOpts());pr.on('open',()=>res(pr));pr.on('error',e=>{pr.destroy();rej(e)})});
-  let pr;for(let k=0;k<3&&!pr;k++){try{pr=await tryOpen()}catch(e){if(k===2){box.innerHTML=`<p class="err">${L('Could not open an online table','Kunne ikke åbne et online-bord')} (${esc(e.type||e.message)}). ${L('Try again in a moment.','Prøv igen om lidt.')}</p>`;return}}}
+  let pr;for(let k=0;k<3&&!pr;k++){try{pr=await tryOpen()}catch(e){if(k===2){box.innerHTML=`<p class="err">${L('Could not open a table','Kunne ikke åbne et bord')} (${esc(e.type||e.message)}). ${L('Try again in a moment.','Prøv igen om lidt.')}</p>`;return}}}
   NET.role='host';NET.peer=pr;NET.id='host';NET.lobby=[];
   pr.on('connection',c=>{
     c.on('data',m=>hostMsg(c,m));
@@ -1732,7 +1729,7 @@ function hostCountdown(seats){
 function drawHostLobby(){
   if(NET.started)return;
   const seats=lobbySeats();hostCountdown(seats);
-  $('#onlineBox').innerHTML=`<div class="codeBox"><small>${L('Table code','Bordkode')}</small><span class="code">${NET.code}</span><small>${L('Your friends open <u>The Potato Empire</u> on their own device, choose <b>Join</b> and type this code.','Dine venner åbner <u>The Potato Empire</u> på deres egen enhed, vælger <b>Join</b> og skriver koden.')}</small></div>
+  $('#onlineBox').innerHTML=`<div class="codeBox"><small>${L('Table code','Bordkode')}</small><span class="code">${NET.code}</span><small>${L('Friends on the <b>same Wi-Fi</b> open <u>The Potato Empire</u>, choose <b>Join</b> and type this code (or use 📤 Invite).','Venner på <b>samme wifi</b> åbner <u>The Potato Empire</u>, vælger <b>Join</b> og skriver koden (eller brug 📤 Inviter).')}</small></div>
     ${tokPicker(CFG.players[0].token,NET.lobby.map(g=>g.token),PCOLORS[0])}
     <div class="lob">${seats.map((s,i)=>`<div class="lobRow" style="--pc:${PCOLORS[i]}"><span class="tk">${s.cpu?'🤖':tokSVG(s.token)}</span><b>${esc(s.name)}</b><small>${s.host?L('🏠 You (host)','🏠 Dig (host)'):s.cpu?'Computer':L('🌐 Joined','🌐 Med')} ${readyTag(s)}</small></div>`).join('')}</div>
     <div class="opt" style="margin-top:8px">${L('🤖 Computer players','🤖 Computerspillere')}<div class="seg" id="cpuSeg">${[0,1,2,3,4].map(n=>`<button class="${CFG.cpu===n?'on':''}" ${NET.lobby.length+1+n>6?'disabled':''}>${n}</button>`).join('')}</div></div>
@@ -1754,7 +1751,7 @@ function hostStart(){
   newGame({players,money:CFG.money,pot:CFG.pot,speed:CFG.speed,auc:CFG.auc});
   G.online=true;
   bcast({t:'start',lang:LANG});
-  log(L(`🌐 Online game started! Table ${NET.code}. Everyone starts with ${M(CFG.money)}.`,`🌐 Online-spillet er startet! Bord ${NET.code}. Alle starter med ${M(CFG.money)}.`));
+  log(L(`📶 Wi-Fi game started! Table ${NET.code}. Everyone starts with ${M(CFG.money)}.`,`📶 Wifi-spillet er startet! Bord ${NET.code}. Alle starter med ${M(CFG.money)}.`));
   startFrom(G);syncNow();
 }
 
@@ -1778,7 +1775,7 @@ async function joinGame(){
     // the host's phone may be re-registering the table (e.g. after switching apps) – try a few more times
     if(e.type==='peer-unavailable'&&!NET.started&&++tries<6){box.innerHTML=L(`<p>⏳ Looking for table <b>${esc(code)}</b>… (try ${tries+1}/6)</p>`,`<p>⏳ Leder efter bord <b>${esc(code)}</b>… (forsøg ${tries+1}/6)</p>`);setTimeout(()=>guestConnect(code,box),2500);return}
     if(NET.started)return;
-    fail(e.type==='peer-unavailable'?L('No table found with code <b>'+esc(code)+'</b>. Check the code and that the host is still waiting.','Intet bord fundet med koden <b>'+esc(code)+'</b>. Tjek koden, og at hosten stadig venter.'):L('Connection problem: ','Forbindelsesproblem: ')+esc(e.type||e.message));
+    fail(e.type==='peer-unavailable'?L('No table found with code <b>'+esc(code)+'</b>. Check the code, that the host is still waiting, and that you are on the same Wi-Fi.','Intet bord fundet med koden <b>'+esc(code)+'</b>. Tjek koden, at hosten stadig venter, og at I er på samme wifi.'):L('Connection problem: ','Forbindelsesproblem: ')+esc(e.type||e.message));
   });
   pr.on('open',id=>{NET.role='guest';NET.id=id;$('#rulesBox').style.display='none';wake();guestConnect(code,box,fail)});
 }
@@ -1786,7 +1783,7 @@ async function joinGame(){
 function guestConnect(code,box,fail){
   const pr=NET.peer;if(!pr||pr.destroyed)return;
   const c=pr.connect(PEER_PREFIX+code,{reliable:true});
-  const to=setTimeout(()=>{if(!c.open&&!NET.started&&fail)fail(L('Could not reach the host. On mobile data this can fail – try again, or put one of the phones on Wi-Fi.','Kunne ikke få forbindelse til hosten. På mobildata kan det fejle – prøv igen, eller sæt en af telefonerne på wifi.'))},25000);
+  const to=setTimeout(()=>{if(!c.open&&!NET.started&&fail)fail(L('Could not reach the host. Make sure both devices are on the same Wi-Fi, then try again.','Kunne ikke få forbindelse til hosten. Tjek at begge enheder er på samme wifi, og prøv igen.'))},25000);
   c.on('open',()=>{clearTimeout(to);NET.conn=c;NET.lastHost=Date.now();const me=CFG.players[0];
     c.send({t:'hello',cid:NET.cid,name:(me.name||'').trim()||L('Guest','Gæst'),token:me.token});
     if(!NET.started&&box)box.innerHTML=L('<p>✅ Connected! Waiting for the host…</p>','<p>✅ Forbundet! Venter på hosten…</p>');
@@ -1905,11 +1902,11 @@ function drawOnline(){
       <input id="onName" value="${esc(['You','Dig'].includes(me.name)?'':me.name)}" placeholder="${L('Your name','Dit navn')}" maxlength="14" aria-label="${L('Your name','Dit navn')}"></div>
     ${tokPicker(me.token,[],'#ffcb52')}
     <div class="onGrid">
-      <div class="onCard"><h4>${L('🏠 Host a table','🏠 Vær host')}</h4><p>${L('Get a code and let friends join from their own PC, tablet or phone.','Få en kode og lad venner joine fra deres egen PC, tablet eller telefon.')}</p><button class="btn go" id="hostBtn">${L('Host game','Host spil')}</button></div>
-      <div class="onCard"><h4>${L('🔑 Join a table','🔑 Join et bord')}</h4><p>${L('Type the 4-letter code from the host.','Skriv koden på 4 tegn fra hosten.')}</p>
+      <div class="onCard"><h4>${L('🏠 Host a table','🏠 Vær host')}</h4><p>${L('Get a code and let friends on the same Wi-Fi join from their own PC, tablet or phone.','Få en kode og lad venner på samme wifi joine fra deres egen PC, tablet eller telefon.')}</p><button class="btn go" id="hostBtn">${L('Host game','Host spil')}</button></div>
+      <div class="onCard"><h4>${L('🔑 Join a table','🔑 Join et bord')}</h4><p>${L('Type the 4-letter code from the host. You must be on the same Wi-Fi.','Skriv koden på 4 tegn fra hosten. I skal være på samme wifi.')}</p>
         <div style="display:flex;gap:6px"><input id="joinCode" maxlength="4" placeholder="${L('CODE','KODE')}" autocapitalize="characters" autocomplete="off"><button class="btn green" id="joinBtn" style="flex:0 0 auto">Join</button></div><div class="err" id="joinErr"></div></div>
     </div>
-    <p class="hint">${L('Works on the same Wi-Fi and over the internet. A free matchmaking service connects the browsers, then the game runs directly between your devices.','Virker på samme wifi og over internettet. En gratis forbindelsestjeneste kobler browserne sammen, og så kører spillet direkte mellem jeres enheder.')}</p>`;
+    <p class="hint">${L('📶 All devices must be on the <b>same Wi-Fi</b>. A free matchmaking service only swaps the table code – the game itself runs directly between your devices.','📶 Alle enheder skal være på <b>samme wifi</b>. En gratis forbindelsestjeneste bytter kun bordkoden – selve spillet kører direkte mellem jeres enheder.')}</p>`;
   $$('#onlineBox .tokPick button').forEach(b=>b.onclick=()=>{me.token=+b.dataset.tok;SFX.click();$$('#onlineBox .tokPick button').forEach(x=>x.classList.toggle('on',x===b))});
   $('#onName').oninput=e=>{me.name=e.target.value};
   $('#hostBtn').onclick=()=>{SFX.ac();hostGame()};
@@ -2001,7 +1998,7 @@ const STATIC=[
   ['#bSnd@title','Sound on/off','Lyd til/fra'],['#btnManage','🏠 Properties','🏠 Grunde'],['#btnTrade','🤝 Trade','🤝 Handel'],['.logBox h3','📜 Game log','📜 Spillets log'],
   ['.lidSub','The Potato Property Trading Game','Kartoffel-ejendomsspillet'],
   ['#modes [data-m=local]','🪑 Same device<small>Pass the dice around · vs computer</small>','🪑 Samme enhed<small>Send terningerne rundt · mod computeren</small>',1],
-  ['#modes [data-m=online]','🌐 Play online<small>Each on own device · host / join</small>','🌐 Spil online<small>Hver på sin enhed · host / join</small>',1],
+  ['#modes [data-m=online]','🌐 Play on Wi-Fi<small>Each on own device · same Wi-Fi</small>','🌐 Spil på wifi<small>Hver på sin enhed · samme wifi</small>',1],
   ['#localBox h3','Players','Spillere'],['#rulesBox h3','House rules','Husregler'],
   ['#lblMoney','💰 Starting money','💰 Startbeløb'],['#lblPot','🅿️ Free Parking jackpot','🅿️ Jackpot på Gratis parkering'],['#lblSpeed','⚡ Computer speed','⚡ Computerens fart'],['#lblAuc','🔨 Auctions','🔨 Auktioner'],
   ['#homeBtn','← All games','← Alle spil'],['#rulesBtn','📖 Rules','📖 Regler'],['#startBtn','🎲 Start game','🎲 Start spil'],
