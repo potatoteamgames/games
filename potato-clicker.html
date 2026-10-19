@@ -156,7 +156,8 @@ main{display:grid;grid-template-columns:minmax(0,1fr) 460px;min-height:0;min-wid
 @keyframes runL{from{transform:translateX(105vw)}to{transform:translateX(-40vw)}}
 @keyframes ufo{50%{transform:translateY(-36px) rotate(-6deg)}}
 @keyframes rhit{50%{transform:scale(.8) rotate(-10deg)}}
-#chips{position:absolute;top:0;left:0;right:0;display:flex;flex-wrap:wrap;gap:5px;justify-content:center;z-index:3;pointer-events:none}
+#chips{position:relative;display:flex;flex-wrap:wrap;gap:5px;justify-content:center;z-index:5;pointer-events:none;padding:0 8px}
+#chips:empty{display:none}
 .chip{font-size:12px;padding:3px 10px;border-radius:999px;background:var(--red);border:2px solid var(--ink);color:var(--cream);animation:pulse 1s ease-in-out infinite}
 @keyframes pulse{50%{transform:scale(1.06)}}
 #comboBox{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:min(300px,80%);text-align:center;opacity:0;transition:opacity .3s;z-index:3;pointer-events:none}
@@ -376,8 +377,8 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
         <div class="sub" id="xpTxt"></div>
       </div>
       <div id="goal"><div class="gt"><span>🎯 Next goal</span><b id="goalTxt"></b></div><div class="bar"><div id="goalBar"></div></div></div>
+      <div id="chips"></div>
       <div id="potArea">
-        <div id="chips"></div>
         <div id="glow"></div>
         <div id="rays"></div>
         <div id="hands"></div>
