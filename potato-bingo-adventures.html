@@ -1203,7 +1203,7 @@ function vUp(){
   h+=seg('up',[['helpers','🧰 Bingo helpers'],['power','🔮 Power-ups']]);
   const toggle=(on,act)=>`<div class="opt"><button class="${on?'on':''}" data-a="${on?'':act}">On</button><button class="${on?'':'on'}" data-a="${on?act:''}">Off</button></div>`;
   if(UI.up==='helpers'){
-    h+=`<div class="hcard"><div class="hce">🔍</div><div style="flex:1"><h4>Number Spotter</h4><p>Called numbers glow softly on your cards, so you can see where to put your marker. Without it, you have to watch carefully yourself.</p>
+    h+=`<div class="hcard"><div class="hce">🔍</div><div style="flex:1"><h4>Number Spotter</h4><p>If you haven't found a called number after about 3 seconds, it starts to glow softly on your card, so you can see where to put your marker. Without it, you have to watch carefully yourself.</p>
       ${S.spot?toggle(S.spotOn,'spotToggle'):`<button class="btn p" data-a="spotBuy" ${S.gems<SPOT_COST?'disabled':''}>Buy · 💎 ${SPOT_COST}</button>`}</div></div>
      <div class="hcard"><div class="hce">🤖</div><div style="flex:1"><h4>Auto-BINGO</h4><p>BINGO is pressed for you the moment you finish a line, so you never lose a bingo to slow fingers. You still place your own markers.</p>
       ${hasAutoB()?toggle(S.autoBOn,'autoBToggle'):`<button class="btn p" data-a="autoBBuy" ${S.gems<AUTOB_COST?'disabled':''}>Buy · 💎 ${AUTOB_COST}</button>`}</div></div>`;
@@ -1330,7 +1330,7 @@ function tourGo(){S.tours++;S.coins=0;S.b=LANDS.map(()=>Array(8).fill(0));S.unlo
    ========================================================= */
 let R=null;
 function vBingo(){if(R&&!R.over)return renderRound();vLobby()}
-const SPOT_COST=30,AUTOB_COST=80;
+const SPOT_DELAY=3,SPOT_COST=30,AUTOB_COST=80;
 // Auto-BINGO comes from the bought upgrade or from gear; one switch turns it on/off
 const hasAutoB=()=>S.autoB||ST.claim>0, autoBOn=()=>hasAutoB()&&S.autoBOn;
 function nextGoal(){
@@ -1368,7 +1368,7 @@ function settingsHtml(){
        ${VOICES.length?'<span class="small muted">No sound? Pick another voice and press Test. English voices sound best.</span>':'<span class="small" style="color:#ff9a9a">No voices found yet. Press Test – if it stays silent, add a voice in your computer settings (Windows: Settings → Time &amp; language → Speech) or try Chrome/Edge.</span>'}`}</div>
    <div class="set"><div class="sl"><b>⏱️ Calling speed</b><span>How fast numbers are drawn. You can also change it during a game.</span></div>
      <div class="opt">${SPEEDS.map((x,j)=>`<button class="${S.spd===j?'on':''}" data-a="speed" data-n="${j}">${x.e} ${x.n}</button>`).join('')}</div></div>
-   ${S.spot?`<div class="set"><div class="sl"><b>🔍 Number Spotter</b><span>Called numbers glow on your cards.</span></div>${onOff(S.spotOn,'spotToggle')}</div>`:''}
+   ${S.spot?`<div class="set"><div class="sl"><b>🔍 Number Spotter</b><span>Missed numbers glow after about 3 seconds.</span></div>${onOff(S.spotOn,'spotToggle')}</div>`:''}
    ${hasAutoB()?`<div class="set"><div class="sl"><b>🤖 Auto-BINGO</b><span>BINGO is pressed for you.</span></div>${onOff(S.autoBOn,'autoBToggle')}</div>`:''}
   </div><div class="acts"><button class="btn dk" data-a="help">❓ Game guide</button><button class="btn dk" data-a="howBingo">🎱 Bingo rules</button><button class="btn dk" data-a="reset" style="color:#ff9a9a">Reset game</button></div>
   <div class="acts"><button class="btn big" data-a="close">Done</button></div>`}
@@ -1435,7 +1435,7 @@ function startRound(){if(S.afk)return showAfk();
   const pt=ri(10,16);
   R={land:i,cards:[],order:shuffle([...Array(75)].map((_,k)=>k+1)),called:new Set(),hist:[],idx:0,maxBalls:50+Math.floor(ST.balls),poolTotal:pt,pool:pt,
      tNext:1.2,speed:SPEEDS[S.spd].t,paused:false,time:0,bingos:0,coins:0,xp:0,gems:0,souv:0,chests:0,combo:0,best:0,charge:0,need:Math.max(5,14/(1+ST.charge/100)),
-     frozen:0,dbl:0,dblM:1,ev:null,evCd:4,pending:[],over:false,endAt:0,players:ri(40,240),feed:[],boost:S.boost>0,claimQ:[],post:[]};
+     frozen:0,dbl:0,dblM:1,ev:null,evCd:4,pending:[],hintQ:[],over:false,endAt:0,players:ri(40,240),feed:[],boost:S.boost>0,claimQ:[],post:[]};
   for(let c=0;c<S.cards;c++)R.cards.push(genCard());
   // collect specials on lucky pre-daubs
   S.tab='bingo';render();
@@ -1462,7 +1462,7 @@ function renderRound(){
 }
 const SPI={coin:'🪙',souv:'🧩',charge:'⚡',gem:'💎',chest:'🎁'};
 function updCell(ci,j){const el=document.getElementById('c'+ci+'_'+j);if(!el)return;const cl=R.cards[ci].cells[j];
-  el.className='cell'+(cl.d?' d':'')+(cl.free?' free':'')+(cl.magic?' magic':'')+(cl.won?' won':'')+(!cl.d&&cl.ca&&S.spot&&S.spotOn?' hint':'');
+  el.className='cell'+(cl.d?' d':'')+(cl.free?' free':'')+(cl.magic?' magic':'')+(cl.won?' won':'')+(!cl.d&&cl.ca&&S.spot&&S.spotOn&&R.time-cl.ct>=SPOT_DELAY?' hint':'');
   el.innerHTML=cl.free?'<span>🥔</span>':`<span>${cl.n}</span>${cl.sp&&!cl.d?`<i class="sq">${SPI[cl.sp]}</i>`:''}`}
 function ballLetter(n){return Math.floor((n-1)/15)}
 function updCaller(){
@@ -1485,7 +1485,7 @@ function callBall(){
   if(R.idx>=R.maxBalls){if(!R.endAt)R.endAt=R.time+2.5;return}
   const n=R.order[R.idx++];R.called.add(n);R.hist.unshift(n);
   const gold=R.goldNext;R.goldNext=false;
-  R.cards.forEach((cd,ci)=>cd.cells.forEach((cl,j)=>{if(cl.n===n&&!cl.free){cl.ca=R.idx;if(gold)cl.gold=R.time+2.5}}));
+  R.cards.forEach((cd,ci)=>cd.cells.forEach((cl,j)=>{if(cl.n===n&&!cl.free){cl.ca=R.idx;cl.ct=R.time;if(gold)cl.gold=R.time+2.5;if(S.spot)R.hintQ.push({ci,j,at:R.time+SPOT_DELAY})}}));
   // combo breaker: a number called 3 balls ago is still not daubed
   if(R.idx>3){const old=R.hist[3];let missed=false;R.cards.forEach(cd=>cd.cells.forEach(cl=>{if(cl.n===old&&!cl.d)missed=true}));if(missed&&R.combo>0){if(R.combo>=5)feed(`💔 Combo lost at ${R.combo}×`);R.combo=0}}
   // rivals
@@ -1616,6 +1616,8 @@ function loop(){
     if(R.ev&&R.ev.tick)R.ev.tick();
     // no new numbers while a bonus event is on screen, so the player can grab it calmly
     if(!R.paused&&!R.ev){R.tNext-=dt;if(R.tNext<=0){R.tNext=R.speed;callBall()}}
+    // Number Spotter: called numbers only glow after a few seconds, so players get a chance to find them first
+    if(R.hintQ.length){const due=R.hintQ.filter(q=>q.at<=R.time);if(due.length){R.hintQ=R.hintQ.filter(q=>q.at>R.time);due.forEach(q=>updCell(q.ci,q.j))}}
     if(R.pending.length){const due=R.pending.filter(p=>p.at<=R.time);R.pending=R.pending.filter(p=>p.at>R.time);due.forEach(p=>daub(p.ci,p.j,true))}
     if(R&&R.endAt&&R.time>=R.endAt&&!R.over)endRound('All the balls have been called!');
   }
@@ -1657,7 +1659,7 @@ const ACT={
   spotToggle:()=>{S.spotOn=!S.spotOn;save();if(R&&!R.over){R.cards.forEach((cd,ci)=>cd.cells.forEach((_,j)=>updCell(ci,j)));updCtl()}else rerender()},
   autoBBuy:()=>{if(S.autoB||S.gems<AUTOB_COST)return;S.gems-=AUTOB_COST;S.autoB=true;S.autoBOn=true;SFX.level();toast('🤖 <b>Auto-BINGO</b> unlocked! BINGO is now pressed for you when you get a line.');save();rerender()},
   autoBToggle:()=>{S.autoBOn=!S.autoBOn;save();if(R&&!R.over){updCtl();if(S.autoBOn)R.cards.forEach((_,ci)=>checkLines(ci))}else rerender()},
-  spotBuy:()=>{if(S.spot||S.gems<SPOT_COST)return;S.gems-=SPOT_COST;S.spot=true;S.spotOn=true;SFX.level();toast('🔍 <b>Number Spotter</b> unlocked! Called numbers now glow softly on your cards.');save();rerender()},
+  spotBuy:()=>{if(S.spot||S.gems<SPOT_COST)return;S.gems-=SPOT_COST;S.spot=true;S.spotOn=true;SFX.level();toast('🔍 <b>Number Spotter</b> unlocked! Numbers you miss will glow after about 3 seconds.');save();rerender()},
   spdUp:()=>setSpeed(S.spd+1),spdDown:()=>setSpeed(S.spd-1),
   leave:()=>{if(!R||R.over)return;closeModalAll();R.paused=true;modal(`<div class="me">🚪</div><h2>Leave the bingo hall?</h2><p>This game ends now. Coins, gems and souvenirs you already won are yours to keep.</p><div class="acts"><button class="btn p big" data-a="leaveGo">Leave game</button><button class="btn dk" data-a="leaveNo">Keep playing</button></div>`)},
   leaveNo:()=>{closeModal();if(R)R.paused=false},
