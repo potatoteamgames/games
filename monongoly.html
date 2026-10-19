@@ -1808,8 +1808,14 @@ $('#startBtn').onclick=()=>{
 (function(){
   const s=loadSave();
   if(s){$('#contBox').innerHTML=`<div style="background:#f3e9cf;border:2px solid #d8c9a3;border-radius:14px;padding:10px 12px;margin-bottom:8px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap">
-    <div style="font-size:14px">💾 Saved game · Round ${s.round} · ${s.players.filter(p=>!p.out).length} players left</div><button class="btn go" id="contBtn" style="flex:0 0 auto">▶ Continue</button></div>`;
-    $('#contBtn').onclick=()=>{SFX.ac();startFrom(s)}}
+    <div style="font-size:14px">💾 Saved game · Round ${s.round} · ${s.players.filter(p=>!p.out).length} players left<br><small style="color:#6b5a3e">${s.players.filter(p=>!p.out).map(p=>esc(p.name)).join(', ')}</small></div>
+    <div style="display:flex;gap:6px"><button class="btn danger" id="delBtn" style="flex:0 0 auto;color:#fff" title="Delete saved game">🗑️ Delete</button><button class="btn go" id="contBtn" style="flex:0 0 auto">▶ Continue</button></div></div>`;
+    $('#contBtn').onclick=()=>{SFX.ac();startFrom(s)};
+    $('#delBtn').onclick=async()=>{
+      if(await modal({title:'🗑️ Delete saved game?',html:`<p>Your saved game (round ${s.round}) will be deleted for good. This can't be undone.</p>`,buttons:[{k:'y',label:'🗑️ Yes, delete it',cls:'danger'},{k:'n',label:'Keep it',cls:'go'}]})!=='y')return;
+      try{localStorage.removeItem(SAVE_KEY)}catch(e){}
+      SFX.bad();$('#contBox').innerHTML='<p style="font-size:14px;margin:0 0 8px;color:#6b5a3e">🗑️ Saved game deleted.</p>';
+    }}
   if(CFG.mode!=='online')CFG.mode='local';
   drawSetup();drawMode();
 })();
