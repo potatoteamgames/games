@@ -1035,7 +1035,7 @@ function usePw(){
 /* ---------- BONUS EVENTS ---------- */
 const EVENTS=['golden','rain','mash','chests','balloon'];
 function evReward(m){return Bv(R.land)*ST.cm*(1+ST.event/100)*m}
-function evDone(ok){if(!R||!R.ev)return;if(ok){S.st.events++;track('events');R.xp+=5}R.ev=null;R.evCd=8;document.querySelectorAll('.evx').forEach(e=>e.remove())}
+function evDone(ok){if(!R||!R.ev)return;if(ok){S.st.events++;track('events');R.xp+=5}R.ev=null;R.tNext=Math.max(R.tNext,1.2);R.evCd=8;document.querySelectorAll('.evx').forEach(e=>e.remove())}
 function startEvent(){
   const t=pick(EVENTS);R.ev={t};SFX.event();
   if(t==='golden'||t==='balloon'){
@@ -1096,7 +1096,8 @@ function loop(){
   if(R&&!R.over){
     R.time+=dt;
     if(R.ev&&R.ev.tick)R.ev.tick();
-    if(!R.paused&&(!R.ev||R.ev.t==='golden'||R.ev.t==='balloon'||R.ev.t==='rain')){R.tNext-=dt;if(R.tNext<=0){R.tNext=R.speed;callBall()}}
+    // no new numbers while a bonus event is on screen, so the player can grab it calmly
+    if(!R.paused&&!R.ev){R.tNext-=dt;if(R.tNext<=0){R.tNext=R.speed;callBall()}}
     if(R.pending.length){const due=R.pending.filter(p=>p.at<=R.time);R.pending=R.pending.filter(p=>p.at>R.time);due.forEach(p=>daub(p.ci,p.j,true))}
     if(R&&R.endAt&&R.time>=R.endAt&&!R.over)endRound('All the balls have been called!');
   }
