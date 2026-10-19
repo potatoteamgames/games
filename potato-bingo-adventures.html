@@ -569,7 +569,7 @@ function fresh(){return{
   cards:1,speed:0,boost:0,
   st:{rounds:0,bingos:0,daubs:0,events:0,coins:0,gems:0,chests:0,powerups:0,souvenirs:0,bestCombo:0,specials:0,upgrades:0,best1:0,playMs:0},
   ach:{},achSeen:0,daily:null,login:{last:'',streak:0,total:0},
-  tours:0,last:Date.now(),sound:true,music:true,call:true,spd:2,spot:false,spotOn:true,tut:false,tab:'bingo'
+  tours:0,last:Date.now(),sound:true,music:true,call:true,spd:2,spot:false,spotOn:true,autoB:false,autoBOn:true,tut:false,tab:'bingo'
 }}
 let S=fresh();
 function load(){
@@ -755,7 +755,7 @@ function vGear(){
     h+=`<div class="slot ${it?'f':''}" ${it?`style="border-color:${RAR[it.r].c}"`:''}><div class="se">${lock?'🔒':it?it.e:sl.e}</div><b style="color:var(--txt)">${sl.n}</b>${lock?`Level ${sl.lv}`:it?`${it.n}<br>Lv ${S.gear[id]}`:'Empty'}</div>`});
   h+=`</div><div class="box" style="margin-top:12px"><b>Your bonuses</b><div class="stats" style="margin-top:8px">`;
   [['coin','🪙'],['auto','🖍️'],['xp','🎓'],['charge','⚡'],['event','🎉'],['gem','💎'],['luck','🍀'],['special','✨'],['souv','🧩'],['balls','🎱'],['rival','🐢'],['idle','🌾']].forEach(([k,e])=>{h+=`<div>${e} ${STAT[k][0]}<b>+${+ST[k].toFixed(2)}${STAT[k][1]}</b></div>`});
-  h+=`<div>🤖 Auto-BINGO<b>${ST.claim?'ON':'OFF'}</b></div><div>🌍 Global coins<b>×${ST.all.toFixed(2)}</b></div></div></div>
+  h+=`<div>🤖 Auto-BINGO<b>${autoBOn()?'ON':hasAutoB()?'OFF (switched off)':'OFF'}</b></div><div>🌍 Global coins<b>×${ST.all.toFixed(2)}</b></div></div></div>
     <h3 class="sec">🎁 Treasure Chests</h3><div class="grid">`;
   CHESTS.forEach((c,j)=>{h+=`<div class="box chest"><div class="ce">${c.e}</div><b>${c.n}</b><div class="small muted">${c.w.map((w,r)=>w?`${RAR[r].n} ${w}%`:'').filter(Boolean).join(' · ')}</div>
     ${j===0?`<button class="btn" data-a="openChest" data-j="0" ${S.bronze<1?'disabled':''}>Open (${S.bronze} owned)</button><div class="small muted">Found on 🎁 bingo squares</div>`:`<button class="btn p" data-a="openChest" data-j="${j}" ${S.gems<c.gems?'disabled':''}>Open · 💎 ${c.gems}</button>`}</div>`});
@@ -846,7 +846,9 @@ function tourGo(){S.tours++;S.coins=0;S.b=LANDS.map(()=>Array(8).fill(0));S.unlo
    ========================================================= */
 let R=null;
 function vBingo(){if(R&&!R.over)return renderRound();vLobby()}
-const SPOT_COST=30;
+const SPOT_COST=30,AUTOB_COST=80;
+// Auto-BINGO comes from the bought upgrade or from gear; one switch turns it on/off
+const hasAutoB=()=>S.autoB||ST.claim>0, autoBOn=()=>hasAutoB()&&S.autoBOn;
 function nextGoal(){
   const i=S.cur,L=LANDS[i];
   if(!S.st.rounds)return['👋','Welcome! Press <b>PLAY BINGO</b> to start your very first game – it\'s free.',null];
@@ -882,6 +884,9 @@ function vLobby(){
      <div class="set"><div class="sl"><b>🔍 Number Spotter</b><span>Upgrade: called numbers glow softly on your cards, so you see where to put your marker. Without it you have to watch carefully yourself!</span></div>
        ${S.spot?`<div class="opt"><button class="${S.spotOn?'on':''}" data-a="${S.spotOn?'':'spotToggle'}">On</button><button class="${S.spotOn?'':'on'}" data-a="${S.spotOn?'spotToggle':''}">Off</button></div>`
         :`<button class="btn p" data-a="spotBuy" ${S.gems<SPOT_COST?'disabled':''}>Buy · 💎 ${SPOT_COST}</button>${S.gems<SPOT_COST?` <span class="small muted">You have 💎 ${S.gems} – earn gems from trophies, quests and special squares.</span>`:''}`}</div>
+     <div class="set"><div class="sl"><b>🤖 Auto-BINGO</b><span>Upgrade: BINGO is pressed for you the moment you complete a line, so you never lose a bingo to slow fingers. You still place your own markers.</span></div>
+       ${hasAutoB()?`<div class="opt"><button class="${S.autoBOn?'on':''}" data-a="${S.autoBOn?'':'autoBToggle'}">On</button><button class="${S.autoBOn?'':'on'}" data-a="${S.autoBOn?'autoBToggle':''}">Off</button></div>`
+        :`<button class="btn p" data-a="autoBBuy" ${S.gems<AUTOB_COST?'disabled':''}>Buy · 💎 ${AUTOB_COST}</button>${S.gems<AUTOB_COST?` <span class="small muted">You have 💎 ${S.gems}</span>`:''}`}</div>
     </div>
     <details class="box howto" ${newbie?'open':''}><summary class="lil bh">📖 How to play bingo</summary>
      <ol class="steps">
@@ -957,7 +962,7 @@ function updCaller(){
 function updCtl(){const c=$('#ctl');if(!c)return;const sp=SPEEDS[S.spd];
   c.innerHTML=`<button class="cb leave" data-a="leave" title="Leave the bingo hall">🚪 Leave</button>
    <div class="spd"><button class="cb" data-a="spdDown" ${S.spd<=0?'disabled':''} title="Slower">−</button><span title="${sp.t}s per number">${sp.e} ${sp.n}</span><button class="cb" data-a="spdUp" ${S.spd>=SPEEDS.length-1?'disabled':''} title="Faster">+</button></div>
-   <button class="cb ${S.call?'on':''}" data-a="call" title="Read numbers aloud">${S.call?'🗣️':'🤐'}<i class="cl"> Voice</i></button>${S.spot?`<button class="cb ${S.spotOn?'on':''}" data-a="spotToggle" title="Number Spotter">🔍<i class="cl"> Spotter</i></button>`:''}`}
+   <button class="cb ${S.call?'on':''}" data-a="call" title="Read numbers aloud">${S.call?'🗣️':'🤐'}<i class="cl"> Voice</i></button>${S.spot?`<button class="cb ${S.spotOn?'on':''}" data-a="spotToggle" title="Number Spotter">🔍<i class="cl"> Spotter</i></button>`:''}${hasAutoB()?`<button class="cb ${S.autoBOn?'on':''}" data-a="autoBToggle" title="Auto-BINGO">🤖<i class="cl"> Auto</i></button>`:''}`}
 function updPw(){const btn=$('#pwBtn');if(!btn)return;const ready=R.charge>=R.need;btn.classList.toggle('ready',ready);$('#pwFill').style.width=Math.min(100,R.charge/R.need*100)+'%';$('#pwTxt').textContent=ready?'⚡ USE POWER-UP!':`⚡ Power ${Math.floor(Math.min(100,R.charge/R.need*100))}%`}
 function updClaim(ci){const el=document.getElementById('bg'+ci);if(!el)return;const has=newLines(ci).length>0;el.classList.toggle('ready',has);const cb=document.getElementById('cb'+ci);if(cb)cb.textContent=R.cards[ci].bingos}
 function feed(t){R.feed.unshift(t);R.feed=R.feed.slice(0,2);const f=$('#feed');if(f)f.innerHTML=R.feed.join('<br>')}
@@ -998,7 +1003,7 @@ function collectSp(ci,j){const cl=R.cards[ci].cells[j],el=document.getElementByI
   else if(sp==='chest'){S.bronze++;R.chests++;if(el)floatAt(el,'+1 🎁','#ff8cc0');SFX.coin()}
   else if(sp==='souv'){R.souv++;findSouv(el)}}
 function checkLines(ci){const cd=R.cards[ci];const nl=newLines(ci);
-  if(nl.length){updClaim(ci);if(ST.claim&&!R.claimQ.includes(ci)){R.claimQ.push(ci);setTimeout(()=>{R&&(R.claimQ=R.claimQ.filter(x=>x!==ci));if(R&&!R.over)claim(ci,true)},450)}}
+  if(nl.length){updClaim(ci);if(autoBOn()&&!R.claimQ.includes(ci)){R.claimQ.push(ci);setTimeout(()=>{R&&(R.claimQ=R.claimQ.filter(x=>x!==ci));if(R&&!R.over)claim(ci,true)},450)}}
   else updClaim(ci)}
 function claim(ci,auto){
   if(!R||R.over)return;const nl=newLines(ci);const el=document.getElementById('bg'+ci);
@@ -1118,6 +1123,8 @@ const ACT={
   music:()=>{S.music=!S.music;if(S.music)musicStart();else musicStop();save();if(S.tab==='trophy')rerender();updHUD()},
   call:()=>{S.call=!S.call;if(!S.call&&window.speechSynthesis)speechSynthesis.cancel();save();if(R&&!R.over)updCtl();else rerender()},
   spotToggle:()=>{S.spotOn=!S.spotOn;save();if(R&&!R.over){R.cards.forEach((cd,ci)=>cd.cells.forEach((_,j)=>updCell(ci,j)));updCtl()}else rerender()},
+  autoBBuy:()=>{if(S.autoB||S.gems<AUTOB_COST)return;S.gems-=AUTOB_COST;S.autoB=true;S.autoBOn=true;SFX.level();toast('🤖 <b>Auto-BINGO</b> unlocked! BINGO is now pressed for you when you get a line.');save();rerender()},
+  autoBToggle:()=>{S.autoBOn=!S.autoBOn;save();if(R&&!R.over){updCtl();if(S.autoBOn)R.cards.forEach((_,ci)=>checkLines(ci))}else rerender()},
   spotBuy:()=>{if(S.spot||S.gems<SPOT_COST)return;S.gems-=SPOT_COST;S.spot=true;S.spotOn=true;SFX.level();toast('🔍 <b>Number Spotter</b> unlocked! Called numbers now glow softly on your cards.');save();rerender()},
   spdUp:()=>setSpeed(S.spd+1),spdDown:()=>setSpeed(S.spd-1),
   leave:()=>{if(!R||R.over)return;R.paused=true;modal(`<div class="me">🚪</div><h2>Leave the bingo hall?</h2><p>This game ends now. Coins, gems and souvenirs you already won are yours to keep.</p><div class="acts"><button class="btn p big" data-a="leaveGo">Leave game</button><button class="btn dk" data-a="leaveNo">Keep playing</button></div>`)},
