@@ -5,18 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Potato Bingo Adventures – Free Bingo Adventure Game | Play Online, No Download</title>
 <meta name="description" content="Play Potato Bingo Adventures free in your browser! Win bingo to build towns in 14 lands, collect souvenirs, equip lucky gear, catch bonus events and travel the world. No download, works on mobile.">
-<meta name="keywords" content="potato bingo, bingo game, free bingo, bingo adventure, online bingo, browser game, potato game, idle bingo">
+<meta name="keywords" content="potato bingo, bingo game, free bingo, bingo online, bingo adventure, bingo with friends, play bingo free, browser game, potato game, bingo battle pass">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#1b1440">
 <meta name="application-name" content="Potato Bingo Adventures">
 <meta name="apple-mobile-web-app-title" content="Potato Bingo">
 <meta name="mobile-web-app-capable" content="yes">
+<link rel="canonical" href="https://potatoteamgames.github.io/games/potato-bingo-adventures.html">
+<meta property="og:url" content="https://potatoteamgames.github.io/games/potato-bingo-adventures.html">
+<meta property="og:image" content="https://potatoteamgames.github.io/games/images/og-bingo.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Potato Bingo Adventures – free bingo adventure game">
+<meta name="twitter:image" content="https://potatoteamgames.github.io/games/images/og-bingo.jpg">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Potato Team Games">
 <meta property="og:title" content="Potato Bingo Adventures – Free Bingo Adventure Game">
 <meta property="og:description" content="Win bingo, build towns around the world, collect souvenirs and lucky gear. Free, no download, works on mobile.">
 <meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Potato Bingo Adventures – Free Bingo Adventure Game">
 <meta name="twitter:description" content="Win bingo, build towns around the world, collect souvenirs and lucky gear. Free, no download.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎱%3C/text%3E%3C/svg%3E">
@@ -25,6 +32,9 @@
   "@context": "https://schema.org",
   "@type": "VideoGame",
   "name": "Potato Bingo Adventures",
+  "url": "https://potatoteamgames.github.io/games/potato-bingo-adventures.html",
+  "image": "https://potatoteamgames.github.io/games/images/og-bingo.jpg",
+  "author": {"@type": "Organization", "name": "Potato Team Games", "url": "https://potatoteamgames.github.io/games/"},
   "description": "A free bingo adventure game in your browser. Win bingo to build towns in 14 lands, collect souvenirs, equip lucky gear, catch bonus events and go on a world tour.",
   "genre": ["Bingo game", "Adventure game", "Idle game"],
   "gamePlatform": ["Web browser", "Mobile browser"],
@@ -59,8 +69,8 @@ button:disabled{cursor:not-allowed}
 #top{display:flex;align-items:center;gap:8px;padding:8px 12px;background:linear-gradient(180deg,#2d1f6e,#1f1650);border-bottom:3px solid #120b2e;box-shadow:0 4px 14px #0007;z-index:5}
 .home{display:flex;align-items:center;gap:4px;height:38px;padding:0 10px;border-radius:12px;background:var(--card2);border:2px solid var(--line);text-decoration:none;color:var(--txt);font-size:13px;white-space:nowrap}
 .home:hover{background:#4a3a96}
-.logo{font-family:'Lilita One',sans-serif;font-size:22px;line-height:1;white-space:nowrap;color:var(--gold);text-shadow:2px 2px 0 var(--ink)}
-.logo small{display:block;font-size:12px;color:var(--txt);letter-spacing:2px}
+.logo{margin:0;font-weight:400;font-family:'Lilita One',sans-serif;font-size:22px;line-height:1;white-space:nowrap;color:var(--gold);text-shadow:2px 2px 0 var(--ink)}
+.logo small{display:block;text-transform:uppercase;font-size:12px;color:var(--txt);letter-spacing:2px}
 .res{margin-left:auto;display:flex;gap:6px;align-items:center;min-width:0}
 .pill{display:flex;align-items:center;gap:4px;height:34px;padding:0 10px;border-radius:999px;background:#0006;border:2px solid var(--line);font-size:15px;white-space:nowrap}
 .pill b{font-weight:900}
@@ -590,7 +600,7 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
   .cards .cinfo{display:none}
 }
 @media (max-width:560px){
-  .logo{display:none}
+  .logo{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .home .hl{display:none}
   .pill{font-size:13px;padding:0 8px}
   .lvl{width:70px;font-size:12px}
@@ -612,7 +622,7 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
 <div id="app">
   <header id="top">
     <a class="home" href="./" aria-label="Back to all games">🏠<span class="hl">Games</span></a>
-    <div class="logo">🥔 Potato Bingo<small>ADVENTURES</small></div>
+    <h1 class="logo">🥔 Potato Bingo <small>Adventures</small></h1>
     <div class="res">
       <div class="pill" title="Coins">🪙 <b id="hCoins">0</b></div>
       <div class="pill" title="Gems">💎 <b id="hGems">0</b></div>
@@ -622,7 +632,7 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
       <button class="ibtn" id="sndBtn" data-a="sound" aria-label="Toggle sound effects" title="Sound effects">🔊</button>
     </div>
   </header>
-  <main id="view"></main>
+  <main id="view"><noscript><div class="pad"><h2>Potato Bingo Adventures – free online bingo game</h2><p>Potato Bingo Adventures is a free bingo game you play in your browser on PC, tablet and phone. Win bingo to earn coins, build towns in 14 lands from Ireland to Potato Planet, collect souvenirs, wear lucky gear and unlock rewards in the free Battle Pass. Please enable JavaScript to play.</p></div></noscript></main>
   <nav id="nav" aria-label="Game menu">
     <button data-a="tab" data-t="pass" style="--o:1.5"><span class="e">🎖️</span>Pass<span class="dot" id="dPass"></span></button>
     <button data-a="tab" data-t="town" style="--o:2"><span class="e">🏘️</span>Town<span class="dot" id="dTown"></span></button>
