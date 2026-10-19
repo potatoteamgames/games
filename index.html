@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Potato Team Games – Free Browser Games | Play Online, No Download</title>
-<meta name="description" content="Potato Team Games makes free browser games you can play instantly on PC and mobile. Play Potato Bingo Adventures, a world-travelling bingo game, and Potato Clicker, a Wild West idle clicker. No download.">
+<meta name="description" content="Potato Team Games makes free browser games you can play instantly on PC and mobile. Play Monongoly, a classic property trading board game, Potato Bingo Adventures and Potato Clicker. No download.">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#1c1230">
 <link rel="canonical" href="https://potatoteamgames.github.io/games/">
@@ -17,11 +17,11 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Potato Team Games">
 <meta property="og:title" content="Potato Team Games – Free Browser Games">
-<meta property="og:description" content="Free browser games you can play instantly on PC and mobile. Play Potato Bingo Adventures and Potato Clicker!">
+<meta property="og:description" content="Free browser games you can play instantly on PC and mobile. Play Monongoly, Potato Bingo Adventures and Potato Clicker!">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Potato Team Games – Free Browser Games">
-<meta name="twitter:description" content="Free browser games you can play instantly on PC and mobile. Play Potato Bingo Adventures and Potato Clicker!">
+<meta name="twitter:description" content="Free browser games you can play instantly on PC and mobile. Play Monongoly, Potato Bingo Adventures and Potato Clicker!">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🥔%3C/text%3E%3C/svg%3E">
 <script type="application/ld+json">
 {
@@ -38,8 +38,9 @@
       "@type": "ItemList",
       "name": "Potato Team Games",
       "itemListElement": [
-        {"@type": "ListItem", "position": 1, "name": "Potato Bingo Adventures", "url": "https://potatoteamgames.github.io/games/potato-bingo-adventures.html"},
-        {"@type": "ListItem", "position": 2, "name": "Potato Clicker", "url": "https://potatoteamgames.github.io/games/potato-clicker.html"}
+        {"@type": "ListItem", "position": 1, "name": "Monongoly", "url": "https://potatoteamgames.github.io/games/monongoly.html"},
+        {"@type": "ListItem", "position": 2, "name": "Potato Bingo Adventures", "url": "https://potatoteamgames.github.io/games/potato-bingo-adventures.html"},
+        {"@type": "ListItem", "position": 3, "name": "Potato Clicker", "url": "https://potatoteamgames.github.io/games/potato-clicker.html"}
       ]
     }
   ]
@@ -47,7 +48,7 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Rye&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Rye&family=Oswald:wght@600&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#1c1230; --bg2:#2a1b48; --card:#2f2150; --card2:#3a2a62; --line:rgba(255,255,255,.1);
@@ -128,6 +129,29 @@ a{color:inherit}
 .thumb.bingo{background:radial-gradient(circle at 70% 30%,rgba(255,95,162,.6),transparent 60%),linear-gradient(160deg,#4b2fb0,#1a0f45)}
 .badge.hot{background:var(--pink);color:#fff}
 
+/* MONONGOLY FEATURED BANNER */
+.featured.mono{background:radial-gradient(ellipse at 70% 50%,rgba(255,214,150,.25),transparent 60%),repeating-linear-gradient(90deg,transparent 0 120px,rgba(0,0,0,.25) 120px 122px),linear-gradient(90deg,#6b3a1c,#82492a 40%,#6a381a 70%,#7d4522);border-color:#1d0f06}
+.featured.mono::after{display:none}
+.featured.mono .tag{background:#e1262c}
+.featured.mono .ftitle{margin:14px 0 18px;font-family:'Lilita One',sans-serif;color:#fff;letter-spacing:.04em;background:#c3241c;display:inline-block;padding:4px 18px 0;border:4px solid #000;border-radius:12px;box-shadow:0 6px 0 #000;transform:rotate(-2deg);text-shadow:3px 3px 0 #000;font-size:clamp(34px,5.4vw,60px)}
+.featured.mono .play{font-family:'Lilita One',sans-serif;background:linear-gradient(#ffd56b,#e3a024);color:#2a1606;border-color:#000;box-shadow:0 6px 0 #000}
+.featured.mono .chips span{background:#f4ecd5}
+.mart{position:relative;display:flex;align-items:center;justify-content:center;min-height:250px;perspective:700px}
+.mboard{position:relative;width:min(240px,72%);aspect-ratio:1;background:#f4ecd5;border:3px solid #2b2620;border-radius:6px;transform:rotateX(38deg) rotateZ(-18deg);transform-style:preserve-3d;
+  box-shadow:0 0 0 5px #f4ecd5,0 0 0 7px #8e1b1b,10px 22px 30px rgba(0,0,0,.55);transition:transform .4s;display:grid;grid-template:repeat(6,1fr)/repeat(6,1fr)}
+.featured.mono:hover .mboard{transform:rotateX(30deg) rotateZ(-8deg) scale(1.05)}
+.mboard i{border:1px solid #2b2620;background:#f4ecd5;position:relative}
+.mboard i::before{content:'';position:absolute;inset:0 0 62% 0;background:var(--c,transparent)}
+.mboard .mc{grid-area:2/2/6/6;border:1px solid #2b2620;display:flex;align-items:center;justify-content:center}
+.mboard .mc b{font-family:'Lilita One',sans-serif;font-weight:400;color:#fff;background:#c3241c;border:2px solid #000;border-radius:5px;padding:2px 8px 0;font-size:clamp(12px,2vw,18px);transform:rotate(-45deg);text-shadow:1px 1px 0 #000}
+.mdie{position:absolute;z-index:3;width:46px;height:46px;border-radius:10px;background:radial-gradient(circle at 30% 25%,#fffef8,#efe5cc);box-shadow:inset -3px -4px 6px rgba(0,0,0,.18),0 10px 14px rgba(0,0,0,.45);display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:7px;animation:bob 3s ease-in-out infinite}
+.mdie s{width:8px;height:8px;border-radius:50%;background:#111;margin:auto}
+.mdie.a{top:4%;left:8%;transform:rotate(-14deg)}.mdie.b{bottom:6%;right:6%;transform:rotate(18deg);animation-delay:-1.2s}
+.mpiece{position:absolute;z-index:3;font-size:38px;top:8%;right:12%;filter:drop-shadow(0 8px 6px rgba(0,0,0,.5));animation:bob 2.6s ease-in-out infinite;animation-delay:-.6s}
+.mhouse{position:absolute;z-index:3;bottom:10%;left:10%;font-size:30px;filter:drop-shadow(0 6px 5px rgba(0,0,0,.5))}
+.thumb.mono{background:repeating-linear-gradient(90deg,transparent 0 40px,rgba(0,0,0,.25) 40px 41px),linear-gradient(90deg,#6b3a1c,#82492a 50%,#6a381a)}
+.thumb.mono .tb{font-family:'Lilita One',sans-serif;font-size:24px;color:#fff;background:#c3241c;border:3px solid #000;border-radius:8px;padding:2px 12px 0;transform:rotate(-4deg);box-shadow:0 4px 0 #000;text-shadow:2px 2px 0 #000;letter-spacing:.04em}
+
 /* GAMES GRID */
 section.games{padding:34px 0 10px}
 .shead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:14px}
@@ -170,6 +194,9 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between}
   .bcard{width:170px}
   .bball{width:48px;height:48px;font-size:15px}
   .flags{display:none}
+  .mart{order:-1;min-height:200px}
+  .mboard{width:160px}
+  .mdie{width:36px;height:36px;padding:5px}.mdie s{width:6px;height:6px}
   .shead{flex-direction:column;align-items:start}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -182,6 +209,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between}
     <nav aria-label="Main">
       <a href="#games">Games</a>
       <a href="#about">About</a>
+      <a href="monongoly.html">Monongoly</a>
       <a href="potato-bingo-adventures.html">Potato Bingo</a>
       <a href="potato-clicker.html">Potato Clicker</a>
     </nav>
@@ -194,27 +222,23 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between}
     <p>Fun games you can play instantly on PC, tablet and phone. No download, no sign-up — just click and play.</p>
   </section>
 
-  <!-- FEATURED GAME BANNER -->
-  <a class="featured bingo" href="potato-bingo-adventures.html" aria-label="Play Potato Bingo Adventures">
+  <!-- FEATURED GAME BANNER (newest game) -->
+  <a class="featured mono" href="monongoly.html" aria-label="Play Monongoly">
     <div class="fin">
       <div>
         <span class="tag">🆕 NEW · FEATURED GAME</span>
-        <h2 class="ftitle">Potato Bingo Adventures</h2>
-        <p class="fdesc">Travel from Ireland to Potato Planet! Win bingo to build towns in 14 lands, catch surprise bonus events, collect souvenirs and wear lucky gear while you play.</p>
-        <div class="chips"><span>🎱 Bingo</span><span>✈️ Adventure</span><span>🏗️ Town building</span><span>📱 Mobile</span></div>
-        <span class="play" id="bingoPlay">▶ PLAY NOW</span>
-        <div class="progress" id="bingoProgress"></div>
+        <h2 class="ftitle">MONONGOLY</h2>
+        <p class="fdesc">The classic property trading board game on a real table! Roll the dice, buy streets, build houses and hotels, trade and bankrupt your rivals. Play vs the computer, pass the dice with friends, or play online with a table code.</p>
+        <div class="chips"><span>🎲 Board game</span><span>🏨 Build &amp; trade</span><span>👥 2–6 players</span><span>🌐 Online</span><span>📱 Mobile</span></div>
+        <span class="play" id="monoPlay">▶ PLAY NOW</span>
+        <div class="progress" id="monoProgress"></div>
       </div>
-      <div class="bart" aria-hidden="true">
-        <div class="rays"></div>
-        <div class="bcard">
-          <div class="bh"><span style="background:#ff5a5a">B</span><span style="background:#ffb52e">I</span><span style="background:#3fcf6b">N</span><span style="background:#4aa3ff">G</span><span style="background:#b36bff">O</span></div>
-          <div class="bg"><span class="d">7</span><span>19</span><span>33</span><span>52</span><span>64</span><span>2</span><span class="d">24</span><span>41</span><span>48</span><span>70</span><span>11</span><span>27</span><span class="d">🥔</span><span>55</span><span>61</span><span>14</span><span>16</span><span>39</span><span class="d">59</span><span>73</span><span>5</span><span>30</span><span>44</span><span>47</span><span class="d">68</span></div>
-        </div>
-        <span class="bball a">B7</span><span class="bball b">O68</span><span class="bball c">N33</span>
+      <div class="mart" aria-hidden="true">
+        <div class="mboard"><i style="grid-area:1/1;--c:#e1262c"></i><i style="grid-area:1/2"></i><i style="grid-area:1/3;--c:#e1262c"></i><i style="grid-area:1/4;--c:#f6d023"></i><i style="grid-area:1/5"></i><i style="grid-area:1/6"></i><i style="grid-area:2/1;--c:#f28c1e"></i><i style="grid-area:2/6;--c:#1e9c52"></i><i style="grid-area:3/1;--c:#f28c1e"></i><i style="grid-area:3/6"></i><i style="grid-area:4/1"></i><i style="grid-area:4/6;--c:#1e9c52"></i><i style="grid-area:5/1;--c:#d8418f"></i><i style="grid-area:5/6;--c:#1d4ea6"></i><i style="grid-area:6/1"></i><i style="grid-area:6/2;--c:#8fd3f4"></i><i style="grid-area:6/3"></i><i style="grid-area:6/4;--c:#8b4a26"></i><i style="grid-area:6/5;--c:#8b4a26"></i><i style="grid-area:6/6"></i><div class="mc"><b>MONONGOLY</b></div></div>
+        <span class="mdie a"><s style="grid-area:1/1"></s><s style="grid-area:1/3"></s><s style="grid-area:2/2"></s><s style="grid-area:3/1"></s><s style="grid-area:3/3"></s></span><span class="mdie b"><s style="grid-area:1/1"></s><s style="grid-area:2/2"></s><s style="grid-area:3/3"></s></span>
+        <span class="mpiece">🎩</span><span class="mhouse">🏠🏨</span>
       </div>
     </div>
-    <span class="flags" aria-hidden="true">☘️🦙🗼🍝🐫🗻🌕🪐</span>
   </a>
 
   <!-- ALL GAMES -->
@@ -224,13 +248,21 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between}
       <p>New games are added regularly — check back soon!</p>
     </div>
     <div class="grid">
-      <!-- To add a new game: copy one <a class="game"> block, change the link, title and text. -->
+      <!-- To add a new game: copy one <a class="game"> block, change the link, title and text. The newest game is also the featured banner above. -->
+      <a class="game" href="monongoly.html">
+        <div class="thumb mono"><span class="badge hot">NEW</span><span class="tb">MONONGOLY</span></div>
+        <div class="body">
+          <h3>Monongoly</h3>
+          <p>Classic property trading board game. Buy streets, build hotels, trade and bankrupt your rivals – vs computer, with friends on one device or online.</p>
+          <div class="meta"><span id="monoMeta">🎲 Board game · 2–6</span><span class="btn">Play ▶</span></div>
+        </div>
+      </a>
       <a class="game" href="potato-bingo-adventures.html">
-        <div class="thumb bingo"><span class="badge hot">NEW</span>🎱</div>
+        <div class="thumb bingo"><span class="badge">HOT</span>🎱</div>
         <div class="body">
           <h3>Potato Bingo Adventures</h3>
           <p>Win bingo to build towns in 14 lands. Catch bonus events, collect souvenirs, wear lucky gear and travel all the way to Potato Planet.</p>
-          <div class="meta"><span>🎱 Bingo · Adventure</span><span class="btn">Play ▶</span></div>
+          <div class="meta"><span id="bingoMeta">🎱 Bingo · Adventure</span><span class="btn" id="bingoPlay">Play ▶</span></div>
         </div>
       </a>
       <a class="game" href="potato-clicker.html">
@@ -255,7 +287,8 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between}
   <section class="about" id="about" aria-labelledby="aboutH">
     <h2 id="aboutH">About Potato Team Games</h2>
     <p><b>Potato Team Games</b> makes free, fun browser games that run on any device — PC, Mac, Chromebook, iPhone and Android. Every game works right in your browser with no download, no account and no ads. Your progress is saved automatically on your device.</p>
-    <p>Our newest game, <a href="potato-bingo-adventures.html"><b>Potato Bingo Adventures</b></a>, is a bingo game with a twist: win bingo to build towns all around the world, from Ireland to the Moon and beyond.</p>
+    <p>Our newest game, <a href="monongoly.html"><b>Monongoly</b></a>, is a classic property trading board game that looks like it's sitting on your table. Roll the dice, buy streets, build houses and hotels and trade your way to the top – against the computer, with friends on one device, or online with a table code.</p>
+    <p><a href="potato-bingo-adventures.html"><b>Potato Bingo Adventures</b></a> is a bingo game with a twist: win bingo to build towns all around the world, from Ireland to the Moon and beyond.</p>
     <p>Our first game, <a href="potato-clicker.html"><b>Potato Clicker</b></a>, is an idle clicker game like Cookie Clicker — but with potatoes, cowboys and a whole lot of upgrades.</p>
   </section>
 </main>
@@ -285,9 +318,19 @@ document.getElementById('yr').textContent=new Date().getFullYear();
   try{
     const s=JSON.parse(localStorage.getItem('potato_bingo_adventures_v1')||'null');
     if(!s||!s.st||!s.st.rounds)return;
-    const lands=['Ireland','Peru','France','Italy','Egypt','India','Japan','Australia','Brazil','Iceland','Mexico','USA','The Moon','Potato Planet'];
-    document.getElementById('bingoProgress').textContent='Level '+(s.level||1)+' · '+(s.unlocked||1)+'/14 lands · now in '+(lands[s.cur||0]||'Ireland')+' — continue your adventure!';
-    document.getElementById('bingoPlay').textContent='▶ CONTINUE';
+    document.getElementById('bingoMeta').textContent='🎱 Lv '+(s.level||1)+' · '+(s.unlocked||1)+'/14 lands';
+    document.getElementById('bingoPlay').textContent='Continue ▶';
+  }catch(e){}
+})();
+// Show the player's saved Monongoly game
+(function(){
+  try{
+    const s=JSON.parse(localStorage.getItem('monongoly_save_v1')||'null');
+    if(!s||!s.players)return;
+    const left=s.players.filter(p=>!p.out).length;if(left<2)return;
+    document.getElementById('monoProgress').textContent='💾 Saved game · Round '+(s.round||1)+' · '+left+' players left — continue your game!';
+    document.getElementById('monoPlay').textContent='▶ CONTINUE';
+    document.getElementById('monoMeta').textContent='💾 Round '+(s.round||1);
   }catch(e){}
 })();
 </script>
