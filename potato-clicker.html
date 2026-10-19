@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Potato Clicker – Free Idle Clicker Game | Play Online, No Download</title>
+<meta name="description" content="Play Potato Clicker free in your browser! Click the giant potato, build a Wild West potato ranch and unlock 300+ upgrades, skins and 350+ achievements. No download, works on mobile.">
+<meta name="keywords" content="potato clicker, clicker game, idle game, incremental game, cookie clicker alternative, free browser game, potato game, idle clicker online">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#6e4322">
+<meta name="application-name" content="Potato Clicker">
+<meta name="apple-mobile-web-app-title" content="Potato Clicker">
+<meta name="mobile-web-app-capable" content="yes">
+<!-- When your GitHub Pages URL is live, uncomment and fill in (also add og:url):
+<link rel="canonical" href="https://YOUR-USERNAME.github.io/potato-clicker.html">
+-->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Potato Clicker">
+<meta property="og:title" content="Potato Clicker – Free Idle Clicker Game">
+<meta property="og:description" content="Click the giant potato, build a Wild West potato ranch and unlock 300+ upgrades. Free, no download, works on mobile.">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Potato Clicker – Free Idle Clicker Game">
+<meta name="twitter:description" content="Click the giant potato, build a Wild West potato ranch and unlock 300+ upgrades. Free, no download.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🥔%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "Potato Clicker",
+  "alternateName": "POTATO",
+  "description": "A free Wild West idle clicker game in your browser. Click the giant potato, build machines, unlock 300+ upgrades, skins, missions, a lucky wheel, daily chests and 350+ achievements.",
+  "genre": ["Clicker game", "Idle game", "Incremental game"],
+  "gamePlatform": ["Web browser", "Mobile browser"],
+  "applicationCategory": "Game",
+  "operatingSystem": "Any",
+  "playMode": "SinglePlayer",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rye&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --b1:#e9a55b; --b2:#c9733a; --b3:#7a3f1d;
+  --p1:#ffe0a3; --p2:#d99a4e; --p3:#8a5524; --pglow:#ffb347;
+  --ink:#3b2412; --ink2:#6b4a2b; --paper:#f3e2bd; --paper2:#e6cf9f;
+  --wood:#6e4322; --woodD:#4a2c15; --woodL:#9a6534; --brass:#f0b84a; --brassD:#b9811f;
+  --cream:#fff3d6; --red:#a8321f; --green:#4f8a3a; --greenL:#7cc35a;
+  --ps:clamp(170px,min(44vh,34vw),360px);
+  --planks:repeating-linear-gradient(180deg,#6e4322 0 44px,#4a2c15 44px 47px),repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 2px,transparent 2px 11px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{color:var(--cream);font-family:Nunito,system-ui,sans-serif;font-weight:800;background:var(--woodD);overflow:hidden;user-select:none;-webkit-user-select:none}
+button{font-family:inherit;font-weight:900;cursor:pointer;border:none;color:inherit}
+#app{display:grid;grid-template-rows:auto minmax(0,1fr);grid-template-columns:minmax(0,1fr);height:100vh;height:100dvh}
+
+/* ===== BANNER ===== */
+#banner{position:relative;display:flex;align-items:center;gap:12px;padding:8px 18px;
+  background:linear-gradient(180deg,rgba(255,255,255,.08),transparent 40%,rgba(0,0,0,.25)),repeating-linear-gradient(90deg,#8b5a2b 0 3px,#82522a 3px 7px,#8f5d2d 7px 12px);
+  border-bottom:5px solid var(--woodD);box-shadow:0 4px 0 #2a1708,0 8px 20px #0007;z-index:5}
+#banner::before,#banner::after{content:'';position:absolute;top:50%;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#e8d3a0,#6b5a3a);transform:translateY(-50%);box-shadow:0 1px 0 #0008}
+#banner::before{left:6px}#banner::after{right:6px}
+.logo{margin:0;font-family:Rye,Georgia,serif;font-weight:400;font-size:34px;line-height:1;color:#ffd27a;letter-spacing:2px;white-space:nowrap;
+  text-shadow:2px 2px 0 #3b2412,-1px -1px 0 #3b2412,1px -1px 0 #3b2412,-1px 1px 0 #3b2412,4px 5px 0 rgba(0,0,0,.35)}
+.logo small{font-size:.55em;letter-spacing:1px}
+.logo span{display:inline-block;animation:wig 1.4s ease-in-out infinite}
+@keyframes wig{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(12deg)}}
+.ticker{flex:1;overflow:hidden;white-space:nowrap;background:var(--paper);color:var(--ink);border:3px solid var(--ink);border-radius:6px;padding:5px 0;font-size:14px;min-width:0;box-shadow:inset 0 0 12px rgba(120,80,30,.4)}
+#tick{display:inline-block;padding-left:100%;animation:scroll 18s linear infinite}
+@keyframes scroll{to{transform:translateX(-100%)}}
+.hbtn{background:linear-gradient(#b07a43,#8b5a2b);border:3px solid var(--ink);border-radius:10px;font-size:20px;width:44px;height:44px;flex-shrink:0;box-shadow:0 3px 0 #2a1708;transition:transform .12s}
+.homebtn{display:flex;align-items:center;gap:6px;flex-shrink:0;height:44px;padding:0 14px;text-decoration:none;white-space:nowrap;font-weight:900;font-size:15px;color:var(--ink);background:linear-gradient(#ffd77a,var(--brassD));border:3px solid var(--ink);border-radius:10px;box-shadow:0 3px 0 #2a1708;transition:transform .12s}
+.homebtn:hover{transform:translateY(-2px)}
+.homebtn:active{transform:translateY(2px);box-shadow:none}
+.homebtn .hl2{display:none}
+.hbtn:hover{transform:translateY(-2px) rotate(-5deg)}
+.hbtn:active{transform:translateY(2px);box-shadow:none}
+
+/* ===== MAIN ===== */
+main{display:grid;grid-template-columns:minmax(0,1fr) 460px;min-height:0;min-width:0}
+#left{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:6px;padding:max(14px,3vh) 12px 8px;overflow:hidden;min-height:0;
+  background:radial-gradient(ellipse at 50% 115%,rgba(255,220,150,.35),transparent 60%),linear-gradient(180deg,var(--b1),var(--b2) 60%,var(--b3));transition:background .6s}
+#left::after{content:'';position:absolute;left:-5%;right:-5%;bottom:0;height:16%;pointer-events:none;
+  background:radial-gradient(ellipse at 20% 100%,#7a4a22 0 45%,transparent 46%),radial-gradient(ellipse at 75% 100%,#6b3f1c 0 50%,transparent 51%),linear-gradient(transparent 55%,#5a3418 56%)}
+.cactus{position:absolute;bottom:4%;font-size:clamp(34px,6vh,64px);z-index:1;pointer-events:none;filter:drop-shadow(0 6px 4px #0005)}
+.cactus.c1{left:4%}.cactus.c2{right:5%;bottom:6%;font-size:clamp(26px,4.5vh,48px)}
+.tumble{position:absolute;bottom:5%;left:-60px;font-size:32px;z-index:1;pointer-events:none;animation:tumble 16s linear infinite}
+@keyframes tumble{0%{transform:translateX(0) rotate(0)}12%{transform:translateX(30vw) translateY(-14px) rotate(360deg)}22%{transform:translateX(55vw) rotate(640deg)}30%,100%{transform:translateX(90vw) rotate(900deg);opacity:0}}
+.info{display:flex;flex-direction:column;align-items:center;z-index:2}
+#count{font-family:Rye,Georgia,serif;font-size:clamp(34px,5.4vw,62px);line-height:1;color:var(--cream);text-align:center;
+  text-shadow:3px 3px 0 var(--ink),-2px -2px 0 var(--ink),2px -2px 0 var(--ink),-2px 2px 0 var(--ink),0 0 30px rgba(255,210,120,.6);will-change:transform}
+.lbl{font-family:Rye,Georgia,serif;font-size:15px;color:#ffe2a8;letter-spacing:2px;text-shadow:2px 2px 0 var(--ink)}
+#pps{font-size:15px;color:var(--ink);background:var(--paper);border:2px solid var(--ink);padding:2px 14px;border-radius:999px;margin-top:4px}
+.levelbox,#goal{width:min(440px,94%);background:rgba(59,36,18,.82);border:3px solid var(--ink);border-radius:10px;padding:5px 10px;z-index:2;box-shadow:0 3px 0 rgba(0,0,0,.3)}
+.lvl{display:flex;justify-content:space-between;font-size:14px}
+#lvlNum{color:var(--brass)}
+#lvlTitle{color:var(--cream)}
+.bar{height:12px;background:#2a1708;border:2px solid #1a0e05;border-radius:999px;overflow:hidden;margin-top:3px}
+.bar>div{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--brassD),var(--brass),#ffe08a);transition:width .25s}
+.sub{font-size:11px;color:#e8cfa0;text-align:center;margin-top:2px}
+#goal{font-size:12px;color:#e8cfa0;padding:4px 10px}
+#goal .gt{display:flex;justify-content:space-between;gap:8px}
+#goal .gt b{color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#goal .bar{height:8px}
+#goalBar{background:linear-gradient(90deg,var(--green),var(--greenL))!important}
+#potArea{position:relative;flex:0 0 auto;height:calc(var(--ps)*1.14);width:100%;display:flex;align-items:center;justify-content:center;z-index:2}
+#rays{position:absolute;width:calc(var(--ps)*1.5);height:calc(var(--ps)*1.5);border-radius:50%;
+  background:repeating-conic-gradient(from 0deg,rgba(255,240,200,.28) 0 9deg,transparent 9deg 18deg);
+  -webkit-mask:radial-gradient(circle,#000 25%,transparent 70%);mask:radial-gradient(circle,#000 25%,transparent 70%);pointer-events:none}
+#glow{position:absolute;width:calc(var(--ps)*1.05);height:calc(var(--ps)*1.05);border-radius:50%;background:radial-gradient(circle,var(--pglow) 0%,transparent 65%);opacity:.6;pointer-events:none;filter:blur(8px)}
+#potWrap{position:relative;width:var(--ps);height:var(--ps);cursor:pointer;touch-action:manipulation;will-change:transform}
+#potWrap svg{width:100%;height:100%;display:block;filter:drop-shadow(0 14px 14px rgba(40,20,5,.55)) drop-shadow(0 0 20px var(--pglow));overflow:visible}
+#potWrap.rainbow svg{animation:hue 3s linear infinite}
+@keyframes hue{to{filter:drop-shadow(0 14px 14px rgba(0,0,0,.45)) drop-shadow(0 0 22px #fff) hue-rotate(360deg)}}
+.s1{stop-color:var(--p1)}.s2{stop-color:var(--p2)}.s3{stop-color:var(--p3)}
+.pspot{fill:var(--p3);opacity:.45}
+#eyes{transform-box:fill-box;transform-origin:center;transition:transform .08s}
+#acc{position:absolute;transform:translate(-50%,-50%);pointer-events:none;line-height:1;filter:drop-shadow(0 4px 4px #0006)}
+#hands{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none;z-index:3}
+.hand{position:absolute;left:0;top:0;transform-origin:0 0;transform:rotate(var(--a)) translateY(calc(var(--ps)*-.56)) rotate(180deg)}
+.hand span{display:block;transform:translate(-50%,-50%);font-size:calc(var(--ps)*.11);line-height:1;filter:drop-shadow(0 3px 2px rgba(40,20,5,.5))}
+.hand.tap span{animation:tap .22s ease-out}
+@keyframes tap{45%{transform:translate(-50%,calc(-50% - var(--ps)*.07)) scale(.9)}}
+.chip.wchip{background:#2c5a8a}
+#weather{position:absolute;inset:0;pointer-events:none;z-index:4;opacity:0;transition:opacity 1.5s}
+#weather.on{opacity:1}
+#weather .wsky{position:absolute;inset:-25%}
+.w-rain,.w-storm{background:rgba(50,70,110,.2)}
+.w-storm{background:rgba(15,20,45,.42)}
+.w-rain .wsky,.w-storm .wsky{transform:rotate(14deg);background-image:radial-gradient(1.2px 10px at 50% 50%,rgba(220,235,255,.75) 0 99%,transparent 100%),radial-gradient(1px 7px at 50% 50%,rgba(220,235,255,.55) 0 99%,transparent 100%);background-size:26px 64px,41px 90px;background-position:0 0,13px 7px;animation:wrain .45s linear infinite}
+@keyframes wrain{to{background-position:0 64px,13px 97px}}
+.w-snow{background:rgba(220,235,255,.16)}
+.w-snow .wsky{background-image:radial-gradient(circle,#fff 0 2.5px,transparent 3.5px),radial-gradient(circle,rgba(255,255,255,.8) 0 1.5px,transparent 2.5px);background-size:90px 90px,55px 55px;background-position:0 0,20px 30px;animation:wsnow 7s linear infinite}
+@keyframes wsnow{to{background-position:90px 360px,-35px 360px}}
+.w-heat{background:radial-gradient(circle at 86% 8%,rgba(255,245,170,.9) 0 34px,rgba(255,180,70,.35) 80px,transparent 240px),rgba(255,120,30,.16)}
+.w-heat .wsky{background:linear-gradient(transparent 55%,rgba(255,200,120,.22));animation:wheat 1.8s ease-in-out infinite}
+@keyframes wheat{50%{transform:scaleY(1.03) skewX(1deg)}}
+.w-dust{background:rgba(190,140,70,.4)}
+.w-dust .wsky{background-image:radial-gradient(18px 1.5px at 50% 50%,rgba(240,200,130,.8) 0 99%,transparent 100%),radial-gradient(10px 1px at 50% 50%,rgba(255,225,170,.6) 0 99%,transparent 100%);background-size:80px 26px,53px 19px;animation:wdust .6s linear infinite}
+@keyframes wdust{to{background-position:80px 0,53px 0}}
+.w-moon{background:radial-gradient(circle at 84% 11%,#fffbe0 0 28px,rgba(255,250,220,.3) 42px,transparent 130px),rgba(15,20,60,.45)}
+.w-rainbow .wsky{inset:0;background:radial-gradient(circle at 50% 105%,transparent 0 50%,rgba(255,40,40,.2) 50% 53%,rgba(255,150,0,.2) 53% 56%,rgba(255,235,0,.2) 56% 59%,rgba(40,200,60,.2) 59% 62%,rgba(30,130,255,.2) 62% 65%,rgba(140,40,255,.2) 65% 68%,transparent 68%)}
+#weather .wflash{position:absolute;inset:0;background:#fff;opacity:0}
+#weather .wflash.go{animation:wflash .5s}
+@keyframes wflash{0%,30%{opacity:.75}15%,100%{opacity:0}}
+.runner{position:fixed;left:0;z-index:42;cursor:pointer;line-height:1;white-space:nowrap;padding:10px;touch-action:manipulation;user-select:none;-webkit-user-select:none;filter:drop-shadow(0 4px 4px #0007);animation:runL linear forwards}
+.runner>span{display:inline-block}
+.runner.ufo>span{animation:ufo 1.1s ease-in-out infinite}
+.runner.hit>span{animation:rhit .2s}
+.runner .rhp{position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:13px;background:var(--red);color:var(--cream);border:2px solid var(--ink);border-radius:999px;padding:1px 8px}
+@keyframes runL{from{transform:translateX(105vw)}to{transform:translateX(-40vw)}}
+@keyframes ufo{50%{transform:translateY(-36px) rotate(-6deg)}}
+@keyframes rhit{50%{transform:scale(.8) rotate(-10deg)}}
+#chips{position:absolute;top:0;left:0;right:0;display:flex;flex-wrap:wrap;gap:5px;justify-content:center;z-index:3;pointer-events:none}
+.chip{font-size:12px;padding:3px 10px;border-radius:999px;background:var(--red);border:2px solid var(--ink);color:var(--cream);animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.06)}}
+#comboBox{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:min(300px,80%);text-align:center;opacity:0;transition:opacity .3s;z-index:3;pointer-events:none}
+#comboTxt{font-family:Rye,Georgia,serif;font-size:19px;color:#ffe08a;text-shadow:2px 2px 0 var(--ink)}
+#comboBox .bar{height:8px}
+#comboBar{background:linear-gradient(90deg,#e06d1f,var(--red))!important;transition:none!important}
+#clickInfo{font-size:13px;color:var(--cream);text-shadow:1px 1px 0 var(--ink);text-align:center;z-index:2}
+.shake{animation:shake .25s}
+@keyframes shake{20%{transform:translate(-6px,3px)}40%{transform:translate(5px,-4px)}60%{transform:translate(-4px,-2px)}80%{transform:translate(3px,4px)}}
+
+/* ===== RIGHT (wood panel) ===== */
+#right{background:var(--planks);display:flex;flex-direction:column;min-height:0;border-left:6px solid #2a1708;box-shadow:inset 8px 0 16px rgba(0,0,0,.35)}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:8px;background:rgba(30,15,5,.55);border-bottom:4px solid #2a1708}
+.tabs button{position:relative;background:linear-gradient(#a8743f,#86562a);border:2px solid var(--ink);border-radius:8px;padding:5px 2px;font-size:12px;color:var(--cream);text-shadow:1px 1px 0 var(--ink);box-shadow:0 3px 0 #2a1708;transition:transform .1s}
+.tabs button .tb{display:block;font-size:19px;line-height:1.1}
+.tabs button.on{background:linear-gradient(#ffd77a,var(--brassD));color:var(--ink);text-shadow:none}
+.tabs button:active{transform:translateY(2px);box-shadow:none}
+.badge{position:absolute;top:-7px;right:-5px;background:var(--red);color:#fff;border:2px solid var(--ink);font-size:10px;min-width:20px;height:20px;border-radius:999px;display:none;align-items:center;justify-content:center;padding:0 4px;animation:pulse 1s infinite;text-shadow:none}
+.tabc{flex:1;overflow-y:auto;padding:10px 12px;display:none;-webkit-overflow-scrolling:touch}
+.tabc.on{display:block}
+.tabc::-webkit-scrollbar{width:9px}
+.tabc::-webkit-scrollbar-thumb{background:#c98d4b;border-radius:9px;border:2px solid #4a2c15}
+h2,h3{font-family:Rye,Georgia,serif;font-weight:400;margin:2px 0 8px;font-size:21px;color:#ffe2a8;text-shadow:2px 2px 0 #2a1708}
+h4{font-family:Rye,Georgia,serif;font-weight:400;margin:12px 0 6px;font-size:16px;color:#ffe2a8;text-shadow:2px 2px 0 #2a1708}
+.note{font-size:12px;color:#f0dcb4;margin:-4px 0 8px;font-weight:700}
+.amt{display:flex;gap:5px;margin-bottom:8px}
+.amt button{flex:1;background:linear-gradient(#a8743f,#86562a);border:2px solid var(--ink);color:var(--cream);padding:6px;border-radius:8px;font-size:13px}
+.amt button.on{background:linear-gradient(#ffd77a,var(--brassD));color:var(--ink)}
+#hideScene{background:rgba(25,12,4,.6);border:3px solid #2a1708;border-radius:10px;padding:8px;margin-bottom:10px;max-height:170px;overflow-y:auto;box-shadow:inset 0 0 14px #000a}
+.hrow{display:flex;align-items:center;gap:6px;padding:2px 0;border-bottom:1px dashed #ffffff18}
+.hl{font-size:10px;color:#e8cfa0;width:80px;flex-shrink:0;line-height:1.1}
+.hi{display:flex;flex-wrap:wrap;gap:1px;font-size:17px}
+.hi span{display:inline-block;animation:bob 1.6s ease-in-out infinite}
+.hi em{font-size:11px;color:var(--brass);font-style:normal;align-self:center;margin-left:4px}
+@keyframes bob{50%{transform:translateY(-4px) rotate(6deg)}}
+.empty{color:#f0dcb4;text-align:center;padding:14px;font-size:13px}
+.row{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--paper),var(--paper2));color:var(--ink);border:3px solid var(--ink);border-radius:10px;padding:7px 10px;margin-bottom:7px;cursor:pointer;
+  box-shadow:0 3px 0 #2a1708,inset 0 0 14px rgba(140,90,30,.35);transition:transform .1s,filter .2s;filter:saturate(.6) brightness(.82)}
+.row.can{filter:none;border-color:#2f5a1f;box-shadow:0 3px 0 #2a1708,0 0 0 2px var(--greenL),inset 0 0 14px rgba(140,90,30,.3)}
+.row.can:hover{transform:translateX(-4px) rotate(-.5deg)}
+.row:active{transform:scale(.97)}
+.row.locked{filter:grayscale(1) brightness(.6);cursor:default}
+.row.static{cursor:default;filter:none}
+.row .ri{font-size:30px;width:42px;text-align:center;flex-shrink:0}
+.row .rt{flex:1;min-width:0}
+.row .rn{font-size:15px}
+.row .rd{font-size:11px;color:var(--ink2);font-weight:700;line-height:1.25}
+.row .rc{font-size:13px;color:var(--red)}
+.utag{display:inline-block;font-size:10px;padding:1px 7px;border-radius:999px;border:2px solid var(--ink);color:#fff;text-shadow:1px 1px 0 #0007;margin-right:6px;vertical-align:2px;letter-spacing:.3px;white-space:nowrap}
+.row .rfx{font-size:12px;color:#2f5a1f;font-weight:900;line-height:1.25;margin-top:1px}
+.uhelp{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;font-size:11px;color:#f0dcb4;background:rgba(25,12,4,.5);border:2px solid #2a1708;border-radius:8px;padding:6px 8px;margin:4px 0 8px}
+.uhelp b{color:var(--brass)}
+.mlv{display:inline-block;font-size:10px;background:var(--green);color:#fff;text-shadow:1px 1px 0 #1d3a12;border:2px solid var(--ink);border-radius:999px;padding:0 6px;margin-left:6px;vertical-align:2px}
+.mlv:empty{display:none}
+.row .ro{font-family:Rye,Georgia,serif;font-size:28px;color:rgba(59,36,18,.45);min-width:44px;text-align:right}
+.ubtn{background:linear-gradient(#7cc35a,var(--green));color:#fff;text-shadow:1px 1px 0 #1d3a12;border:2px solid #1d3a12;padding:8px 12px;border-radius:8px;font-size:13px;box-shadow:0 3px 0 #1d3a12;white-space:nowrap}
+.ubtn:active{transform:translateY(2px);box-shadow:none}
+.ubtn:disabled{filter:grayscale(1);opacity:.55;cursor:default}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px}
+.card{background:linear-gradient(135deg,var(--paper),var(--paper2));color:var(--ink);border:3px solid var(--ink);border-radius:10px;padding:8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;box-shadow:0 3px 0 #2a1708;transition:transform .1s;filter:saturate(.6) brightness(.82);position:relative}
+.card.can,.card.owned,.card.equip{filter:none}
+.card.can{box-shadow:0 3px 0 #2a1708,0 0 0 2px var(--greenL)}
+.card.equip{box-shadow:0 3px 0 #2a1708,0 0 0 3px var(--brass);background:linear-gradient(135deg,#fff0c4,#f0cf7a)}
+.card:hover{transform:translateY(-2px)}
+.card .ce{font-size:30px;line-height:1.1;height:36px;display:flex;align-items:center}
+.card .cn{font-size:13px;line-height:1.1}
+.card .cc{font-size:12px;color:var(--red)}
+.sw{width:34px;height:34px;border-radius:50% 46% 52% 48%;border:2px solid var(--ink)}
+.achgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:6px}
+.ach{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:22px;background:rgba(25,12,4,.55);border:2px solid #2a1708;border-radius:8px;position:relative}
+.ach.got{background:linear-gradient(135deg,var(--paper),#f0cf7a);border-color:var(--ink)}
+.ach.no{opacity:.45;filter:grayscale(1)}
+.ach:hover::after{content:attr(data-t);position:absolute;bottom:105%;left:50%;transform:translateX(-50%);background:var(--paper);color:var(--ink);border:2px solid var(--ink);padding:6px 8px;border-radius:8px;font-size:11px;z-index:5;pointer-events:none;width:max-content;max-width:200px;white-space:normal;text-align:center}
+.stat{display:flex;justify-content:space-between;gap:8px;padding:5px 2px;border-bottom:1px dashed rgba(255,255,255,.15);font-size:13px}
+.stat b{color:var(--brass);text-align:right}
+.box{background:rgba(25,12,4,.5);border:3px solid #2a1708;border-radius:10px;padding:10px;margin:10px 0;box-shadow:inset 0 0 12px #0008}
+.about{font-size:13px;line-height:1.5;color:#f0dcb4;font-weight:700;user-select:text;-webkit-user-select:text}
+.about p{margin:0 0 8px}
+.about ul{margin:0 0 8px;padding-left:18px}
+.about b{color:var(--cream)}
+.btnrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.sbtn{background:linear-gradient(#a8743f,#86562a);border:2px solid var(--ink);color:var(--cream);padding:8px 12px;border-radius:8px;font-size:13px;box-shadow:0 3px 0 #2a1708}
+.sbtn.red{background:linear-gradient(#c8473a,var(--red))}
+.sbtn.big{background:linear-gradient(#ffd77a,var(--brassD));color:var(--ink);font-size:16px;padding:10px 16px;width:100%;font-family:Rye,Georgia,serif;font-weight:400}
+.sbtn:disabled{opacity:.5;cursor:default;filter:grayscale(.6)}
+.sbtn:active{transform:translateY(2px);box-shadow:none}
+.mis{display:flex;gap:10px;align-items:center;background:linear-gradient(135deg,var(--paper),var(--paper2));color:var(--ink);border:3px solid var(--ink);border-radius:10px;padding:7px 10px;margin-bottom:7px;box-shadow:0 3px 0 #2a1708}
+.mis.done{box-shadow:0 3px 0 #2a1708,0 0 0 3px var(--greenL);animation:pulse 1.2s infinite}
+.mis .ri{font-size:28px}
+.mis .rt{flex:1;min-width:0}
+.mis .rn{font-size:14px}
+.mis .bar{height:9px;background:#c9ad7a;border-color:var(--ink2)}
+.mis .mp{font-size:11px;color:var(--ink2)}
+.streak{font-size:13px;color:#f0dcb4;margin-bottom:8px}
+.streak b{color:var(--brass)}
+.wheelbox{text-align:center}
+.wheelWrap{position:relative;width:220px;height:220px;margin:8px auto 12px}
+#wheel{position:absolute;inset:0;border-radius:50%;border:7px solid var(--ink);box-shadow:0 0 0 4px var(--brass),0 6px 14px #000a;
+  background:conic-gradient(#c8473a 0 45deg,#f3e2bd 45deg 90deg,#4f8a3a 90deg 135deg,#f0b84a 135deg 180deg,#8b5a2b 180deg 225deg,#f3e2bd 225deg 270deg,#2e6c8a 270deg 315deg,#f0b84a 315deg 360deg);
+  transition:transform 4.6s cubic-bezier(.12,.7,.18,1)}
+#wheel .wl{position:absolute;inset:0;display:flex;justify-content:center;padding-top:12px;font-size:23px;pointer-events:none}
+#wheelPtr{position:absolute;top:-16px;left:50%;transform:translateX(-50%);z-index:2;font-size:30px;color:var(--red);text-shadow:2px 2px 0 var(--ink)}
+#wheelHub{position:absolute;left:50%;top:50%;width:44px;height:44px;transform:translate(-50%,-50%);border-radius:50%;background:var(--paper);border:3px solid var(--ink);display:flex;align-items:center;justify-content:center;font-size:22px;z-index:2}
+.tokens{font-size:14px;margin:6px 0}
+.tokens b{color:var(--brass)}
+
+/* ===== OVERLAYS ===== */
+#fx{position:fixed;inset:0;pointer-events:none;z-index:50}
+#toasts{position:fixed;left:14px;bottom:14px;display:flex;flex-direction:column-reverse;gap:8px;z-index:60;pointer-events:none;max-width:330px}
+.toast{background:linear-gradient(135deg,var(--paper),var(--paper2));color:var(--ink);border:3px solid var(--ink);border-radius:10px;padding:8px 12px;animation:tin .4s cubic-bezier(.2,1.6,.4,1);box-shadow:0 4px 0 #2a1708,0 10px 24px #0008}
+.toast b{display:block;font-size:15px;color:var(--red)}
+.toast small{font-size:12px;color:var(--ink2);font-weight:700}
+.toast.out{animation:tout .3s forwards}
+@keyframes tin{from{transform:translateX(-120%) scale(.6)}}
+@keyframes tout{to{transform:translateX(-120%);opacity:0}}
+.golden{position:fixed;width:80px;height:80px;z-index:40;cursor:pointer;animation:gold 2.4s ease-in-out infinite,gin .5s cubic-bezier(.2,1.6,.4,1);filter:drop-shadow(0 0 14px #ffd700) drop-shadow(0 0 30px #ffae00);touch-action:manipulation}
+.golden.bye{animation:gout .6s forwards}
+@keyframes gold{0%,100%{transform:rotate(-12deg) scale(1)}50%{transform:rotate(12deg) scale(1.12)}}
+@keyframes gin{from{transform:scale(0)}}
+@keyframes gout{to{transform:scale(0) rotate(180deg);opacity:0}}
+.drop{position:fixed;top:-70px;font-size:46px;padding:6px;z-index:41;cursor:pointer;animation:fall linear forwards;filter:drop-shadow(0 0 8px #ffcf70);touch-action:manipulation;line-height:1}
+@keyframes fall{to{transform:translateY(calc(100vh + 140px)) rotate(540deg)}}
+.modal{position:fixed;inset:0;background:rgba(20,10,3,.8);backdrop-filter:blur(6px);z-index:80;display:flex;align-items:center;justify-content:center;padding:14px}
+#daily{z-index:79}
+.hidden{display:none!important}
+.mbox{background:linear-gradient(135deg,var(--paper),var(--paper2));color:var(--ink);border:6px double var(--ink);border-radius:8px;padding:16px;width:min(480px,100%);text-align:center;box-shadow:0 0 0 4px var(--paper2),0 20px 60px #000;animation:tin2 .4s cubic-bezier(.2,1.6,.4,1)}
+@keyframes tin2{from{transform:scale(.5) rotate(-6deg)}}
+.vtitle{font-family:Rye,Georgia,serif;font-size:34px;color:var(--red);line-height:1.1}
+#vsub{color:var(--ink2);font-size:14px;margin:6px 0 10px}
+#vq{font-size:18px;margin-bottom:10px}
+#varea{position:relative;height:230px;background:rgba(120,80,30,.18);border:3px dashed var(--ink2);border-radius:10px;overflow:hidden}
+.vb{position:absolute;transform:translate(-50%,-50%);min-width:58px;height:58px;padding:0 12px;border-radius:10px;font-size:26px;background:linear-gradient(#b07a43,#86562a);color:var(--cream);border:3px solid var(--ink);box-shadow:0 4px 0 #2a1708}
+.vb.ok{background:linear-gradient(#7cc35a,var(--green))}
+.vb.hold{width:170px;font-size:17px;overflow:hidden}
+.vb.hold i{position:absolute;left:0;top:0;bottom:0;width:0;background:#7cc35acc;pointer-events:none}
+.vb.hold span{position:relative}
+#vmsg{min-height:24px;margin-top:8px;color:var(--red)}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin:14px 0}
+.day{background:rgba(120,80,30,.18);border:2px solid var(--ink2);border-radius:8px;padding:7px 1px;font-size:11px}
+.day i{display:block;font-style:normal;font-size:21px}
+.day.past{opacity:.45}
+.day.now{border-color:var(--red);background:#f0cf7a;animation:pulse 1s infinite}
+#lvlUp{position:fixed;left:50%;top:36%;transform:translate(-50%,-50%);z-index:70;text-align:center;pointer-events:none;animation:lvl 2.6s forwards;width:92vw}
+#lvlUp .l1{font-family:Rye,Georgia,serif;font-size:clamp(40px,8vw,84px);color:#ffd27a;text-shadow:3px 3px 0 var(--ink),-2px -2px 0 var(--ink),2px -2px 0 var(--ink),-2px 2px 0 var(--ink),0 8px 20px #000}
+#lvlUp .l2{font-size:clamp(15px,2.4vw,22px);color:var(--cream);text-shadow:2px 2px 0 var(--ink)}
+@keyframes lvl{0%{transform:translate(-50%,-50%) scale(0) rotate(-20deg)}15%{transform:translate(-50%,-50%) scale(1.15) rotate(4deg)}25%{transform:translate(-50%,-50%) scale(1)}85%{opacity:1}100%{opacity:0;transform:translate(-50%,-70%) scale(1)}}
+noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--ink);padding:24px;font-size:16px}
+
+/* ===== MOBILE ===== */
+@media (max-width:900px){
+  :root{--ps:clamp(120px,min(50vw,25dvh),240px)}
+  #banner{padding:6px 12px;gap:8px}
+  #banner .ticker{display:none}
+  .logo{font-size:20px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .logo small{display:none}
+  .hbtn{width:38px;height:38px;font-size:17px}
+  .homebtn{height:38px;padding:0 9px;font-size:13px;gap:4px}
+  .homebtn .hl1{display:none}.homebtn .hl2{display:inline}
+  main{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1.08fr) minmax(0,1fr)}
+  #left{padding:6px 8px 4px;gap:4px;justify-content:flex-start}
+  #potArea{flex:1 1 0;height:auto;min-height:calc(var(--ps)*1.02)}
+  #count{font-size:clamp(28px,8vw,40px)}
+  .lbl{font-size:12px}
+  #pps{font-size:12px;padding:1px 10px;margin-top:2px}
+  .levelbox{padding:3px 8px}
+  .lvl{font-size:12px}
+  .bar{height:9px}
+  .sub{display:none}
+  #goal{padding:2px 8px;font-size:11px}
+  #clickInfo{display:none}
+  .cactus{font-size:30px}.cactus.c2{font-size:24px}
+  #right{border-left:none;border-top:6px solid #2a1708}
+  .tabs{gap:4px;padding:6px}
+  .tabs button{font-size:10px;padding:3px 1px}
+  .tabs button .tb{font-size:16px}
+  .tabc{padding:8px}
+  .row .ri{font-size:24px;width:32px}
+  .row .rn{font-size:14px}
+  #toasts{left:50%;transform:translateX(-50%);top:4px;bottom:auto;width:min(92vw,360px);flex-direction:column;max-width:none}
+  .toast{padding:4px 10px;width:100%;opacity:.96}
+  .toast b{font-size:12px}.toast small{display:none}
+  .golden{width:64px;height:64px}
+  .vtitle{font-size:26px}
+  #varea{height:210px}
+}
+@media (max-width:900px) and (max-height:620px){
+  #goal{display:none}
+}
+</style>
+</head>
+<body>
+<noscript>
+  <h1>Potato Clicker – Free Idle Clicker Game</h1>
+  <p>Potato Clicker is a free Wild West idle clicker game you play right in your browser. Please enable JavaScript to play.</p>
+</noscript>
+<div id="app">
+  <header id="banner">
+    <a class="homebtn" href="./" title="Back to Potato Team Games" aria-label="Back to Potato Team Games">⬅ <span class="hl1">All Games</span><span class="hl2">Home</span></a>
+    <h1 class="logo" title="Potato Clicker">POTATO <small>CLICKER</small> <span>🥔</span></h1>
+    <div class="ticker" aria-hidden="true"><div id="tick">Welcome to Potato Clicker 🥔 — the wildest potato game in the West.</div></div>
+    <button class="hbtn" id="sndBtn" title="Sound on/off" aria-label="Sound on/off">🔊</button>
+    <button class="hbtn" id="saveBtn" title="Save game" aria-label="Save game">💾</button>
+  </header>
+
+  <main id="main">
+    <section id="left" aria-label="Potato">
+      <div class="cactus c1" aria-hidden="true">🌵</div><div class="cactus c2" aria-hidden="true">🌵</div><div class="tumble" aria-hidden="true">🌾</div>
+      <div id="weather" aria-hidden="true"><div class="wsky"></div><div class="wflash"></div></div>
+      <div class="info">
+        <div id="count">0</div>
+        <div class="lbl">POTATOES</div>
+        <div id="pps">0 per second</div>
+      </div>
+      <div class="levelbox">
+        <div class="lvl"><span id="lvlNum">Level 1</span><span id="lvlTitle"></span></div>
+        <div class="bar"><div id="xpBar"></div></div>
+        <div class="sub" id="xpTxt"></div>
+      </div>
+      <div id="goal"><div class="gt"><span>🎯 Next goal</span><b id="goalTxt"></b></div><div class="bar"><div id="goalBar"></div></div></div>
+      <div id="potArea">
+        <div id="chips"></div>
+        <div id="glow"></div>
+        <div id="rays"></div>
+        <div id="hands"></div>
+        <div id="potWrap" role="button" aria-label="Click the potato">
+          <svg viewBox="0 0 300 300" aria-hidden="true">
+            <defs>
+              <radialGradient id="pg" cx="38%" cy="30%" r="78%">
+                <stop offset="0%" class="s1"/><stop offset="62%" class="s2"/><stop offset="100%" class="s3"/>
+              </radialGradient>
+            </defs>
+            <path d="M150 18 C228 14 284 78 276 158 C268 238 210 286 142 282 C70 278 18 226 24 150 C30 74 78 22 150 18Z" fill="url(#pg)" stroke="var(--p3)" stroke-width="5"/>
+            <ellipse class="pspot" cx="88" cy="92" rx="9" ry="6"/>
+            <ellipse class="pspot" cx="214" cy="82" rx="7" ry="5"/>
+            <ellipse class="pspot" cx="234" cy="204" rx="10" ry="7"/>
+            <ellipse class="pspot" cx="78" cy="214" rx="8" ry="5"/>
+            <ellipse class="pspot" cx="160" cy="250" rx="7" ry="4"/>
+            <ellipse class="pspot" cx="56" cy="150" rx="5" ry="4"/>
+            <ellipse cx="108" cy="66" rx="52" ry="20" fill="#fff" opacity=".33" transform="rotate(-24 108 66)"/>
+            <ellipse cx="92" cy="172" rx="18" ry="10" fill="#ff6fa8" opacity=".45"/>
+            <ellipse cx="208" cy="172" rx="18" ry="10" fill="#ff6fa8" opacity=".45"/>
+            <g id="eyes">
+              <ellipse cx="117" cy="128" rx="21" ry="25" fill="#fff" stroke="#3a1d08" stroke-width="3"/>
+              <ellipse cx="183" cy="128" rx="21" ry="25" fill="#fff" stroke="#3a1d08" stroke-width="3"/>
+              <g id="pupL"><circle cx="117" cy="130" r="11" fill="#1a0d05"/><circle cx="121" cy="125" r="4" fill="#fff"/></g>
+              <g id="pupR"><circle cx="183" cy="130" r="11" fill="#1a0d05"/><circle cx="187" cy="125" r="4" fill="#fff"/></g>
+            </g>
+            <g id="shades" style="display:none">
+              <defs><linearGradient id="lens" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3b3f4a"/><stop offset="100%" stop-color="#0c0d12"/></linearGradient></defs>
+              <path d="M88 116 L34 106 M212 116 L266 106" stroke="#1a0d05" stroke-width="7" stroke-linecap="round" fill="none"/>
+              <path d="M142 120 Q150 112 158 120" stroke="#1a0d05" stroke-width="7" stroke-linecap="round" fill="none"/>
+              <path d="M90 110 H144 Q148 110 147 116 L142 140 Q138 156 118 156 Q96 156 91 140 L86 116 Q86 110 90 110Z" fill="url(#lens)" stroke="#1a0d05" stroke-width="5" stroke-linejoin="round"/>
+              <path d="M210 110 H156 Q152 110 153 116 L158 140 Q162 156 182 156 Q204 156 209 140 L214 116 Q214 110 210 110Z" fill="url(#lens)" stroke="#1a0d05" stroke-width="5" stroke-linejoin="round"/>
+              <path d="M96 118 L112 118 L100 140Z M162 118 L178 118 L166 140Z" fill="#fff" opacity=".28"/>
+            </g>
+            <path id="mouth" d="M122 186 Q150 214 178 186" stroke="#3a1d08" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div id="acc"></div>
+        </div>
+        <div id="comboBox"><div id="comboTxt">COMBO</div><div class="bar"><div id="comboBar"></div></div></div>
+      </div>
+      <div id="clickInfo"></div>
+    </section>
+
+    <aside id="right" aria-label="Game menus">
+      <nav class="tabs">
+        <button data-t="mach" class="on"><span class="tb">🏭</span>Machines</button>
+        <button data-t="upg"><span class="tb">⬆️</span>Upgrades<span class="badge" id="bUpg"></span></button>
+        <button data-t="shop"><span class="tb">🛒</span>Shop</button>
+        <button data-t="bag"><span class="tb">🎒</span>Bag<span class="badge" id="bBag"></span></button>
+        <button data-t="mis"><span class="tb">📜</span>Missions<span class="badge" id="bMis"></span></button>
+        <button data-t="look"><span class="tb">🎨</span>Style</button>
+        <button data-t="ach"><span class="tb">🏆</span>Trophies</button>
+        <button data-t="stats"><span class="tb">📊</span>Stats</button>
+      </nav>
+
+      <div class="tabc on" id="t-mach">
+        <h2>🏭 Your Ranch</h2>
+        <div id="hideScene"></div>
+        <div class="amt" id="amtBtns">
+          <button data-a="1" class="on">x1</button><button data-a="10">x10</button><button data-a="100">x100</button><button data-a="max">MAX</button>
+        </div>
+        <div id="machList"></div>
+      </div>
+      <div class="tabc" id="t-upg"><h2>⬆️ Upgrades</h2><div class="note">Machines make potatoes. Upgrades make the things you already have <b>stronger</b>. Each upgrade is bought once. The colored tag tells you what it upgrades:</div><div class="uhelp"><span><b>🏭 MACHINE</b> = one machine type makes x2</span><span><b>🌍 ALL MACHINES</b> = every machine +25%</span><span><b>👆 CLICK</b> = more potatoes per click</span><span><b>💥 🔥 🌟 📚 ⏱️</b> = crits, combo, golden, XP, boosts</span></div><div class="note" id="upgNote"></div><div id="upgList"></div></div>
+      <div class="tabc" id="t-shop"><h2>🛒 Shop</h2><div class="note">Buy boosts now and save them in your bag for later. Prices follow your production — buy cheap now, use them when you're rich.</div><div id="shopList"></div></div>
+      <div class="tabc" id="t-bag"><h2>🎒 Your Bag</h2><div class="note">Your saved boosts. Tap USE whenever you want.</div><div id="bagList"></div></div>
+      <div class="tabc" id="t-mis">
+        <h2>📜 Missions</h2>
+        <div class="streak" id="streakTxt"></div>
+        <div id="misList"></div>
+        <div class="box wheelbox">
+          <h3>🎡 Lucky Wheel</h3>
+          <div class="note">Free spin every 20 minutes of play</div>
+          <div class="wheelWrap"><div id="wheelPtr">▼</div><div id="wheel"></div><div id="wheelHub">🥔</div></div>
+          <button class="sbtn big" id="spinBtn">SPIN</button>
+        </div>
+      </div>
+      <div class="tabc" id="t-look">
+        <h2>🎨 Style</h2>
+        <div class="note">Every item you buy gives +2% production forever.</div>
+        <h4>🥔 Potato Skins</h4><div class="grid" id="lookPot"></div>
+        <h4>🤠 Accessories</h4><div class="grid" id="lookAcc"></div>
+        <h4>🌄 Backgrounds</h4><div class="grid" id="lookBg"></div>
+      </div>
+      <div class="tabc" id="t-ach"><h2 id="achH">🏆 Trophies</h2><div class="note">Every trophy gives +1% production forever.</div><div class="achgrid" id="achGrid"></div></div>
+      <div class="tabc" id="t-stats">
+        <h2>📊 Stats</h2>
+        <div id="statList"></div>
+        <div class="box">
+          <h3>✨ Rebirth</h3>
+          <div class="note" style="margin:0">Start over with potatoes, machines and upgrades — but earn <b>Potato Souls 👻</b>. Each soul gives <b>+5%</b> to everything forever. You keep your level, style, trophies and bag.</div>
+          <div id="rebInfo" style="margin:8px 0;font-size:14px"></div>
+          <button class="sbtn big" id="rebBtn">✨ REBIRTH</button>
+        </div>
+        <div class="box">
+          <h3>🪙 Soul Shop</h3>
+          <div class="note" style="margin:0">Every rebirth also gives Soul Coins 🪙 (1 per soul). Spend them on permanent perks.</div>
+          <div class="tokens" id="tokTxt"></div>
+          <div id="perkList"></div>
+        </div>
+        <div class="box">
+          <h3>⚙️ Settings</h3>
+          <div class="btnrow">
+            <button class="sbtn" id="expBtn">📤 Export save</button>
+            <button class="sbtn" id="impBtn">📥 Import save</button>
+            <button class="sbtn red" id="resetBtn">🗑️ Delete all</button>
+          </div>
+        </div>
+        <section class="box about" aria-labelledby="aboutH">
+          <h2 id="aboutH">🥔 About Potato Clicker</h2>
+          <p><b>Potato Clicker</b> is a free idle clicker game set in the Wild West. Click the giant potato, earn potatoes and build a potato empire — from a tiny peeler to steam trains, gold mines and galaxy farms. No download and no sign-up: it runs right in your browser on PC, Mac, Chromebook, iPhone and Android.</p>
+          <h3>How to play</h3>
+          <ul>
+            <li><b>Click the potato</b> to earn potatoes. Fast clicks build a combo bonus.</li>
+            <li><b>Buy machines</b> that make potatoes for you, even while you're not clicking.</li>
+            <li><b>Unlock 300+ upgrades</b> that multiply your clicks and production.</li>
+            <li><b>Catch golden potatoes</b> and falling potato rain for big bonuses.</li>
+            <li><b>Watch the weather</b> — rain, thunderstorms, snow, heatwaves and dust storms change the game, and trains, bandits and UFOs sometimes show up.</li>
+            <li><b>Complete missions</b>, spin the lucky wheel and open your daily chest.</li>
+            <li><b>Level up</b>, collect 350+ trophies and <b>rebirth</b> for permanent power.</li>
+          </ul>
+          <h3>Features</h3>
+          <p>Endless machines, skins, hats and backgrounds, boosts you can save for later, a soul shop with perks, and automatic saving. Like Cookie Clicker — but with potatoes and cowboys.</p>
+          <h3>Is it free?</h3>
+          <p>Yes. Potato Clicker is 100% free to play with no ads and no in-app purchases. Your progress is saved in your browser.</p>
+          <p><a href="./" style="color:var(--brass)">🎮 More free games from Potato Team Games →</a></p>
+        </section>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<canvas id="fx" aria-hidden="true"></canvas>
+<div id="toasts" aria-live="polite"></div>
+<div id="vibe" class="modal hidden">
+  <div class="mbox" id="vbox">
+    <div class="vtitle">🤠 SHERIFF CHECK!</div>
+    <div id="vsub"></div>
+    <div id="vq"></div>
+    <div id="varea"></div>
+    <div id="vmsg"></div>
+  </div>
+</div>
+<div id="daily" class="modal hidden">
+  <div class="mbox">
+    <div class="vtitle">🎁 DAILY CHEST</div>
+    <div id="dStreak" style="font-size:15px;margin-top:6px"></div>
+    <div class="days" id="dDays"></div>
+    <button class="sbtn big" id="dOpen">OPEN CHEST 🔓</button>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* =============== HELPERS =============== */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const rand=(a,b)=>a+Math.random()*(b-a);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const SUF=['','K','M','B','T','Qa','Qi','Sx','Sp','Oc','No','Dc','UDc','DDc','TDc','QaDc','QiDc','SxDc','SpDc','OcDc','NoDc','Vg','UVg','DVg','TVg'];
+function fmt(n,dec){
+  if(!isFinite(n))return '∞';
+  if(n<1000){if(dec&&n<100&&n%1)return (Math.round(n*10)/10).toString();return Math.floor(n).toString()}
+  const e=Math.floor(Math.log10(n)/3);
+  if(e>=SUF.length)return n.toExponential(2).replace('+','');
+  const v=n/Math.pow(10,e*3);
+  return (v<10?v.toFixed(2):v<100?v.toFixed(1):Math.floor(v).toString())+' '+SUF[e];
+}
+function fmtTime(s){s=Math.max(0,Math.floor(s));const d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),x=s%60;return (d?d+'d ':'')+(h||d?h+'h ':'')+(m||h||d?m+'m ':'')+x+'s'}
+const plural=(n,w)=>n+' '+w+(n===1?'':'s');
+
+/* =============== DATA =============== */
+const MACHINES=[
+  {n:'Peeler',e:'🔪',c:15,p:0.1,d:'A small knife with a big dream'},
+  {n:'Potato Field',e:'🌱',c:100,p:1,d:'Fresh soil, happy potatoes'},
+  {n:'Deep Fryer',e:'🍟',c:1100,p:8,d:'Makes fries around the clock'},
+  {n:'Tractor',e:'🚜',c:12000,p:47,d:'Plows the field in record time'},
+  {n:'Ranch',e:'🐎',c:130000,p:260,d:'Horses, hay bales and loads of potatoes'},
+  {n:'Potato Factory',e:'🏭',c:1.4e6,p:1400,d:'Conveyor belts full of potatoes'},
+  {n:'Steam Train',e:'🚂',c:2e7,p:7800,d:'Hauls potatoes across the prairie'},
+  {n:'Gold Mine',e:'⛏️',c:3.3e8,p:44000,d:'Digs for gold — finds potatoes'},
+  {n:'Potato Bank',e:'🏦',c:5.1e9,p:260000,d:'Interest paid in potatoes'},
+  {n:'Laboratory',e:'🧪',c:7.5e10,p:1.6e6,d:'Researching super potatoes'},
+  {n:'Rocket',e:'🚀',c:1e12,p:1e7,d:'Fetches potatoes from space'},
+  {n:'Moon Base',e:'🌕',c:1.4e13,p:6.5e7,d:'Low-gravity potato farming'},
+  {n:'Time Machine',e:'⏳',c:1.7e14,p:4.3e8,d:'Brings potatoes back from the future'},
+  {n:'Galaxy Farm',e:'🌌',c:2.1e15,p:2.9e9,d:'Potato fields across the stars'},
+  {n:'Potato King',e:'👑',c:2.6e16,p:2.1e10,d:'The biggest potato of them all'},
+];
+
+/* ---- UPGRADES (300+) ---- */
+const UPG=[];
+const ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX','X'];
+const TIERS=[[1,10],[5,50],[25,500],[50,5e4],[100,5e6],[150,5e8],[200,5e10],[250,5e12],[300,5e14],[400,5e16],[500,5e18],[600,5e20],[700,5e22],[850,5e24],[1000,5e26]];
+const TN=['Sharper','Faster','Stronger','Turbo','Deluxe','Premium','Gold Edition','Diamond Edition','Masterpiece','Legendary','Mythic','Cosmic','Infinite','Divine','Ultimate'];
+const machUpg=(m,i)=>TIERS.forEach(([r,mul],t)=>UPG.push({id:'m'+i+'_'+t,n:m.n+': '+TN[t],e:m.e,d:'Every '+m.n+' you own makes x2 potatoes',c:m.c*mul,t:'mach',i,req:()=>S.machines[i]>=r}));
+MACHINES.forEach(machUpg);
+['Strong Finger','Quick Hand','Turbo Thumb','Iron Grip','Rocket Click','Lightning Finger','Super Hand','Giant Fist','Diamond Finger','Golden Hand',...ROMAN.map(r=>'Click Master '+r)].forEach((n,t)=>{
+  const c=t<3?[100,500,1e4][t]:1e6*Math.pow(100,t-3), r=t<10?[0,25,100,250,500,1000,2000,4000,8000,15000][t]:15000+(t-9)*10000;
+  UPG.push({id:'c'+t,n,e:'👆',d:'Clicks give x2 potatoes',c,t:'click',req:()=>S.clicks>=r});
+});
+[[0.1,1e4],[0.5,1e5],[5,1e7],[50,1e9],[500,1e11],[5000,1e13],[5e4,1e15],[5e5,1e17],[5e6,1e19],[5e7,1e21]].forEach(([v,c],t)=>
+  UPG.push({id:'f'+t,n:'Many Hands '+ROMAN[t],e:'🙌',d:'+'+fmt(v,1)+' potatoes per click for every machine you own',c,t:'flat',v,req:()=>totalMach()>=10+t*25}));
+ROMAN.forEach((r,t)=>UPG.push({id:'cp'+t,n:'Potato Magnet '+r,e:'🧲',d:'Each click also gives +1% of your potatoes per second',c:5e4*Math.pow(100,t),t:'cpct',req:()=>S.clicks>=100*(t+1)*(t+1)}));
+['Potato Salad','French Fries','Mashed Potatoes','Potato Chips','Rösti','Hasselback Potatoes','Baked Potato','Potato Soup','Gnocchi','Croquettes','Potato Bread','Scalloped Potatoes','Potato Pizza','Hash Browns','Potato Muffins','Potato Cake','Potato Ice Cream','Potato Pie','Potato Festival','The Perfect Potato'].forEach((n,t)=>
+  UPG.push({id:'g'+t,n:'Recipe: '+n,e:'🥘',d:'+25% to ALL production',c:1e5*Math.pow(50,t),t:'glob',v:1.25,req:()=>true}));
+['Lucky Potato','Four-Leaf Clover','Lucky Coin','Horseshoe','Shooting Star','Fortune Potato'].forEach((n,t)=>UPG.push({id:'cr'+t,n,e:'🍀',d:'+2% critical click chance',c:1e3*Math.pow(1000,t),t:'crit',req:()=>true}));
+['Hard Hit','Mega Hit','Ultra Hit','Giant Hit','Potato Bomb'].forEach((n,t)=>UPG.push({id:'cx'+t,n,e:'💥',d:'Critical clicks give +5x more',c:5e4*Math.pow(1e4,t),t:'critx',req:()=>S.crits>=10}));
+['Gold Radar','Gold Magnet','Gold Fever','Gold Seeker','Midas Touch'].forEach((n,t)=>UPG.push({id:'gd'+t,n,e:'🌟',d:'Golden potatoes appear 15% more often',c:5e4*Math.pow(1000,t),t:'gold',req:()=>S.goldens>=1}));
+ROMAN.slice(0,5).forEach((r,t)=>UPG.push({id:'cb'+t,n:'Combo Artist '+r,e:'🔥',d:'+25 max combo (bigger combo bonus)',c:2e3*Math.pow(1000,t),t:'combo',req:()=>S.maxCombo>=20}));
+ROMAN.forEach((r,t)=>UPG.push({id:'xp'+t,n:'Smarter Potato '+r,e:'📚',d:'+1 XP per click (level up faster)',c:1e3*Math.pow(100,t),t:'xp',req:()=>S.level>=3+t*5}));
+ROMAN.slice(0,5).forEach((r,t)=>UPG.push({id:'bd'+t,n:'Long Party '+r,e:'⏱️',d:'All boosts last 20% longer',c:1e4*Math.pow(1000,t),t:'bdur',req:()=>S.boostsUsed>=1}));
+
+const BOOSTS=[
+  {id:'frenzy',e:'🔥',n:'Production Party',d:'x7 production for 60 sec',k:180,min:500,use:()=>addActive('frenzy',60)},
+  {id:'clickrizz',e:'👆',n:'Click Power',d:'x15 potatoes per click for 30 sec',k:120,min:300,use:()=>addActive('clickrizz',30)},
+  {id:'mewing',e:'🎯',n:'Sharpshooter',d:'50% critical click chance for 30 sec',k:120,min:600,use:()=>addActive('mewing',30)},
+  {id:'turbo',e:'🤖',n:'Robot Hand',d:'20 free clicks per second for 30 sec — the only legal auto clicker',k:150,min:800,use:()=>addActive('turbo',30)},
+  {id:'fanum',e:'⏩',n:'Time Skip',d:'Get 30 minutes of production instantly',k:900,min:1000,use:()=>{const v=Math.max(1000,D.base*1800);gain(v);bigFloat('⏩ +'+fmt(v),'#ffe08a')}},
+  {id:'goldrain',e:'🌟',n:'Gold Rain',d:'5 golden potatoes appear',k:600,min:5000,use:()=>{for(let i=0;i<5;i++)setTimeout(spawnGolden,i*450)}},
+  {id:'aura',e:'🧃',n:'XP Juice',d:'x3 XP for 5 minutes',k:300,min:2000,use:()=>addActive('aura',300)},
+  {id:'mystery',e:'🎁',n:'Mystery Box',d:'2-4 random boosts straight to your bag',k:400,min:1500,use:()=>{const n=2+Math.floor(Math.random()*3),got=[];for(let i=0;i<n;i++){const b=pick(BOOSTS.filter(x=>x.id!=='mystery'));S.bag[b.id]=(S.bag[b.id]||0)+1;got.push(b.e)}toast('🎁 Mystery Box!','You got: '+got.join(' '));renderBag()}},
+];
+const ACTIVE_LBL={frenzy:'🔥 x7 production',gfrenzy:'🌟 GOLD PARTY x7',clickrizz:'👆 x15 click',gclick:'⚡ CLICK FRENZY x77',mewing:'🎯 50% crit',turbo:'🤖 Robot Hand',aura:'🧃 x3 XP',sale:'🛒 Shop -50%'};
+
+const SKINS=[
+  {id:'classic',t:'pot',n:'Classic',c:0,col:['#ffe0a3','#d99a4e','#8a5524'],g:'#ffb347'},
+  {id:'gold',t:'pot',n:'Gold',c:5e3,col:['#fff7b0','#ffc400','#a86f00'],g:'#ffd000'},
+  {id:'slime',t:'pot',n:'Cactus',c:5e4,col:['#d8ffb0','#4cb137','#1e5a12'],g:'#7dff4a'},
+  {id:'diamond',t:'pot',n:'Diamond',c:5e5,col:['#f0ffff','#7fdfff','#2a7fbf'],g:'#88ffff'},
+  {id:'neon',t:'pot',n:'Pink',c:5e6,col:['#ffc2f7','#ff5bd6','#7a0066'],g:'#ff5bd6'},
+  {id:'lava',t:'pot',n:'Lava',c:5e7,col:['#ffe08a','#ff4d00','#6a0a00'],g:'#ff5a00'},
+  {id:'ohio',t:'pot',n:'Stone',c:1e9,col:['#d5d5d5','#7a7a7a','#2a2a2a'],g:'#bbbbbb'},
+  {id:'galaxy',t:'pot',n:'Galaxy',c:1e11,col:['#e0c4ff','#5b2bd6','#120840'],g:'#9a6bff'},
+  {id:'rainbow',t:'pot',n:'Rainbow',c:1e13,col:['#fff0a3','#ff6b6b','#8a2be2'],g:'#ffffff',rb:1},
+  {id:'void',t:'pot',n:'Shadow',c:1e16,col:['#5a5a5a','#151515','#000'],g:'#ff7a00'},
+  {id:'none',t:'acc',n:'None',c:0,e:'🚫'},
+  {id:'shades',t:'acc',n:'Sunglasses',c:2e3,e:'🕶️'},
+  {id:'star',t:'acc',n:'Sheriff Star',c:2e4,e:'⭐',pos:[72,76,20]},
+  {id:'cap',t:'acc',n:'Cap',c:2e5,e:'🧢',pos:[50,6,46]},
+  {id:'bow',t:'acc',n:'Bow',c:2e6,e:'🎀',pos:[76,12,28]},
+  {id:'crown',t:'acc',n:'Crown',c:2e8,e:'👑',pos:[50,2,40]},
+  {id:'tophat',t:'acc',n:'Top Hat',c:2e10,e:'🎩',pos:[50,-4,46]},
+  {id:'headset',t:'acc',n:'Headset',c:2e12,e:'🎧',pos:[50,36,96]},
+  {id:'bg0',t:'bg',n:'Prairie',c:0,col:['#f0b46a','#c9733a','#7a3f1d']},
+  {id:'bg1',t:'bg',n:'Sunset',c:1e4,col:['#ff8a5c','#c73866','#3d1e4a']},
+  {id:'bg2',t:'bg',n:'Desert Night',c:1e6,col:['#2a3060','#1b1f3a','#0b0d1e']},
+  {id:'bg3',t:'bg',n:'Canyon',c:1e8,col:['#d0704f','#8a3324','#4a1a12']},
+  {id:'bg4',t:'bg',n:'Cactus Valley',c:1e10,col:['#a9cf78','#6b8f3a','#33461d']},
+  {id:'bg5',t:'bg',n:'Sandstorm',c:1e12,col:['#e8cf9a','#c9a96e','#8a6d3b']},
+  {id:'bg6',t:'bg',n:'Northern Lights',c:1e14,col:['#1f4a5a','#2c5364','#00805f']},
+  {id:'bg7',t:'bg',n:'Gold Rush',c:1e17,col:['#ffd56a','#d4a017','#6b4f00']},
+];
+
+const TITLES=[[1,'Greenhorn 🥔'],[5,'Field Hand 🌱'],[10,'Potato Picker 🧺'],[15,'Cowboy 🤠'],[20,'Rancher 🐎'],[25,'Sheriff ⭐'],[30,'Prospector ⛏️'],[40,'Potato Baron 🎩'],[50,'Railroad Tycoon 🚂'],[65,'Potato King 👑'],[80,'Legend 🏆'],[100,'Hero of the West 🌵'],[150,'Potato God ✨'],[200,'Potato of the Universe 🌌']];
+const title=l=>{let t=TITLES[0][1];for(const [n,s] of TITLES)if(l>=n)t=s;return t};
+const need=l=>Math.floor(25*Math.pow(l,1.55));
+
+/* ---- TROPHIES ---- */
+const ACH=[];
+const A=(id,n,d,e,f)=>ACH.push({id,n,d,e,f});
+[[1,'First Click','This is how it starts'],[100,'Click Rookie','100 clicks'],[1000,'Click Machine','1,000 clicks'],[1e4,'Finger on Fire 🔥','10,000 clicks'],[5e4,'Sore Fingers','50,000 clicks'],[1e5,'100,000 Clicks','100,000 clicks'],[5e5,'Not Human','500,000 clicks'],[1e6,'Click Legend','1 million clicks']]
+  .forEach(([n,a,b])=>A('cl'+n,a,b,'👆',()=>S.clicks>=n));
+[[100,'Small Farmer'],[1e3,'A Thousand Potatoes'],[1e4,'Potato Expert'],[1e5,'Almost Rich'],[1e6,'Potato Millionaire'],[1e8,'Rich Rancher'],[1e9,'Billion Mash'],[1e11,'Potato Baron'],[1e12,'Trillionaire'],[1e15,'Quadrillionaire'],[1e18,'Potato Galaxy'],[1e21,'Mash of the Universe'],[1e24,'Infinite Mash'],[1e30,'Why Are You Still Playing?']]
+  .forEach(([n,a])=>A('e'+n,a,'Earn '+fmt(n)+' potatoes in total','🥔',()=>S.allEarned>=n));
+for(let e=33;e<=303;e+=3)A('e'+e,'Potato Rank '+((e-30)/3),'Earn '+fmt(Math.pow(10,e))+' potatoes in total','🌠',()=>S.allEarned>=Math.pow(10,e));
+[[1,'Passive Income'],[10,'Small Business'],[100,'Side Hustle'],[1e3,'Full-Time Job'],[1e4,'CEO'],[1e5,'Big Industry'],[1e6,'A Million per Second'],[1e8,'World Economy'],[1e10,'Potato Empire'],[1e12,'Potato Bank'],[1e15,'Infinite Production']]
+  .forEach(([n,a])=>A('ps'+n,a,'Make '+fmt(n)+' potatoes per second','📈',()=>D.base>=n));
+const machAch=(m,i)=>[[1,'First '+m.n],[10,'10 × '+m.n],[50,'50 × '+m.n],[100,m.n+' Empire'],[200,m.n+' Master']]
+  .forEach(([n,a])=>A('m'+i+'_'+n,a,'Own '+n+' '+m.n,m.e,()=>S.machines[i]>=n));
+MACHINES.forEach(machAch);
+[5,10,25,50,75,100,150,200].forEach(n=>A('lv'+n,'Level '+n,'Reach level '+n+' — '+title(n),'⭐',()=>S.level>=n));
+for(let l=250;l<=5000;l+=50)A('lv'+l,'Level '+l,'Reach level '+l,'🌟',()=>S.level>=l);
+[[1,'Gold Find'],[10,'Gold Hunter'],[50,'Gold Digger'],[200,'Gold Baron'],[1000,'Midas']].forEach(([n,a])=>A('gd'+n,a,'Click '+n+' golden potatoes','🌟',()=>S.goldens>=n));
+A('wx1','Weather Watcher','Live through your first weather event','🌦️',()=>S.weathers>=1);
+A('wx25','Storm Chaser','Live through 25 weather events','⛈️',()=>S.weathers>=25);
+A('band1',"Sheriff's Helper",'Catch a bandit','🏇',()=>S.bandits>=1);
+A('band10','Bounty Hunter','Catch 10 bandits','💰',()=>S.bandits>=10);
+A('train5','Train Robber','Grab the cargo from 5 trains','🚂',()=>S.trains>=5);
+[[1,'Critical!'],[100,'Sharpshooter'],[1000,'Precision Master'],[1e4,'Critical Legend'],[1e5,'Bullseye Only']].forEach(([n,a])=>A('cr'+n,a,n+' critical clicks','💥',()=>S.crits>=n));
+[[1,'Not a Robot ✅'],[10,'Real Human'],[50,"Sheriff's Friend"],[100,'Honored Citizen'],[500,'Regular']].forEach(([n,a])=>A('vb'+n,a,'Pass '+n+' sheriff checks','🤠',()=>S.vibes>=n));
+[[1,'First Boost'],[10,'Boost Fan'],[50,'Boost Expert'],[200,'Boost Master']].forEach(([n,a])=>A('bu'+n,a,'Use '+n+' boosts','⚡',()=>S.boostsUsed>=n));
+[[2,'A Bit of Style'],[5,'Fashionable'],[10,'Style Icon'],[20,'Full Wardrobe']].forEach(([n,a])=>A('sk'+n,a,'Own '+n+' skins, accessories or backgrounds','🎨',()=>D.skinN>=n));
+[[1,'Reborn'],[3,'Again and Again'],[10,'Eternal Soul'],[25,'Rebirth Master']].forEach(([n,a])=>A('rb'+n,a,'Rebirth '+n+' times','👻',()=>S.rebirths>=n));
+[[25,'Combo Starter'],[50,'Combo Warrior'],[100,'Combo God']].forEach(([n,a])=>A('cb'+n,a,'Reach a '+n+' combo','🔥',()=>S.maxCombo>=n));
+[[1,"An Hour's Work"],[5,'Long Day'],[24,'A Whole Day'],[72,'Three Days'],[168,'A Whole Week'],[720,'A Month'],[1440,'Two Months'],[4320,'Half a Year'],[8760,'A Whole Year']].forEach(([n,a])=>A('pt'+n,a,'Play for '+n+' hours','⏰',()=>S.playTime>=n*3600));
+[[1,'First Mission'],[10,'Helpful'],[50,'Deputy'],[100,'Mission Master'],[250,'Secret Agent'],[500,'Mission Machine'],[1000,'Mission Legend']].forEach(([n,a])=>A('mi'+n,a,'Complete '+n+' missions','📜',()=>S.missionsDone>=n));
+[[3,'3-Day Streak'],[7,'1-Week Streak'],[14,'2-Week Streak'],[30,'1-Month Streak'],[100,'100-Day Streak']].forEach(([n,a])=>A('st'+n,a,'Log in '+n+' days in a row','📅',()=>S.streak>=n));
+[[1,'First Spin'],[10,'Wheel Fan'],[50,'Lucky Rider'],[100,'Lord of the Wheel']].forEach(([n,a])=>A('sp'+n,a,'Spin the lucky wheel '+n+' times','🎡',()=>S.spins>=n));
+[[10,'Rain Catcher'],[100,'Rain Master'],[1000,'Cloudburst']].forEach(([n,a])=>A('dr'+n,a,'Catch '+n+' falling potatoes','🌧️',()=>S.drops>=n));
+[[10,'Upgraded'],[50,'Well Upgraded'],[150,'Super Upgraded'],[300,'Fully Upgraded']].forEach(([n,a])=>A('up'+n,a,'Buy '+n+' upgrades','⬆️',()=>Object.keys(S.upgrades).length>=n));
+A('lucky','Lucky Number 🍀','Have exactly 777 potatoes','🍀',()=>Math.floor(S.potatoes)===777);
+A('broke','Empty Wallet','Spend so much you have less than 1 potato','🥲',()=>S.clicks>10&&S.potatoes<1);
+
+const TICK=[
+  'NEWS: Local potato wins beauty contest 🥔👑',
+  'Scientists confirm: potatoes are the best vegetable in the world',
+  'French fries declare war on chips. Hash browns stay neutral.',
+  "Today's weather: 100% chance of potatoes 🌧️🥔",
+  'Mom: "We have potatoes at home." The potatoes at home: 🥔',
+  'Potato refuses to become mash: "I am more than a side dish!"',
+  'New study: 9 out of 10 potatoes love being clicked',
+  'Expert: "It\'s just a potato." The expert has been fired.',
+  "Potato spotted driving a tractor without a license 🚜",
+  'Rumor: there is a potato shaped exactly like Texas',
+  'The sheriff warns: watch out for potato thieves near the saloon 🤠',
+  'The steam train is late — it is carrying too many potatoes 🚂',
+  'Gold miners disappointed: only found potatoes. Happy anyway.',
+  'The Potato King says: "Click more."',
+  'Moon landing! First potato on the moon 🌕',
+  'Tumbleweed spotted on Main Street. It was looking for potatoes. 🌾',
+  'Potato prices are rising! No wait, falling. Potatoes are confusing.',
+  'Cowboy trades his horse for a really nice potato 🐎',
+];
+const CRITW=['CRITICAL!','BOOM!','WOW!','MEGA!','SUPER!','PERFECT!','HUGE!','YEEHAW!','BULLSEYE!'];
+const HYPE=['What a harvest! 🌾','Your potato is proud 🥹','New record! 🏆','The sheriff tips his hat 🤠','Yeehaw! 🐎','The Potato King is impressed 👑'];
+
+/* =============== STATE =============== */
+const vibeGap=()=>rand(540,660); // about every 10 minutes
+function defState(){return{
+  potatoes:0,runEarned:0,allEarned:0,clicks:0,clickEarned:0,
+  machines:MACHINES.map(()=>0),upgrades:{},bag:{},ach:{},active:{},
+  skins:{classic:1,none:1,bg0:1},skin:'classic',acc:'none',bg:'bg0',
+  aura:0,level:1,souls:0,rebirths:0,goldens:0,crits:0,vibes:0,boostsUsed:0,maxCombo:0,
+  playTime:0,nextVibe:vibeGap(),vibePending:false,sound:true,buyAmt:1,started:Date.now(),
+  bought:0,missions:[],missionsDone:0,lastDay:'',streak:0,dailyPending:false,nextSpin:60,spins:0,
+  tokens:0,perks:{},autoBuy:true,drops:0,bestPow:0,nextRain:rand(150,300),nextWater:7200,v:3,
+  weather:null,nextEvent:rand(70,130),weathers:0,bandits:0,trains:0
+}}
+let S=defState(),D={};
+const KEY='potato_brainrot_save_v1';
+function load(){try{const r=localStorage.getItem(KEY);if(r)importObj(JSON.parse(r))}catch(e){}}
+function importObj(o){
+  S=Object.assign(defState(),o);
+  while(MACHINES.length<S.machines.length)addMachine();
+  while(S.machines.length<MACHINES.length)S.machines.push(0);
+  if(!S.active||typeof S.active!=='object')S.active={};
+  if(o.tokens===undefined)S.tokens=S.souls||0;
+  if(!o.v||o.v<3){S.nextVibe=Math.min(S.nextVibe,S.playTime+vibeGap());S.v=3}
+}
+function save(loud){try{localStorage.setItem(KEY,JSON.stringify(S));if(loud)toast('💾 Saved!','Your progress is safe')}catch(e){if(loud)toast('😬 Could not save','Your browser is blocking storage')}}
+
+/* endless machines */
+const EXN=['Super','Mega','Ultra','Giga','Turbo','Cosmic','Golden','Diamond','Quantum','Legendary'],BASE_N=MACHINES.length;
+function addMachine(){
+  const i=MACHINES.length,b=MACHINES[(i-BASE_N)%BASE_N],gen=Math.floor((i-BASE_N)/BASE_N),prev=MACHINES[i-1],px=EXN[gen%EXN.length];
+  const m={n:px+' '+b.n+(gen>=EXN.length?' '+(Math.floor(gen/EXN.length)+1):''),e:b.e,c:prev.c*12,p:prev.p*7.5,d:b.d+' — just way bigger 🚀'};
+  MACHINES.push(m);machUpg(m,i);machAch(m,i);
+  while(S.machines.length<MACHINES.length)S.machines.push(0);
+  if(mEls.length){addMachEl(i);renderAch()}
+}
+function ensureMachines(){let added=false;while(S.machines[MACHINES.length-1]>0){addMachine();added=true}if(added)toast('🚀 NEW MACHINE UNLOCKED','The game never ends — check your ranch')}
+const PK=id=>S.perks[id]||0;
+const totalMach=()=>S.machines.reduce((a,b)=>a+b,0);
+
+function recalc(){
+  const mm=MACHINES.map(()=>1);let g=1,cm=1,cp=0,cc=0.04,cx=10,gf=1,cmax=25,flat=0,xpc=1,bd=1;
+  for(const u of UPG)if(S.upgrades[u.id])switch(u.t){
+    case'mach':mm[u.i]*=2;break;case'click':cm*=2;break;case'cpct':cp+=0.01;break;case'glob':g*=u.v;break;
+    case'crit':cc+=0.02;break;case'critx':cx+=5;break;case'gold':gf*=0.85;break;case'combo':cmax+=25;break;
+    case'flat':flat+=u.v;break;case'xp':xpc+=1;break;case'bdur':bd+=0.2;break;}
+  cm*=1+PK('click');gf/=1+.2*PK('gold');
+  const achN=Object.keys(S.ach).length,skinN=SKINS.filter(s=>S.skins[s.id]&&s.c>0).length;
+  const bAch=achN*0.01,bLvl=(S.level-1)*0.01,bSoul=S.souls*0.05,bSkin=skinN*0.02;
+  const bonus=(1+bAch)*(1+bLvl)*(1+bSoul)*(1+bSkin);
+  let base=0;MACHINES.forEach((m,i)=>base+=S.machines[i]*m.p*mm[i]);
+  D={mm,glob:g*bonus,cm,cp,cc,cx,gf,cmax,flat,xpc,bd,base:base*g*bonus,bonus,achN,skinN,bAch,bLvl,bSoul,bSkin,g};
+}
+const wx=()=>(S.weather&&WEATHER[S.weather.id])||{};
+const prodBoost=()=>(S.active.frenzy?7:1)*(S.active.gfrenzy?7:1)*(wx().prod||1);
+const cps=()=>D.base*prodBoost();
+const clickBoost=()=>(S.active.clickrizz?15:1)*(S.active.gclick?77:1)*(wx().click||1);
+const critChance=()=>S.active.mewing?0.5:Math.min(.9,D.cc+(wx().crit||0));
+const xpMult=()=>S.active.aura?3:1;
+const comboMult=()=>1+Math.floor(combo)*0.02;
+const clickBase=()=>((1+D.flat*totalMach())*D.cm*D.bonus+cps()*D.cp)*clickBoost();
+
+function gain(v){S.potatoes+=v;S.runEarned+=v;S.allEarned+=v}
+// XP only comes from things the player does (clicks, buying, missions, ...)
+function addXP(x){
+  S.aura+=x*xpMult();let up=false;
+  while(S.aura>=need(S.level)){S.aura-=need(S.level);S.level++;up=true}
+  if(up)levelUp();
+}
+// boosts stack, but never past 2x their normal length
+const BDUR={frenzy:60,clickrizz:30,mewing:30,turbo:30,aura:300,gfrenzy:77,gclick:13,sale:60};
+const activeCap=id=>2*(BDUR[id]||60)*(D.bd||1);
+function addActive(id,t){S.active[id]=Math.min(activeCap(id),(S.active[id]||0)+t*(D.bd||1))}
+function clampActive(){for(const k in S.active)S.active[k]=Math.min(S.active[k],activeCap(k))}
+
+/* =============== SOUND =============== */
+let AC=null;
+function tone(f,dur,type,vol,slide,delay){
+  const t=AC.currentTime+(delay||0),o=AC.createOscillator(),g=AC.createGain();
+  o.type=type||'sine';o.frequency.setValueAtTime(f,t);
+  if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,f*slide),t+dur);
+  g.gain.setValueAtTime(vol||.1,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.connect(g).connect(AC.destination);o.start(t);o.stop(t+dur+.03);
+}
+function snd(k,x){
+  if(!S.sound)return;
+  try{
+    if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==='suspended')AC.resume();
+    switch(k){
+      case'pop':tone(320+Math.min(x||0,80)*8+rand(-25,25),.09,'sine',.14,.45);break;
+      case'crit':tone(880,.14,'square',.04,1.6);tone(1320,.22,'triangle',.09,1.3,.03);break;
+      case'buy':tone(660,.07,'triangle',.11);tone(990,.12,'triangle',.11,1,.06);break;
+      case'no':tone(140,.14,'sawtooth',.05,.7);break;
+      case'lvl':[523,659,784,1047,1319].forEach((f,i)=>tone(f,.2,'triangle',.1,1,i*.08));break;
+      case'ach':[784,988,1175,1568].forEach((f,i)=>tone(f,.16,'sine',.1,1,i*.07));break;
+      case'gold':for(let i=0;i<7;i++)tone(1100+i*180,.09,'sine',.06,1,i*.04);break;
+      case'alert':[440,660,440,660].forEach((f,i)=>tone(f,.12,'square',.05,1,i*.14));break;
+      case'boost':tone(200,.35,'sawtooth',.06,5);tone(400,.3,'triangle',.06,3,.05);break;
+      case'tick':tone(1400+rand(-100,100),.03,'square',.03);break;
+      case'ready':tone(880,.1,'sine',.08);tone(1320,.16,'sine',.08,1,.08);break;
+    }
+  }catch(e){}
+}
+
+/* =============== EFFECTS =============== */
+const fx=$('#fx'),ctx=fx.getContext('2d');let P=[];
+function resize(){const r=Math.min(2,window.devicePixelRatio||1);fx.width=innerWidth*r;fx.height=innerHeight*r;fx.style.width=innerWidth+'px';fx.style.height=innerHeight+'px';ctx.setTransform(r,0,0,r,0,0)}
+addEventListener('resize',resize);resize();
+const COLS=['#ffd27a','#f0b84a','#e06d1f','#c8473a','#fff3d6','#7cc35a','#8b5a2b'];
+function burst(x,y,n,cols,spd){for(let i=0;i<n&&P.length<600;i++){const a=Math.random()*Math.PI*2,s=rand(2,7)*(spd||1);P.push({k:'c',x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-2,l:rand(.5,1),m:1,r:rand(3,7),c:pick(cols||COLS)})}}
+function emojis(x,y,n,e){for(let i=0;i<n&&P.length<600;i++){const a=rand(-Math.PI,0),s=rand(3,8);P.push({k:'e',x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:1.2,m:1.2,r:rand(16,30),t:e||'🥔',rot:rand(-3,3),a:0})}}
+function confetti(n){for(let i=0;i<n&&P.length<800;i++)P.push({k:'q',x:rand(0,innerWidth),y:rand(-200,-10),vx:rand(-2,2),vy:rand(2,6),l:rand(2,3.5),m:3,r:rand(6,11),c:pick(COLS),rot:rand(0,6),a:rand(-.2,.2)})}
+function ring(x,y,c,max){P.push({k:'r',x,y,l:.5,m:.5,r:10,max:max||140,c:c||'#fff'})}
+function floatTxt(x,y,t,c,size){P.push({k:'t',x:x+rand(-20,20),y,vx:rand(-.6,.6),vy:-2.2,l:1.1,m:1.1,t,c:c||'#fff3d6',r:size||26})}
+function bigFloat(t,c){const r=$('#potWrap').getBoundingClientRect();floatTxt(r.left+r.width/2,r.top+r.height*0.25,t,c,32)}
+function drawFX(dt){
+  ctx.clearRect(0,0,innerWidth,innerHeight);
+  for(let i=P.length-1;i>=0;i--){
+    const p=P[i];p.l-=dt;if(p.l<=0){P.splice(i,1);continue}
+    const al=Math.min(1,p.l/p.m*2);ctx.globalAlpha=al;
+    if(p.k==='c'){p.vy+=.25;p.x+=p.vx;p.y+=p.vy;ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.r*al,0,7);ctx.fill()}
+    else if(p.k==='e'){p.vy+=.3;p.x+=p.vx;p.y+=p.vy;p.a+=p.rot*.02;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.font=p.r+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(p.t,0,0);ctx.restore()}
+    else if(p.k==='q'){p.x+=p.vx+Math.sin(p.l*5)*.8;p.y+=p.vy;p.a+=p.rot*.03;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.fillStyle=p.c;ctx.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);ctx.restore()}
+    else if(p.k==='r'){const k=1-p.l/p.m;ctx.strokeStyle=p.c;ctx.lineWidth=6*(1-k);ctx.beginPath();ctx.arc(p.x,p.y,10+k*p.max,0,7);ctx.stroke()}
+    else if(p.k==='t'){p.x+=p.vx;p.y+=p.vy;p.vy*=.97;const age=p.m-p.l,sc=age<.12?.5+age/.12*.7:1.2-Math.min(.2,(age-.12));ctx.font=`${Math.round(p.r*sc)}px Rye,Georgia,serif`;ctx.textAlign='center';ctx.lineWidth=5;ctx.strokeStyle='#3b2412';ctx.strokeText(p.t,p.x,p.y);ctx.fillStyle=p.c;ctx.fillText(p.t,p.x,p.y)}
+  }
+  ctx.globalAlpha=1;
+}
+function toast(t,s){const el=document.createElement('div');el.className='toast';el.innerHTML=`<b>${t}</b><small>${s||''}</small>`;$('#toasts').appendChild(el);
+  const all=$('#toasts').children,max=innerWidth<900?1:5;while(all.length>max)all[0].remove();
+  setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),300)},3800)}
+
+/* =============== THE POTATO / CLICKING =============== */
+const pot=$('#potWrap');
+let countPop=0,squish=0,tilt=0,combo=0,lastClick=0,clickTimes=[],rayA=0,hover=0,mouthOpen=0;
+pot.addEventListener('pointerdown',e=>{
+  e.preventDefault();
+  if(!e.isTrusted)return; // clicks made by scripts don't count
+  if(vibe){snd('no');return}
+  const now=performance.now();
+  clickTimes.push(now);if(clickTimes.length>60)clickTimes.shift();
+  if(botCheck(now)){clickTimes=[];startVibe(true);return}
+  doClick(e.clientX,e.clientY,false);
+});
+pot.addEventListener('contextmenu',e=>e.preventDefault());
+pot.addEventListener('pointerenter',()=>hover=1);pot.addEventListener('pointerleave',()=>hover=0);
+
+function botCheck(now){
+  // more than 30 clicks in one second is not humanly possible
+  if(clickTimes.filter(t=>now-t<1000).length>30)return true;
+  // machine-perfect rhythm over 60 clicks (humans always vary a little)
+  if(clickTimes.length>=60){
+    const iv=[];for(let i=1;i<clickTimes.length;i++)iv.push(clickTimes[i]-clickTimes[i-1]);
+    const mean=iv.reduce((a,b)=>a+b,0)/iv.length,sd=Math.sqrt(iv.reduce((a,b)=>a+(b-mean)**2,0)/iv.length);
+    if(mean<250&&sd<2.5)return true;
+  }
+  return false;
+}
+
+function doClick(x,y,auto){
+  const now=performance.now();
+  if(now-lastClick<550)combo=Math.min(D.cmax,combo+1);
+  lastClick=now;
+  if(combo>S.maxCombo)S.maxCombo=Math.floor(combo);
+  for(const m of S.missions)if(m.t==='combo'&&combo>(m.best||0))m.best=Math.floor(combo);
+  countPop=Math.min(1,countPop+.3);
+  let v=clickBase()*comboMult();
+  const crit=Math.random()<critChance();
+  if(crit){v*=D.cx;S.crits++}
+  v=Math.max(1,v);
+  if(!auto&&S.weather&&S.weather.id==='dust')S.weather.t-=.4;
+  gain(v);S.clicks++;S.clickEarned+=v;
+  addXP(D.xpc*(crit?3:1));
+  squish=1;tilt=rand(-1,1)*(crit?9:4);mouthOpen=1;
+  if(auto){
+    tapHand();
+    if(Math.random()<.35)floatTxt(x,y,'+'+fmt(v,1),'#fff3d6',20);
+    if(Math.random()<.3)burst(x,y,3);
+    return;
+  }
+  if(crit){
+    floatTxt(x,y-20,pick(CRITW)+' +'+fmt(v,1),'#ffd27a',34);
+    burst(x,y,26,null,1.4);emojis(x,y,4);ring(x,y,'#ffd27a',180);snd('crit');
+    const m=$('#left');m.classList.remove('shake');void m.offsetWidth;m.classList.add('shake');
+  }else{
+    floatTxt(x,y,'+'+fmt(v,1),'#fff3d6',26);
+    burst(x,y,8+Math.floor(combo/5));if(Math.random()<.25)emojis(x,y,1);ring(x,y,'rgba(255,243,214,.8)',90);snd('pop',combo);
+  }
+}
+
+let pupT={x:0,y:0},pup={x:0,y:0};
+addEventListener('pointermove',e=>{const r=pot.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height*.43;const dx=e.clientX-cx,dy=e.clientY-cy,d=Math.hypot(dx,dy)||1,k=Math.min(1,d/200)*7;pupT={x:dx/d*k,y:dy/d*k}});
+function blink(){const ey=$('#eyes');ey.style.transform='scaleY(.1)';setTimeout(()=>ey.style.transform='',120);setTimeout(blink,rand(2500,6000))}
+setTimeout(blink,3000);
+
+/* =============== AUTO HANDS (show that the machines are working) =============== */
+let handEls=[],handRot=0,tapAcc=0,tapGain=0;
+function buildHands(){
+  const tm=totalMach(),n=tm?Math.min(30,Math.max(3,Math.ceil(Math.sqrt(tm)*2))):0;
+  if(n===handEls.length)return;
+  const box=$('#hands');box.innerHTML='';handEls=[];
+  for(let i=0;i<n;i++){const h=document.createElement('div');h.className='hand';h.innerHTML='<span>👆</span>';box.appendChild(h);handEls.push(h)}
+}
+function tapHand(text){
+  if(!handEls.length)return;
+  const i=Math.floor(Math.random()*handEls.length),h=handEls[i];
+  h.classList.remove('tap');void h.offsetWidth;h.classList.add('tap');
+  squish=Math.max(squish,.35);tilt+=rand(-1.5,1.5);
+  const r=pot.getBoundingClientRect(),a=(handRot+i*360/handEls.length)*Math.PI/180,R=r.width*.42;
+  const x=r.left+r.width/2+Math.sin(a)*R,y=r.top+r.height/2-Math.cos(a)*R;
+  burst(x,y,3,null,.6);
+  if(text)floatTxt(x,y-6,text,'#fff3d6',18);
+  if(Math.random()<.18){const own=MACHINES.filter((m,k)=>S.machines[k]>0);if(own.length)emojis(r.left+r.width/2,r.top+r.height*.4,1,pick(own).e)}
+}
+function autoTaps(dt){
+  buildHands();
+  const c=cps();if(!handEls.length||c<=0||vibe){tapAcc=0;tapGain=0;return}
+  const rate=Math.min(8,1+Math.log10(c+1)*.8)*(prodBoost()>1?1.6:1);
+  tapAcc+=dt*rate;tapGain+=c*dt;
+  if(tapAcc>=1){tapAcc=0;tapHand('+'+fmt(tapGain,1));tapGain=0}
+}
+
+/* =============== GOLDEN POTATOES =============== */
+let goldT=rand(50,120);
+const GOLD_SVG=`<svg viewBox="0 0 300 300" width="100%" height="100%"><defs><radialGradient id="gg" cx="38%" cy="30%" r="78%"><stop offset="0%" stop-color="#fffbe0"/><stop offset="55%" stop-color="#ffcc00"/><stop offset="100%" stop-color="#b36b00"/></radialGradient></defs><path d="M150 18 C228 14 284 78 276 158 C268 238 210 286 142 282 C70 278 18 226 24 150 C30 74 78 22 150 18Z" fill="url(#gg)" stroke="#8a5200" stroke-width="8"/><ellipse cx="108" cy="66" rx="52" ry="20" fill="#fff" opacity=".6" transform="rotate(-24 108 66)"/><text x="150" y="190" font-size="110" text-anchor="middle">✨</text></svg>`;
+function spawnGolden(){
+  const el=document.createElement('div');el.className='golden';el.innerHTML=GOLD_SVG;
+  el.style.left=rand(4,84)+'vw';el.style.top=rand(12,78)+'vh';
+  let done=false;
+  el.addEventListener('pointerdown',e=>{e.preventDefault();if(!e.isTrusted||done||vibe)return;done=true;clickGolden(e.clientX,e.clientY);el.classList.add('bye');setTimeout(()=>el.remove(),600)});
+  document.body.appendChild(el);
+  setTimeout(()=>{if(!done){done=true;el.classList.add('bye');setTimeout(()=>el.remove(),600)}},13000);
+}
+function clickGolden(x,y){
+  S.goldens++;snd('gold');burst(x,y,40,['#ffd700','#fff3a0','#ffae00','#fff'],1.6);ring(x,y,'#ffd700',220);emojis(x,y,6,'✨');
+  let r=Math.random(),t,s;
+  // no stacking parties: if it's already running you get lucky potatoes instead
+  if((r>=.45&&r<.75&&S.active.gfrenzy)||(r>=.75&&r<.88&&S.active.gclick))r=0;
+  if(r<.45){const v=Math.max(13,Math.min(S.potatoes*.15,D.base*900)+13);gain(v);t='🍀 LUCKY!';s='+'+fmt(v)+' potatoes'}
+  else if(r<.75){addActive('gfrenzy',77);t='🌟 GOLD PARTY!';s='x7 production for 77 sec'}
+  else if(r<.88){addActive('gclick',13);t='⚡ CLICK FRENZY!';s='x77 potatoes per click for 13 sec — click away!'}
+  else if(r<.96){const a=need(S.level)*.3;addXP(a/xpMult());t='📚 XP BONUS!';s='+'+fmt(a)+' XP'}
+  else{const b=pick(BOOSTS);S.bag[b.id]=(S.bag[b.id]||0)+1;renderBag();t='🎁 FREE BOOST!';s=b.e+' '+b.n+' added to your bag'}
+  floatTxt(x,y-30,t,'#ffd27a',34);toast(t,s);addXP(25);
+}
+
+/* =============== SHERIFF CHECK (anti auto-clicker) =============== */
+let vibe=null,titleFlash=null;
+function startVibe(bot){
+  if(vibe)return;
+  vibe={bot};S.vibePending=true;
+  $('#vsub').textContent=bot?'You are clicking a bit too perfectly 🤖 — prove you are human':'The sheriff stops by about every 10 minutes. Are you still here? The game is paused ⏸️';
+  $('#vibe').classList.remove('hidden');$('#vmsg').textContent='';
+  buildChallenge();snd('alert');
+  let f=0;clearInterval(titleFlash);titleFlash=setInterval(()=>{document.title=(f++%2)?'🤠 SHERIFF CHECK!':'Are you there? 🥔'},800);
+  save();
+}
+function vbtn(label,pos){const b=document.createElement('button');b.className='vb';b.textContent=label;b.style.left=pos[0]+'%';b.style.top=pos[1]+'%';$('#varea').appendChild(b);return b}
+function spots(n){const out=[];for(let i=0;i<n;i++){let p,tries=0;do{p=[rand(14,86),rand(18,82)];tries++}while(tries<80&&out.some(q=>Math.hypot(q[0]-p[0],(q[1]-p[1])*.6)<20));out.push(p)}return out}
+function buildChallenge(){
+  const area=$('#varea'),q=$('#vq');area.innerHTML='';
+  const type=pick(['order','find','math','hold']);
+  if(type==='order'){
+    q.textContent='Tap the numbers in order: 1 → 2 → 3 → 4';let next=1;const ps=spots(4);
+    shuffle([1,2,3,4]).forEach((n,i)=>{const b=vbtn(n,ps[i]);b.addEventListener('pointerdown',e=>{if(!e.isTrusted||b.disabled)return;if(n===next){b.classList.add('ok');b.disabled=true;next++;snd('pop',n*15);if(next>4)passVibe()}else failVibe()})});
+  }else if(type==='find'){
+    q.textContent='Find the real potato 🥔';
+    const opts=shuffle(['🥔',...shuffle(['🍠','🥖','🍞','🧅','🥚','🍋','🥥','🧄','🌰','🍪']).slice(0,6)]),ps=spots(opts.length);
+    opts.forEach((o,i)=>{const b=vbtn(o,ps[i]);b.addEventListener('pointerdown',e=>{if(!e.isTrusted)return;o==='🥔'?passVibe():failVibe()})});
+  }else if(type==='math'){
+    const a=2+Math.floor(Math.random()*12),c=2+Math.floor(Math.random()*12),ans=a+c;
+    q.textContent=`Quick math: ${a} + ${c} = ?`;
+    const set=new Set([ans]);while(set.size<4){const w=ans+Math.floor(rand(-6,7));if(w>0)set.add(w)}
+    const opts=shuffle([...set]),ps=spots(4);
+    opts.forEach((o,i)=>{const b=vbtn(o,ps[i]);b.addEventListener('pointerdown',e=>{if(!e.isTrusted)return;o===ans?passVibe():failVibe()})});
+  }else{
+    q.textContent='Hold the button down for 2 seconds';
+    const b=vbtn('',spots(1)[0]);b.classList.add('hold');b.innerHTML='<i></i><span>HOLD ME 🥔</span>';
+    let st=0,raf=0;const bar=b.querySelector('i');
+    const stop=()=>{st=0;cancelAnimationFrame(raf);bar.style.width='0'};
+    const loop=()=>{if(!st)return;const k=(performance.now()-st)/2000;bar.style.width=Math.min(100,k*100)+'%';if(k>=1){st=0;passVibe()}else raf=requestAnimationFrame(loop)};
+    b.addEventListener('pointerdown',e=>{if(!e.isTrusted)return;e.preventDefault();st=performance.now();loop()});
+    ['pointerup','pointerleave','pointercancel'].forEach(ev=>b.addEventListener(ev,stop));
+  }
+}
+function failVibe(){snd('no');$('#vmsg').textContent=pick(['Wrong — try again','Oops! One more try','Almost! Try again']);const bx=$('#vbox');bx.classList.remove('shake');void bx.offsetWidth;bx.classList.add('shake');setTimeout(buildChallenge,350)}
+function passVibe(){
+  vibe=null;S.vibePending=false;S.vibes++;S.nextVibe=S.playTime+vibeGap();
+  $('#vibe').classList.add('hidden');clearInterval(titleFlash);
+  const v=Math.max(100,D.base*120);gain(v);addXP(100);
+  snd('ach');confetti(80);toast('✅ Approved by the sheriff','Thanks for being here! Bonus: +'+fmt(v)+' potatoes and +100 XP');
+  last=performance.now();save();
+}
+
+/* =============== LEVEL / BANNERS =============== */
+function levelUp(){
+  recalc();
+  const v=Math.max(50*S.level,D.base*30);gain(v);
+  snd('lvl');confetti(120);
+  bigBanner(`LEVEL ${S.level}!`,`${title(S.level)} · +1% production · +${fmt(v)} 🥔`);
+}
+function bigBanner(a,b){
+  const el=document.createElement('div');el.id='lvlUp';
+  el.innerHTML=`<div class="l1">${a}</div><div class="l2">${b}</div>`;
+  document.getElementById('lvlUp')?.remove();document.body.appendChild(el);setTimeout(()=>el.remove(),2700);
+}
+
+/* =============== BUYING =============== */
+function machCost(i,a){const m=MACHINES[i];return m.c*Math.pow(1.15,S.machines[i])*(Math.pow(1.15,a)-1)/.15}
+function machMax(i){const b=MACHINES[i].c*Math.pow(1.15,S.machines[i]);return Math.max(0,Math.floor(Math.log(S.potatoes*.15/b+1)/Math.log(1.15)))}
+function amtFor(i){return S.buyAmt==='max'?Math.max(1,machMax(i)):S.buyAmt}
+function fxAt(el,n){const r=el.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,n||18);ring(r.left+r.width/2,r.top+r.height/2,'#7cc35a',80)}
+function buyMachine(i,el){
+  if(vibe)return;const a=amtFor(i),c=machCost(i,a);
+  if(S.potatoes<c){snd('no');return}
+  S.potatoes-=c;S.machines[i]+=a;S.bought+=a;addXP(2*a);recalc();snd('buy');fxAt(el);ensureMachines();renderHideout();updMachines();
+}
+function buyUpg(u,el){
+  if(vibe||S.upgrades[u.id])return;if(S.potatoes<u.c){snd('no');return}
+  S.potatoes-=u.c;S.upgrades[u.id]=1;addXP(10);recalc();snd('buy');fxAt(el,30);toast('⬆️ '+u.n,u.d);upgKey='';
+}
+const boostCost=b=>Math.max(b.min,D.base*b.k)*(1-.1*PK('boost'))*(S.active.sale?.5:1);
+function buyBoost(b,el){
+  if(vibe)return;const c=boostCost(b);if(S.potatoes<c){snd('no');return}
+  S.potatoes-=c;S.bag[b.id]=(S.bag[b.id]||0)+1;snd('buy');fxAt(el);const r=el.getBoundingClientRect();floatTxt(r.left+r.width/2,r.top+10,'+1 '+b.e+' in bag','#ffd27a',20);renderBag();
+}
+function useBoost(id){
+  if(vibe||!S.bag[id])return;const b=BOOSTS.find(x=>x.id===id);
+  if(BDUR[id]&&(S.active[id]||0)>activeCap(id)-BDUR[id]*(D.bd||1)){snd('no');toast('⏳ Already running',b.e+' '+b.n+' is at max time — wait a bit before using another');return}
+  S.bag[id]--;if(!S.bag[id])delete S.bag[id];S.boostsUsed++;b.use();snd('boost');
+  const r=pot.getBoundingClientRect();emojis(r.left+r.width/2,r.top+r.height/2,10,b.e);ring(r.left+r.width/2,r.top+r.height/2,'#ffd27a',260);
+  toast(b.e+' '+b.n+' activated!',b.d);renderBag();
+}
+function skinAction(s,el){
+  if(vibe)return;
+  if(!S.skins[s.id]){if(S.potatoes<s.c){snd('no');return}S.potatoes-=s.c;S.skins[s.id]=1;recalc();snd('buy');fxAt(el,30);toast('🎨 New style: '+s.n,'+2% production forever')}
+  if(s.t==='pot')S.skin=s.id;else if(s.t==='acc')S.acc=s.id;else S.bg=s.id;
+  applyLook();lookKey='';
+}
+function applyLook(){
+  const p=SKINS.find(s=>s.id===S.skin)||SKINS[0],r=document.documentElement.style;
+  r.setProperty('--p1',p.col[0]);r.setProperty('--p2',p.col[1]);r.setProperty('--p3',p.col[2]);r.setProperty('--pglow',p.g);
+  pot.classList.toggle('rainbow',!!p.rb);
+  const b=SKINS.find(s=>s.id===S.bg)||SKINS.find(s=>s.id==='bg0');
+  r.setProperty('--b1',b.col[0]);r.setProperty('--b2',b.col[1]);r.setProperty('--b3',b.col[2]);
+  const a=SKINS.find(s=>s.id===S.acc),ac=$('#acc');
+  $('#shades').style.display=S.acc==='shades'?'':'none';
+  if(a&&a.pos){ac.textContent=a.e;ac.style.left=a.pos[0]+'%';ac.style.top=a.pos[1]+'%';ac.style.fontSize=`calc(var(--ps)*${a.pos[2]/100})`}else ac.textContent='';
+}
+
+/* =============== MACHINES =============== */
+const mEls=[];
+function buildMachines(){$('#machList').innerHTML='';mEls.length=0;MACHINES.forEach((m,i)=>addMachEl(i))}
+function addMachEl(i){
+  const m=MACHINES[i],el=document.createElement('div');el.className='row';
+  el.innerHTML=`<div class="ri">${m.e}</div><div class="rt"><div class="rn"><span></span><b class="mlv"></b></div><div class="rd"></div><div class="rc"></div></div><div class="ro"></div>`;
+  el.addEventListener('click',()=>{if(!el.classList.contains('locked'))buyMachine(i,el)});
+  $('#machList').appendChild(el);
+  mEls.push({el,n:el.querySelector('.rn span'),lv:el.querySelector('.mlv'),d:el.querySelector('.rd'),c:el.querySelector('.rc'),o:el.querySelector('.ro'),i:el.querySelector('.ri')});
+}
+function updMachines(){
+  let hi=-1;S.machines.forEach((n,i)=>{if(n>0)hi=i});
+  MACHINES.forEach((m,i)=>{
+    const r=mEls[i];if(!r)return;const show=i<=hi+2,known=i<=hi+1||S.runEarned>=m.c*.5;
+    r.el.style.display=show?'':'none';if(!show)return;
+    r.el.classList.toggle('locked',!known);
+    if(!known){r.lv.textContent='';r.n.textContent='???';r.d.textContent='Earn more potatoes to unlock';r.c.textContent='🥔 '+fmt(m.c);r.o.textContent='';r.i.textContent='❓';return}
+    r.i.textContent=m.e;
+    const a=amtFor(i),c=machCost(i,a),each=m.p*D.mm[i]*D.glob;
+    r.n.textContent=m.n+(a>1?` (x${a})`:'');
+    const lv=D.mm[i]>1?'⬆️ x'+fmt(D.mm[i])+' upgraded':'';if(r.lv.textContent!==lv)r.lv.textContent=lv;
+    r.d.textContent=`${m.d} · +${fmt(each,1)}/s each${S.machines[i]?` · ${fmt(each*S.machines[i],1)}/s total`:''}`;
+    r.c.textContent='🥔 '+fmt(c);r.o.textContent=S.machines[i]||'';
+    r.el.classList.toggle('can',S.potatoes>=c);
+  });
+}
+function renderHideout(){
+  let h='';
+  MACHINES.forEach((m,i)=>{const n=S.machines[i];if(!n)return;const k=Math.min(n,20);let s='';for(let j=0;j<k;j++)s+=`<span style="animation-delay:-${((j*.37)%1.6).toFixed(2)}s">${m.e}</span>`;
+    h+=`<div class="hrow"><div class="hl">${m.n}</div><div class="hi">${s}${n>k?`<em>+${n-k}</em>`:''}</div></div>`});
+  $('#hideScene').innerHTML=h||'<div class="empty">Your ranch is empty 🌵 Buy your first machine below</div>';
+}
+
+/* =============== UPGRADES =============== */
+const UCAT={mach:['🏭 MACHINE','#8a5a2b'],click:['👆 CLICK','#c8473a'],flat:['👆 CLICK','#c8473a'],cpct:['👆 CLICK','#c8473a'],glob:['🌍 ALL MACHINES','#2f7a3a'],
+  crit:['💥 CRITICAL','#b0500a'],critx:['💥 CRITICAL','#b0500a'],gold:['🌟 GOLDEN','#a07c00'],combo:['🔥 COMBO','#c06010'],xp:['📚 XP','#3a5aa0'],bdur:['⏱️ BOOSTS','#6a3fa0']};
+// what the upgrade does to YOUR game right now, in real numbers
+function upgFx(u){
+  const tm=totalMach(),clk=(1+D.flat*tm)*D.cm*D.bonus,pct=x=>Math.round(x*100)+'%';
+  switch(u.t){
+    case'mach':{const m=MACHINES[u.i],n=S.machines[u.i],each=m.p*D.mm[u.i]*D.glob;
+      return `➜ ${m.e} ${fmt(each,1)}/s → ${fmt(each*2,1)}/s each`+(n?` · you own ${n}: +${fmt(each*n,1)}/s`:'')}
+    case'click':return `➜ Base click ${fmt(clk,1)} → ${fmt(clk*2,1)}`;
+    case'flat':return `➜ +${fmt(u.v*tm*D.cm*D.bonus,1)} per click right now (${tm} machines)`;
+    case'cpct':return `➜ +${fmt(D.base*.01,1)} per click right now`;
+    case'glob':return `➜ +${fmt(D.base*(u.v-1),1)}/s in total`;
+    case'crit':return `➜ Crit chance ${pct(Math.min(.9,D.cc))} → ${pct(Math.min(.9,D.cc+.02))}`;
+    case'critx':return `➜ Crits give x${D.cx} → x${D.cx+5}`;
+    case'combo':return `➜ Max combo ${D.cmax} → ${D.cmax+25}`;
+    case'xp':return `➜ ${D.xpc} → ${D.xpc+1} XP per click`;
+    case'bdur':return `➜ Boosts last ${pct(D.bd)} → ${pct(D.bd+.2)}`;
+  }
+  return '';
+}
+let upgKey='',upgEls=[],prevCan=0;
+const availUpg=()=>UPG.filter(u=>!S.upgrades[u.id]&&u.req()&&(u.t==='mach'||S.runEarned>=u.c*.1)).sort((a,b)=>a.c-b.c);
+function updUpgrades(){
+  const av=availUpg(),key=av.map(u=>u.id).join();
+  if(key!==upgKey){
+    upgKey=key;const box=$('#upgList');box.innerHTML='';upgEls=[];
+    if(!av.length)box.innerHTML='<div class="empty">No upgrades ready right now. Buy more machines and keep clicking 🥔</div>';
+    av.forEach(u=>{const el=document.createElement('div');el.className='row';
+      const [tl,tc]=UCAT[u.t]||['⭐ OTHER','#666'];
+      el.innerHTML=`<div class="ri">${u.e}</div><div class="rt"><div class="rn"><span class="utag" style="background:${tc}">${tl}</span>${u.n}</div><div class="rd">${u.d}</div><div class="rfx"></div><div class="rc">🥔 ${fmt(u.c)}</div></div>`;
+      el.addEventListener('click',()=>buyUpg(u,el));box.appendChild(el);upgEls.push({el,u,fx:el.querySelector('.rfx')})});
+    $('#upgNote').textContent=`${av.length} ready · ${Object.keys(S.upgrades).length} of ${UPG.length} bought`;
+  }
+  let can=0;upgEls.forEach(({el,u,fx})=>{const ok=S.potatoes>=u.c;el.classList.toggle('can',ok);if(ok)can++;const t=upgFx(u);if(fx.textContent!==t)fx.textContent=t});
+  const b=$('#bUpg');b.style.display=can?'flex':'none';b.textContent=can;
+  if(can>0&&prevCan===0)snd('ready');prevCan=can;
+}
+
+/* =============== SHOP + STYLE =============== */
+const shopEls=[];
+function buildShop(){
+  BOOSTS.forEach(b=>{const el=document.createElement('div');el.className='row';
+    el.innerHTML=`<div class="ri">${b.e}</div><div class="rt"><div class="rn">${b.n}</div><div class="rd">${b.d}</div><div class="rc"></div></div><div class="ro" style="font-size:18px"></div>`;
+    el.addEventListener('click',()=>buyBoost(b,el));$('#shopList').appendChild(el);
+    shopEls.push({b,el,c:el.querySelector('.rc'),o:el.querySelector('.ro')})});
+}
+function updShop(){shopEls.forEach(s=>{const c=boostCost(s.b);s.c.textContent='🥔 '+fmt(c);s.o.textContent=S.bag[s.b.id]?'🎒'+S.bag[s.b.id]:'';s.el.classList.toggle('can',S.potatoes>=c)})}
+let lookKey='',lookEls=[];
+function updLooks(){
+  const key=JSON.stringify(S.skins)+S.skin+S.acc+S.bg;
+  if(key!==lookKey){
+    lookKey=key;lookEls=[];
+    [['pot','#lookPot'],['acc','#lookAcc'],['bg','#lookBg']].forEach(([t,sel])=>{
+      const box=$(sel);box.innerHTML='';
+      SKINS.filter(s=>s.t===t).forEach(s=>{
+        const icon=t==='acc'?s.e:`<div class="sw" style="background:${t==='pot'?`radial-gradient(circle at 35% 30%,${s.col[0]},${s.col[1]} 60%,${s.col[2]})`:`linear-gradient(180deg,${s.col.join(',')})`}"></div>`;
+        const on=S.skin===s.id||S.acc===s.id||S.bg===s.id,own=S.skins[s.id];
+        const el=document.createElement('div');el.className='card'+(on?' equip':own?' owned':'');
+        el.innerHTML=`<div class="ce">${icon}</div><div class="cn">${s.n}</div><div class="cc">${on?'✅ In use':own?'Tap to use':'🥔 '+fmt(s.c)}</div>`;
+        el.addEventListener('click',()=>skinAction(s,el));box.appendChild(el);
+        if(!own)lookEls.push({el,s});
+      });
+    });
+  }
+  lookEls.forEach(o=>o.el.classList.toggle('can',S.potatoes>=o.s.c));
+}
+
+/* =============== BAG =============== */
+function renderBag(){
+  const box=$('#bagList');box.innerHTML='';let tot=0;
+  BOOSTS.forEach(b=>{const n=S.bag[b.id]||0;if(!n)return;tot+=n;
+    const el=document.createElement('div');el.className='row static';
+    el.innerHTML=`<div class="ri">${b.e}</div><div class="rt"><div class="rn">${b.n} <span style="color:var(--red)">x${n}</span></div><div class="rd">${b.d}</div></div><button class="ubtn">USE</button>`;
+    el.querySelector('button').addEventListener('click',e=>{e.stopPropagation();useBoost(b.id)});box.appendChild(el)});
+  if(!tot)box.innerHTML='<div class="empty">Your bag is empty 🎒<br>Buy boosts in the 🛒 Shop</div>';
+  const bd=$('#bBag');bd.style.display=tot?'flex':'none';bd.textContent=tot;
+}
+
+/* =============== TROPHIES =============== */
+function renderAch(){
+  $('#achGrid').innerHTML=ACH.map(a=>{const g=S.ach[a.id];return `<div class="ach ${g?'got':'no'}" data-t="${g?a.n+' — '+a.d:'??? — '+a.d}">${g?a.e:'❓'}</div>`}).join('');
+  $('#achH').textContent=`🏆 Trophies ${Object.keys(S.ach).length}/${ACH.length}`;
+}
+function checkAch(){
+  let got=false;
+  for(const a of ACH)if(!S.ach[a.id]&&a.f()){S.ach[a.id]=1;got=true;toast('🏆 '+a.n,a.d+' · +1% production')}
+  if(got){snd('ach');recalc();renderAch();confetti(40)}
+}
+
+/* =============== STATS =============== */
+const soulsPending=()=>Math.max(0,Math.floor(Math.cbrt(S.allEarned/1e10))-S.souls);
+function updStats(){
+  const st=[
+    ['🥔 Potatoes (this run)',fmt(S.runEarned)],['🌍 Potatoes (all time)',fmt(S.allEarned)],
+    ['📈 Per second',fmt(cps(),1)],['👆 Clicks',fmt(S.clicks)],['👆 Potatoes from clicks',fmt(S.clickEarned)],
+    ['💥 Critical clicks',fmt(S.crits)+' ('+Math.round(critChance()*100)+'%, x'+D.cx+')'],['🔥 Best combo',S.maxCombo+' / '+D.cmax],
+    ['🌟 Golden potatoes',fmt(S.goldens)],['🤠 Sheriff checks passed',S.vibes],['⏰ Play time',fmtTime(S.playTime)],
+    ['⏳ Next sheriff check in','~'+fmtTime(S.nextVibe-S.playTime)],
+    ['⭐ Level',S.level+' — '+title(S.level)],['📚 XP per click',D.xpc],
+    ['⬆️ Upgrades bought',Object.keys(S.upgrades).length+' / '+UPG.length],
+    ['🏆 Trophy bonus','+'+Math.round(D.bAch*100)+'%'],['⭐ Level bonus','+'+Math.round(D.bLvl*100)+'%'],
+    ['🎨 Style bonus','+'+Math.round(D.bSkin*100)+'%'],['👻 Potato Souls ('+S.souls+')','+'+Math.round(D.bSoul*100)+'%'],
+    ['🥘 Recipes','x'+fmt(D.g,1)],['✨ Rebirths',S.rebirths],
+  ];
+  $('#statList').innerHTML=st.map(([a,b])=>`<div class="stat"><span>${a}</span><b>${b}</b></div>`).join('');
+  const p=soulsPending();
+  $('#rebInfo').innerHTML=p>0?`You get <b style="color:var(--brass)">+${p} 👻 souls</b> (+${p*5}% forever) and +${p} 🪙`:`Earn more potatoes in total to get souls (first soul at ${fmt(1e10)} all time)`;
+  $('#rebBtn').disabled=p<1;
+}
+
+/* =============== MISSIONS =============== */
+const MT={
+  click:{n:'Click {x} times',e:'👆',cur:()=>S.clicks},
+  earn:{n:'Earn {x} potatoes',e:'🥔',cur:()=>S.allEarned},
+  buy:{n:'Buy {x} machines',e:'🏭',cur:()=>S.bought},
+  gold:{n:'Click {x} golden potatoes',e:'🌟',cur:()=>S.goldens},
+  crit:{n:'Land {x} critical clicks',e:'💥',cur:()=>S.crits},
+  boost:{n:'Use {x} boosts',e:'⚡',cur:()=>S.boostsUsed},
+  combo:{n:'Reach a {x} combo',e:'🔥',cur:null},
+  drop:{n:'Catch {x} falling potatoes',e:'🌧️',cur:()=>S.drops},
+};
+const nice=v=>{const p=Math.pow(10,Math.max(0,Math.floor(Math.log10(v))-1));return Math.ceil(v/p)*p};
+function newMission(){
+  const d=S.missionsDone,used=S.missions.map(m=>m.t);
+  const types=Object.keys(MT).filter(t=>!used.includes(t)&&!(['gold','drop','boost'].includes(t)&&d<3));
+  const t=pick(types);let x;
+  switch(t){
+    case'click':x=Math.round((50+d*12)*rand(.8,1.3)/10)*10;break;
+    case'earn':x=nice(Math.max(500,D.base*rand(300,900)));break;
+    case'buy':x=Math.min(5+Math.floor(d/3),40);break;
+    case'gold':x=Math.min(3,1+Math.floor(d/20));break;
+    case'crit':x=Math.round(5+d*1.5);break;
+    case'boost':x=d>25?2:1;break;
+    case'combo':x=Math.min(D.cmax,10+Math.floor(d/3)*5);break;
+    case'drop':x=Math.min(15,3+Math.floor(d/6));break;
+  }
+  return{t,x,s:MT[t].cur?MT[t].cur():0,best:0,id:Math.random().toString(36).slice(2)};
+}
+const mProg=m=>Math.max(0,m.t==='combo'?(m.best||0):MT[m.t].cur()-m.s);
+function fillMissions(){while(S.missions.length<3)S.missions.push(newMission())}
+let misKey='',misEls=[];
+function updMissions(){
+  fillMissions();
+  const key=S.missions.map(m=>m.id).join();
+  if(key!==misKey){
+    misKey=key;const box=$('#misList');box.innerHTML='';misEls=[];
+    S.missions.forEach(m=>{const el=document.createElement('div');el.className='mis';
+      el.innerHTML=`<div class="ri">${MT[m.t].e}</div><div class="rt"><div class="rn">${MT[m.t].n.replace('{x}',fmt(m.x))}</div><div class="bar"><div></div></div><div class="mp"></div></div><button class="ubtn">CLAIM</button>`;
+      const b=el.querySelector('button');b.addEventListener('click',()=>claimMission(m,el));
+      box.appendChild(el);misEls.push({m,el,b,bar:el.querySelector('.bar>div'),p:el.querySelector('.mp')})});
+  }
+  let ready=0;
+  misEls.forEach(o=>{const pr=Math.min(o.m.x,mProg(o.m)),ok=pr>=o.m.x;o.bar.style.width=(pr/o.m.x*100)+'%';o.p.textContent=fmt(pr)+' / '+fmt(o.m.x);o.b.disabled=!ok;o.el.classList.toggle('done',ok);if(ok)ready++});
+  const sr=spinReady()?1:0,bd=$('#bMis');bd.style.display=ready+sr?'flex':'none';bd.textContent=ready+sr;
+  $('#streakTxt').innerHTML=`🔥 Login streak: <b>${plural(S.streak,'day')}</b> · Missions completed: <b>${S.missionsDone}</b>`;
+}
+function claimMission(m,el){
+  const k=S.missions.indexOf(m);if(k<0||vibe||mProg(m)<m.x)return;
+  // small rewards at first — they grow slowly the more missions you complete (up to x3 after 200)
+  const grind=1+Math.min(2,S.missionsDone/100),mult=(1+.5*PK('mission'))*grind;
+  const v=(m.t==='earn'?m.x*.05:Math.max(100,D.base*rand(20,45)))*mult;
+  gain(v);addXP(need(S.level)*.12*(1+.5*PK('mission'))/xpMult());
+  let extra='';if(Math.random()<.08+Math.min(.12,S.missionsDone/1000)){const b=pick(BOOSTS);S.bag[b.id]=(S.bag[b.id]||0)+1;extra=' + '+b.e+' boost';renderBag()}
+  S.missionsDone++;S.missions.splice(k,1);fillMissions();
+  snd('ach');fxAt(el,40);confetti(35);toast('📜 Mission complete!','+'+fmt(v)+' 🥔 + XP'+extra);updMissions();
+}
+
+/* =============== LUCKY WHEEL =============== */
+const WHEEL=[
+  {e:'💰',w:20,n:'10 min of production',f:()=>{const v=Math.max(1000,D.base*600);gain(v);return '+'+fmt(v)+' 🥔'}},
+  {e:'🔥',w:14,n:'Production Party',f:()=>{S.bag.frenzy=(S.bag.frenzy||0)+1;return '🔥 Production Party added to your bag'}},
+  {e:'📚',w:14,n:'XP',f:()=>{const a=need(S.level)*.5;addXP(a/xpMult());return '+'+fmt(a)+' XP'}},
+  {e:'🎁',w:10,n:'Mystery Box',f:()=>{S.bag.mystery=(S.bag.mystery||0)+1;return '🎁 Mystery Box added to your bag'}},
+  {e:'🤑',w:12,n:'30 min of production',f:()=>{const v=Math.max(3000,D.base*1800);gain(v);return '+'+fmt(v)+' 🥔'}},
+  {e:'👆',w:14,n:'Click Power',f:()=>{S.bag.clickrizz=(S.bag.clickrizz||0)+1;return '👆 Click Power added to your bag'}},
+  {e:'🌟',w:10,n:'Gold Rain',f:()=>{for(let i=0;i<5;i++)setTimeout(spawnGolden,i*450);return '5 golden potatoes — now!'}},
+  {e:'💎',w:6,n:'JACKPOT',f:()=>{const v=Math.max(50000,D.base*7200);gain(v);confetti(250);return 'JACKPOT! +'+fmt(v)+' 🥔'}},
+];
+$('#wheel').innerHTML=WHEEL.map((s,i)=>`<div class="wl" style="transform:rotate(${i*45+22.5}deg)">${s.e}</div>`).join('');
+let wheelRot=0,spinning=false,spinNotified=false;
+const spinReady=()=>!spinning&&S.playTime>=S.nextSpin;
+function spin(){
+  if(!spinReady()||vibe)return;spinning=true;S.spins++;S.nextSpin=S.playTime+1200;spinNotified=false;
+  let r=Math.random()*WHEEL.reduce((a,s)=>a+s.w,0),idx=0;while((r-=WHEEL[idx].w)>0)idx++;
+  wheelRot+=360*6+(360-(idx*45+22.5))-(wheelRot%360);
+  $('#wheel').style.transform=`rotate(${wheelRot}deg)`;
+  for(let k=0;k<30;k++)setTimeout(()=>snd('tick'),4600*(1-Math.pow(1-k/30,.45)));
+  setTimeout(()=>{
+    spinning=false;const s=WHEEL[idx],res=s.f();renderBag();
+    const r2=$('#wheel').getBoundingClientRect();burst(r2.left+r2.width/2,r2.top+r2.height/2,50);emojis(r2.left+r2.width/2,r2.top+r2.height/2,8,s.e);
+    snd(idx===7?'lvl':'ach');confetti(60);toast('🎡 '+s.e+' '+s.n+'!',res);
+  },4700);
+}
+$('#spinBtn').addEventListener('click',spin);
+function updSpin(){
+  const b=$('#spinBtn');
+  if(spinning){b.textContent='🎡 Spinning...';b.disabled=true}
+  else if(spinReady()){b.textContent='🎡 FREE SPIN!';b.disabled=false;if(!spinNotified){spinNotified=true;toast('🎡 Free spin ready!','Go to 📜 Missions and spin the wheel');snd('ready')}}
+  else{b.textContent='⏳ Next spin in '+fmtTime(S.nextSpin-S.playTime);b.disabled=true}
+}
+
+/* =============== DAILY CHEST =============== */
+const dayStr=d=>d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+function checkDaily(){
+  const today=dayStr(new Date());if(S.lastDay===today)return;
+  const y=new Date();y.setDate(y.getDate()-1);
+  S.streak=S.lastDay===dayStr(y)?S.streak+1:1;S.lastDay=today;S.dailyPending=true;showDaily();save();
+}
+function showDaily(){
+  if(!S.dailyPending)return;
+  const c=(S.streak-1)%7+1;
+  $('#dStreak').innerHTML=`🔥 <b>${plural(S.streak,'day')}</b> in a row! Come back tomorrow for a bigger chest.`;
+  $('#dDays').innerHTML=[1,2,3,4,5,6,7].map(d=>`<div class="day ${d<c?'past':d===c?'now':''}"><i>${d===7?'💎':d<c?'✅':'🎁'}</i>Day ${d}</div>`).join('');
+  $('#daily').classList.remove('hidden');
+}
+$('#dOpen').addEventListener('click',e=>{
+  if(!e.isTrusted||!S.dailyPending)return;
+  const c=(S.streak-1)%7+1,n=c===7?5:1+Math.floor(c/2),v=Math.max(1000*S.streak,D.base*300*c),got=[];
+  for(let i=0;i<n;i++){const b=pick(BOOSTS);S.bag[b.id]=(S.bag[b.id]||0)+1;got.push(b.e)}
+  gain(v);S.dailyPending=false;$('#daily').classList.add('hidden');renderBag();
+  snd('lvl');confetti(160);bigBanner('DAY '+S.streak+' 🔥','+'+fmt(v)+' 🥔 · '+got.join(' '));save();
+});
+
+/* =============== POTATO RAIN =============== */
+function potatoRain(){
+  toast('🌧️ POTATO RAIN!','Click the falling potatoes — fast!');snd('alert');
+  for(let i=0;i<15;i++)setTimeout(()=>spawnDrop(),i*420);
+}
+function spawnDrop(e){
+  if(vibe)return;
+  const el=document.createElement('div');el.className='drop';el.textContent=e||(Math.random()<.1?'🍟':'🥔');
+  el.style.left=rand(4,88)+'vw';el.style.animationDuration=rand(4,6.5)+'s';let done=false;
+  el.addEventListener('pointerdown',e=>{e.preventDefault();if(!e.isTrusted||done||vibe)return;done=true;S.drops++;
+    const v=Math.max(10,D.base*10+clickBase()*5);gain(v);floatTxt(e.clientX,e.clientY,'+'+fmt(v),'#c8f5a8',30);
+    burst(e.clientX,e.clientY,16);ring(e.clientX,e.clientY,'#7cc35a',70);snd('pop',30+(S.drops%15)*4);el.remove()});
+  el.addEventListener('animationend',()=>el.remove());document.body.appendChild(el);
+}
+
+/* =============== WEATHER + RANDOM EVENTS =============== */
+const WEATHER={
+  rain:{e:'🌧️',n:'Rain Shower',d:'The fields love rain — production x2',t:60,prod:2},
+  heat:{e:'☀️',n:'Heatwave',d:'Hot potato! Clicks give x3',t:45,click:3},
+  storm:{e:'⛈️',n:'Thunderstorm',d:'Lightning strikes the potato for big bonuses ⚡',t:50},
+  snow:{e:'❄️',n:'Snowfall',d:'Catch the falling snowflakes for potatoes!',t:45},
+  dust:{e:'🌪️',n:'Dust Storm',d:'Production x0.5 — click the potato to blow the dust away!',t:40,prod:.5},
+  moon:{e:'🌕',n:'Full Moon',d:'Spooky night — +25% critical click chance',t:60,crit:.25},
+  rainbow:{e:'🌈',n:'Rainbow',d:'x2 production, x2 clicks and golden potatoes 3x as often',t:40,prod:2,click:2},
+};
+let wTimer=0;
+function setWeatherFx(){
+  const w=$('#weather');
+  if(S.weather){w.className='on w-'+S.weather.id}
+  else{w.classList.remove('on');setTimeout(()=>{if(!S.weather)w.className=''},1600)}
+}
+function startWeather(id){
+  const w=WEATHER[id];S.weather={id,t:w.t};S.weathers++;wTimer=2;setWeatherFx();
+  toast(w.e+' '+w.n.toUpperCase()+'!',w.d);snd('ready');
+}
+function endWeather(){
+  const id=S.weather.id;S.weather=null;setWeatherFx();
+  toast('🌤️ The sky clears up',WEATHER[id].n+' is over');
+  if(id==='rain'&&Math.random()<.45)setTimeout(()=>{if(!S.weather&&!vibe)startWeather('rainbow')},2500);
+}
+function lightning(){
+  const f=$('#weather .wflash');f.classList.remove('go');void f.offsetWidth;f.classList.add('go');
+  const r=pot.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height*.35,v=Math.max(50,D.base*15+clickBase()*10);
+  gain(v);squish=1;tilt=rand(-8,8);mouthOpen=1;
+  burst(x,y,30,['#fff','#fff7a0','#9ad8ff'],1.5);ring(x,y,'#bfe6ff',200);emojis(x,y,3,'⚡');
+  floatTxt(x,y-30,'⚡ ZAP! +'+fmt(v),'#fff7a0',32);snd('crit');
+  const m=$('#left');m.classList.remove('shake');void m.offsetWidth;m.classList.add('shake');
+}
+function weatherTick(dt){
+  wTimer-=dt;if(wTimer>0)return;
+  switch(S.weather.id){
+    case'storm':wTimer=rand(3,7);lightning();break;
+    case'snow':wTimer=rand(1.2,2.2);spawnDrop('❄️');break;
+    default:wTimer=99;
+  }
+}
+// something that runs across the screen; click it hp times before it gets away
+function runner(o){
+  if(vibe)return;
+  const el=document.createElement('div');el.className='runner'+(o.cls?' '+o.cls:'');
+  const hp=o.hp||1;let left=hp,done=false;
+  el.innerHTML=`<span>${o.e}</span>`+(hp>1?`<b class="rhp">${hp}</b>`:'');
+  el.style.top=(o.y!=null?o.y:rand(18,62))+'vh';el.style.fontSize=(o.size||52)+'px';el.style.animationDuration=(o.dur||7)+'s';
+  el.addEventListener('pointerdown',ev=>{
+    ev.preventDefault();if(!ev.isTrusted||done||vibe)return;left--;
+    burst(ev.clientX,ev.clientY,12);ring(ev.clientX,ev.clientY,'#ffd27a',80);snd('pop',40+(hp-left)*12);
+    el.classList.remove('hit');void el.offsetWidth;el.classList.add('hit');
+    const b=el.querySelector('.rhp');if(b)b.textContent=left;
+    if(left<=0){done=true;el.remove();o.win&&o.win(ev.clientX,ev.clientY)}
+    else floatTxt(ev.clientX,ev.clientY-20,left+' more!','#fff',22);
+  });
+  el.addEventListener('animationend',ev=>{if(ev.animationName!=='runL')return;if(!done){done=true;if(!vibe&&o.lose)o.lose()}el.remove()});
+  document.body.appendChild(el);
+}
+const EVENTS=[
+  {w:3,f:()=>{toast('🚂 TRAIN INCOMING!','Click the train to grab its cargo');snd('alert');
+    runner({e:'🚂🚃🚃',dur:6,size:46,y:rand(50,68),win:(x,y)=>{const v=Math.max(500,D.base*90+clickBase()*40);gain(v);S.trains++;
+      floatTxt(x,y,'🚂 +'+fmt(v),'#ffd27a',32);emojis(x,y,6,'📦');snd('gold')}})}},
+  {w:3,f:()=>{toast('🚨 BANDIT!','He is running off with your potatoes — click him 5 times!');snd('alert');
+    runner({e:'🏇💰',hp:5,dur:8,size:54,
+      win:(x,y)=>{const v=Math.max(1000,D.base*150);gain(v);S.bandits++;floatTxt(x,y,'⭐ GOT HIM! +'+fmt(v),'#ffd27a',32);confetti(80);snd('lvl');
+        toast('⭐ Bandit caught!','The sheriff pays you a reward: +'+fmt(v)+' 🥔')},
+      lose:()=>{const v=Math.min(S.potatoes*.03,D.base*30);S.potatoes-=v;snd('no');toast('😩 The bandit got away','He stole '+fmt(v)+' potatoes')}})}},
+  {w:2,f:()=>{toast('🛸 UFO SIGHTING!','Click it 3 times — aliens love potatoes');snd('alert');
+    runner({e:'🛸',hp:3,dur:9,size:58,cls:'ufo',y:rand(14,36),win:(x,y)=>{const b=pick(BOOSTS),v=Math.max(500,D.base*60);
+      S.bag[b.id]=(S.bag[b.id]||0)+1;gain(v);renderBag();floatTxt(x,y,'👽 +'+fmt(v),'#c8f5a8',30);emojis(x,y,5,'👽');snd('gold');
+      toast('👽 The aliens left a gift',b.e+' '+b.n+' is in your bag + '+fmt(v)+' 🥔')}})}},
+  {w:2,f:()=>{toast('🐂 STAMPEDE!','Click the cows for potatoes!');snd('alert');
+    for(let i=0;i<8;i++)setTimeout(()=>runner({e:pick(['🐂','🐄','🐃']),dur:rand(4,6),size:44,y:rand(40,72),
+      win:(x,y)=>{const v=Math.max(50,D.base*8+clickBase()*4);gain(v);floatTxt(x,y,'+'+fmt(v),'#c8f5a8',26)}}),i*550)}},
+  {w:2,f:()=>{addActive('sale',60);toast('🛒 TRAVELING MERCHANT!','Everything in the 🛒 Shop is half price for 60 sec');snd('ready')}},
+  {w:2,f:()=>{toast('🦅 EAGLE!','It is carrying a golden potato — catch it!');snd('alert');
+    runner({e:'🦅',dur:3.8,size:52,y:rand(12,32),win:(x,y)=>clickGolden(x,y)})}},
+];
+function randomEvent(){
+  if(vibe||totalMach()<1)return;
+  if(!S.weather&&Math.random()<.55){startWeather(pick(Object.keys(WEATHER).filter(k=>k!=='rainbow')));return}
+  let r=Math.random()*EVENTS.reduce((a,e)=>a+e.w,0),i=0;while((r-=EVENTS[i].w)>0)i++;
+  EVENTS[i].f();
+}
+
+/* =============== MILESTONES + NEXT GOAL =============== */
+function checkMilestone(){
+  const pw=Math.floor(Math.log10(S.allEarned||1));
+  if(pw>S.bestPow){const show=S.bestPow>0&&pw>=3;S.bestPow=pw;
+    if(show){bigBanner(fmt(Math.pow(10,pw))+' 🥔!',pick(HYPE));confetti(120);snd('lvl')}}
+}
+function updGoal(){
+  let best=null;const hi=S.machines.reduce((h,n,i)=>n>0?i:h,-1);
+  const consider=(e,n,c)=>{if(c>S.potatoes&&(!best||c<best.c))best={e,n,c}};
+  MACHINES.forEach((m,i)=>{if(i<=hi+1)consider(m.e,m.n,machCost(i,1))});
+  availUpg().slice(0,15).forEach(u=>consider(u.e,u.n,u.c));
+  SKINS.forEach(s=>{if(!S.skins[s.id])consider('🎨',s.n,s.c)});
+  if(!best){$('#goal').style.visibility='hidden';return}
+  $('#goal').style.visibility='';
+  const pc=S.potatoes/best.c,c=cps(),eta=c>0?(best.c-S.potatoes)/c:0;
+  $('#goalTxt').textContent=`${best.e} ${best.n} · ${Math.floor(pc*100)}%${eta?' · ~'+fmtTime(eta):''}`;
+  $('#goalBar').style.width=(pc*100)+'%';
+}
+
+/* =============== SOUL SHOP =============== */
+const PERKS=[
+  {id:'start',e:'🚀',n:'Quick Start',d:'Start every rebirth with more potatoes (x10 per level)',max:10,c:1},
+  {id:'click',e:'👆',n:'Soul Click',d:'+100% potatoes per click per level',max:10,c:1},
+  {id:'gold',e:'🌟',n:'Golden Soul',d:'Golden potatoes appear 20% more often per level',max:5,c:2},
+  {id:'boost',e:'🏷️',n:'Boost Discount',d:'Boosts cost 10% less per level',max:5,c:2},
+  {id:'mission',e:'📜',n:'Mission Master',d:'+50% mission rewards per level',max:5,c:2},
+  {id:'combo',e:'🔥',n:'Tough Combo',d:'Combo drops 25% slower per level',max:3,c:3},
+  {id:'auto',e:'🤖',n:'Auto Buyer',d:'Automatically buys the cheapest machine every second',max:1,c:5},
+];
+let perkKey='';
+function renderPerks(){
+  const key=S.tokens+JSON.stringify(S.perks)+S.autoBuy;if(key===perkKey)return;perkKey=key;
+  $('#tokTxt').innerHTML=`You have <b>${S.tokens} 🪙</b>`;
+  const box=$('#perkList');box.innerHTML='';
+  PERKS.forEach(p=>{const l=PK(p.id),c=p.c*(l+1),max=l>=p.max;
+    const el=document.createElement('div');el.className='row static';
+    el.innerHTML=`<div class="ri">${p.e}</div><div class="rt"><div class="rn">${p.n} <span style="color:var(--red)">${l}/${p.max}</span></div><div class="rd">${p.d}</div></div><button class="ubtn">${max?'MAX':c+' 🪙'}</button>`;
+    const b=el.querySelector('button');b.disabled=max||S.tokens<c;
+    b.addEventListener('click',()=>{if(S.tokens<c||max)return;S.tokens-=c;S.perks[p.id]=l+1;recalc();snd('buy');fxAt(el,30);toast('🪙 '+p.n+' level '+(l+1),p.d);renderPerks()});
+    box.appendChild(el);
+    if(p.id==='auto'&&l){const t=document.createElement('button');t.className='sbtn';t.style.margin='-2px 0 8px';t.textContent=S.autoBuy?'🤖 Auto Buyer: ON':'🤖 Auto Buyer: OFF';t.addEventListener('click',()=>{S.autoBuy=!S.autoBuy;renderPerks()});box.appendChild(t)}
+  });
+}
+function autoBuy(){
+  if(!PK('auto')||!S.autoBuy||vibe)return;
+  const hi=S.machines.reduce((h,n,i)=>n>0?i:h,-1);let bi=-1,bc=Infinity;
+  for(let i=0;i<=Math.min(hi+1,MACHINES.length-1);i++){const c=machCost(i,1);if(c<bc){bc=c;bi=i}}
+  if(bi>=0&&S.potatoes>=bc){S.potatoes-=bc;S.machines[bi]++;S.bought++;recalc();ensureMachines();renderHideout()}
+}
+
+/* =============== LEFT UI =============== */
+let disp=0;
+function updLeft(){
+  const lv=need(S.level);
+  $('#lvlNum').textContent='Level '+S.level;$('#lvlTitle').textContent=title(S.level);
+  $('#xpBar').style.width=(S.aura/lv*100)+'%';
+  $('#xpTxt').textContent=`📚 XP ${fmt(S.aura)} / ${fmt(lv)} · clicks, purchases and missions give XP${xpMult()>1?' (x3!)':''}`;
+  $('#pps').textContent=`${fmt(cps(),1)} per second${prodBoost()!==1?(prodBoost()>1?' 🔥 x':' 🌪️ x')+fmt(prodBoost(),1):''}`;
+  $('#chips').innerHTML=(S.weather?`<div class="chip wchip">${wx().e} ${wx().n} · ${Math.ceil(S.weather.t)}s</div>`:'')+Object.entries(S.active).map(([k,t])=>`<div class="chip">${ACTIVE_LBL[k]||k} · ${Math.ceil(t)}s</div>`).join('');
+  $('#clickInfo').textContent=`👆 ${fmt(clickBase()*comboMult(),1)} per click · 💥 ${Math.round(critChance()*100)}% critical`;
+  if(!vibe)document.title=S.clicks?`${fmt(S.potatoes)} potatoes – Potato Clicker`:'Potato Clicker – Free Idle Clicker Game | Play Online, No Download';
+}
+
+/* =============== LOOPS =============== */
+let last=performance.now(),turboAcc=0;
+function logic(){
+  const now=performance.now();let dt=Math.min(120,(now-last)/1000);last=now;
+  if(vibe)return;
+  S.playTime+=dt;
+  for(const k in S.active){S.active[k]-=dt;if(S.active[k]<=0){delete S.active[k];toast('⌛ Boost ended',(ACTIVE_LBL[k]||k)+' has run out')}}
+  gain(cps()*dt); // no passive XP — level only goes up when you do something
+  if(S.active.turbo){turboAcc+=dt*20;const r=pot.getBoundingClientRect();while(turboAcc>=1){turboAcc--;doClick(r.left+r.width*rand(.25,.75),r.top+r.height*rand(.25,.75),true)}}else turboAcc=0;
+  goldT-=dt*(S.weather&&S.weather.id==='rainbow'?3:1);if(goldT<=0){goldT=rand(60,180)*D.gf;spawnGolden()}
+  if(S.playTime>=S.nextRain){S.nextRain=S.playTime+rand(240,480);potatoRain()}
+  if(S.weather){S.weather.t-=dt;weatherTick(dt);if(S.weather.t<=0)endWeather()}
+  if(S.playTime>=S.nextEvent){S.nextEvent=S.playTime+rand(100,200);randomEvent()}
+  if(S.playTime>=S.nextWater){S.nextWater=S.playTime+7200;toast('💧 Break time?',"You've played for 2 hours. Drink some water and stretch — the potato will wait 🥔")}
+  if(S.playTime>=S.nextVibe)startVibe(false);
+}
+let lastF=performance.now();
+function frame(t){
+  const dt=Math.min(.05,(t-lastF)/1000);lastF=t;
+  if(t-lastClick>700)combo=Math.max(0,combo-dt*18*(1-.25*PK('combo')));
+  squish*=Math.pow(.0009,dt);tilt*=Math.pow(.002,dt);mouthOpen*=Math.pow(.01,dt);countPop*=Math.pow(.002,dt);
+  const wob=Math.sin(t/500)*.012,sx=1+squish*.08+hover*.03+wob,sy=1-squish*.12+hover*.03-wob;
+  pot.style.transform=`scale(${sx},${sy}) rotate(${tilt+Math.sin(t/900)*2}deg)`;
+  $('#count').style.transform=`scale(${1+countPop*.08})`;
+  handRot+=dt*(8+(prodBoost()>1?25:0));handEls.forEach((h,i)=>h.style.setProperty('--a',(handRot+i*360/handEls.length)+'deg'));
+  autoTaps(dt);
+  rayA+=dt*(10+combo*5+(prodBoost()>1?40:0));$('#rays').style.transform=`rotate(${rayA}deg) scale(${1+combo/D.cmax*.25})`;
+  pup.x+=(pupT.x-pup.x)*.2;pup.y+=(pupT.y-pup.y)*.2;
+  $('#pupL').setAttribute('transform',`translate(${pup.x} ${pup.y})`);$('#pupR').setAttribute('transform',`translate(${pup.x} ${pup.y})`);
+  const mo=$('#mouth');mo.setAttribute('d',mouthOpen>.3?'M118 184 Q150 236 182 184 Q150 196 118 184Z':'M122 186 Q150 214 178 186');mo.setAttribute('fill',mouthOpen>.3?'#5a1020':'none');
+  disp+=(S.potatoes-disp)*Math.min(1,dt*14);if(Math.abs(S.potatoes-disp)<1)disp=S.potatoes;
+  $('#count').textContent=fmt(Math.max(0,disp));
+  const cb=$('#comboBox');cb.style.opacity=combo>=3?1:0;
+  if(combo>=3){const c=Math.floor(combo);$('#comboTxt').textContent=(c>=D.cmax?'🔥 MAX COMBO ':c>=50?'⚡ WILD COMBO ':c>=25?'🤠 YEEHAW ':c>=10?'🔥 NICE ':'COMBO ')+'x'+comboMult().toFixed(2);$('#comboBar').style.width=(combo/D.cmax*100)+'%'}
+  drawFX(dt);
+  requestAnimationFrame(frame);
+}
+
+/* =============== REBIRTH / SETTINGS =============== */
+$('#rebBtn').addEventListener('click',()=>{
+  const p=soulsPending();if(p<1||vibe)return;
+  if(!confirm(`✨ REBIRTH\n\nYou lose: potatoes, machines, upgrades and active boosts.\nYou keep: level, style, trophies and bag.\nYou get: +${p} Potato Souls (+${p*5}% forever) and +${p} 🪙 Soul Coins.\n\nRebirth now?`))return;
+  S.souls+=p;S.tokens+=p;S.rebirths++;S.potatoes=PK('start')?Math.pow(10,2+PK('start')):0;S.runEarned=0;S.machines=MACHINES.map(()=>0);S.upgrades={};S.active={};disp=0;
+  recalc();renderHideout();upgKey='';snd('lvl');confetti(200);toast('✨ REBORN!','+'+p+' souls. Start over — but stronger 💪');save();
+});
+$('#expBtn').addEventListener('click',()=>{try{const s=btoa(unescape(encodeURIComponent(JSON.stringify(S))));prompt('Copy your save:',s)}catch(e){}});
+$('#impBtn').addEventListener('click',()=>{const s=prompt('Paste your save:');if(!s)return;try{importObj(JSON.parse(decodeURIComponent(escape(atob(s.trim())))));fullRefresh();save();toast('📥 Save imported','Welcome back, cowboy')}catch(e){toast('😬 Invalid save','That code does not work')}});
+$('#resetBtn').addEventListener('click',()=>{if(confirm('Delete EVERYTHING? This cannot be undone.')&&confirm('Are you really sure? Your potato will be sad 😢')){S=defState();try{localStorage.removeItem(KEY)}catch(e){}fullRefresh();toast('🗑️ Everything deleted','A brand new start')}});
+$('#sndBtn').addEventListener('click',()=>{S.sound=!S.sound;$('#sndBtn').textContent=S.sound?'🔊':'🔇';if(S.sound)snd('buy')});
+$('#saveBtn').addEventListener('click',()=>save(true));
+$$('.tabs button').forEach(b=>b.addEventListener('click',()=>{$$('.tabs button').forEach(x=>x.classList.toggle('on',x===b));$$('.tabc').forEach(x=>x.classList.toggle('on',x.id==='t-'+b.dataset.t))}));
+$$('#amtBtns button').forEach(b=>b.addEventListener('click',()=>{S.buyAmt=b.dataset.a==='max'?'max':+b.dataset.a;$$('#amtBtns button').forEach(x=>x.classList.toggle('on',x===b));updMachines()}));
+
+function fullRefresh(){
+  recalc();applyLook();ensureMachines();buildMachines();renderHideout();renderBag();renderAch();
+  upgKey='';lookKey='';misKey='';perkKey='';disp=S.potatoes;
+  $('#sndBtn').textContent=S.sound?'🔊':'🔇';
+  $$('#amtBtns button').forEach(x=>x.classList.toggle('on',x.dataset.a===String(S.buyAmt)));
+  updMachines();updUpgrades();updShop();updLooks();updLeft();updStats();updMissions();renderPerks();
+  if(S.vibePending&&!vibe)startVibe(false);
+}
+function nextTicker(){
+  const dyn=[`You have ${fmt(S.potatoes)} potatoes. The sheriff is impressed 🤠`,`You've clicked ${fmt(S.clicks)} times. The potato says thanks.`,`${title(S.level)} spotted in town!`];
+  const el=$('#tick');el.textContent=Math.random()<.25?pick(dyn):pick(TICK);el.style.animation='none';void el.offsetWidth;el.style.animation='';
+}
+
+/* =============== START =============== */
+load();buildShop();fullRefresh();clampActive();if(S.weather&&!WEATHER[S.weather.id])S.weather=null;if(S.weather)setWeatherFx();checkDaily();showDaily();
+setInterval(logic,50);
+setInterval(()=>{updLeft();updMachines();updUpgrades();updShop();updLooks();updMissions();updSpin();updGoal();checkMilestone()},200);
+setInterval(()=>{checkAch();updStats();renderPerks();autoBuy()},1000);
+setInterval(checkDaily,60000);
+setInterval(()=>save(false),15000);
+setInterval(nextTicker,18000);setTimeout(nextTicker,500);
+addEventListener('beforeunload',()=>save(false));
+document.addEventListener('visibilitychange',()=>{if(document.hidden)save(false)});
+requestAnimationFrame(frame);
+if(S.clicks===0)setTimeout(()=>toast('🤠 Howdy, partner!','Click the big potato to start your potato ranch 🥔'),600);
+</script>
+<script>/* local file fallback: open index.html inside folders */if(location.protocol==="file:")document.addEventListener("click",e=>{const a=e.target.closest("a[href]");if(a&&/\/$/.test(a.getAttribute("href"))){e.preventDefault();location.href=a.getAttribute("href")+"index.html"}});</script>
+</body>
+</html>

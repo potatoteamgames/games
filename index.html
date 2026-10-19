@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Potato Team Games – Free Browser Games | Play Online, No Download</title>
+<meta name="description" content="Potato Team Games makes free browser games you can play instantly on PC and mobile. Play Potato Clicker, a Wild West idle clicker game, and more games coming soon. No download.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#1c1230">
+<!-- When your GitHub Pages URL is live, uncomment and fill in:
+<link rel="canonical" href="https://YOUR-USERNAME.github.io/">
+-->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Potato Team Games">
+<meta property="og:title" content="Potato Team Games – Free Browser Games">
+<meta property="og:description" content="Free browser games you can play instantly on PC and mobile. Start with Potato Clicker!">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Potato Team Games – Free Browser Games">
+<meta name="twitter:description" content="Free browser games you can play instantly on PC and mobile. Start with Potato Clicker!">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🥔%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "name": "Potato Team Games",
+      "description": "Free browser games you can play instantly on PC and mobile.",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "ItemList",
+      "name": "Potato Team Games",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Potato Clicker", "url": "potato-clicker.html"}
+      ]
+    }
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Rye&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#1c1230; --bg2:#2a1b48; --card:#2f2150; --card2:#3a2a62; --line:rgba(255,255,255,.1);
+  --txt:#fff7e8; --muted:#c9bde6; --potato:#f2b866; --potatoD:#c98436; --pink:#ff6fae; --mint:#5fe3b0; --sky:#6cc7ff;
+  --ink:#3b2412; --paper:#f3e2bd;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;color:var(--txt);font-family:Nunito,system-ui,sans-serif;font-weight:800;
+  background:radial-gradient(circle at 15% -10%,#4a2a7a 0,transparent 45%),radial-gradient(circle at 100% 30%,#3b1f5c 0,transparent 40%),var(--bg)}
+a{color:inherit}
+.wrap{width:min(1120px,100% - 32px);margin:0 auto}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:10;background:rgba(28,18,48,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:14px;height:64px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:'Lilita One',sans-serif;font-size:26px;letter-spacing:.5px}
+.brand .logoP{font-size:30px;display:inline-block;animation:wig 2.4s ease-in-out infinite}
+.brand b{color:var(--potato);font-weight:400}
+@keyframes wig{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(10deg)}}
+.nav nav{margin-left:auto;display:flex;gap:6px}
+.nav nav a{text-decoration:none;font-size:14px;color:var(--muted);padding:8px 12px;border-radius:999px;transition:.15s}
+.nav nav a:hover{background:var(--card);color:var(--txt)}
+
+/* HERO */
+.hero{padding:34px 0 10px;text-align:center}
+.hero h1{font-family:'Lilita One',sans-serif;font-weight:400;font-size:clamp(36px,6vw,64px);line-height:1.05;margin:0 0 10px}
+.hero h1 span{color:var(--potato)}
+.hero p{margin:0 auto;max-width:620px;color:var(--muted);font-size:clamp(15px,2vw,18px)}
+
+/* FEATURED BANNER */
+.featured{display:block;position:relative;margin:28px 0 8px;border-radius:24px;overflow:hidden;text-decoration:none;color:var(--txt);
+  border:4px solid #2a1708;box-shadow:0 18px 40px rgba(0,0,0,.45);
+  background:radial-gradient(ellipse at 70% 120%,rgba(255,220,150,.45),transparent 60%),linear-gradient(180deg,#f0b46a,#c9733a 60%,#7a3f1d);
+  transition:transform .2s,box-shadow .2s;min-height:320px}
+.featured:hover{transform:translateY(-4px) scale(1.01);box-shadow:0 26px 60px rgba(0,0,0,.55)}
+.featured:hover .fpot{transform:scale(1.08) rotate(-6deg)}
+.featured::after{content:'';position:absolute;left:-5%;right:-5%;bottom:0;height:22%;
+  background:radial-gradient(ellipse at 20% 100%,#7a4a22 0 45%,transparent 46%),radial-gradient(ellipse at 80% 100%,#6b3f1c 0 50%,transparent 51%),linear-gradient(transparent 55%,#5a3418 56%)}
+.fin{position:relative;z-index:2;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:20px;padding:34px 40px 40px}
+.tag{display:inline-block;background:#a8321f;border:3px solid var(--ink);color:#fff3d6;font-size:13px;padding:4px 12px;border-radius:999px;letter-spacing:1px}
+.ftitle{font-family:Rye,Georgia,serif;font-weight:400;font-size:clamp(34px,5.4vw,62px);line-height:1;margin:12px 0 10px;color:#ffd27a;
+  text-shadow:3px 3px 0 var(--ink),-2px -2px 0 var(--ink),2px -2px 0 var(--ink),-2px 2px 0 var(--ink),0 6px 0 rgba(0,0,0,.3)}
+.fdesc{font-size:clamp(15px,1.8vw,18px);color:#fff3d6;text-shadow:1px 1px 0 var(--ink);max-width:470px;margin:0 0 16px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.chips span{background:var(--paper);color:var(--ink);border:2px solid var(--ink);font-size:12px;padding:3px 10px;border-radius:999px}
+.play{display:inline-flex;align-items:center;gap:10px;font-family:Rye,Georgia,serif;font-size:24px;color:var(--ink);
+  background:linear-gradient(#ffd77a,#d99a2a);border:4px solid var(--ink);border-radius:14px;padding:12px 26px;box-shadow:0 6px 0 #2a1708;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.05)}}
+.progress{margin-top:12px;font-size:14px;color:#fff3d6;text-shadow:1px 1px 0 var(--ink)}
+.fart{position:relative;display:flex;align-items:center;justify-content:center;min-height:240px}
+.fpot{width:min(260px,70%);transition:transform .3s;filter:drop-shadow(0 16px 14px rgba(40,20,5,.55)) drop-shadow(0 0 30px #ffb347);animation:bob 3s ease-in-out infinite}
+@keyframes bob{50%{translate:0 -10px}}
+.rays{position:absolute;width:380px;height:380px;border-radius:50%;background:repeating-conic-gradient(rgba(255,240,200,.3) 0 9deg,transparent 9deg 18deg);
+  -webkit-mask:radial-gradient(circle,#000 20%,transparent 68%);mask:radial-gradient(circle,#000 20%,transparent 68%);animation:spin 30s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cactus{position:absolute;z-index:3;bottom:6%;font-size:46px}
+.cactus.a{right:46%}.cactus.b{right:4%;font-size:34px}
+
+/* GAMES GRID */
+section.games{padding:34px 0 10px}
+.shead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:14px}
+h2{font-family:'Lilita One',sans-serif;font-weight:400;font-size:32px;margin:0}
+.shead p{margin:0;color:var(--muted);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.game{position:relative;display:flex;flex-direction:column;background:var(--card);border:2px solid var(--line);border-radius:18px;overflow:hidden;text-decoration:none;transition:transform .15s,border-color .15s,box-shadow .15s}
+a.game:hover{transform:translateY(-4px);border-color:var(--potato);box-shadow:0 14px 30px rgba(0,0,0,.4)}
+.thumb{height:150px;display:flex;align-items:center;justify-content:center;font-size:72px;position:relative;overflow:hidden}
+.thumb.potato{background:linear-gradient(180deg,#f0b46a,#c9733a 70%,#7a3f1d)}
+.thumb.soon{background:repeating-linear-gradient(45deg,#2a1b48 0 14px,#33225a 14px 28px);font-size:54px;filter:grayscale(.3)}
+.game .body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
+.game h3{margin:0;font-size:20px;font-family:'Lilita One',sans-serif;font-weight:400}
+.game p{margin:0;color:var(--muted);font-size:13px;font-weight:700;line-height:1.4;flex:1}
+.game .meta{display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:12px;color:var(--muted)}
+.btn{background:var(--potato);color:var(--ink);padding:7px 14px;border-radius:999px;font-size:13px}
+.badge{position:absolute;top:10px;left:10px;font-size:11px;padding:3px 9px;border-radius:999px;background:var(--mint);color:#063;letter-spacing:.5px}
+.badge.soon{background:#ffffff22;color:var(--txt)}
+.game.soon{opacity:.75}
+
+/* ABOUT / FOOTER */
+.about{margin:40px 0 0;background:var(--bg2);border:2px solid var(--line);border-radius:20px;padding:22px 24px;color:var(--muted);font-size:15px;line-height:1.6;font-weight:700}
+.about h2{color:var(--txt);font-size:26px;margin-bottom:6px}
+.about b{color:var(--txt)}
+footer{margin-top:40px;padding:22px 0 30px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between}
+
+@media (max-width:760px){
+  .nav nav{display:none}
+  .fin{grid-template-columns:1fr;padding:22px 20px 34px;text-align:center}
+  .fart{order:-1;min-height:170px}
+  .fpot{width:150px}
+  .rays{width:260px;height:260px}
+  .fdesc{margin:0 auto 14px}
+  .chips{justify-content:center}
+  .play{font-size:20px;padding:10px 20px}
+  .featured{min-height:0}
+  .cactus{font-size:32px}.cactus.b{font-size:26px}
+  .shead{flex-direction:column;align-items:start}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="Potato Team Games home"><span class="logoP">🥔</span><span>Potato <b>Team Games</b></span></a>
+    <nav aria-label="Main">
+      <a href="#games">Games</a>
+      <a href="#about">About</a>
+      <a href="potato-clicker.html">Play Potato Clicker</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>Welcome to <span>Potato Team Games</span> 🥔</h1>
+    <p>Fun games you can play instantly on PC, tablet and phone. No download, no sign-up — just click and play.</p>
+  </section>
+
+  <!-- FEATURED GAME BANNER -->
+  <a class="featured" href="potato-clicker.html" aria-label="Play Potato Clicker">
+    <div class="fin">
+      <div>
+        <span class="tag">⭐ FEATURED GAME</span>
+        <h2 class="ftitle">Potato Clicker</h2>
+        <p class="fdesc">Click the giant potato, build a Wild West potato ranch and unlock 300+ upgrades, skins and trophies. How big can your potato empire get?</p>
+        <div class="chips"><span>👆 Clicker</span><span>⏳ Idle</span><span>🤠 Wild West</span><span>📱 Mobile</span></div>
+        <span class="play">▶ PLAY NOW</span>
+        <div class="progress" id="potatoProgress"></div>
+      </div>
+      <div class="fart" aria-hidden="true">
+        <div class="rays"></div>
+        <svg class="fpot" viewBox="0 0 300 300">
+          <defs><radialGradient id="pg" cx="38%" cy="30%" r="78%"><stop offset="0%" stop-color="#ffe0a3"/><stop offset="62%" stop-color="#d99a4e"/><stop offset="100%" stop-color="#8a5524"/></radialGradient></defs>
+          <path d="M150 18 C228 14 284 78 276 158 C268 238 210 286 142 282 C70 278 18 226 24 150 C30 74 78 22 150 18Z" fill="url(#pg)" stroke="#8a5524" stroke-width="5"/>
+          <ellipse cx="88" cy="92" rx="9" ry="6" fill="#8a5524" opacity=".45"/><ellipse cx="214" cy="82" rx="7" ry="5" fill="#8a5524" opacity=".45"/><ellipse cx="234" cy="204" rx="10" ry="7" fill="#8a5524" opacity=".45"/><ellipse cx="78" cy="214" rx="8" ry="5" fill="#8a5524" opacity=".45"/>
+          <ellipse cx="108" cy="66" rx="52" ry="20" fill="#fff" opacity=".33" transform="rotate(-24 108 66)"/>
+          <ellipse cx="92" cy="172" rx="18" ry="10" fill="#ff6fa8" opacity=".45"/><ellipse cx="208" cy="172" rx="18" ry="10" fill="#ff6fa8" opacity=".45"/>
+          <ellipse cx="117" cy="128" rx="21" ry="25" fill="#fff" stroke="#3a1d08" stroke-width="3"/><ellipse cx="183" cy="128" rx="21" ry="25" fill="#fff" stroke="#3a1d08" stroke-width="3"/>
+          <circle cx="121" cy="132" r="11" fill="#1a0d05"/><circle cx="187" cy="132" r="11" fill="#1a0d05"/><circle cx="125" cy="127" r="4" fill="#fff"/><circle cx="191" cy="127" r="4" fill="#fff"/>
+          <path d="M122 186 Q150 214 178 186" stroke="#3a1d08" stroke-width="7" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+    <span class="cactus a" aria-hidden="true">🌵</span><span class="cactus b" aria-hidden="true">🌵</span>
+  </a>
+
+  <!-- ALL GAMES -->
+  <section class="games" id="games" aria-labelledby="gamesH">
+    <div class="shead">
+      <h2 id="gamesH">🎮 All games</h2>
+      <p>New games are added regularly — check back soon!</p>
+    </div>
+    <div class="grid">
+      <!-- To add a new game: copy one <a class="game"> block, change the link, title and text. -->
+      <a class="game" href="potato-clicker.html">
+        <div class="thumb potato"><span class="badge">NEW</span>🥔</div>
+        <div class="body">
+          <h3>Potato Clicker</h3>
+          <p>Wild West idle clicker. Click the potato, build machines, unlock upgrades and rebirth for endless progress.</p>
+          <div class="meta"><span>👆 Clicker · Idle</span><span class="btn">Play ▶</span></div>
+        </div>
+      </a>
+      <div class="game soon" aria-label="Coming soon">
+        <div class="thumb soon"><span class="badge soon">COMING SOON</span>🎲</div>
+        <div class="body">
+          <h3>Next Potato Game</h3>
+          <p>Potato Team Games is cooking up something new. Stay tuned!</p>
+          <div class="meta"><span>🔒 Coming soon</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="about" id="about" aria-labelledby="aboutH">
+    <h2 id="aboutH">About Potato Team Games</h2>
+    <p><b>Potato Team Games</b> makes free, fun browser games that run on any device — PC, Mac, Chromebook, iPhone and Android. Every game works right in your browser with no download, no account and no ads. Your progress is saved automatically on your device.</p>
+    <p>Our first game, <a href="potato-clicker.html"><b>Potato Clicker</b></a>, is an idle clicker game like Cookie Clicker — but with potatoes, cowboys and a whole lot of upgrades.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="yr">2026</span> Potato Team Games 🥔</span>
+    <span>Free browser games · No download</span>
+  </div>
+</footer>
+
+<script>
+document.getElementById('yr').textContent=new Date().getFullYear();
+// Show the player's Potato Clicker progress (same website = same saved data)
+(function(){
+  try{
+    const s=JSON.parse(localStorage.getItem('potato_brainrot_save_v1')||'null');
+    if(!s||!s.clicks)return;
+    const SUF=['','K','M','B','T','Qa','Qi','Sx','Sp','Oc','No','Dc'];
+    const fmt=n=>{if(n<1000)return Math.floor(n)+'';const e=Math.min(SUF.length-1,Math.floor(Math.log10(n)/3));return (n/Math.pow(10,e*3)).toFixed(2)+' '+SUF[e]};
+    document.getElementById('potatoProgress').textContent='Your ranch: Level '+(s.level||1)+' · '+fmt(s.potatoes||0)+' potatoes — continue playing!';
+    document.querySelector('.featured .play').textContent='▶ CONTINUE';
+  }catch(e){}
+})();
+</script>
+<script>/* local file fallback: open index.html inside folders */if(location.protocol==="file:")document.addEventListener("click",e=>{const a=e.target.closest("a[href]");if(a&&/\/$/.test(a.getAttribute("href"))){e.preventDefault();location.href=a.getAttribute("href")+"index.html"}});</script>
+</body>
+</html>
