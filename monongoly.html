@@ -168,7 +168,7 @@ button:disabled{cursor:not-allowed;opacity:.45}
 .pot.on{opacity:1}
 
 /* ===== TOKENS ===== */
-.tok{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d;transition:left .35s ease,top .35s ease}
+.tok{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d;transition:transform .35s ease;will-change:transform}
 .tok.moving{transition:none}
 .tokSh{position:absolute;width:calc(var(--u)*.46);height:calc(var(--u)*.46);left:calc(var(--u)*-.23);top:calc(var(--u)*-.23);border-radius:50%;
   background:radial-gradient(circle,rgba(0,0,0,.5),transparent 70%);transform:translateZ(1px)}
@@ -770,38 +770,46 @@ function layoutTokens(instant){
     const t=tokEl(p);if(!t||(!instant&&t.classList.contains('moving')))return;
     const {x,y}=spotFor(p,p.pos,slotOf(p));
     if(instant)t.classList.add('moving');
-    t.style.left=x+'px';t.style.top=y+'px';
+    t.style.transform=`translate3d(${x}px,${y}px,0)`;
     t.classList.toggle('cur',p.id===G.turn);
     if(instant)requestAnimationFrame(()=>requestAnimationFrame(()=>t.classList.remove('moving')));
   });
 }
-async function hopTo(p,from,to,dur){
-  fx('hop',[p.id,from,to,dur]);
-  const t=tokEl(p);if(!t)return;
-  t.classList.add('moving');
-  const a=spotFor(p,from,0),b=spotFor(p,to,0);
-  const lift=t.querySelector('.tokL'),hh=U*(dur>200?1.1:.7);
-  lift.animate([{transform:'translateZ(0)'},{transform:`translateZ(${hh}px)`,offset:.45},{transform:'translateZ(0)'}],{duration:dur,easing:'ease-in-out'});
-  t.querySelector('.tokSh').animate([{transform:'translateZ(1px) scale(1)',opacity:1},{transform:'translateZ(1px) scale(.6)',opacity:.4,offset:.45},{transform:'translateZ(1px) scale(1)',opacity:1}],{duration:dur});
-  const an=t.animate([{left:a.x+'px',top:a.y+'px'},{left:b.x+'px',top:b.y+'px'}],{duration:dur,easing:'ease-in-out',fill:'forwards'});
+// The whole walk is ONE compositor animation (hop + short stop on every space), so it never stutters.
+// onStep(k,tile) fires as the piece lands on each space (sound, passing GO…).
+const TF=(x,y)=>`translate3d(${x}px,${y}px,0)`;
+async function animPath(p,tiles,step,dwell,onStep){
+  fx('path',[p.id,tiles,step,dwell]);
+  const t=tokEl(p);if(!t||tiles.length<2)return;
+  const n=tiles.length-1,seg=step+dwell,T=n*seg,hh=U*(step>280?1.05:.75);
+  const pts=tiles.map(tl=>spotFor(p,tl,0));
+  const mv=[],lf=[],sh=[];
+  for(let k=0;k<n;k++){
+    const o0=k*seg/T,o1=(k*seg+step)/T,om=(k*seg+step*.45)/T;
+    mv.push({offset:o0,transform:TF(pts[k].x,pts[k].y),easing:'cubic-bezier(.45,0,.4,1)'},{offset:o1,transform:TF(pts[k+1].x,pts[k+1].y)});
+    lf.push({offset:o0,transform:'translateZ(0)',easing:'cubic-bezier(.2,.7,.4,1)'},{offset:om,transform:`translateZ(${hh}px)`,easing:'cubic-bezier(.6,0,.8,.4)'},{offset:o1,transform:'translateZ(0)'});
+    sh.push({offset:o0,transform:'translateZ(1px) scale(1)',opacity:1},{offset:om,transform:'translateZ(1px) scale(.6)',opacity:.45},{offset:o1,transform:'translateZ(1px) scale(1)',opacity:1});
+  }
+  const fin=TF(pts[n].x,pts[n].y);
+  mv.push({offset:1,transform:fin});lf.push({offset:1,transform:'translateZ(0)'});sh.push({offset:1,transform:'translateZ(1px) scale(1)',opacity:1});
+  t.classList.add('moving');t.style.transform=fin;
+  const opt={duration:T,fill:'none'};
+  const an=t.animate(mv,opt);t.querySelector('.tokL').animate(lf,opt);t.querySelector('.tokSh').animate(sh,opt);
+  const timers=tiles.slice(1).map((tl,k)=>setTimeout(()=>onStep&&onStep(k,tl),k*seg+step));
   await an.finished.catch(()=>{});
-  t.style.left=b.x+'px';t.style.top=b.y+'px';an.cancel();
+  timers.forEach(clearTimeout);
   t.classList.remove('moving');
 }
-async function moveSteps(p,n){
-  const dur=(n>12?250:360)*(p.human?1:Math.max(.65,SP()));
-  for(let k=0;k<n;k++){
-    const from=p.pos;p.pos=(p.pos+1)%40;
-    await hopTo(p,from,p.pos,dur);SFX.hop();
-    if(p.pos===0){addMoney(p,200);log(`${pName(p)} passed GO and collected ${M(200)}.`);SFX.coin()}
-    await sleep(dur*.15);
-  }
-  layoutTokens();flashTile(p.pos);await sleep(250);
+async function walk(p,n,dir){
+  const tiles=[p.pos];for(let k=0;k<n;k++)tiles.push((tiles[k]+(dir>0?1:39))%40);
+  const step=(n>12?250:340)*(p.human?1:Math.max(.65,SP())),dwell=n>12?50:90;
+  let passed=false;
+  await animPath(p,tiles,step,dwell,(k,tl)=>{p.pos=tl;SFX.hop();if(dir>0&&tl===0&&!passed){passed=true;addMoney(p,200);log(`${pName(p)} passed GO and collected ${M(200)}.`);SFX.coin()}});
+  p.pos=tiles[n];
+  if(dir>0&&!passed&&tiles.slice(1).includes(0)){addMoney(p,200);log(`${pName(p)} passed GO and collected ${M(200)}.`)}
+  layoutTokens();flashTile(p.pos);await sleep(200);
 }
-async function moveBack(p,n){
-  for(let k=0;k<n;k++){const from=p.pos;p.pos=(p.pos+39)%40;await hopTo(p,from,p.pos,360);SFX.hop();await sleep(60)}
-  layoutTokens();flashTile(p.pos);await sleep(250);
-}
+const moveSteps=(p,n)=>walk(p,n,1), moveBack=(p,n)=>walk(p,n,-1);
 async function moveTo(p,target){await moveSteps(p,(target-p.pos+40)%40)}
 async function sendToJail(p){
   banner(`🚓 ${p.name} goes to Jail!`,'#1d1a16');SFX.jail();
@@ -813,9 +821,10 @@ async function jailFly(p,from){
   fx('jail',[p.id,from]);
   const t=tokEl(p);
   if(t){t.classList.add('moving');const a=spotFor(p,from,0),b=spotFor(p,10,slotOf(p));
+    t.style.transform=TF(b.x,b.y);
     t.querySelector('.tokL').animate([{transform:'translateZ(0)'},{transform:`translateZ(${U*3}px)`},{transform:'translateZ(0)'}],{duration:900,easing:'ease-in-out'});
-    const an=t.animate([{left:a.x+'px',top:a.y+'px'},{left:b.x+'px',top:b.y+'px'}],{duration:900,easing:'ease-in-out',fill:'forwards'});
-    await an.finished.catch(()=>{});t.style.left=b.x+'px';t.style.top=b.y+'px';an.cancel();t.classList.remove('moving')}
+    const an=t.animate([{transform:TF(a.x,a.y)},{transform:TF(b.x,b.y)}],{duration:900,easing:'ease-in-out'});
+    await an.finished.catch(()=>{});t.classList.remove('moving')}
 }
 function flashTile(i){fx('flash',i);const t=$('#t'+i);if(!t)return;t.classList.remove('hl');void t.offsetWidth;t.classList.add('hl')}
 
@@ -1684,7 +1693,7 @@ async function guestFx(e,d){
     case'flash':flashTile(d);break;
     case'sfx':if(SFX[d])SFX[d]();break;
     case'dice':DICE.v=d[0];await animDice(d[0],d[1],d[2]);break;
-    case'hop':{const p=P(d[0]);await hopTo(p,d[1],d[2],d[3]);SFX.hop();break}
+    case'path':{const p=P(d[0]);await animPath(p,d[1],d[2],d[3],()=>SFX.hop());break}
     case'jail':{const p=P(d[0]);p.jail=true;p.pos=10;await jailFly(p,d[1]);break}
     case'card':if(!mine(P(d[2]))){specCard&&specCard.close();specCard=showCardUI(d[0],DECKS[d[0]][d[1]],'hold')}break;
     case'cardclose':specCard&&specCard.close();specCard=null;break;
