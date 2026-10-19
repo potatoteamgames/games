@@ -132,9 +132,10 @@ button:disabled{cursor:not-allowed;opacity:.45}
 .tile.hl{animation:hl 1.1s ease-out}
 @keyframes hl{0%,60%{box-shadow:inset 0 0 0 calc(var(--u)*.08) #ffcb52,inset 0 0 calc(var(--u)*.4) #ffcb52}100%{box-shadow:none}}
 /* corners */
-.cgo .big{font-family:'Lilita One',sans-serif;font-size:calc(var(--u)*.62);color:var(--red);-webkit-text-stroke:1px #000;line-height:1}
-.cgo .sm{font-size:calc(var(--u)*.12);padding:0 8%}
-.cgo .arrow{font-size:calc(var(--u)*.5);color:var(--red);line-height:.6}
+.cgo .big{font-family:'Lilita One',sans-serif;font-size:calc(var(--u)*.56);color:var(--red);-webkit-text-stroke:1px #000;line-height:1}
+.cgo .big.long{font-size:calc(var(--u)*.4)}
+.cgo .sm{font-size:calc(var(--u)*.15);line-height:1.08;font-weight:700;white-space:nowrap;letter-spacing:.02em}
+.cgo .arrow{font-size:calc(var(--u)*.4);color:var(--red);line-height:.6}
 .cin{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--u)*.04)}
 .cin .ic{margin:0}
 .jailcell{position:absolute;right:0;top:0;width:calc(var(--u)*1.12);height:calc(var(--u)*1.12);background:#f2913b;border-left:1px solid var(--line);border-bottom:1px solid var(--line);
@@ -371,6 +372,9 @@ button:disabled{cursor:not-allowed;opacity:.45}
 
 /* "THE" in the logo */
 .the{font-size:.5em;vertical-align:.45em;margin-right:.12em;letter-spacing:.08em}
+.rdy{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;background:#e9dcc0;color:#6b5a3e;font-size:11px}
+.rdy.on{background:#2fb35a;color:#fff}
+.cdTxt{font-family:'Lilita One',sans-serif;font-weight:400;font-size:22px;color:#c3241c}
 /* language switch */
 .langSeg{display:flex;justify-content:flex-end;gap:4px;margin:-6px 0 10px}
 .langSeg button{padding:5px 10px;border-radius:999px;border:2px solid #000;background:#efe4c8;font-size:13px;color:#1d1a16}
@@ -678,7 +682,7 @@ let G=null, U=50, PAD=18, LOOP=0;
 const NET={role:null,id:null,peer:null,conn:null,conns:{},code:'',pend:{},cmds:{},seq:0,lobby:[],q:Promise.resolve(),started:false};
 const REDRAW=new Set();
 // whose seat is controlled from this device
-const mine=p=>!NET.role||(NET.role==='host'?(p.ctl||'host')==='host':p.ctl===NET.id);
+const mine=p=>!NET.role||(NET.role==='host'?(p.ctl||'host')==='host':(p.cid?p.cid===NET.cid:p.ctl===NET.id));
 const isRemote=p=>NET.role==='host'&&p.human&&p.ctl&&p.ctl!=='host';
 const VIEW={tilt:1,rot:0};
 let PREF={snd:true,tilt:1,rot:0};
@@ -694,7 +698,7 @@ const pName=p=>`<b style="--c:${p.color}">${esc(p.name)}</b>`;
 
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
 function newGame(cfg){
-  G={v:1,players:cfg.players.map((p,i)=>({id:i,name:p.name,token:p.token,color:PCOLORS[i],human:p.human,ctl:p.ctl||'host',money:cfg.money,pos:0,jail:false,jailTries:0,cards:[],out:false})),
+  G={v:1,players:cfg.players.map((p,i)=>({id:i,name:p.name,token:p.token,color:PCOLORS[i],human:p.human,ctl:p.ctl||'host',cid:p.cid||null,money:cfg.money,pos:0,jail:false,jailTries:0,cards:[],out:false})),
     owner:Array(40).fill(-1),houses:Array(40).fill(0),mort:Array(40).fill(false),turn:0,round:1,phase:'start',pot:0,bankH:32,bankT:12,
     deck:{chance:shuffle([...CHANCE.keys()]),chest:shuffle([...CHEST.keys()])},set:{pot:cfg.pot,speed:cfg.speed,auc:cfg.auc},asked:{},log:[]};
 }
@@ -720,7 +724,7 @@ function buildBoard(){
     else if(s.t==='tax')h=`<div class="nm">${nm}</div><div class="ic big">${s.ic}</div><div class="pr">${L('Pay','Betal')} ${M(s.a)}</div>`;
     else if(s.t==='chance')h=`<div class="nm">${L('Chance','Prøv<br>lykken')}</div><div class="qm">?</div>`;
     else if(s.t==='chest')h=`<div class="nm">${L('Potato<br>Sack','Kartoffel-<br>sækken')}</div><div class="ic big" style="margin:auto 0">💰</div>`;
-    else if(s.t==='go'){rot=-45;h=`<div class="cin cgo"><div class="sm">${L('COLLECT ₱200 SALARY AS YOU PASS','MODTAG ₱200 HVER GANG DU PASSERER')}</div><div class="big">${L('GO','START')}</div><div class="arrow">⬅</div></div>`}
+    else if(s.t==='go'){rot=-45;h=`<div class="cin cgo"><div class="sm">${L('COLLECT<br>₱200 SALARY<br>AS YOU PASS','MODTAG ₱200<br>HVER GANG<br>DU PASSERER')}</div><div class="big${LANG==='da'?' long':''}">${L('GO','START')}</div><div class="arrow">⬅</div></div>`}
     else if(s.t==='jail'){rot=0;h=`<div class="jailcell"><div class="bars"></div><b>${L('IN','I')}</b><b style="font-size:1.6em">🚔</b><b>${L('JAIL','FÆNGSEL')}</b></div><div class="jv1"><span>${L('JUST','KUN PÅ')}</span></div><div class="jv2">${L('VISITING','BESØG')}</div>`}
     else if(s.t==='park'){rot=135;h=`<div class="cin"><div>${L('FREE','GRATIS')}</div><div class="ic big">🚗</div><div>${L('PARKING','PARKERING')}</div></div>`}
     else if(s.t==='gojail'){rot=225;h=`<div class="cin"><div>${L('GO TO','GÅ I')}</div><div class="ic big">👮</div><div>${L('JAIL','FÆNGSEL')}</div></div>`}
@@ -947,7 +951,7 @@ function renderPlayers(){
   if(!G)return;syncSoon();
   $('#players').innerHTML=G.players.map(p=>`<div class="pc${p.id===G.turn&&!p.out?' cur':''}${p.out?' out':''}" data-id="${p.id}" style="--pc:${p.color}">
     <div class="pTok">${tokSVG(p.token)}</div>
-    <div class="pName">${esc(p.name)}<small>${p.left?L('🚪 Left','🚪 Gået'):p.out?L('Bankrupt','Konkurs'):!p.human?L('CPU','Computer'):NET.role&&p.ctl!=='host'?'🌐 Online':NET.role?'🏠 Host':L('Player','Spiller')}</small></div>
+    <div class="pName">${esc(p.name)}<small>${p.disc?L('📶 Reconnecting…','📶 Forbinder…'):p.left?L('🚪 Left','🚪 Gået'):p.out?L('Bankrupt','Konkurs'):!p.human?L('CPU','Computer'):NET.role&&p.ctl!=='host'?'🌐 Online':NET.role?'🏠 Host':L('Player','Spiller')}</small></div>
     <div class="pMoney">${p.out?'—':M(p.money)}</div>
     <div class="pChips">${CHIP_ORDER.map(ids=>`<span>${ids.map(i=>`<i class="${G.owner[i]===p.id?'on':''}${G.mort[i]?' m':''}" style="--c:${colorOf(i)}"></i>`).join('')}</span>`).join('')}</div>
     <div class="pFlags">${p.jail?`🔒 ${p.jailTries}/3 `:''}${p.cards.length?'🗝️'.repeat(p.cards.length):''}</div></div>`).join('');
@@ -1531,7 +1535,7 @@ async function gameOver(w,byWorth){
   const rank=[...G.players].sort((a,b)=>(b.out?-1:netWorth(b))-(a.out?-1:netWorth(a)));
   await modal({title:L('🏆 Game over!','🏆 Spillet er slut!'),html:`<div style="text-align:center"><div style="width:90px;height:90px;margin:4px auto 8px;border-radius:50%;border:3px solid #000;background:${w.color};display:flex;align-items:center;justify-content:center">${tokSVG(w.token,64)}</div>
     <p style="font-size:20px">${pName(w)} ${byWorth?L('is the richest tycoon','er den rigeste rigmand'):L('owns all of Spudville','ejer hele Kartoffelby')}! 🎉</p></div>
-    <div class="mg">${rank.map((p,k)=>`<div class="mgRow"><span class="sw" style="background:${p.color}"></span><div class="nm2">${k+1}. ${esc(p.name)}<small>${p.left?L('🚪 Left','🚪 Gået'):p.out?L('Bankrupt','Konkurs'):L('Net worth ','Samlet værdi ')+M(netWorth(p))}</small></div><div></div></div>`).join('')}</div>`,
+    <div class="mg">${rank.map((p,k)=>`<div class="mgRow"><span class="sw" style="background:${p.color}"></span><div class="nm2">${k+1}. ${esc(p.name)}<small>${p.disc?L('📶 Reconnecting…','📶 Forbinder…'):p.left?L('🚪 Left','🚪 Gået'):p.out?L('Bankrupt','Konkurs'):L('Net worth ','Samlet værdi ')+M(netWorth(p))}</small></div><div></div></div>`).join('')}</div>`,
     buttons:[{k:'again',label:L('🎲 Play again','🎲 Spil igen'),cls:'go'},{k:'home',label:L('← All games','← Alle spil')}]}).then(k=>{if(k==='home')location.href='./';else location.reload()});
   REDRAW.clear();
 }
@@ -1574,6 +1578,38 @@ addEventListener('beforeunload',()=>{if(NET.role&&!NET.leaving&&G&&!G.over)quitO
 /* ================= ONLINE (WebRTC via PeerJS) ================= */
 // The host's browser runs the game. Guests receive the state + visual effects and answer when it's their move.
 const PEER_PREFIX='potato-empire-ptg-',PEERJS='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js';
+// Phones on mobile data sit behind carrier NAT and usually need a relay (TURN) to reach each other.
+const ICE={sdpSemantics:'unified-plan',iceServers:[
+  {urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']},{urls:'stun:stun.cloudflare.com:3478'},
+  {urls:['turn:eu-0.turn.peerjs.com:3478','turn:us-0.turn.peerjs.com:3478'],username:'peerjs',credential:'peerjsp'},
+  {urls:['turn:openrelay.metered.ca:80','turn:openrelay.metered.ca:443','turn:openrelay.metered.ca:443?transport=tcp'],username:'openrelayproject',credential:'openrelayproject'}]};
+const peerOpts=()=>window.__PEER_OPTS||{config:ICE,pingInterval:4000};
+// a per-tab id so a guest whose connection drops can get their seat back
+NET.cid=(()=>{try{let c=sessionStorage.getItem('pe_cid');if(!c){c=Math.random().toString(36).slice(2,12);sessionStorage.setItem('pe_cid',c)}return c}catch(e){return Math.random().toString(36).slice(2,12)}})();
+NET.discT={};
+// keep the screen on while hosting / playing online, so the phone doesn't sleep and drop the table
+let WAKE=null;async function wake(){try{if(NET.role&&navigator.wakeLock&&!WAKE){WAKE=await navigator.wakeLock.request('screen');WAKE.addEventListener('release',()=>{WAKE=null})}}catch(e){}}
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState!=='visible'||!NET.role)return;
+  wake();
+  if(NET.peer&&NET.peer.disconnected&&!NET.peer.destroyed){try{NET.peer.reconnect()}catch(e){}}
+  if(NET.role==='guest'&&NET.started&&!NET.ended&&!NET.leaving&&!(NET.conn&&NET.conn.open))guestReconnect();
+});
+// heartbeat: a phone that dies or loses signal doesn't always close the connection, so we ping
+NET.seen={};
+setInterval(()=>{
+  const now=Date.now();
+  if(NET.role==='host'){
+    Object.entries(NET.conns).forEach(([peer,c])=>{
+      if(!NET.seen[peer])NET.seen[peer]=now;
+      try{c.open&&c.send({t:'ping'})}catch(e){}
+      if(now-NET.seen[peer]>12000){delete NET.seen[peer];try{c.close()}catch(e){}hostLost(peer)}
+    });
+  }else if(NET.role==='guest'&&NET.conn&&NET.conn.open&&!NET.ended){
+    if(!NET.lastHost)NET.lastHost=now;
+    if(now-NET.lastHost>15000){NET.lastHost=now;const c=NET.conn;NET.conn=null;try{c.close()}catch(e){}if(NET.started)guestReconnect();else guestLost()}
+  }
+},3000);
 function fx(e,d){if(NET.role==='host'&&NET.started)bcast({t:'fx',e,d})}
 function bcast(m){Object.values(NET.conns).forEach(c=>{try{c.open&&c.send(m)}catch(x){}})}
 let syncT=0;
@@ -1581,7 +1617,8 @@ function syncSoon(){if(NET.role==='host'&&NET.started&&!syncT)syncT=setTimeout(s
 function syncNow(){clearTimeout(syncT);syncT=0;if(NET.role==='host'&&NET.started&&G)bcast({t:'state',G:{...G,log:[]}})}
 function ask(p,spec){
   syncNow();
-  return new Promise(res=>{const id=++NET.seq;NET.pend[id]={res,pid:p.id,spec};const c=NET.conns[p.ctl];if(c&&c.open)c.send({t:'ask',id,pid:p.id,spec});else dropAsk(id)});
+  // a player who is reconnecting keeps the question; it is re-sent when they come back
+  return new Promise(res=>{const id=++NET.seq;NET.pend[id]={res,pid:p.id,spec};const c=NET.conns[p.ctl];if(c&&c.open)c.send({t:'ask',id,pid:p.id,spec});else if(!p.disc)dropAsk(id)});
 }
 function dropAsk(id){ // answer for a player who left
   const x=NET.pend[id];if(!x)return;delete NET.pend[id];const s=x.spec;
@@ -1605,7 +1642,7 @@ const freeTok=(taken,want)=>!taken.includes(want)?want:[...TOKENS.keys()].find(k
 async function hostGame(){
   const box=$('#onlineBox');box.innerHTML=L('<p>⏳ Opening a table…</p>','<p>⏳ Åbner et bord…</p>');
   try{await loadPeer()}catch(e){box.innerHTML=`<p class="err">${e.message}</p>`;return}
-  const tryOpen=()=>new Promise((res,rej)=>{NET.code=newCode();const pr=new Peer(PEER_PREFIX+NET.code,window.__PEER_OPTS||{});pr.on('open',()=>res(pr));pr.on('error',e=>{pr.destroy();rej(e)})});
+  const tryOpen=()=>new Promise((res,rej)=>{NET.code=newCode();const pr=new Peer(PEER_PREFIX+NET.code,peerOpts());pr.on('open',()=>res(pr));pr.on('error',e=>{pr.destroy();rej(e)})});
   let pr;for(let k=0;k<3&&!pr;k++){try{pr=await tryOpen()}catch(e){if(k===2){box.innerHTML=`<p class="err">${L('Could not open an online table','Kunne ikke åbne et online-bord')} (${esc(e.type||e.message)}). ${L('Try again in a moment.','Prøv igen om lidt.')}</p>`;return}}}
   NET.role='host';NET.peer=pr;NET.id='host';NET.lobby=[];
   pr.on('connection',c=>{
@@ -1613,21 +1650,39 @@ async function hostGame(){
     c.on('close',()=>hostLost(c.peer));
     c.on('error',()=>hostLost(c.peer));
   });
-  pr.on('disconnected',()=>{try{pr.reconnect()}catch(e){}});
+  // the matchmaking link drops when the phone switches apps; keep re-registering the table code
+  pr.on('disconnected',()=>{let n=0;const t=setInterval(()=>{if(pr.destroyed||!pr.disconnected||n++>40){clearInterval(t);return}try{pr.reconnect()}catch(e){}},2500);try{pr.reconnect()}catch(e){}});
+  pr.on('error',e=>{if(e.type==='unavailable-id'&&!NET.started)console.warn('table id taken')});
+  wake();
   drawHostLobby();
 }
 function hostMsg(c,m){
   if(!m||typeof m!=='object')return;
+  NET.seen[c.peer]=Date.now();if(m.t==='pong')return;
   if(m.t==='hello'){
+    const cid=String(m.cid||c.peer).slice(0,24);
+    if(NET.started){ // a guest coming back after losing the connection gets their seat again
+      const p=G&&G.players.find(q=>q.cid===cid&&!q.out);
+      if(p){
+        if(p.ctl&&p.ctl!==c.peer)delete NET.conns[p.ctl];
+        p.ctl=c.peer;p.disc=false;NET.conns[c.peer]=c;clearTimeout(NET.discT[p.id]);
+        c.send({t:'start',lang:LANG,rejoin:1});syncNow();
+        Object.entries(NET.pend).forEach(([id,x])=>{if(x.pid===p.id)c.send({t:'ask',id:+id,pid:p.id,spec:x.spec})});
+        log(L(`📶 ${pName(p)} is back!`,`📶 ${pName(p)} er tilbage!`));banner(L(`📶 ${p.name} is back`,`📶 ${p.name} er tilbage`),p.color);renderPlayers();return;
+      }
+    }
+    const again=!NET.started&&NET.lobby.find(g=>g.cid===cid);
+    if(again){delete NET.conns[again.peer];again.peer=c.peer;NET.conns[c.peer]=c;drawHostLobby();return}
     if(!NET.started&&NET.lobby.length+1+CFG.cpu>=7&&CFG.cpu>0)CFG.cpu--;
     if(NET.started||NET.lobby.length+1+CFG.cpu>=7){c.send({t:'full',why:NET.started?L('The game has already started.','Spillet er allerede i gang.'):L('The table is full.','Bordet er fuldt.')});setTimeout(()=>c.close(),300);return}
     NET.conns[c.peer]=c;NET.lobby=NET.lobby.filter(g=>g.peer!==c.peer);
     const taken=[CFG.players[0].token,...NET.lobby.map(g=>g.token)];
-    NET.lobby.push({peer:c.peer,name:String(m.name||'Guest').slice(0,14),token:freeTok(taken,+m.token||0)});SFX.bid();drawHostLobby();return;
+    NET.lobby.push({peer:c.peer,cid,name:String(m.name||'Guest').slice(0,14),token:freeTok(taken,+m.token||0)});SFX.bid();drawHostLobby();return;
   }
   if(m.t==='tok'&&!NET.started){const g=NET.lobby.find(g=>g.peer===c.peer),t=+m.token;
     if(g&&TOKENS[t]&&![CFG.players[0].token,...NET.lobby.filter(x=>x!==g).map(x=>x.token)].includes(t))g.token=t;drawHostLobby();return}
-  if(m.t==='bye'){hostLost(c.peer);try{c.close()}catch(e){}return}
+  if(m.t==='ready'&&!NET.started){const g=NET.lobby.find(g=>g.peer===c.peer);if(g){g.ready=!!m.v;drawHostLobby()}return}
+  if(m.t==='bye'){hostLost(c.peer,true);try{c.close()}catch(e){}return}
   if(m.t==='ans'){const x=NET.pend[m.id];if(x&&G&&G.players[x.pid].ctl===c.peer){delete NET.pend[m.id];x.res(m.v)}return}
   if(m.t==='cmd')hostCmd(c,m);
 }
@@ -1640,12 +1695,16 @@ async function hostCmd(c,m){
   }
   syncNow();c.send({t:'reply',id:m.id,v});
 }
-function hostLost(peer){
+function hostLost(peer,final){
   if(!NET.conns[peer]&&!NET.lobby.some(g=>g.peer===peer))return;
   delete NET.conns[peer];
   if(!NET.started){NET.lobby=NET.lobby.filter(g=>g.peer!==peer);drawHostLobby();return}
   const p=G&&G.players.find(q=>q.ctl===peer);if(!p||p.out)return;
-  leaveSeat(p);
+  if(final){leaveSeat(p);return}
+  // connection dropped (app switch, tunnel…): keep the seat for 60 seconds
+  if(p.disc)return;p.disc=true;
+  log(L(`📶 ${pName(p)} lost the connection – waiting up to 60 seconds…`,`📶 ${pName(p)} mistede forbindelsen – venter op til 60 sekunder…`));banner(L(`📶 ${p.name} is reconnecting…`,`📶 ${p.name} forbinder igen…`),'#3a2616');renderPlayers();
+  NET.discT[p.id]=setTimeout(()=>{if(p.disc&&!p.out){p.disc=false;leaveSeat(p)}},60000);
 }
 function leaveSeat(p){ // a guest left: their property goes back to the bank and the rest play on
   p.human=false;p.ctl='host';p.left=true;p.out=true;p.jail=false;
@@ -1659,27 +1718,38 @@ function leaveSeat(p){ // a guest left: their property goes back to the bank and
 }
 function lobbySeats(){
   const me=CFG.players[0];
-  return[{name:(me.name||'').trim()||'Host',token:me.token,host:1},...NET.lobby.map(g=>({name:g.name,token:g.token,peer:g.peer})),...Array.from({length:CFG.cpu},(_,k)=>({name:CPU_NAMES[k],cpu:1}))];
+  return[{name:(me.name||'').trim()||'Host',token:me.token,host:1,ready:!!NET.hostReady},...NET.lobby.map(g=>({name:g.name,token:g.token,peer:g.peer,cid:g.cid,ready:!!g.ready})),...Array.from({length:CFG.cpu},(_,k)=>({name:CPU_NAMES[k],cpu:1,ready:true}))];
+}
+// lobby: every human presses Ready; when all are ready a short countdown starts the game
+const readyTag=s=>s.cpu?'':(s.ready?`<span class="rdy on">${L('✅ Ready','✅ Klar')}</span>`:`<span class="rdy">${L('⏳ Not ready','⏳ Ikke klar')}</span>`);
+const readyHint=(seats,cd)=>{const h=seats.filter(x=>!x.cpu),r=h.filter(x=>x.ready).length;
+  return cd!=null?`<b class="cdTxt">${L(`🎲 Starting in ${cd}…`,`🎲 Starter om ${cd}…`)}</b>`:seats.length<2?L('Waiting for players… (add a computer player to play right away)','Venter på spillere… (tilføj en computerspiller for at spille med det samme)'):L(`Waiting for everyone to press Ready (${r}/${h.length})`,`Venter på at alle trykker Klar (${r}/${h.length})`)};
+function hostCountdown(seats){
+  const all=seats.length>=2&&seats.every(x=>x.ready);
+  if(all&&NET.cd==null){NET.cd=3;SFX.bid();NET.cdT=setInterval(()=>{NET.cd--;if(NET.cd<=0){clearInterval(NET.cdT);NET.cdT=null;NET.cd=null;hostStart()}else{SFX.click();drawHostLobby()}},1000)}
+  if(!all&&NET.cd!=null){clearInterval(NET.cdT);NET.cdT=null;NET.cd=null}
 }
 function drawHostLobby(){
-  const seats=lobbySeats();
+  if(NET.started)return;
+  const seats=lobbySeats();hostCountdown(seats);
   $('#onlineBox').innerHTML=`<div class="codeBox"><small>${L('Table code','Bordkode')}</small><span class="code">${NET.code}</span><small>${L('Your friends open <u>The Potato Empire</u> on their own device, choose <b>Join</b> and type this code.','Dine venner åbner <u>The Potato Empire</u> på deres egen enhed, vælger <b>Join</b> og skriver koden.')}</small></div>
     ${tokPicker(CFG.players[0].token,NET.lobby.map(g=>g.token),PCOLORS[0])}
-    <div class="lob">${seats.map((s,i)=>`<div class="lobRow" style="--pc:${PCOLORS[i]}"><span class="tk">${s.cpu?'🤖':tokSVG(s.token)}</span><b>${esc(s.name)}</b><small>${s.host?L('🏠 You (host)','🏠 Dig (host)'):s.cpu?'Computer':L('🌐 Joined','🌐 Med')}</small></div>`).join('')}</div>
+    <div class="lob">${seats.map((s,i)=>`<div class="lobRow" style="--pc:${PCOLORS[i]}"><span class="tk">${s.cpu?'🤖':tokSVG(s.token)}</span><b>${esc(s.name)}</b><small>${s.host?L('🏠 You (host)','🏠 Dig (host)'):s.cpu?'Computer':L('🌐 Joined','🌐 Med')} ${readyTag(s)}</small></div>`).join('')}</div>
     <div class="opt" style="margin-top:8px">${L('🤖 Computer players','🤖 Computerspillere')}<div class="seg" id="cpuSeg">${[0,1,2,3,4].map(n=>`<button class="${CFG.cpu===n?'on':''}" ${NET.lobby.length+1+n>6?'disabled':''}>${n}</button>`).join('')}</div></div>
-    <div class="lidBtns"><button class="btn danger" id="leaveBtn">${L('✖ Close table','✖ Luk bordet')}</button><button class="btn go" id="hostStart" ${seats.length<2?'disabled':''}>${L('🎲 Start online game','🎲 Start online-spil')}</button></div>
-    <p class="hint">${seats.length<2?L('Waiting for players… (add a computer player to play right away)','Venter på spillere… (tilføj en computerspiller for at spille med det samme)'):L('Everyone in? Press start!','Er alle med? Tryk start!')}</p>`;
+    <div class="lidBtns"><button class="btn danger" id="leaveBtn">${L('✖ Close table','✖ Luk bordet')}</button><button class="btn green" id="shareBtn">${L('📤 Invite','📤 Inviter')}</button><button class="btn ${NET.hostReady?'':'go'}" id="readyBtn">${NET.hostReady?L('↩ Not ready','↩ Ikke klar'):L("✋ I'm ready","✋ Jeg er klar")}</button></div>
+    <p class="hint">${readyHint(seats,NET.cd)}</p>`;
   $$('#cpuSeg button').forEach((b,n)=>b.onclick=()=>{CFG.cpu=n;SFX.click();drawHostLobby()});
   $$('#onlineBox .tokPick button').forEach(b=>b.onclick=()=>{CFG.players[0].token=+b.dataset.tok;SFX.click();drawHostLobby()});
   $('#leaveBtn').onclick=()=>location.reload();
-  $('#hostStart').onclick=hostStart;
-  bcast({t:'lobby',seats:seats.map(s=>({name:s.name,token:s.token,cpu:!!s.cpu,host:!!s.host,peer:s.peer||null}))});
+  $('#shareBtn').onclick=shareInvite;
+  $('#readyBtn').onclick=()=>{NET.hostReady=!NET.hostReady;SFX.click();drawHostLobby()};
+  bcast({t:'lobby',cd:NET.cd,seats:seats.map(s=>({name:s.name,token:s.token,cpu:!!s.cpu,host:!!s.host,peer:s.peer||null,ready:!!s.ready}))});
 }
 function hostStart(){
-  const seats=lobbySeats();if(seats.length<2)return;
+  const seats=lobbySeats();if(NET.started||seats.length<2||!seats.every(x=>x.ready))return;
   // unique tokens
   const used=new Set(),players=seats.map(s=>{let t=s.cpu?-1:s.token;if(t<0||used.has(t)){t=0;while(used.has(t))t++}used.add(t);
-    return{name:s.name,token:t,human:!s.cpu,ctl:s.peer||'host'}});
+    return{name:s.name,token:t,human:!s.cpu,ctl:s.peer||'host',cid:s.cid}});
   NET.started=true;try{localStorage.setItem('monongoly_setup_v1',JSON.stringify(CFG))}catch(e){}
   newGame({players,money:CFG.money,pot:CFG.pot,speed:CFG.speed,auc:CFG.auc});
   G.online=true;
@@ -1688,6 +1758,12 @@ function hostStart(){
   startFrom(G);syncNow();
 }
 
+async function shareInvite(){
+  const url=location.href.split(/[?#]/)[0]+'?join='+NET.code;
+  const text=L(`Join my game of The Potato Empire! Table code: ${NET.code}`,`Spil The Potato Empire med mig! Bordkode: ${NET.code}`);
+  try{if(navigator.share){await navigator.share({title:'The Potato Empire',text,url});return}}catch(e){if(e&&e.name==='AbortError')return}
+  try{await navigator.clipboard.writeText(text+' '+url);banner(L('📋 Invite link copied','📋 Invitationslink kopieret'),'#2fb35a')}catch(e){prompt(L('Copy this link:','Kopiér dette link:'),url)}
+}
 /* ---- guest ---- */
 async function joinGame(){
   const code=($('#joinCode').value||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
@@ -1695,15 +1771,47 @@ async function joinGame(){
   if(code.length!==4){$('#joinErr').textContent=L('The code has 4 characters.','Koden har 4 tegn.');return}
   box.innerHTML=L('<p>⏳ Connecting to table <b>','<p>⏳ Forbinder til bord <b>')+esc(code)+'</b>…</p>';
   try{await loadPeer()}catch(e){box.innerHTML=`<p class="err">${e.message}</p>`;return}
-  const pr=new Peer(undefined,window.__PEER_OPTS||{});NET.peer=pr;
-  pr.on('error',e=>{if(!NET.started)box.innerHTML=`<p class="err">${e.type==='peer-unavailable'?L('No table found with code <b>'+esc(code)+'</b>. Check the code and that the host is still waiting.','Intet bord fundet med koden <b>'+esc(code)+'</b>. Tjek koden, og at hosten stadig venter.'):L('Connection problem: ','Forbindelsesproblem: ')+esc(e.type||e.message)}</p><div class="lidBtns"><button class="btn" onclick="drawOnline()">${L('↩ Back','↩ Tilbage')}</button></div>`});
-  pr.on('open',id=>{
-    NET.role='guest';NET.id=id;NET.code=code;$('#rulesBox').style.display='none';
-    const c=pr.connect(PEER_PREFIX+code,{reliable:true});NET.conn=c;
-    c.on('open',()=>{const me=CFG.players[0];c.send({t:'hello',name:(me.name||'').trim()||L('Guest','Gæst'),token:me.token});box.innerHTML=L('<p>✅ Connected! Waiting for the host…</p>','<p>✅ Forbundet! Venter på hosten…</p>')});
-    c.on('data',m=>{NET.q=NET.q.then(()=>guestMsg(m)).catch(e=>console.error(e))});
-    c.on('close',guestLost);
+  const pr=new Peer(undefined,peerOpts());NET.peer=pr;NET.code=code;let tries=0;
+  const fail=html=>{if(!NET.started)box.innerHTML=`<p class="err">${html}</p><div class="lidBtns"><button class="btn" onclick="drawOnline()">${L('↩ Back','↩ Tilbage')}</button><button class="btn go" onclick="joinGame()">${L('🔁 Try again','🔁 Prøv igen')}</button></div>`};
+  pr.on('disconnected',()=>{if(!pr.destroyed)try{pr.reconnect()}catch(e){}});
+  pr.on('error',e=>{
+    // the host's phone may be re-registering the table (e.g. after switching apps) – try a few more times
+    if(e.type==='peer-unavailable'&&!NET.started&&++tries<6){box.innerHTML=L(`<p>⏳ Looking for table <b>${esc(code)}</b>… (try ${tries+1}/6)</p>`,`<p>⏳ Leder efter bord <b>${esc(code)}</b>… (forsøg ${tries+1}/6)</p>`);setTimeout(()=>guestConnect(code,box),2500);return}
+    if(NET.started)return;
+    fail(e.type==='peer-unavailable'?L('No table found with code <b>'+esc(code)+'</b>. Check the code and that the host is still waiting.','Intet bord fundet med koden <b>'+esc(code)+'</b>. Tjek koden, og at hosten stadig venter.'):L('Connection problem: ','Forbindelsesproblem: ')+esc(e.type||e.message));
   });
+  pr.on('open',id=>{NET.role='guest';NET.id=id;$('#rulesBox').style.display='none';wake();guestConnect(code,box,fail)});
+}
+// open the data channel to the host (also used to reconnect during a game)
+function guestConnect(code,box,fail){
+  const pr=NET.peer;if(!pr||pr.destroyed)return;
+  const c=pr.connect(PEER_PREFIX+code,{reliable:true});
+  const to=setTimeout(()=>{if(!c.open&&!NET.started&&fail)fail(L('Could not reach the host. On mobile data this can fail – try again, or put one of the phones on Wi-Fi.','Kunne ikke få forbindelse til hosten. På mobildata kan det fejle – prøv igen, eller sæt en af telefonerne på wifi.'))},25000);
+  c.on('open',()=>{clearTimeout(to);NET.conn=c;NET.lastHost=Date.now();const me=CFG.players[0];
+    c.send({t:'hello',cid:NET.cid,name:(me.name||'').trim()||L('Guest','Gæst'),token:me.token});
+    if(!NET.started&&box)box.innerHTML=L('<p>✅ Connected! Waiting for the host…</p>','<p>✅ Forbundet! Venter på hosten…</p>');
+    if(NET.started){NET.reconn=false;$$('.ov.reconn').forEach(o=>o._close&&o._close('x'))}});
+  c.on('data',m=>{if(c!==NET.conn)return;NET.lastHost=Date.now();if(m&&m.t==='ping'){try{c.send({t:'pong'})}catch(e){}return}NET.q=NET.q.then(()=>guestMsg(m)).catch(e=>console.error(e))});
+  c.on('close',()=>{if(c===NET.conn){if(NET.started)guestReconnect();else guestLost()}});
+}
+// during a game: try to get back to the table for up to 55 seconds before giving up
+function guestReconnect(){
+  if(NET.reconn||NET.ended||NET.leaving||(G&&G.over))return;NET.reconn=true;
+  idleMsg(L('📶 Connection lost – reconnecting…','📶 Forbindelsen er tabt – forbinder igen…'));
+  modal({title:L('📶 Reconnecting…','📶 Forbinder igen…'),cls:'reconn',html:L('<p>The connection to the host dropped. Trying to get you back to your seat…</p>','<p>Forbindelsen til hosten blev afbrudt. Prøver at få dig tilbage på din plads…</p>')}).then(()=>{});
+  $$('.ov').pop().classList.add('reconn');
+  const t0=Date.now();
+  const tick=()=>{
+    if(!NET.reconn)return;
+    if(NET.conn&&NET.conn.open){NET.reconn=false;return}
+    if(Date.now()-t0>55000){NET.reconn=false;$$('.ov.reconn').forEach(o=>o._close('x'));guestLost();return}
+    const pr=NET.peer;
+    if(!pr||pr.destroyed){NET.peer=new Peer(undefined,peerOpts());NET.peer.on('open',id=>{NET.id=id;guestConnect(NET.code)});NET.peer.on('error',()=>{})}
+    else if(pr.disconnected){try{pr.reconnect()}catch(e){}}
+    else guestConnect(NET.code);
+    setTimeout(tick,4000);
+  };
+  tick();
 }
 function guestLost(){
   if((G&&G.over)||NET.leaving||NET.ended)return;NET.ended=true;
@@ -1711,15 +1819,19 @@ function guestLost(){
 }
 async function guestMsg(m){
   switch(m.t){
+    case'ping':break;
     case'full':$('#onlineBox').innerHTML=`<p class="err">${esc(m.why)}</p><div class="lidBtns"><button class="btn" onclick="location.reload()">${L('↩ Back','↩ Tilbage')}</button></div>`;break;
-    case'lobby':if(!NET.started){const meS=m.seats.find(x=>x.peer===NET.id),myI=m.seats.indexOf(meS);
-      $('#onlineBox').innerHTML=`<div class="codeBox"><small>${L('Table','Bord')}</small><span class="code">${esc(NET.code)}</span><small>${L("✅ You're in! Waiting for the host to start…",'✅ Du er med! Venter på, at hosten starter…')}</small></div>
+    case'lobby':if(!NET.started){const meS=m.seats.find(x=>x.peer===NET.id),myI=m.seats.indexOf(meS);NET.lastLobby=m;
+      $('#onlineBox').innerHTML=`<div class="codeBox"><small>${L('Table','Bord')}</small><span class="code">${esc(NET.code)}</span><small>${L("✅ You're in! Press <b>Ready</b> when you're set – the game starts when everyone is ready.",'✅ Du er med! Tryk <b>Klar</b>, når du er klar – spillet starter, når alle er klar.')}</small></div>
       ${meS?tokPicker(meS.token,m.seats.filter(x=>x!==meS&&!x.cpu).map(x=>x.token),PCOLORS[myI]):''}
-      <div class="lob">${m.seats.map((s,i)=>`<div class="lobRow" style="--pc:${PCOLORS[i]}"><span class="tk">${s.cpu?'🤖':tokSVG(s.token)}</span><b>${esc(s.name)}</b><small>${s.host?'🏠 Host':s.cpu?'Computer':L('🌐 Player','🌐 Spiller')}</small></div>`).join('')}</div>
-      <div class="lidBtns"><button class="btn danger" onclick="location.reload()">${L('✖ Leave','✖ Forlad')}</button></div>`;
+      <div class="lob">${m.seats.map((s,i)=>`<div class="lobRow" style="--pc:${PCOLORS[i]}"><span class="tk">${s.cpu?'🤖':tokSVG(s.token)}</span><b>${esc(s.name)}</b><small>${s.host?'🏠 Host':s.cpu?'Computer':L('🌐 Player','🌐 Spiller')} ${readyTag(s)}</small></div>`).join('')}</div>
+      <div class="lidBtns"><button class="btn danger" onclick="location.reload()">${L('✖ Leave','✖ Forlad')}</button>${meS?`<button class="btn ${meS.ready?'':'go'}" id="gReadyBtn">${meS.ready?L('↩ Not ready','↩ Ikke klar'):L("✋ I'm ready","✋ Jeg er klar")}</button>`:''}</div>
+      <p class="hint">${readyHint(m.seats,m.cd)}</p>`;
+      if(m.cd!=null)SFX.click();
+      const rb=$('#gReadyBtn');if(rb)rb.onclick=()=>{SFX.click();rb.disabled=true;NET.conn.send({t:'ready',v:!meS.ready})};
       $$('#onlineBox .tokPick button').forEach(b=>b.onclick=()=>{CFG.players[0].token=+b.dataset.tok;SFX.click();NET.conn.send({t:'tok',token:+b.dataset.tok})});}
       break;
-    case'start':NET.started=true;$('#log').innerHTML='';if(m.lang&&m.lang!==LANG){LANG=m.lang;applyLang(false)}break; // everyone plays in the host's language
+    case'start':if(m.rejoin){NET.started=true;break}NET.started=true;$('#log').innerHTML='';if(m.lang&&m.lang!==LANG){LANG=m.lang;applyLang(false)}break; // everyone plays in the host's language
     case'end':if(!NET.ended&&!(G&&G.over)){NET.ended=true;ACT=null;idleMsg(L('🏁 The host ended the game.','🏁 Hosten afsluttede spillet.'));
       modal({title:L('🏁 The host left','🏁 Hosten er gået'),html:L('<p>The host has left, so the game has ended.</p>','<p>Hosten er gået, så spillet er slut.</p>'),buttons:[{k:'r',label:L('↩ Back to menu','↩ Tilbage til menuen'),cls:'go'}]}).then(()=>location.reload())}break;
     case'state':applyState(m.G);break;
@@ -1767,6 +1879,7 @@ function guestAuction(d){
   if(d.turn==null||!mine(P(d.turn)))bb.innerHTML=d.turn!=null?`<div style="color:var(--muted);font-size:14px;padding-top:10px">${esc(P(d.turn).name)} ${L('is thinking…','tænker…')}</div>`:'';
 }
 function guestAsk(m){
+  NET.asks=NET.asks||{};if(NET.asks[m.id])return;NET.asks[m.id]=1; // questions are re-sent after a reconnect – show each only once
   const ans=v=>{if(NET.conn&&NET.conn.open)NET.conn.send({t:'ans',id:m.id,v})};
   const s=m.spec,p=G&&G.players[m.pid];
   switch(s.k){
@@ -1827,12 +1940,14 @@ function drawSetup(){
   seg('optSpeed',[['normal','Normal'],['fast',L('Fast','Hurtig')]],'speed');
   seg('optAuc',[[true,L('On','Til')],[false,L('Off','Fra')]],'auc');
 }
+const JOIN_CODE=(new URLSearchParams(location.search).get('join')||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,4);
+if(JOIN_CODE)CFG.mode='online';
 function drawMode(){
   $$('#modes button').forEach(b=>{b.classList.toggle('on',b.dataset.m===CFG.mode);b.onclick=()=>{if(NET.role)return;CFG.mode=b.dataset.m;SFX.click();drawMode()}});
   const on=CFG.mode==='online';
   $('#localBox').style.display=on?'none':'';$('#startBtn').style.display=on?'none':'';
   $('#onlineBox').style.display=on?'':'none';
-  if(on&&!NET.role)drawOnline();
+  if(on&&!NET.role){drawOnline();if(JOIN_CODE){$('#joinCode').value=JOIN_CODE;$('#joinErr').innerHTML=L('👋 You were invited! Type your name and press <b>Join</b>.','👋 Du er inviteret! Skriv dit navn og tryk <b>Join</b>.');$('#joinErr').style.color='#2a7a3f'}}
 }
 function startFrom(state){
   G=state;$('#setup').classList.add('hide');
@@ -1907,7 +2022,7 @@ function applyLang(persist=true){
 }
 function setLang(l){LANG=l;SFX.click();applyLang(true)}
 (function(){
-  if(CFG.mode!=='online')CFG.mode='local';
+  if(CFG.mode!=='online'||!JOIN_CODE)CFG.mode=JOIN_CODE?'online':'local';
   drawCont();drawSetup();drawMode();
   $$('#langSeg button').forEach(b=>b.onclick=()=>{if(!NET.role)setLang(b.dataset.l)});
   if(LANG!=='en')applyLang(false);else $$('#langSeg button').forEach(b=>b.classList.toggle('on',b.dataset.l===LANG));
