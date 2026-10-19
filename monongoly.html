@@ -65,7 +65,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 button:disabled{cursor:not-allowed;opacity:.45}
 
 /* ===== TOP BAR ===== */
-.top{position:relative;z-index:20;height:52px;display:flex;align-items:center;gap:10px;padding:0 12px;
+.top{position:relative;z-index:45;height:52px;display:flex;align-items:center;gap:10px;padding:0 12px;
   background:linear-gradient(#2c1a0e,#1e1209);border-bottom:2px solid #000;box-shadow:0 3px 12px rgba(0,0,0,.5)}
 .back{color:var(--muted);text-decoration:none;font-size:14px;padding:6px 10px;border-radius:999px;white-space:nowrap}
 .back:hover{background:var(--card);color:var(--txt)}
@@ -338,7 +338,7 @@ button:disabled{cursor:not-allowed;opacity:.45}
 .fcOk{flex:0 0 auto;margin-top:4px;padding:7px 26px;font-size:16px!important}
 
 /* ===== SETUP ===== */
-.setup{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:24px 14px;background:rgba(15,8,3,.6);backdrop-filter:blur(3px)}
+.setup{position:fixed;inset:52px 0 0 0;z-index:40;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:24px 14px;background:rgba(15,8,3,.6);backdrop-filter:blur(3px)}
 .setup.hide{display:none}
 .lid{width:min(620px,100%);border-radius:22px;border:4px solid #000;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.7);background:#fffaf0;color:#1d1a16;margin:auto 0}
 .lidTop{position:relative;padding:28px 20px 22px;text-align:center;background:radial-gradient(circle at 50% 0,#ff6b55,#c3241c 60%,#8e1b1b);overflow:hidden}
@@ -492,6 +492,7 @@ button:disabled{cursor:not-allowed;opacity:.45}
       </div>
       </div>
       <div class="lidBtns">
+        <a class="btn" href="./" id="homeBtn" style="text-decoration:none;text-align:center">← All games</a>
         <button class="btn" id="rulesBtn">📖 Rules</button>
         <button class="btn go" id="startBtn">🎲 Start game</button>
       </div>
@@ -898,10 +899,10 @@ function renderPlayers(){
   if(!G)return;syncSoon();
   $('#players').innerHTML=G.players.map(p=>`<div class="pc${p.id===G.turn&&!p.out?' cur':''}${p.out?' out':''}" data-id="${p.id}" style="--pc:${p.color}">
     <div class="pTok">${tokSVG(p.token)}</div>
-    <div class="pName">${esc(p.name)}<small>${p.out?'Bankrupt':!p.human?'CPU':NET.role&&p.ctl!=='host'?'🌐 Online':NET.role?'🏠 Host':'Player'}</small></div>
+    <div class="pName">${esc(p.name)}<small>${p.left?'🚪 Left':p.out?'Bankrupt':!p.human?'CPU':NET.role&&p.ctl!=='host'?'🌐 Online':NET.role?'🏠 Host':'Player'}</small></div>
     <div class="pMoney">${p.out?'—':M(p.money)}</div>
     <div class="pChips">${CHIP_ORDER.map(ids=>`<span>${ids.map(i=>`<i class="${G.owner[i]===p.id?'on':''}${G.mort[i]?' m':''}" style="--c:${colorOf(i)}"></i>`).join('')}</span>`).join('')}</div>
-    <div class="pFlags">${p.jail?'🔒':''}${p.cards.length?'🗝️'.repeat(p.cards.length):''}</div></div>`).join('');
+    <div class="pFlags">${p.jail?`🔒 ${p.jailTries}/3 `:''}${p.cards.length?'🗝️'.repeat(p.cards.length):''}</div></div>`).join('');
   $$('#players .pc').forEach(el=>el.onclick=()=>showPortfolio(G.players[+el.dataset.id]));
   const p=cur();$('#turnName').innerHTML=G.over?'🏆 Game over':mine(p)&&p.human&&NET.role?'🎲 Your turn!':p.name==='You'?'Your turn':`${esc(p.name)}'s turn`;$('#roundNo').textContent='Round '+G.round;
   const pot=$('#pot');pot.textContent='🅿️ Jackpot '+M(G.pot);pot.classList.toggle('on',G.set.pot&&G.pot>0);
@@ -1027,6 +1028,7 @@ function aiRaise(p,amt){
   return p.money>=amt;
 }
 async function bankrupt(p,to){
+  if(p.out)return;
   const toP=to&&to.id!==undefined?to:null;
   banner(`☠️ ${p.name} is bankrupt!`,'#3a2616');SFX.bad();
   log(`☠️ ${pName(p)} is <b>bankrupt</b>${toP?' — everything goes to '+pName(toP):''}!`);
@@ -1068,8 +1070,10 @@ async function takeTurn(p){
     if(r==='stay'||r==='done'){if(!p.out)await endPhase(p);return}
   }
   while(true){
+    if(p.out)return;
     if(p.human)await choose(p,()=>[{k:'roll',label:'🎲 Roll dice',cls:'go'}],`${pName(p)}, roll the dice!${G.dbl?' <b>(Doubles – roll again!)</b>':''}`);
     else{idleMsg(`🎲 ${esc(p.name)} is rolling…`);await sleep(400*SP())}
+    if(p.out)return;
     const[a,b]=await rollDice();
     const dbl=a===b;
     log(`${pName(p)} rolled ${a} + ${b} = <b>${a+b}</b>${dbl?' — doubles!':''}`);
@@ -1089,17 +1093,18 @@ function passDevice(p){
 }
 async function jailTurn(p){
   let ch;
-  if(p.human)ch=await choose(p,()=>[{k:'roll',label:'🎲 Roll for doubles',cls:'go'},{k:'pay',label:`Pay ${M(50)} bail`,dis:p.money<50},...(p.cards.length?[{k:'card',label:'🗝️ Use Get Out of Jail Free'}]:[])],
-    `🔒 ${pName(p)} is in Jail (try ${p.jailTries+1} of 3). Roll doubles, pay bail or use a card.`);
+  // house rule: you must roll doubles (3 tries) or use a Get Out of Jail Free card – no paying out early
+  if(p.human)ch=await choose(p,()=>[{k:'roll',label:`🎲 Roll for doubles (${p.jailTries+1}/3)`,cls:'go'},...(p.cards.length?[{k:'card',label:'🗝️ Use Get Out of Jail Free'}]:[])],
+    `🔒 ${pName(p)} is in Jail – try ${p.jailTries+1} of 3. Roll doubles to get out${p.cards.length?' or use your card':''}.${p.jailTries===2?' <b>Last try: no doubles = pay '+M(50)+' and move.</b>':''}`);
   else{ch=aiJailChoice(p);await sleep(500*SP())}
+  if(p.out)return'out';
   if(ch==='card'){const t=p.cards.pop();G.deck[t].push(DECKS[t].findIndex(c=>c.k==='free'));p.jail=false;p.jailTries=0;log(`${pName(p)} used a Get Out of Jail Free card. 🗝️`);layoutTokens();renderPlayers();return'free'}
-  if(ch==='pay'){if(!await pay(p,50,potOrBank()))return'out';p.jail=false;p.jailTries=0;log(`${pName(p)} paid ${M(50)} bail.`);layoutTokens();renderPlayers();return'free'}
   const[a,b]=await rollDice();
   log(`${pName(p)} rolled ${a} + ${b} in Jail.`);
   if(a===b){p.jail=false;p.jailTries=0;banner('🎉 Doubles! Free!','#2fb35a');log(`Doubles! ${pName(p)} walks free.`);renderPlayers();await moveSteps(p,a+b);await land(p,a+b);return'done'}
   p.jailTries++;
-  if(p.jailTries>=3){log(`Third try failed – ${pName(p)} must pay ${M(50)} bail.`);if(!await pay(p,50,potOrBank()))return'out';p.jail=false;p.jailTries=0;renderPlayers();await moveSteps(p,a+b);await land(p,a+b);return'done'}
-  log(`${pName(p)} stays in Jail.`);return'stay';
+  if(p.jailTries>=3){banner(`🔒 3 tries used – pay ${M(50)}`,'#3a2616');log(`Third try failed – ${pName(p)}: pay ${M(50)} bail and move on.`);await sleep(700);if(!await pay(p,50,potOrBank()))return'out';p.jail=false;p.jailTries=0;renderPlayers();await moveSteps(p,a+b);await land(p,a+b);return'done'}
+  banner(`🔒 No doubles – ${p.jailTries}/3`,'#3a2616');log(`No doubles – ${pName(p)}: still in Jail (${p.jailTries}/3 tries used).`);renderPlayers();return'stay';
 }
 async function endPhase(p){
   G.phase='end';save();
@@ -1134,8 +1139,9 @@ async function offerBuy(p,i){
       const k=await askModal(p,{html:deedHTML(i)+`<p class="q">${pName(p)}, buy <b>${s.n}</b> for <b>${M(s.p)}</b>?<br><small>You have ${M(p.money)}</small></p>${p.money<s.p?'<p class="warn" style="text-align:center">Not enough cash – raise money first or let it go to auction.</p>':''}`,
         buttons:[{k:'buy',label:'✅ Buy '+M(s.p),cls:'go',dis:p.money<s.p},...(p.money<s.p&&owned(p.id).length?[{k:'raise',label:'🏠 Raise money'}]:[]),{k:'no',label:G.set.auc?'🔨 Auction':'No thanks'}]});
       if(k==='raise'){await manageFor(p);continue}
-      buy=k==='buy';break;
+      buy=k==='buy'&&!p.out;break;
     }
+    if(p.out)return;
   }else{await sleep(500*SP());buy=aiWantsBuy(p,i)}
   if(buy){addMoney(p,-s.p);G.owner[i]=p.id;SFX.buy();renderTile(i);flashTile(i);log(`${pName(p)} bought <b>${s.n}</b> for ${M(s.p)}.`);
     if(!p.human)banner(`🏠 ${p.name} bought ${s.n}`,p.color);renderPlayers()}
@@ -1260,7 +1266,7 @@ function aiBid(p,i,high){
 function aiJailChoice(p){
   const free=BUYABLE.filter(i=>G.owner[i]<0).length;
   const danger=BUYABLE.some(i=>G.owner[i]>=0&&G.owner[i]!==p.id&&G.houses[i]>=3);
-  if(free>6&&!danger){if(p.cards.length)return'card';if(p.money>=150)return'pay'}
+  if(free>6&&!danger&&p.cards.length)return'card';
   if(p.jailTries>=2&&p.cards.length)return'card';
   return'roll';
 }
@@ -1425,7 +1431,7 @@ function deedHTML(i){
 function showSpace(i){
   const s=SPACES[i];
   if(s.p){modal({html:deedHTML(i),buttons:[{k:'x',label:'Close'}],dismiss:'x'});return}
-  const D={go:['🏁 GO','Collect ₱200 salary every time you pass or land on GO.'],jail:['🔒 Jail','Just visiting? Relax. In Jail? Roll doubles, pay ₱50 bail or use a Get Out of Jail Free card. After three failed tries you must pay.'],
+  const D={go:['🏁 GO','Collect ₱200 salary every time you pass or land on GO.'],jail:['🔒 Jail','Just visiting? Relax. In Jail? You get 3 tries to roll doubles, or use a Get Out of Jail Free card. After the third miss you pay ₱50 and move.'],
     park:['🅿️ Free Parking',G&&G.set.pot?`Jackpot house rule: taxes and fines go to the middle of the board. Land here to win it all! Current jackpot: <b>${M(G.pot)}</b>.`:'A free resting place. Nothing happens here.'],
     gojail:['👮 Go To Jail','Go directly to Jail. Do not pass GO, do not collect ₱200.'],chance:['❓ Chance','Draw the top Chance card and do what it says.'],chest:['💰 Potato Sack','Draw the top Potato Sack card and do what it says.'],
     tax:[s.ic+' '+s.n,`Pay ${M(s.a||0)} to the bank${G&&G.set.pot?' (it goes into the Free Parking jackpot)':''}.`]};
@@ -1447,7 +1453,7 @@ function showRules(){
   <p>🏨 <b>Build:</b> houses must be built evenly across a set. Four houses can become a hotel. Rents skyrocket!</p>
   <p>🚂 <b>Stations</b> earn more the more you own. 💡 <b>Utilities</b> earn 4× or 10× the dice.</p>
   <p>❓ <b>Chance</b> & 💰 <b>Potato Sack</b> cards can help… or hurt.</p>
-  <p>🔒 <b>Jail:</b> roll doubles, pay ₱50 or use a Get Out of Jail Free card. Visitors are safe.</p>
+  <p>🔒 <b>Jail:</b> you get 3 tries to roll doubles (or use a Get Out of Jail Free card). After the third miss you pay ₱50 and move. Visitors are safe.</p>
   <p>🤝 <b>Trade</b> streets and cash with other players at any time on your turn. Mortgage property for quick cash when you're broke.</p>
   <p>🅿️ <b>House rule:</b> with the jackpot on, all taxes and fines go to Free Parking – land there to win the pile!</p>`});
 }
@@ -1459,7 +1465,7 @@ async function gameOver(w,byWorth){
   const rank=[...G.players].sort((a,b)=>(b.out?-1:netWorth(b))-(a.out?-1:netWorth(a)));
   await modal({title:'🏆 Game over!',html:`<div style="text-align:center"><div style="width:90px;height:90px;margin:4px auto 8px;border-radius:50%;border:3px solid #000;background:${w.color};display:flex;align-items:center;justify-content:center">${tokSVG(w.token,64)}</div>
     <p style="font-size:20px">${pName(w)} ${byWorth?'is the richest tycoon':'owns all of Mononga'}! 🎉</p></div>
-    <div class="mg">${rank.map((p,k)=>`<div class="mgRow"><span class="sw" style="background:${p.color}"></span><div class="nm2">${k+1}. ${esc(p.name)}<small>${p.out?'Bankrupt':'Net worth '+M(netWorth(p))}</small></div><div></div></div>`).join('')}</div>`,
+    <div class="mg">${rank.map((p,k)=>`<div class="mgRow"><span class="sw" style="background:${p.color}"></span><div class="nm2">${k+1}. ${esc(p.name)}<small>${p.left?'🚪 Left':p.out?'Bankrupt':'Net worth '+M(netWorth(p))}</small></div><div></div></div>`).join('')}</div>`,
     buttons:[{k:'again',label:'🎲 Play again',cls:'go'},{k:'home',label:'🥔 More games'}]}).then(k=>{if(k==='home')location.href='./';else location.reload()});
   REDRAW.clear();
 }
@@ -1467,15 +1473,36 @@ function confetti(){const c=['#e63946','#ffcb52','#2fb35a','#2a7de1','#ff6fae','
 
 /* ================= MENU ================= */
 async function openMenu(){
-  const k=await modal({title:'☰ Menu',dismiss:'x',html:`<p style="color:var(--muted);font-size:13px">Your game is saved automatically at the start of every turn.</p>`,
-    buttons:[{k:'rules',label:'📖 Rules'},...(G&&!G.over&&NET.role!=='guest'?[{k:'finish',label:'🏁 Finish now – richest wins'}]:[]),{k:'new',label:'🆕 New game',cls:'danger'},{k:'home',label:'🥔 More games'},{k:'x',label:'Close',cls:'go'}]});
+  const inGame=G&&!G.over;
+  const note=!inGame?'':NET.role==='host'?'You are hosting: leaving ends the game for everyone.':NET.role==='guest'?'Leaving removes you from the game – the others keep playing.':'Your game is saved automatically at the start of every turn.';
+  const k=await modal({title:'☰ Menu',dismiss:'x',html:`<p style="color:var(--muted);font-size:13px">${note}</p>`,
+    buttons:[...(inGame?[{k:'leave',label:'🚪 Leave to menu',cls:'green'}]:[]),{k:'rules',label:'📖 Rules'},...(G&&!G.over&&NET.role!=='guest'?[{k:'finish',label:'🏁 Finish now – richest wins'}]:[]),{k:'new',label:'🆕 New game',cls:'danger'},{k:'home',label:'🥔 More games'},{k:'x',label:'Close',cls:'go'}]});
   if(k==='rules')showRules();
-  else if(k==='home')location.href='./';
+  else if(k==='leave')leaveGame();
+  else if(k==='home'){if(!inGame||!NET.role||await confirmLeave()){quitOnline();location.href='./'}}
   else if(k==='new'){if(!G||G.over||NET.role==='guest'||await modal({title:'Start a new game?',html:'<p>The current game will be lost.</p>',buttons:[{k:'y',label:'Yes, new game',cls:'danger'},{k:'n',label:'Cancel'}]})==='y'){try{localStorage.removeItem(SAVE_KEY)}catch(e){}location.reload()}}
   else if(k==='finish'){if(await modal({title:'Finish the game?',html:'<p>The player with the highest net worth (cash + property + buildings) wins.</p>',buttons:[{k:'y',label:'🏁 Finish',cls:'go'},{k:'n',label:'Keep playing'}]})==='y'){
     const w=alive().sort((a,b)=>netWorth(b)-netWorth(a))[0];ACT=null;Object.values(NET.pend).forEach(x=>x.res(null));gameOver(w,true)}}
 }
 
+
+async function confirmLeave(){
+  if(!NET.role)return true;
+  return await modal({title:'🚪 Leave the game?',html:NET.role==='host'?'<p>You are the host – the game will <b>end for everyone</b>.</p>':'<p>You will be removed from the game. The other players keep playing.</p>',
+    buttons:[{k:'y',label:'🚪 Leave',cls:'danger'},{k:'n',label:'Stay'}]})==='y';
+}
+function quitOnline(){ // tell the table we're going
+  if(NET.role==='host'&&NET.started){bcast({t:'end',why:'host'});try{localStorage.removeItem(SAVE_KEY)}catch(e){}}
+  if(NET.role==='guest'&&NET.conn&&NET.conn.open){try{NET.conn.send({t:'bye'})}catch(e){}}
+  NET.leaving=true;
+}
+async function leaveGame(){
+  if(!await confirmLeave())return;
+  if(!NET.role){save();await modal({title:'💾 Game saved',html:'<p>Your game is saved. Press <b>Continue</b> on the start screen to carry on from the start of this turn.</p>',buttons:[{k:'ok',label:'OK',cls:'go'}]})}
+  quitOnline();
+  setTimeout(()=>location.reload(),NET.role?350:0);
+}
+addEventListener('beforeunload',()=>{if(NET.role&&!NET.leaving&&G&&!G.over)quitOnline()});
 
 /* ================= ONLINE (WebRTC via PeerJS) ================= */
 // The host's browser runs the game. Guests receive the state + visual effects and answer when it's their move.
@@ -1533,6 +1560,7 @@ function hostMsg(c,m){
   }
   if(m.t==='tok'&&!NET.started){const g=NET.lobby.find(g=>g.peer===c.peer),t=+m.token;
     if(g&&TOKENS[t]&&![CFG.players[0].token,...NET.lobby.filter(x=>x!==g).map(x=>x.token)].includes(t))g.token=t;drawHostLobby();return}
+  if(m.t==='bye'){hostLost(c.peer);try{c.close()}catch(e){}return}
   if(m.t==='ans'){const x=NET.pend[m.id];if(x&&G&&G.players[x.pid].ctl===c.peer){delete NET.pend[m.id];x.res(m.v)}return}
   if(m.t==='cmd')hostCmd(c,m);
 }
@@ -1549,11 +1577,18 @@ function hostLost(peer){
   if(!NET.conns[peer]&&!NET.lobby.some(g=>g.peer===peer))return;
   delete NET.conns[peer];
   if(!NET.started){NET.lobby=NET.lobby.filter(g=>g.peer!==peer);drawHostLobby();return}
-  const p=G&&G.players.find(q=>q.ctl===peer);if(!p)return;
-  p.human=false;p.ctl='host';
-  log(`🔌 ${pName(p)} left the table – a computer player takes over.`);banner(`🔌 ${p.name} disconnected`,'#3a2616');
+  const p=G&&G.players.find(q=>q.ctl===peer);if(!p||p.out)return;
+  leaveSeat(p);
+}
+function leaveSeat(p){ // a guest left: their property goes back to the bank and the rest play on
+  p.human=false;p.ctl='host';p.left=true;p.out=true;p.jail=false;
+  for(const i of owned(p.id)){if(G.houses[i]===5){G.bankT++;G.bankH+=4}else G.bankH+=G.houses[i];G.houses[i]=0;G.owner[i]=-1;G.mort[i]=false;renderTile(i)}
+  p.cards.forEach(t=>G.deck[t].push(DECKS[t].findIndex(c=>c.k==='free')));p.cards=[];p.money=0;
+  log(`🚪 ${pName(p)} left the game. Their property goes back to the bank.`);banner(`🚪 ${p.name} left the game`,'#3a2616');SFX.bad();
+  const t=tokEl(p);if(t){t.classList.add('gone');setTimeout(()=>t.remove(),900)}
   Object.keys(NET.pend).forEach(id=>{if(NET.pend[id].pid===p.id)dropAsk(id)});
-  renderPlayers();
+  renderPlayers();syncNow();
+  if(alive().length<=1&&!G.over){LOOP++;ACT=null;setTimeout(()=>gameOver(alive()[0]),600)}
 }
 function lobbySeats(){
   const me=CFG.players[0];
@@ -1604,8 +1639,8 @@ async function joinGame(){
   });
 }
 function guestLost(){
-  if(G&&G.over)return;
-  modal({title:'🔌 Connection lost',html:'<p>The connection to the host was lost.</p>',buttons:[{k:'r',label:'↩ Back to start',cls:'go'}]}).then(()=>location.reload());
+  if((G&&G.over)||NET.leaving||NET.ended)return;NET.ended=true;
+  modal({title:'🔌 Game ended',html:'<p>The connection to the host was lost, so the game has ended.</p>',buttons:[{k:'r',label:'↩ Back to menu',cls:'go'}]}).then(()=>location.reload());
 }
 async function guestMsg(m){
   switch(m.t){
@@ -1618,6 +1653,8 @@ async function guestMsg(m){
       $$('#onlineBox .tokPick button').forEach(b=>b.onclick=()=>{CFG.players[0].token=+b.dataset.tok;SFX.click();NET.conn.send({t:'tok',token:+b.dataset.tok})});}
       break;
     case'start':NET.started=true;$('#log').innerHTML='';break;
+    case'end':if(!NET.ended&&!(G&&G.over)){NET.ended=true;ACT=null;idleMsg('🏁 The host ended the game.');
+      modal({title:'🏁 The host left',html:'<p>The host has left, so the game has ended.</p>',buttons:[{k:'r',label:'↩ Back to menu',cls:'go'}]}).then(()=>location.reload())}break;
     case'state':applyState(m.G);break;
     case'fx':await guestFx(m.e,m.d);break;
     case'ask':guestAsk(m);break;
