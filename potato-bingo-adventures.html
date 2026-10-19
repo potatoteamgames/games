@@ -279,6 +279,10 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
 .afkopts{display:flex;gap:12px;justify-content:center;margin:10px 0}
 .afkb{font-size:44px;width:80px;height:80px;border-radius:20px;background:#0005;border:3px solid var(--line)}
 .afkb:hover{border-color:var(--gold);transform:scale(1.06)}
+.wsearch{display:flex;align-items:center;gap:8px;background:#0005;border:2px solid var(--line);border-radius:14px;padding:0 12px;margin-bottom:10px}
+.wsearch:focus-within{border-color:var(--gold)}
+.wsearch input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--txt);font:inherit;font-size:16px;padding:12px 0}
+.wsearch input::placeholder{color:var(--muted);font-weight:700}
 .wiki{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
 .wcard{display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:16px;background:var(--card);border:2px solid var(--line);border-left:5px solid var(--rc)}
 .wcard.own{cursor:pointer;background:linear-gradient(135deg,#2bb38a22,var(--card) 50%)}
@@ -1077,25 +1081,32 @@ function vUp(){
   }
   h+=`<p class="note" style="margin-top:6px">💎 Get gems from trophies, daily quests, the lucky wheel, level-ups and 💎 bingo squares.</p></div>`;view.innerHTML=h;
 }
-UI.wsrc='all';UI.wslot='all';UI.wrar='all';
+UI.wsrc='all';UI.wslot='all';UI.wrar='all';UI.wq='';
+// search filters the rendered cards in place, so typing never loses focus
+function wikiSearch(){const q=UI.wq.trim().toLowerCase(),words=q.split(/\s+/).filter(Boolean);let n=0;
+  document.querySelectorAll('.wcard').forEach(c=>{const ok=words.every(w=>c.dataset.q.includes(w));c.style.display=ok?'':'none';if(ok)n++});
+  const cnt=$('#wcount');if(cnt)cnt.textContent=`Showing ${n} item${n===1?'':'s'}${q?` for "${UI.wq.trim()}"`:''}.`;const e=$('#wempty');if(e)e.style.display=n?'none':''}
 function vWiki(){
   const all=Object.values(ITEMS),own=all.filter(it=>S.gear[it.id]).length;
   const chip=(k,v,l)=>`<button class="${UI[k]===v?'on':''}" data-a="wf" data-k="${k}" data-v="${v}">${l}</button>`;
   let h=`<div class="pad">${phead('📖','Item Wiki',`All <b>${all.length}</b> items in the game: where to get them, what they do and what they sell for. You have found <b>${own}</b>.`)}
    <div class="bar" style="margin-bottom:14px"><i style="width:${own/all.length*100}%"></i></div>
+   <div class="wsearch"><span>🔍</span><input id="wq" type="search" placeholder="Search items – e.g. dragon, auto-daub, mythic, hat, Peru…" value="${UI.wq.replace(/"/g,'&quot;')}" autocomplete="off"></div>
    <div class="seg">${[['all','All'],['chest','🎁 From chests'],['shop','🛍️ From shops']].map(([v,l])=>`<button class="${UI.wsrc===v?'on':''}" data-a="wf" data-k="wsrc" data-v="${v}">${l}</button>`).join('')}</div>
    <div class="landchips">${chip('wslot','all','All slots')}${SLOTS.map(x=>chip('wslot',x.k,x.e+' '+x.n)).join('')}</div>
    <div class="landchips">${chip('wrar','all','All rarities')}${RAR.map((r,j)=>`<button class="${UI.wrar===String(j)?'on':''}" data-a="wf" data-k="wrar" data-v="${j}" style="color:${r.c}">● ${r.n}</button>`).join('')}</div>`;
   const list=all.filter(it=>(UI.wsrc==='all'||(UI.wsrc==='chest')===!!it.chest)&&(UI.wslot==='all'||it.slot===UI.wslot)&&(UI.wrar==='all'||it.r===+UI.wrar))
     .sort((a,b)=>a.r-b.r||(a.chest?1:0)-(b.chest?1:0)||(a.land||0)-(b.land||0));
-  h+=`<p class="note">Showing ${list.length} item${list.length===1?'':'s'}. Tap an item you own to wear, upgrade or sell it.</p><div class="wiki">`;
+  h+=`<p class="note"><span id="wcount">Showing ${list.length} item${list.length===1?'':'s'}.</span> Tap an item you own to wear, upgrade or sell it.</p><div class="empty" id="wempty" style="display:none"><div class="ee">🔎</div>No items match your search.</div><div class="wiki">`;
   list.forEach(it=>{const lv=S.gear[it.id],mx=RAR[it.r].max,sl=slotOf(it.slot),s1=itemStat(it,1),sM=itemStat(it,mx);
     const src=it.chest?`🎁 ${CHESTS.filter(c=>c.w[it.r]).map(c=>c.n.replace(' Chest','')).join(', ')} chest`:(it.land<S.unlocked?`🛍️ Shop in ${LANDS[it.land].e} ${LANDS[it.land].n} · 🪙 ${fmt(it.price)}`:`🔒 Shop in ${LANDS[it.land].n} (not unlocked yet)`);
-    h+=`<div class="wcard ${lv?'own':''}" style="--rc:${RAR[it.r].c}" ${lv?`data-a="itemInfo" data-id="${it.id}"`:''}>
+    const q=[it.n,sl.n,RAR[it.r].n,it.chest?'chest':'shop '+LANDS[it.land].n,lv?'owned':'',...Object.keys(it.st).map(k=>k==='claim'?'auto-bingo autobingo':STAT[k][0])].join(' ').toLowerCase();
+    h+=`<div class="wcard ${lv?'own':''}" style="--rc:${RAR[it.r].c}" data-q="${q.replace(/"/g,'')}" ${lv?`data-a="itemInfo" data-id="${it.id}"`:''}>
       <div class="wtop"><div class="wie">${it.e}</div><div style="min-width:0"><b>${it.n}</b><div>${rarTag(it.r)} <span class="small muted">${sl.e} ${sl.n}</span></div></div>${lv?`<span class="wown">✔ Lv ${lv}</span>`:''}</div>
       <div class="wst">${Object.keys(s1).map(k=>k==='claim'?'<span>🤖 Auto-BINGO</span>':`<span>${STAT[k][0]}: <b>+${s1[k]}${STAT[k][1]}</b> → <b style="color:var(--mint)">+${sM[k]}${STAT[k][1]}</b></span>`).join('')}<span class="small muted">Level 1 → max level ${mx}</span></div>
       <div class="wft"><span>${src}</span><span class="wsell">${it.chest?`Sells for 🎟️ <b>${sellVal(it,1)}</b>–<b>${sellVal(it,mx)}</b>`:'Can\'t be sold'}</span></div></div>`});
   h+=`</div></div>`;view.innerHTML=h;
+  const inp=$('#wq');inp.addEventListener('input',()=>{UI.wq=inp.value;wikiSearch()});if(UI.wq)wikiSearch();
 }
 function vMore(){
   const d=quests(),qn=d.q.filter(q=>q.p>=q.n&&!q.c).length+(d.spins===0?1:0)+(S.login.last!==today()?1:0),an=Object.keys(S.ach).length-S.achSeen;
