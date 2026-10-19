@@ -173,13 +173,21 @@ button:disabled{cursor:not-allowed;opacity:.45}
 .tokSh{position:absolute;width:calc(var(--u)*.46);height:calc(var(--u)*.46);left:calc(var(--u)*-.23);top:calc(var(--u)*-.23);border-radius:50%;
   background:radial-gradient(circle,rgba(0,0,0,.5),transparent 70%);transform:translateZ(1px)}
 .tokL{position:absolute;left:0;top:0;transform-style:preserve-3d}
-.tokB{position:absolute;width:calc(var(--u)*.62);height:calc(var(--u)*.62);left:calc(var(--u)*-.31);top:calc(var(--u)*-.62);transform-origin:50% 100%;
-  transform:translateZ(2px) rotateZ(calc(var(--rz) * -1)) rotateX(calc(var(--tilt) * -1));transition:transform .9s cubic-bezier(.3,.7,.25,1)}
-.flat .tokB{top:calc(var(--u)*-.31);transform-origin:50% 50%}
+.tokB{position:absolute;width:calc(var(--u)*.8);height:calc(var(--u)*.8);left:calc(var(--u)*-.4);top:calc(var(--u)*-.8);transform-origin:50% 100%;
+  transform:translateZ(calc(var(--u)*.1 + 1px)) rotateZ(calc(var(--rz) * -1)) rotateX(calc(var(--tilt) * -1));transition:transform .9s cubic-bezier(.3,.7,.25,1)}
+.flat .tokB{top:calc(var(--u)*-.4);transform-origin:50% 50%}
 .tokB svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 1px 0 rgba(0,0,0,.5))}
-.tokRing{position:absolute;width:calc(var(--u)*.42);height:calc(var(--u)*.42);left:calc(var(--u)*-.21);top:calc(var(--u)*-.21);border-radius:50%;
-  background:radial-gradient(circle at 35% 30%,#fff8,transparent 50%),var(--pc);border:2px solid #000;transform:translateZ(1.5px)}
-.tok.cur .tokRing{animation:ringPulse 1.2s ease-in-out infinite}
+.tokBase{position:absolute;left:0;top:0;transform-style:preserve-3d}
+.tokBase i{position:absolute;width:calc(var(--u)*.48);height:calc(var(--u)*.48);left:calc(var(--u)*-.24);top:calc(var(--u)*-.24);border-radius:50%;
+  background:color-mix(in srgb,var(--pc) 70%,#000);border:1px solid #000}
+.tokBase i.top{background:radial-gradient(circle at 35% 30%,#fff9,transparent 50%),var(--pc);border:2px solid #000}
+.tok.cur .tokBase i.top{animation:ringPulse 1.2s ease-in-out infinite}
+.tokB{transform-style:preserve-3d}
+.tok3{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateY(-30deg);transform-origin:50% 100%}
+.tok.cur .tok3{animation:spin3 5s linear infinite}
+@keyframes spin3{from{transform:rotateY(0)}to{transform:rotateY(360deg)}}
+.tok3 .sl{position:absolute;inset:0}
+.tok3 .sl svg{filter:none}
 @keyframes ringPulse{50%{box-shadow:0 0 0 calc(var(--u)*.08) var(--pc),0 0 calc(var(--u)*.3) var(--pc)}}
 .tok.gone{opacity:0;transition:opacity .8s}
 
@@ -362,6 +370,12 @@ button:disabled{cursor:not-allowed;opacity:.45}
 .hint{font-size:12px;color:#6b5a3e;margin-top:10px;text-align:center}
 
 /* modes / online lobby */
+.tokPick{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 2px}
+.tokPick button{width:46px;height:46px;border-radius:50%;border:2px solid #000;background:radial-gradient(circle at 35% 30%,#fff8,transparent 55%),#d8c9a3;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 3px 0 #000;transition:transform .15s}
+.tokPick button svg{width:32px;height:32px}
+.tokPick button.on{background:radial-gradient(circle at 35% 30%,#fff8,transparent 55%),var(--pc,#ffcb52);outline:3px solid #ffcb52;transform:scale(1.12)}
+.tokPick button:disabled{opacity:.25}
+.tokPickL{font-size:12.5px;color:#6b5a3e}
 .modes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px}
 .modes button{padding:10px 8px;border-radius:14px;border:3px solid #000;background:#efe4c8;font-family:'Lilita One',sans-serif;font-size:17px;color:#1d1a16;box-shadow:0 4px 0 #000;line-height:1.15}
 .modes button small{display:block;font-family:Nunito;font-weight:800;font-size:11.5px;color:#6b5a3e;margin-top:2px}
@@ -590,6 +604,12 @@ const TOKENS=[
   {n:'Boot',s:'<path d="M17 5h19v30c0 4 4 6 10 8 8 2 13 5 13 11v4H9V48c0-4 2-6 4-8l4-6z"/><path d="M17 5h19v6H17zM9 53h50v5H9z" class="d"/>'},
   {n:'Duck',s:'<ellipse cx="30" cy="45" rx="23" ry="13"/><circle cx="42" cy="22" r="11"/><path d="M51 20l12 4-12 4z" class="b"/><circle cx="45" cy="19" r="2.2" class="d"/><path d="M14 41c6 5 18 5 23-2" fill="none" stroke="#4b5058" stroke-width="2"/>'}];
 const tokSVG=(t,sz)=>`<svg viewBox="0 0 64 64" ${sz?`width="${sz}" height="${sz}"`:''}><g fill="url(#pw)" stroke="#2f343a" stroke-width="1.6" stroke-linejoin="round">${TOKENS[t].s.replace(/class="d"/g,'fill="#525961"').replace(/class="b"/g,'fill="#e3a83a"')}</g></svg>`;
+// solid metal piece: stacked slices of the silhouette give it real thickness on the 3D table
+function tok3D(t){
+  const N=9,inner=`<svg viewBox="0 0 64 64"><g fill="#7c848d" stroke="#59606a" stroke-width="2" stroke-linejoin="round">${TOKENS[t].s.replace(/ class="[a-z]"/g,'')}</g></svg>`;
+  let h='';for(let k=0;k<N;k++){const z=((k-(N-1)/2)*.028).toFixed(3);h+=`<div class="sl" style="transform:translateZ(calc(var(--u)*${z}))${k===0?' rotateY(180deg)':''}">${k===0||k===N-1?tokSVG(t):inner}</div>`}
+  return h;
+}
 const PCOLORS=['#e63946','#2a7de1','#2fb35a','#f2a516','#9b5de5','#ff6fae'];
 const CPU_NAMES=['Bella','Carlos','Dora','Egon','Frida','Gus'];
 
@@ -719,16 +739,17 @@ function makeTokens(){
   G.players.forEach(p=>{
     if(p.out)return;
     const t=document.createElement('div');t.className='tok';t.id='tok'+p.id;t.style.setProperty('--pc',p.color);
-    t.innerHTML=`<div class="tokSh"></div><div class="tokRing"></div><div class="tokL"><div class="tokB">${tokSVG(p.token)}</div></div>`;
+    t.innerHTML=`<div class="tokSh"></div><div class="tokBase">${[0,1,2,3].map(k=>`<i class="${k===3?'top':''}" style="transform:translateZ(calc(var(--u)*${(.025*(k+1)).toFixed(3)}))"></i>`).join('')}</div><div class="tokL"><div class="tokB"><div class="tok3">${tok3D(p.token)}</div></div></div>`;
     $('#layer').appendChild(t);
   });
   layoutTokens(true);
 }
 const SLOTS=[[0,0],[-.24,-.2],[.24,.2],[.24,-.2],[-.24,.2],[0,.32]];
 function spotFor(p,pos,slot){
-  if(pos===10){
-    if(p.jail){const s=SLOTS[slot%6];return{x:(1.6-.56+s[0]*.7)*U,y:(.56+s[1]*.7)*U}}
-    const v=[[.24,.5],[.24,.95],[.6,1.36],[1.05,1.36],[.24,1.36],[1.4,1.36]][slot%6];return{x:v[0]*U,y:v[1]*U}
+  if(pos===10){ // spots are relative to the Jail tile (bottom-left corner), not the board origin
+    const j=tileRect(10);
+    if(p.jail){const s=SLOTS[slot%6];return{x:(j.x+1.6-.56+s[0]*.7)*U,y:(j.y+.56+s[1]*.7)*U}}
+    const v=[[.24,.5],[.24,.95],[.6,1.36],[1.05,1.36],[.24,1.36],[1.4,1.36]][slot%6];return{x:(j.x+v[0])*U,y:(j.y+v[1])*U}
   }
   const r=tileRect(pos);let cx=r.x+r.w/2,cy=r.y+r.h/2;
   if(pos%10){const o=.14;if(pos<10)cy+=o;else if(pos<20)cx-=o;else if(pos<30)cy-=o;else cx+=o}
@@ -858,7 +879,7 @@ function moneyFx(p,d){
   fx('money',[p.id,d]);
   const card=$(`.pc[data-id="${p.id}"] .pMoney`);
   floatAt(card,(d>0?'+':'−')+M(Math.abs(d)),d>0?'plus':'minus');
-  const t=tokEl(p);if(t)floatAt(t.querySelector('.tokRing'),(d>0?'+':'−')+M(Math.abs(d)),d>0?'plus':'minus');
+  const t=tokEl(p);if(t)floatAt(t.querySelector('.tokBase .top'),(d>0?'+':'−')+M(Math.abs(d)),d>0?'plus':'minus');
   if(card){card.classList.add('bump');setTimeout(()=>card.classList.remove('bump'),200)}
 }
 function renderTile(i){
@@ -1482,6 +1503,10 @@ function guestCmd(m){return new Promise(res=>{const id=++NET.seq;NET.cmds[id]=re
 function loadPeer(){return window.Peer?Promise.resolve():new Promise((res,rej)=>{const sc=document.createElement('script');sc.src=PEERJS;sc.onload=res;sc.onerror=()=>rej(new Error('Could not load the online module. Check your internet connection.'));document.head.appendChild(sc)})}
 const newCode=()=>Array.from({length:4},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[rnd(32)]).join('');
 
+function tokPicker(sel,taken,color){
+  return`<div class="tokPickL">Choose your piece</div><div class="tokPick" style="--pc:${color}">${TOKENS.map((t,k)=>`<button data-tok="${k}" class="${k===sel?'on':''}" ${taken.includes(k)&&k!==sel?'disabled':''} title="${t.n}" aria-label="${t.n}">${tokSVG(k)}</button>`).join('')}</div>`;
+}
+const freeTok=(taken,want)=>!taken.includes(want)?want:[...TOKENS.keys()].find(k=>!taken.includes(k));
 /* ---- host ---- */
 async function hostGame(){
   const box=$('#onlineBox');box.innerHTML='<p>⏳ Opening a table…</p>';
@@ -1503,8 +1528,11 @@ function hostMsg(c,m){
     if(!NET.started&&NET.lobby.length+1+CFG.cpu>=7&&CFG.cpu>0)CFG.cpu--;
     if(NET.started||NET.lobby.length+1+CFG.cpu>=7){c.send({t:'full',why:NET.started?'The game has already started.':'The table is full.'});setTimeout(()=>c.close(),300);return}
     NET.conns[c.peer]=c;NET.lobby=NET.lobby.filter(g=>g.peer!==c.peer);
-    NET.lobby.push({peer:c.peer,name:String(m.name||'Guest').slice(0,14),token:+m.token||0});SFX.bid();drawHostLobby();return;
+    const taken=[CFG.players[0].token,...NET.lobby.map(g=>g.token)];
+    NET.lobby.push({peer:c.peer,name:String(m.name||'Guest').slice(0,14),token:freeTok(taken,+m.token||0)});SFX.bid();drawHostLobby();return;
   }
+  if(m.t==='tok'&&!NET.started){const g=NET.lobby.find(g=>g.peer===c.peer),t=+m.token;
+    if(g&&TOKENS[t]&&![CFG.players[0].token,...NET.lobby.filter(x=>x!==g).map(x=>x.token)].includes(t))g.token=t;drawHostLobby();return}
   if(m.t==='ans'){const x=NET.pend[m.id];if(x&&G&&G.players[x.pid].ctl===c.peer){delete NET.pend[m.id];x.res(m.v)}return}
   if(m.t==='cmd')hostCmd(c,m);
 }
@@ -1534,14 +1562,16 @@ function lobbySeats(){
 function drawHostLobby(){
   const seats=lobbySeats();
   $('#onlineBox').innerHTML=`<div class="codeBox"><small>Table code</small><span class="code">${NET.code}</span><small>Your friends open <u>Monongoly</u> on their own device, choose <b>Join</b> and type this code.</small></div>
+    ${tokPicker(CFG.players[0].token,NET.lobby.map(g=>g.token),PCOLORS[0])}
     <div class="lob">${seats.map((s,i)=>`<div class="lobRow" style="--pc:${PCOLORS[i]}"><span class="tk">${s.cpu?'🤖':tokSVG(s.token)}</span><b>${esc(s.name)}</b><small>${s.host?'🏠 You (host)':s.cpu?'Computer':'🌐 Joined'}</small></div>`).join('')}</div>
     <div class="opt" style="margin-top:8px">🤖 Computer players<div class="seg" id="cpuSeg">${[0,1,2,3,4].map(n=>`<button class="${CFG.cpu===n?'on':''}" ${NET.lobby.length+1+n>6?'disabled':''}>${n}</button>`).join('')}</div></div>
     <div class="lidBtns"><button class="btn danger" id="leaveBtn">✖ Close table</button><button class="btn go" id="hostStart" ${seats.length<2?'disabled':''}>🎲 Start online game</button></div>
     <p class="hint">${seats.length<2?'Waiting for players… (add a computer player to play right away)':'Everyone in? Press start!'}</p>`;
   $$('#cpuSeg button').forEach((b,n)=>b.onclick=()=>{CFG.cpu=n;SFX.click();drawHostLobby()});
+  $$('#onlineBox .tokPick button').forEach(b=>b.onclick=()=>{CFG.players[0].token=+b.dataset.tok;SFX.click();drawHostLobby()});
   $('#leaveBtn').onclick=()=>location.reload();
   $('#hostStart').onclick=hostStart;
-  bcast({t:'lobby',seats:seats.map(s=>({name:s.name,token:s.token,cpu:!!s.cpu,host:!!s.host}))});
+  bcast({t:'lobby',seats:seats.map(s=>({name:s.name,token:s.token,cpu:!!s.cpu,host:!!s.host,peer:s.peer||null}))});
 }
 function hostStart(){
   const seats=lobbySeats();if(seats.length<2)return;
@@ -1580,9 +1610,13 @@ function guestLost(){
 async function guestMsg(m){
   switch(m.t){
     case'full':$('#onlineBox').innerHTML=`<p class="err">${esc(m.why)}</p><div class="lidBtns"><button class="btn" onclick="location.reload()">↩ Back</button></div>`;break;
-    case'lobby':if(!NET.started)$('#onlineBox').innerHTML=`<div class="codeBox"><small>Table</small><span class="code">${esc(NET.code)}</span><small>✅ You're in! Waiting for the host to start…</small></div>
+    case'lobby':if(!NET.started){const meS=m.seats.find(x=>x.peer===NET.id),myI=m.seats.indexOf(meS);
+      $('#onlineBox').innerHTML=`<div class="codeBox"><small>Table</small><span class="code">${esc(NET.code)}</span><small>✅ You're in! Waiting for the host to start…</small></div>
+      ${meS?tokPicker(meS.token,m.seats.filter(x=>x!==meS&&!x.cpu).map(x=>x.token),PCOLORS[myI]):''}
       <div class="lob">${m.seats.map((s,i)=>`<div class="lobRow" style="--pc:${PCOLORS[i]}"><span class="tk">${s.cpu?'🤖':tokSVG(s.token)}</span><b>${esc(s.name)}</b><small>${s.host?'🏠 Host':s.cpu?'Computer':'🌐 Player'}</small></div>`).join('')}</div>
-      <div class="lidBtns"><button class="btn danger" onclick="location.reload()">✖ Leave</button></div>`;break;
+      <div class="lidBtns"><button class="btn danger" onclick="location.reload()">✖ Leave</button></div>`;
+      $$('#onlineBox .tokPick button').forEach(b=>b.onclick=()=>{CFG.players[0].token=+b.dataset.tok;SFX.click();NET.conn.send({t:'tok',token:+b.dataset.tok})});}
+      break;
     case'start':NET.started=true;$('#log').innerHTML='';break;
     case'state':applyState(m.G);break;
     case'fx':await guestFx(m.e,m.d);break;
@@ -1650,16 +1684,16 @@ function guestAsk(m){
 /* ---- setup screen: online panel ---- */
 function drawOnline(){
   const me=CFG.players[0];
-  $('#onlineBox').innerHTML=`<div class="prow" style="--pc:${PCOLORS[0]};grid-template-columns:auto 1fr">
-      <button class="tk" id="onTok" aria-label="Change token">${tokSVG(me.token)}</button>
+  $('#onlineBox').innerHTML=`<div class="prow" style="--pc:${PCOLORS[0]};grid-template-columns:1fr">
       <input id="onName" value="${esc(me.name==='You'?'':me.name)}" placeholder="Your name" maxlength="14" aria-label="Your name"></div>
+    ${tokPicker(me.token,[],'#ffcb52')}
     <div class="onGrid">
       <div class="onCard"><h4>🏠 Host a table</h4><p>Get a code and let friends join from their own PC, tablet or phone.</p><button class="btn go" id="hostBtn">Host game</button></div>
       <div class="onCard"><h4>🔑 Join a table</h4><p>Type the 4-letter code from the host.</p>
         <div style="display:flex;gap:6px"><input id="joinCode" maxlength="4" placeholder="CODE" autocapitalize="characters" autocomplete="off"><button class="btn green" id="joinBtn" style="flex:0 0 auto">Join</button></div><div class="err" id="joinErr"></div></div>
     </div>
     <p class="hint">Works on the same Wi-Fi and over the internet. A free matchmaking service connects the browsers, then the game runs directly between your devices.</p>`;
-  $('#onTok').onclick=()=>{me.token=(me.token+1)%TOKENS.length;SFX.click();drawOnline()};
+  $$('#onlineBox .tokPick button').forEach(b=>b.onclick=()=>{me.token=+b.dataset.tok;SFX.click();$$('#onlineBox .tokPick button').forEach(x=>x.classList.toggle('on',x===b))});
   $('#onName').oninput=e=>{me.name=e.target.value};
   $('#hostBtn').onclick=()=>{SFX.ac();hostGame()};
   $('#joinBtn').onclick=()=>{SFX.ac();joinGame()};
