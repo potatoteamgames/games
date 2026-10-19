@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Potato Bingo Adventures – Free Bingo Adventure Game | Play Online, No Download</title>
+<meta name="description" content="Play Potato Bingo Adventures free in your browser! Win bingo to build towns in 14 lands, collect souvenirs, equip lucky gear, catch bonus events and travel the world. No download, works on mobile.">
+<meta name="keywords" content="potato bingo, bingo game, free bingo, bingo adventure, online bingo, browser game, potato game, idle bingo">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#1b1440">
+<meta name="application-name" content="Potato Bingo Adventures">
+<meta name="apple-mobile-web-app-title" content="Potato Bingo">
+<meta name="mobile-web-app-capable" content="yes">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Potato Team Games">
+<meta property="og:title" content="Potato Bingo Adventures – Free Bingo Adventure Game">
+<meta property="og:description" content="Win bingo, build towns around the world, collect souvenirs and lucky gear. Free, no download, works on mobile.">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Potato Bingo Adventures – Free Bingo Adventure Game">
+<meta name="twitter:description" content="Win bingo, build towns around the world, collect souvenirs and lucky gear. Free, no download.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎱%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "Potato Bingo Adventures",
+  "description": "A free bingo adventure game in your browser. Win bingo to build towns in 14 lands, collect souvenirs, equip lucky gear, catch bonus events and go on a world tour.",
+  "genre": ["Bingo game", "Adventure game", "Idle game"],
+  "gamePlatform": ["Web browser", "Mobile browser"],
+  "applicationCategory": "Game",
+  "operatingSystem": "Any",
+  "playMode": "SinglePlayer",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#1b1440; --bg2:#251a56; --card:#2e2266; --card2:#3a2c7c; --line:rgba(255,255,255,.12);
+  --txt:#fff8ec; --muted:#c7bdf0; --gold:#ffcf4a; --goldD:#d9962a; --pink:#ff5fa2; --mint:#4fe0a6; --sky:#5cc2ff; --red:#ff5a5a;
+  --ink:#1a1033; --c1:#2f8f4e; --c2:#14402a;
+  --B:#ff5a5a; --I:#ffb52e; --N:#3fcf6b; --G:#4aa3ff; --O:#b36bff;
+  --daub:#ff5fa2;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{color:var(--txt);font-family:Nunito,system-ui,sans-serif;font-weight:800;background:var(--bg);overflow:hidden;user-select:none;-webkit-user-select:none}
+button{font-family:inherit;font-weight:900;cursor:pointer;border:none;color:inherit;background:none}
+button:disabled{cursor:not-allowed}
+#app{display:grid;grid-template-rows:auto minmax(0,1fr) auto;height:100vh;height:100dvh}
+.lil{font-family:'Lilita One',Nunito,sans-serif;font-weight:400;letter-spacing:.3px}
+
+/* ===== TOP BAR ===== */
+#top{display:flex;align-items:center;gap:8px;padding:8px 12px;background:linear-gradient(180deg,#2d1f6e,#1f1650);border-bottom:3px solid #120b2e;box-shadow:0 4px 14px #0007;z-index:5}
+.home{display:flex;align-items:center;gap:4px;height:38px;padding:0 10px;border-radius:12px;background:var(--card2);border:2px solid var(--line);text-decoration:none;color:var(--txt);font-size:13px;white-space:nowrap}
+.home:hover{background:#4a3a96}
+.logo{font-family:'Lilita One',sans-serif;font-size:22px;line-height:1;white-space:nowrap;color:var(--gold);text-shadow:2px 2px 0 var(--ink)}
+.logo small{display:block;font-size:12px;color:var(--txt);letter-spacing:2px}
+.res{margin-left:auto;display:flex;gap:6px;align-items:center;min-width:0}
+.pill{display:flex;align-items:center;gap:4px;height:34px;padding:0 10px;border-radius:999px;background:#0006;border:2px solid var(--line);font-size:15px;white-space:nowrap}
+.pill b{font-weight:900}
+.lvl{position:relative;width:96px;height:34px;border-radius:999px;background:#0006;border:2px solid var(--line);overflow:hidden;font-size:13px;display:flex;align-items:center;justify-content:center}
+.lvl i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#4fe0a6,#2bb38a);transition:width .3s}
+.lvl span{position:relative;text-shadow:1px 1px 0 #000a}
+.ibtn{width:36px;height:36px;border-radius:12px;background:var(--card2);border:2px solid var(--line);font-size:17px;flex-shrink:0}
+
+/* ===== VIEW ===== */
+#view{overflow-y:auto;overflow-x:hidden;position:relative;-webkit-overflow-scrolling:touch}
+.pad{padding:16px;max-width:1100px;margin:0 auto}
+h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4px 0 4px}
+.subt{color:var(--muted);font-size:14px;margin:0 0 14px}
+.sec{margin:22px 0 10px;font-family:'Lilita One',sans-serif;font-weight:400;font-size:22px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.box{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 14px;border-radius:12px;font-size:14px;background:linear-gradient(#ffd86a,#e0a42a);color:var(--ink);box-shadow:0 3px 0 #8a5a12;transition:transform .1s,filter .1s;white-space:nowrap}
+.btn:hover:not(:disabled){filter:brightness(1.08);transform:translateY(-1px)}
+.btn:active:not(:disabled){transform:translateY(2px);box-shadow:none}
+.btn:disabled{background:#4a4170;color:#a99fd0;box-shadow:0 3px 0 #2a2350}
+.btn.g{background:linear-gradient(#6ff0b8,#2bb38a);box-shadow:0 3px 0 #11684e}
+.btn.p{background:linear-gradient(#ff8cc0,#e0427f);color:#fff;box-shadow:0 3px 0 #82204a}
+.btn.b{background:linear-gradient(#7fd2ff,#3b8fe0);color:#fff;box-shadow:0 3px 0 #1d4f85}
+.btn.dk{background:var(--card2);color:var(--txt);box-shadow:0 3px 0 #120b2e;border:2px solid var(--line)}
+.btn.big{font-family:'Lilita One',sans-serif;font-weight:400;font-size:24px;padding:14px 28px;border-radius:16px}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sp{flex:1}
+.bar{height:10px;background:#0006;border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#ff9b3a);border-radius:999px}
+
+/* ===== NAV ===== */
+#nav{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:6px 8px calc(6px + env(safe-area-inset-bottom));background:#120b2e;border-top:2px solid var(--line);z-index:5}
+#nav button{position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;padding:5px 2px;border-radius:12px;font-size:11px;color:var(--muted)}
+#nav button .e{font-size:22px;line-height:1.1}
+#nav button.on{background:var(--card2);color:var(--txt)}
+#nav button.mid .e{font-size:28px}
+#nav.lock{display:none}
+.dot{position:absolute;top:2px;right:calc(50% - 22px);min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:var(--red);color:#fff;font-size:11px;display:none;align-items:center;justify-content:center;border:2px solid #120b2e}
+.dot.on{display:flex}
+
+/* ===== MAP ===== */
+.journey{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;counter-reset:land}
+.land{position:relative;border-radius:20px;padding:14px;min-height:150px;border:3px solid #0005;overflow:hidden;display:flex;flex-direction:column;gap:6px;box-shadow:0 8px 20px #0005;text-align:left}
+.land .num{position:absolute;top:10px;right:12px;font-size:12px;background:#0005;border-radius:999px;padding:2px 8px}
+.land .le{font-size:46px;line-height:1;filter:drop-shadow(0 4px 4px #0006)}
+.land h3{margin:0;font-family:'Lilita One',sans-serif;font-weight:400;font-size:22px;text-shadow:2px 2px 0 #0006}
+.land p{margin:0;font-size:12px;color:#fff;opacity:.9}
+.land.locked{filter:grayscale(.85) brightness(.55)}
+.land.here{outline:4px solid var(--gold);outline-offset:-3px}
+.land .pbar{height:8px;background:#0006;border-radius:9px;overflow:hidden;margin-top:auto}
+.land .pbar i{display:block;height:100%;background:var(--gold)}
+
+/* ===== TOWN ===== */
+.scene{position:relative;border-radius:22px;overflow:hidden;padding:18px;min-height:150px;display:flex;align-items:center;gap:16px;border:3px solid #0006;box-shadow:0 10px 26px #0006}
+.scene .bigE{font-size:78px;line-height:1;filter:drop-shadow(0 6px 6px #0006);animation:bob 3s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px)}}
+.scene h2{margin:0;font-family:'Lilita One',sans-serif;font-weight:400;font-size:clamp(26px,4vw,38px);text-shadow:2px 3px 0 #0007}
+.scene .skyline{position:absolute;right:10px;bottom:4px;font-size:30px;opacity:.85;letter-spacing:4px;pointer-events:none}
+.bld{display:flex;flex-direction:column;gap:6px}
+.bld .top{display:flex;gap:10px;align-items:center}
+.bld .be{font-size:38px;width:54px;height:54px;border-radius:14px;background:#0004;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bld h4{margin:0;font-size:16px}
+.stars{color:var(--gold);font-size:12px;letter-spacing:1px}
+.bld .eff{font-size:12px;color:var(--muted);min-height:32px}
+.bld.lm{grid-column:1/-1;background:linear-gradient(135deg,#4a3410,#2e2266 60%);border-color:#ffcf4a66}
+.req{font-size:12px;color:var(--muted)}
+.req b.ok{color:var(--mint)}
+.req b.no{color:#ff9a9a}
+
+/* ===== ITEMS ===== */
+.item{position:relative;display:flex;gap:10px;align-items:center;text-align:left;border-radius:16px;padding:10px;background:var(--card);border:2px solid var(--line);width:100%;color:var(--txt)}
+.item .ie{font-size:32px;width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:#0004;border:2px solid currentColor}
+.item .in{font-size:14px}
+.item .is{font-size:11px;color:var(--muted)}
+.item.eq::after{content:'EQUIPPED';position:absolute;top:6px;right:8px;font-size:9px;background:var(--mint);color:#063;padding:2px 6px;border-radius:999px}
+.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.slot{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border-radius:16px;background:#0004;border:2px dashed var(--line);font-size:11px;color:var(--muted);text-align:center;min-width:0}
+.slot .se{font-size:34px;line-height:1.1}
+.slot.f{border-style:solid}
+.rar{font-size:10px;padding:1px 7px;border-radius:999px;color:#160c2b}
+.chest{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.chest .ce{font-size:50px;line-height:1}
+
+/* ===== BINGO LOBBY ===== */
+.lobby{display:grid;grid-template-columns:1.2fr 1fr;gap:14px}
+.opt{display:flex;gap:6px;flex-wrap:wrap}
+.opt button{min-width:52px;padding:10px 12px;border-radius:12px;background:#0005;border:2px solid var(--line);font-size:16px}
+.opt button.on{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.opt button:disabled{opacity:.4}
+.pw{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.pw:last-child{border:none}
+.pw .pe{font-size:28px;width:44px;text-align:center}
+
+/* ===== BINGO ROUND ===== */
+#round{display:grid;grid-template-columns:250px minmax(0,1fr);gap:12px;padding:12px;min-height:100%;position:relative}
+.caller{display:flex;flex-direction:column;gap:10px}
+.cbox{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:12px}
+.ballwrap{display:flex;align-items:center;gap:12px}
+.ball{width:96px;height:96px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;
+  background:radial-gradient(circle at 50% 50%,#fff 0 34%,var(--bc,#888) 35% 100%);box-shadow:inset -8px -10px 18px #0006,0 6px 14px #0008;color:#1a1033}
+.ball .bl{font-family:'Lilita One',sans-serif;font-size:18px;line-height:1;margin-top:6px}
+.ball .bn{font-family:'Lilita One',sans-serif;font-size:36px;line-height:1}
+.ball.pop{animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{0%{transform:scale(.2) rotate(-90deg)}100%{transform:scale(1) rotate(0deg)}}
+.ball.gold{--bc:#ffd34a!important;box-shadow:inset -8px -10px 18px #0005,0 0 26px #ffd34a}
+.hist{display:flex;gap:4px;flex-wrap:wrap}
+.mb{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:#1a1033;background:radial-gradient(circle at 50% 50%,#fff 0 45%,var(--bc) 47%)}
+.rstat{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px}
+.rstat div{background:#0004;border-radius:10px;padding:6px 8px}
+.rstat b{display:block;font-size:17px}
+.pool b{color:var(--gold)}
+.feed{font-size:12px;color:var(--muted);min-height:34px;line-height:1.4}
+.pwbtn{width:100%;padding:12px;border-radius:14px;font-size:16px;background:#0005;border:2px solid var(--line);position:relative;overflow:hidden}
+.pwbtn i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#4a3aa0,#7a5cff);transition:width .25s}
+.pwbtn span{position:relative}
+.pwbtn.ready{background:linear-gradient(#ffe27a,#ffad2a);color:var(--ink);border-color:#fff;animation:glow 1s ease-in-out infinite}
+.pwbtn.ready i{display:none}
+@keyframes glow{50%{box-shadow:0 0 22px #ffd34a;transform:scale(1.02)}}
+.combo{font-family:'Lilita One',sans-serif;font-size:20px;color:var(--gold);text-align:center;min-height:24px}
+
+.cards{display:grid;gap:12px;align-content:start;justify-content:center}
+.cards.n1{grid-template-columns:minmax(0,440px)}
+.cards.n2{grid-template-columns:repeat(2,minmax(0,380px))}
+.cards.n3,.cards.n4{grid-template-columns:repeat(2,minmax(0,330px))}
+.card{background:#fff8ec;border-radius:18px;padding:8px;border:4px solid #0006;box-shadow:0 8px 20px #0006;color:var(--ink)}
+.chd{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:4px}
+.chd span{font-family:'Lilita One',sans-serif;font-size:clamp(16px,2.6vw,24px);text-align:center;border-radius:8px;color:#fff;text-shadow:1px 1px 0 #0005}
+.cg{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.cell{position:relative;aspect-ratio:1;border-radius:9px;background:#efe3cb;border:2px solid #d9c7a5;font-family:'Lilita One',sans-serif;font-size:clamp(14px,2.4vw,24px);color:var(--ink);display:flex;align-items:center;justify-content:center;padding:0;transition:transform .08s}
+.cell:active{transform:scale(.92)}
+.cell .sq{position:absolute;top:1px;right:2px;font-size:clamp(9px,1.3vw,13px);line-height:1}
+.cell.d{color:#fff}
+.cell.d::before{content:'';position:absolute;inset:8%;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff7 0 12%,var(--daub) 13%);box-shadow:0 2px 0 #0003;animation:daub .25s cubic-bezier(.2,1.6,.4,1)}
+.cell.d span{position:relative;text-shadow:1px 1px 0 #0006}
+@keyframes daub{from{transform:scale(0)}}
+.cell.free{font-size:clamp(16px,2.6vw,26px)}
+.cell.miss{animation:miss 1.1s ease-in-out infinite}
+@keyframes miss{50%{background:#ffe08a;border-color:#ffb52e}}
+.cell.won{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold) inset}
+.cell.shake{animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.cell.magic::before{background:radial-gradient(circle at 35% 30%,#fff9 0 12%,#7a5cff 13%)}
+.bingo{display:block;width:100%;margin-top:8px;padding:10px;border-radius:12px;font-family:'Lilita One',sans-serif;font-size:22px;letter-spacing:2px;background:#d8ccb4;color:#9c8d72}
+.bingo.ready{background:linear-gradient(#ff8cc0,#e0427f);color:#fff;animation:glow .8s ease-in-out infinite;text-shadow:2px 2px 0 #0004}
+.card .cinfo{display:flex;justify-content:space-between;font-size:11px;color:#7a6a50;margin-top:4px}
+
+/* ===== EVENTS / FX ===== */
+#fx{position:fixed;inset:0;pointer-events:none;z-index:40;overflow:hidden}
+.float{position:absolute;font-weight:900;font-size:18px;color:#fff;text-shadow:2px 2px 0 #000a,-1px -1px 0 #000a;pointer-events:none;animation:fl 1.2s ease-out forwards;white-space:nowrap;z-index:41}
+@keyframes fl{to{transform:translateY(-70px);opacity:0}}
+.conf{position:absolute;width:10px;height:14px;border-radius:2px;animation:cf 1.6s ease-in forwards}
+@keyframes cf{to{transform:translate(var(--dx),110vh) rotate(var(--r));}}
+.ev{position:absolute;pointer-events:auto;cursor:pointer;font-size:58px;filter:drop-shadow(0 0 14px #ffd34a);user-select:none;padding:6px;line-height:1}
+.ev.fly{animation:fly var(--dur,3.4s) linear forwards}
+@keyframes fly{from{transform:translateX(-90px) rotate(-10deg)}25%{margin-top:-30px}50%{margin-top:20px}75%{margin-top:-30px}to{transform:translateX(calc(100vw + 90px)) rotate(10deg)}}
+.ev.rise{animation:rise var(--dur,4s) linear forwards}
+@keyframes rise{from{transform:translateY(0)}to{transform:translateY(calc(-100vh - 120px))}}
+.ev.fall{font-size:42px;animation:fall var(--dur,3s) linear forwards}
+@keyframes fall{from{transform:translateY(-80px)}to{transform:translateY(calc(100vh + 80px))}}
+.evp{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:auto;background:linear-gradient(#3a2c7c,#241a5a);border:4px solid var(--gold);border-radius:22px;padding:16px 20px;text-align:center;box-shadow:0 0 0 9999px #0006,0 20px 50px #000a;min-width:280px;animation:pop .35s cubic-bezier(.2,1.6,.4,1)}
+.evp h3{margin:0 0 6px;font-family:'Lilita One',sans-serif;font-weight:400;font-size:26px;color:var(--gold)}
+.evp .tmr{height:8px;background:#0006;border-radius:9px;overflow:hidden;margin:10px 0 0}
+.evp .tmr i{display:block;height:100%;background:var(--pink);width:100%}
+.mash{font-size:80px;line-height:1;padding:10px 20px;border-radius:22px;background:#0004;transition:transform .05s}
+.mash:active{transform:scale(.88)}
+.chs{display:flex;gap:10px;justify-content:center}
+.chs button{font-size:56px;padding:6px 10px;border-radius:16px;background:#0004;border:2px solid var(--line)}
+.chs button:hover{transform:scale(1.08)}
+.bigtxt{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);font-family:'Lilita One',sans-serif;font-size:clamp(54px,12vw,120px);color:var(--gold);text-shadow:4px 5px 0 var(--ink),-2px -2px 0 var(--ink),0 0 30px #ff5fa2;animation:bt 1.3s ease-out forwards;white-space:nowrap;z-index:42}
+@keyframes bt{0%{transform:translate(-50%,-50%) scale(.2) rotate(-12deg);opacity:0}20%{transform:translate(-50%,-50%) scale(1.15) rotate(3deg);opacity:1}70%{transform:translate(-50%,-50%) scale(1)}100%{transform:translate(-50%,-60%) scale(1);opacity:0}}
+
+/* ===== TOAST / MODAL ===== */
+#toasts{position:fixed;left:50%;top:64px;transform:translateX(-50%);display:flex;flex-direction:column;gap:6px;align-items:center;z-index:60;pointer-events:none;width:min(92vw,420px)}
+.toast{background:#120b2ef2;border:2px solid var(--gold);border-radius:14px;padding:8px 14px;font-size:14px;box-shadow:0 8px 20px #000a;animation:tin .3s ease-out;text-align:center}
+@keyframes tin{from{transform:translateY(-14px);opacity:0}}
+#modal{position:fixed;inset:0;background:#0b0620cc;display:none;align-items:center;justify-content:center;z-index:70;padding:16px}
+#modal.on{display:flex}
+.mbox{background:linear-gradient(#33267a,#221858);border:3px solid var(--gold);border-radius:24px;padding:20px;width:min(460px,100%);max-height:90vh;overflow:auto;text-align:center;box-shadow:0 30px 60px #000c;animation:pop .35s cubic-bezier(.2,1.6,.4,1)}
+.mbox h2{margin:0 0 8px;font-family:'Lilita One',sans-serif;font-weight:400;font-size:30px;color:var(--gold)}
+.mbox .me{font-size:64px;line-height:1.1}
+.mbox p{color:var(--muted);font-size:15px;line-height:1.45}
+.mbox .acts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.rl{display:flex;justify-content:space-between;padding:6px 10px;background:#0004;border-radius:10px;margin:4px 0;font-size:15px}
+
+/* ===== DAILY ===== */
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.day{border-radius:12px;padding:8px 2px;text-align:center;background:#0004;border:2px solid var(--line);font-size:11px}
+.day .de{font-size:24px}
+.day.done{background:#2bb38a44;border-color:var(--mint)}
+.day.today{border-color:var(--gold);box-shadow:0 0 14px #ffcf4a88}
+.quest{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.quest:last-child{border:none}
+.wheelw{position:relative;width:260px;height:260px;margin:10px auto}
+.wheel{width:100%;height:100%;border-radius:50%;border:6px solid var(--gold);box-shadow:0 0 0 4px var(--ink),0 10px 30px #000a;transition:transform 4s cubic-bezier(.15,.9,.2,1);position:relative}
+.wheel span{position:absolute;left:50%;top:50%;font-size:24px;transform-origin:0 0}
+.wptr{position:absolute;left:50%;top:-14px;transform:translateX(-50%);font-size:32px;z-index:2;filter:drop-shadow(0 3px 2px #000a)}
+.whub{position:absolute;left:50%;top:50%;width:54px;height:54px;transform:translate(-50%,-50%);border-radius:50%;background:var(--gold);border:4px solid var(--ink);display:flex;align-items:center;justify-content:center;font-size:26px}
+
+/* ===== ALBUM / TROPHIES ===== */
+.alb{display:grid;grid-template-columns:repeat(9,1fr);gap:6px}
+.sv{aspect-ratio:1;border-radius:12px;background:#0004;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:clamp(20px,3vw,30px);position:relative}
+.sv.no{filter:grayscale(1) brightness(.3)}
+.sv small{position:absolute;bottom:1px;right:4px;font-size:10px;color:var(--gold)}
+.ach{display:flex;gap:10px;align-items:center;padding:10px;border-radius:14px;background:var(--card);border:2px solid var(--line)}
+.ach.no{opacity:.5}
+.ach .ae{font-size:28px}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.stats div{background:#0004;border-radius:12px;padding:8px 10px;font-size:12px;color:var(--muted)}
+.stats b{display:block;color:var(--txt);font-size:16px}
+
+@media (max-width:820px){
+  .lobby{grid-template-columns:1fr}
+  #round{grid-template-columns:1fr;padding:8px;gap:8px}
+  .caller{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px}
+  .caller .cbox{padding:6px;border-radius:14px}
+  .caller .c-pw{grid-column:1/-1;display:flex;align-items:center;gap:8px}
+  .c-pw .combo{font-size:15px;min-height:0;white-space:nowrap}
+  .c-pw .combo:empty{display:none}
+  .pwbtn{padding:8px;font-size:14px}
+  .ball{width:64px;height:64px}.ball .bn{font-size:24px}.ball .bl{font-size:12px;margin-top:4px}
+  .hist .mb{width:24px;height:24px;font-size:10px}
+  .hist .mb:nth-child(n+7){display:none}
+  .rstat{grid-template-columns:repeat(4,1fr);gap:4px;font-size:10px;margin-top:4px!important}
+  .rstat div{padding:3px 5px}.rstat b{font-size:13px}
+  .feed{display:none}
+  .cards.n2,.cards.n3,.cards.n4{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .cards.n2 .card,.cards.n3 .card,.cards.n4 .card{padding:4px;border-width:3px;border-radius:12px}
+  .cards.n2 .cg,.cards.n3 .cg,.cards.n4 .cg,.cards.n2 .chd,.cards.n3 .chd,.cards.n4 .chd{gap:2px}
+  .cards.n2 .cell,.cards.n3 .cell,.cards.n4 .cell{border-radius:6px;border-width:1px;font-size:clamp(11px,3.4vw,18px)}
+  .cards.n2 .bingo,.cards.n3 .bingo,.cards.n4 .bingo{font-size:16px;padding:7px;margin-top:4px}
+  .cards .cinfo{display:none}
+}
+@media (max-width:560px){
+  .logo{display:none}
+  .home .hl{display:none}
+  .pill{font-size:13px;padding:0 8px}
+  .lvl{width:70px;font-size:12px}
+  .slots{grid-template-columns:repeat(3,1fr)}
+  .alb{grid-template-columns:repeat(5,1fr)}
+  .scene .bigE{font-size:56px}
+  #nav button{font-size:9px}
+  #nav button .e{font-size:20px}
+}
+@media (prefers-reduced-motion:reduce){.scene .bigE,.ball.pop{animation:none}}
+</style>
+</head>
+<body>
+<div id="app">
+  <header id="top">
+    <a class="home" href="./" aria-label="Back to all games">🏠<span class="hl">Games</span></a>
+    <div class="logo">🥔 Potato Bingo<small>ADVENTURES</small></div>
+    <div class="res">
+      <div class="pill" title="Coins">🪙 <b id="hCoins">0</b></div>
+      <div class="pill" title="Gems">💎 <b id="hGems">0</b></div>
+      <div class="lvl" title="Player level"><i id="hXp"></i><span id="hLvl">Lv 1</span></div>
+      <button class="ibtn" id="sndBtn" data-a="sound" aria-label="Toggle sound">🔊</button>
+    </div>
+  </header>
+  <main id="view"></main>
+  <nav id="nav" aria-label="Game menu">
+    <button data-a="tab" data-t="map"><span class="e">🗺️</span>Map</button>
+    <button data-a="tab" data-t="town"><span class="e">🏘️</span>Town<span class="dot" id="dTown"></span></button>
+    <button data-a="tab" data-t="bingo" class="mid"><span class="e">🎱</span>Bingo</button>
+    <button data-a="tab" data-t="gear"><span class="e">🎒</span>Gear<span class="dot" id="dGear"></span></button>
+    <button data-a="tab" data-t="album"><span class="e">🧩</span>Album</button>
+    <button data-a="tab" data-t="daily"><span class="e">📅</span>Daily<span class="dot" id="dDaily"></span></button>
+    <button data-a="tab" data-t="trophy"><span class="e">🏆</span>Trophies<span class="dot" id="dAch"></span></button>
+  </nav>
+</div>
+<div id="fx"></div>
+<div id="toasts"></div>
+<div id="modal"><div class="mbox" id="mbox"></div></div>
+
+<script>
+'use strict';
+/* =========================================================
+   POTATO BINGO ADVENTURES – Potato Team Games
+   ========================================================= */
+const $=s=>document.querySelector(s);
+const SAVE_KEY='potato_bingo_adventures_v1';
+const rnd=Math.random, ri=(a,b)=>a+Math.floor(rnd()*(b-a+1)), pick=a=>a[Math.floor(rnd()*a.length)];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const SUF=['','K','M','B','T','Qa','Qi','Sx','Sp','Oc','No','Dc','Ud','Dd','Td','Qad','Qid'];
+function fmt(n){n=Math.floor(n);if(n<1000)return ''+n;let e=Math.min(SUF.length-1,Math.floor(Math.log10(n)/3));let v=n/Math.pow(10,e*3);if(v>=999.5&&e<SUF.length-1){e++;v/=1000}return (v>=100?v.toFixed(0):v>=10?v.toFixed(1):v.toFixed(2))+SUF[e]}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function wpick(ws){let t=ws.reduce((a,b)=>a+b,0),r=rnd()*t;for(let i=0;i<ws.length;i++){r-=ws[i];if(r<0)return i}return ws.length-1}
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
+const yesterday=()=>{const d=new Date(Date.now()-864e5);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
+
+/* ---------- DATA ---------- */
+const RAR=[{n:'Common',c:'#b9c3cf',max:10},{n:'Rare',c:'#4aa3ff',max:15},{n:'Epic',c:'#b36bff',max:20},{n:'Legendary',c:'#ffb52e',max:25},{n:'Mythic',c:'#ff4f8b',max:30}];
+const SLOTS=[{k:'hat',e:'🎩',n:'Hat',lv:1},{k:'dauber',e:'🖍️',n:'Dauber',lv:1},{k:'charm',e:'🍀',n:'Charm',lv:1},{k:'outfit',e:'👕',n:'Outfit',lv:4},{k:'pet',e:'🐾',n:'Pet',lv:8}];
+const STAT={coin:['Bingo coins','%'],xp:['XP','%'],auto:['Auto-daub','%'],charge:['Power charge','%'],event:['Event rewards','%'],gem:['Gem luck','%'],luck:['Lucky pre-daubs','/card'],special:['Special squares','%'],souv:['Souvenir luck','%'],balls:['Extra balls',''],rival:['Rival slowdown','%'],idle:['Farm income','%'],claim:['Auto-BINGO','']};
+// building types: stat per level
+const BT=[
+  {k:'farm',d:l=>`Earns coins every minute, even offline`},
+  {k:'hall',d:l=>`+${l*4}% bingo coins (+4%/lvl)`},
+  {k:'market',d:l=>`+${l*3}% special squares, +${l*4}% souvenirs`},
+  {k:'inn',d:l=>`+${l*5}% XP (+5%/lvl)`},
+  {k:'workshop',d:l=>`+${l*4}% power-up charge`},
+  {k:'shrine',d:l=>`+${l*4}% gem luck`},
+  {k:'festival',d:l=>`+${l*6}% event rewards`},
+  {k:'landmark',d:l=>`+${l*10}% ALL coins (global)`}
+];
+const BCOST=[0.8,1.2,1,1,1.4,1.6,1.4];
+// Lands
+const LANDS=[
+ {n:'Ireland',e:'☘️',sub:'The Emerald Isle – where your spud journey begins',c1:'#3aa35c',c2:'#14532d',sky:'🏰🌈🐑',
+  b:[['🌱','Potato Field'],['🎱','Village Bingo Hall'],['🛒','Farmers Market'],['🏡','Cottage Inn'],['🔨','Blacksmith'],['🍀','Clover Shrine'],['🎻','Céilí Festival'],['🏰','Blarney Castle']],
+  s:[['☘️','Shamrock'],['🍀','Four-Leaf Clover'],['🌈','Rainbow'],['🪙','Pot of Gold'],['🎻','Fiddle'],['🐑','Fluffy Sheep'],['🏰','Castle Stone'],['🥧','Shepherd\'s Pie'],['🧚','Lucky Fairy']],
+  g:[['hat','🎩','Leprechaun Hat',{coin:5}],['dauber','🖍️','Shamrock Dauber',{auto:8}],['charm','🍀','Clover Charm',{gem:8}],['outfit','🧶','Wool Sweater',{xp:8}],['pet','🐑','Sheep Buddy',{idle:15}]]},
+ {n:'Peru',e:'🦙',sub:'Birthplace of the potato, high in the Andes',c1:'#d9763a',c2:'#5b2410',sky:'🏔️🦙🌞',
+  b:[['⛰️','Andean Terraces'],['🎱','Cusco Bingo Plaza'],['🧺','Alpaca Market'],['🛖','Mountain Lodge'],['⚒️','Inca Forge'],['🌞','Sun Temple'],['🎶','Inti Raymi Fiesta'],['🏛️','Machu Picchu']],
+  s:[['🦙','Llama'],['🏔️','Andes Peak'],['🏛️','Machu Picchu'],['🌽','Purple Corn'],['🦅','Condor'],['🧶','Alpaca Wool'],['🎶','Pan Flute'],['🌞','Inti Sun'],['🥔','Ancient Potato']],
+  g:[['hat','🧢','Chullo Beanie',{coin:6,charge:5}],['dauber','✨','Inca Gold Dauber',{auto:12}],['charm','🌞','Sun Disc',{event:15}],['outfit','🧥','Alpaca Poncho',{xp:10,special:5}],['pet','🦙','Llama Pal',{charge:12}]]},
+ {n:'France',e:'🗼',sub:'Home of the crispy French fry',c1:'#4a7be0',c2:'#1d2a6b',sky:'🗼🥖🎨',
+  b:[['🌻','Lavender Farm'],['🎱','Bingo Cabaret'],['🥐','Boulangerie'],['🏨','Parisian Hotel'],['🎨','Artist Atelier'],['⛪','Grand Cathedral'],['🎆','Bastille Day'],['🗼','Eiffel Tower']],
+  s:[['🗼','Eiffel Tower'],['🥐','Croissant'],['🥖','Baguette'],['🧀','Fancy Cheese'],['🎨','Paint Palette'],['🍟','Golden Fries'],['🚲','Bicycle'],['🌹','Rose'],['🧁','Macaron']],
+  g:[['hat','🎨','Beret Magnifique',{coin:10}],['dauber','🥖','Baguette Dauber',{auto:15,charge:5}],['charm','🗼','Eiffel Keychain',{souv:20}],['outfit','👕','Striped Marinière',{xp:12,event:10}],['pet','🐩','Poodle Pierre',{gem:15}]]},
+ {n:'Italy',e:'🍝',sub:'Gnocchi, gondolas and gelato',c1:'#3fbf7a',c2:'#8a1f2a',sky:'🏛️🛶🍕',
+  b:[['🍅','Tomato Farm'],['🎱','Bingo Palazzo'],['🍕','Pizzeria Market'],['🏨','Villa Inn'],['🛵','Vespa Garage'],['⛲','Trevi Fountain'],['🎭','Venice Carnival'],['🏛️','Colosseum']],
+  s:[['🍕','Pizza'],['🍝','Gnocchi'],['🏛️','Colosseum'],['🛶','Gondola'],['🍦','Gelato'],['🎭','Opera Mask'],['🛵','Vespa'],['🫒','Olive'],['🍅','Tomato']],
+  g:[['hat','👒','Gondolier Hat',{coin:12,event:8}],['dauber','🍴','Gnocchi Fork',{auto:18}],['charm','🌶️','Lucky Cornicello',{luck:1}],['outfit','🎭','Opera Cape',{xp:15}],['pet','🐈','Vespa Cat',{rival:8}]]},
+ {n:'Egypt',e:'🐫',sub:'Pyramids, pharaohs and the mighty Nile',c1:'#e8b44a',c2:'#7a4a12',sky:'🔺🐫🌴',
+  b:[['🌾','Nile Farm'],['🎱','Pharaoh\'s Bingo Hall'],['🏺','Grand Bazaar'],['⛺','Oasis Camp'],['🔧','Chariot Works'],['🧿','Temple of Horus'],['🎉','Desert Festival'],['🔺','Great Pyramid']],
+  s:[['🐫','Camel'],['🔺','Pyramid'],['🧿','Eye of Horus'],['🏺','Ancient Vase'],['🪲','Scarab'],['🐊','Nile Croc'],['🌴','Oasis Palm'],['📜','Papyrus'],['🐈','Sphinx Cat']],
+  g:[['hat','👑','Pharaoh Crown',{coin:14,gem:8}],['dauber','🪲','Scarab Dauber',{auto:20}],['charm','🧿','Eye of Horus',{special:15}],['outfit','🥻','Desert Robe',{event:20}],['pet','🐫','Royal Camel',{balls:2}]]},
+ {n:'India',e:'🐘',sub:'Spices, colours and aloo everything',c1:'#ff8a3a',c2:'#7a1f5a',sky:'🕌🐘🪷',
+  b:[['🌾','Spice Farm'],['🎱','Bollywood Bingo'],['🛍️','Chandni Market'],['🏨','Palace Hotel'],['🪡','Textile Mill'],['🛕','Golden Temple'],['🎆','Diwali Festival'],['🕌','Taj Mahal']],
+  s:[['🐘','Elephant'],['🕌','Taj Mahal'],['🪷','Lotus'],['🍛','Aloo Curry'],['🐅','Tiger'],['🪁','Kite'],['🫖','Chai Pot'],['🎆','Diwali Lights'],['🦚','Peacock']],
+  g:[['hat','👳','Maharaja Turban',{coin:16,xp:8}],['dauber','🌶','Spice Dauber',{auto:22,charge:8}],['charm','🪷','Lotus Charm',{gem:18}],['outfit','🎉','Festival Sari',{event:25}],['pet','🐘','Baby Elephant',{idle:30,luck:1}]]},
+ {n:'Japan',e:'🗻',sub:'Cherry blossoms and potato croquettes',c1:'#ff8fb3',c2:'#5a1f4a',sky:'⛩️🌸🗻',
+  b:[['🌾','Rice Paddies'],['🎱','Pachinko Bingo Hall'],['🏪','Konbini'],['♨️','Onsen Inn'],['🤖','Robot Lab'],['⛩️','Shinto Shrine'],['🌸','Hanami Festival'],['🏯','Osaka Castle']],
+  s:[['🗻','Mt. Fuji'],['🍣','Sushi'],['⛩️','Torii Gate'],['🌸','Cherry Blossom'],['🍜','Ramen'],['🎎','Hina Dolls'],['🏮','Lantern'],['🍡','Dango'],['🎏','Koinobori']],
+  g:[['hat','🪖','Samurai Kabuto',{coin:18}],['dauber','🌸','Sakura Brush',{auto:25}],['charm','🏮','Lucky Lantern',{luck:2}],['outfit','🥷','Ninja Garb',{rival:12}],['pet','🐕','Shiba Inu',{charge:20}]]},
+ {n:'Australia',e:'🦘',sub:'The outback, the reef and the barbie',c1:'#f0a03a',c2:'#8a2f12',sky:'🦘🐨🏄',
+  b:[['🐑','Outback Station'],['🎱','Beach Bingo Club'],['🦐','Fish Market'],['🏕️','Bush Camp'],['🛠️','Surfboard Shed'],['🌅','Uluru Sanctuary'],['🎆','NYE Fireworks'],['🎼','Opera House']],
+  s:[['🦘','Kangaroo'],['🐨','Koala'],['🏄','Surfboard'],['🪃','Boomerang'],['🦈','Reef Shark'],['🌅','Uluru Sunset'],['🐚','Sea Shell'],['🦜','Cockatoo'],['🎼','Opera House']],
+  g:[['hat','🤠','Cork Bush Hat',{coin:20}],['dauber','🪃','Boomerang Dauber',{auto:28,charge:10}],['charm','💠','Opal Stone',{gem:22}],['outfit','🏄','Surf Wetsuit',{event:30}],['pet','🐨','Koala Kevin',{idle:40,xp:10}]]},
+ {n:'Brazil',e:'🦜',sub:'Samba, rainforest and endless carnival',c1:'#2fbf5a',c2:'#0d4a6b',sky:'🦜🌳⚽',
+  b:[['☕','Coffee Plantation'],['🎱','Samba Bingo Hall'],['🍍','Fruit Market'],['🏖️','Beach Resort'],['🥁','Drum Workshop'],['🌳','Rainforest Shrine'],['🎊','Rio Carnival'],['🏔️','Sugarloaf Mountain']],
+  s:[['🦜','Macaw'],['⚽','Football'],['🥁','Samba Drum'],['🏖️','Copacabana'],['🌳','Rainforest'],['🐆','Jaguar'],['🍍','Pineapple'],['🎊','Carnival'],['🦥','Sloth']],
+  g:[['hat','🪶','Carnival Headdress',{coin:22,event:15}],['dauber','🥁','Samba Dauber',{auto:30}],['charm','⚽','Football Charm',{special:20}],['outfit','💃','Carnival Costume',{xp:20}],['pet','🦜','Toucan Tico',{souv:30}]]},
+ {n:'Iceland',e:'🌋',sub:'Fire, ice and dancing northern lights',c1:'#5ac8e0',c2:'#1a2a5a',sky:'🌋🌌🐋',
+  b:[['🌿','Geothermal Greenhouse'],['🎱','Ice Bingo Igloo'],['🐟','Harbour Market'],['♨️','Blue Lagoon Spa'],['⚒️','Viking Smithy'],['🌌','Aurora Lookout'],['🎇','Midnight Sun Fest'],['🌋','Volcano Observatory']],
+  s:[['🌋','Volcano'],['🧊','Glacier'],['🐋','Whale'],['🌌','Aurora'],['♨️','Hot Spring'],['🐎','Icelandic Horse'],['🐦','Puffin'],['🪓','Viking Axe'],['💨','Geyser']],
+  g:[['hat','⛑️','Viking Helmet',{coin:25}],['dauber','🌌','Aurora Dauber',{auto:35}],['charm','🔮','Volcano Crystal',{luck:2,gem:15}],['outfit','🧥','Puffin Parka',{rival:15}],['pet','🦊','Arctic Fox',{charge:25}]]},
+ {n:'Mexico',e:'🌮',sub:'Fiestas, piñatas and spicy papas',c1:'#ff5a7a',c2:'#3a1a6b',sky:'🌵🪅🌮',
+  b:[['🌽','Corn Ranch'],['🎱','Lotería Hall'],['🌮','Taco Mercado'],['🏨','Hacienda'],['🪅','Piñata Factory'],['💀','Ofrenda Altar'],['🎉','Día de Muertos'],['🔺','Chichén Itzá']],
+  s:[['🌮','Taco'],['🌵','Cactus'],['🪅','Piñata'],['💀','Sugar Skull'],['🎺','Mariachi Trumpet'],['🌶️','Chili'],['🥑','Avocado'],['🏜️','Desert'],['🦂','Scorpion']],
+  g:[['hat','👒','Grand Sombrero',{coin:28}],['dauber','🪅','Piñata Dauber',{auto:40,special:10}],['charm','💀','Sugar Skull Charm',{event:40}],['outfit','🎺','Mariachi Suit',{xp:25}],['pet','🐕','Chihuahua Chico',{balls:3}]]},
+ {n:'USA',e:'🗽',sub:'Idaho – the Potato State itself!',c1:'#e04a4a',c2:'#1d2a6b',sky:'🗽🍟🦅',
+  b:[['🥔','Idaho Spud Ranch'],['🎱','Vegas Bingo Palace'],['🛒','Super Spudmarket'],['🏨','Route 66 Motel'],['🏭','Fry Factory'],['🗽','Liberty Shrine'],['🎆','Fourth of July'],['🚀','Space Center']],
+  s:[['🗽','Lady Liberty'],['🍟','Idaho Fries'],['🦅','Bald Eagle'],['🏈','Football'],['🌉','Golden Gate'],['🎢','Rollercoaster'],['🍔','Burger'],['🤠','Cowboy'],['🚀','Rocket']],
+  g:[['hat','🤠','Spud Cowboy Hat',{coin:32}],['dauber','🍟','Golden Fry Dauber',{auto:45,charge:15}],['charm','🔥','Liberty Torch',{gem:30}],['outfit','🧑‍🚀','Astronaut Prep Suit',{xp:30}],['pet','🦅','Bald Eagle',{rival:20}]]},
+ {n:'The Moon',e:'🌕',sub:'One small step for a spud…',c1:'#8a8fb8',c2:'#14143a',sky:'🌑🛰️☄️',
+  b:[['🌱','Lunar Greenhouse'],['🎱','Zero-G Bingo Dome'],['🛰️','Orbital Market'],['🏠','Moon Base'],['🔧','Rover Garage'],['🔭','Observatory'],['✨','Starlight Gala'],['🌕','Lunar Spud Monument']],
+  s:[['🌕','Full Moon'],['🚀','Lander'],['🧑‍🚀','Astronaut'],['🛰️','Satellite'],['☄️','Comet'],['🌑','Crater'],['🔭','Telescope'],['🧀','Moon Cheese'],['🚩','Spud Flag']],
+  g:[['hat','🌕','Lunar Helmet',{coin:36}],['dauber','☄️','Crater Dauber',{auto:50}],['charm','🪨','Moon Rock',{gem:35}],['outfit','🧑‍🚀','Zero-G Suit',{rival:25}],['pet','🤖','Robo Rover',{claim:1,charge:20}]]},
+ {n:'Potato Planet',e:'🪐',sub:'The legendary home world of all spuds',c1:'#b36bff',c2:'#1a0a3a',sky:'🛸🌠👽',
+  b:[['🌾','Cosmic Spud Fields'],['🎱','Galactic Bingo Arena'],['🛸','UFO Bazaar'],['🏙️','Star Hotel'],['⚛️','Quantum Lab'],['🌠','Wishing Star Shrine'],['🎇','Big Bang Bash'],['👑','Spud King\'s Palace']],
+  s:[['🪐','Ring World'],['👽','Spud Alien'],['🛸','UFO'],['⭐','Star Potato'],['🌠','Shooting Star'],['💫','Stardust'],['🥔','Cosmic Spud'],['🌌','Galaxy'],['👑','Spud Crown']],
+  g:[['hat','🌠','Cosmic Crown',{coin:40}],['dauber','⚛️','Quantum Dauber',{auto:60,claim:1}],['charm','⭐','Star Potato Core',{luck:3}],['outfit','🌌','Galaxy Suit',{event:50,xp:30}],['pet','👽','Alien Spud',{charge:40,idle:60}]]}
+];
+const NL=LANDS.length;
+const LAND_RAR=[0,0,1,1,1,2,2,2,3,3,3,3,4,4];
+const REQ=i=>Math.min(10,3+Math.floor(i*0.6));   // building level needed to build landmark
+const Bv=i=>30*Math.pow(6,i);                      // base bingo payout in land i
+const Dv=i=>Math.pow(1.5,i);                       // difficulty multiplier on prices
+const bCost=(i,k,L)=>k===7?30*Bv(i)*Dv(i)*Math.pow(3,L):BCOST[k]*Bv(i)*Dv(i)*Math.pow(1.5,L);
+const bMax=k=>k===7?5:10;
+const FEE=i=>Math.ceil(0.3*Bv(i));
+
+// Gear
+const ITEMS={};
+LANDS.forEach((L,i)=>L.g.forEach(([slot,e,n,st],j)=>{ITEMS['L'+i+'_'+slot]={id:'L'+i+'_'+slot,slot,e,n,st,r:LAND_RAR[i],land:i,price:[10,12,14,11,16][j]*Bv(i)*Dv(i)}}));
+const CHEST_ITEMS=[
+ ['hat','🥔','Potato Sack Hat',0,{coin:4,xp:4}],['dauber','🖊️','Crayon Dauber',0,{auto:6}],['charm','🐇','Rabbit Foot',0,{gem:6}],['outfit','👖','Garden Overalls',0,{idle:20}],['pet','🪨','Pet Rock',0,{charge:6}],
+ ['hat','🎩','Fancy Top Hat',1,{coin:9,event:5}],['dauber','💡','Neon Dauber',1,{auto:14,charge:6}],['charm','🧲','Lucky Horseshoe',1,{luck:1}],['outfit','🤵','Bingo Tuxedo',1,{xp:14}],['pet','🐹','Hamster Hank',1,{event:15}],
+ ['hat','🧙','Wizard Hat',2,{coin:15,gem:10}],['dauber','🔦','Laser Dauber',2,{auto:25}],['charm','🎲','Dice of Fate',2,{special:18,luck:1}],['outfit','🦸','Super Cape',2,{rival:12,xp:10}],['pet','🐉','Dragon Whelp',2,{coin:10,event:20}],
+ ['hat','👑','Golden Crown',3,{coin:30}],['dauber','🤖','Butler Bot',3,{auto:40,claim:1}],['charm','🪔','Genie Lamp',3,{gem:30,luck:1}],['outfit','💎','Diamond Suit',3,{coin:15,xp:25}],['pet','🔥','Phoenix',3,{charge:30,event:30}],
+ ['hat','🥔','Crown of the Spud King',4,{coin:50,xp:20}],['dauber','♾️','Infinity Dauber',4,{auto:80,claim:1}],['charm','🌈','Rainbow Charm',4,{luck:3,special:25}],['outfit','🌌','Cosmic Robe',4,{rival:30,event:40}],['pet','🦄','Unicorn',4,{gem:50,souv:40}]
+];
+CHEST_ITEMS.forEach(([slot,e,n,r,st],j)=>{ITEMS['C'+j]={id:'C'+j,slot,e,n,r,st,chest:true}});
+const CHESTS=[
+ {k:'bronze',e:'🎁',n:'Bronze Chest',w:[70,25,5,0,0]},
+ {k:'silver',e:'🧰',n:'Silver Chest',w:[25,52,20,3,0],gems:60},
+ {k:'gold',e:'💰',n:'Gold Chest',w:[0,35,45,17,3],gems:180},
+ {k:'spud',e:'🥔',n:'Royal Spud Chest',w:[0,0,35,48,17],gems:500}
+];
+// Power-ups
+const PW=[
+ {k:'daub',e:'🎯',n:'Dauber Blast',d:l=>`Daubs ${2+Math.floor(l/3)} random squares`,unlock:0,w:30},
+ {k:'double',e:'✖️',n:'Double Spud',d:l=>`Next bingo pays ×${(2+0.15*(l-1)).toFixed(2)}`,unlock:0,w:22},
+ {k:'coins',e:'💰',n:'Coin Shower',d:l=>`Instant ${fmt(60+15*(l-1))}% of a bingo in coins`,unlock:0,w:22},
+ {k:'freeze',e:'🧊',n:'Rival Freeze',d:l=>`Rivals can't win for ${4+l} balls`,unlock:40,w:14},
+ {k:'bomb',e:'💣',n:'Potato Bomb',d:l=>l>=5?'Daubs a 3×3 area':'Daubs a + shape (3×3 at Lv5)',unlock:90,w:12},
+ {k:'instant',e:'🔮',n:'Instant Bingo',d:l=>`Completes your best line (weight +${(l-1)*10}%)`,unlock:250,w:4}
+];
+const pwUp=l=>15+l*12;
+// Lines on a 5x5 card
+const LINES=[];
+for(let r=0;r<5;r++)LINES.push([0,1,2,3,4].map(c=>r*5+c));
+for(let c=0;c<5;c++)LINES.push([0,1,2,3,4].map(r=>r*5+c));
+LINES.push([0,6,12,18,24],[4,8,12,16,20]);
+const LET='BINGO', LCOL=['#ff5a5a','#ffb52e','#3fcf6b','#4aa3ff','#b36bff'];
+const RIVALS=['SpudLord88','TaterTot','MashQueen','FryGuy','Chipster','BakedBetty','HashBrownie','Gnocchi_G','SweetPotatoPie','PotatoPaula','RustyRusset','YukonJoe','KingEdward','DaubDaddy','BingoBaron','LuckyLlama','CroquetteCarl','Rösti_Rita','Pommes_Pete','Latke_Lou'];
+
+/* ---------- QUESTS / ACHIEVEMENTS ---------- */
+const QUESTS=[
+ {k:'bingos',t:n=>`Get ${n} bingos`,b:6},
+ {k:'rounds',t:n=>`Play ${n} bingo rounds`,b:5},
+ {k:'daubs',t:n=>`Daub ${n} numbers`,b:150},
+ {k:'events',t:n=>`Catch ${n} bonus events`,b:3},
+ {k:'powerups',t:n=>`Use ${n} power-ups`,b:4},
+ {k:'souvenirs',t:n=>`Find ${n} souvenirs`,b:4},
+ {k:'upgrades',t:n=>`Upgrade buildings ${n} times`,b:5},
+ {k:'combo',t:n=>`Reach a ${n}× daub combo`,b:12,max:true},
+ {k:'specials',t:n=>`Daub ${n} special squares`,b:10}
+];
+const ACH=[];
+(function(){
+ const add=(id,e,n,d,f,g)=>ACH.push({id,e,n,d,f,g});
+ [1,10,50,100,250,500,1000,2500,5000,10000,25000,50000].forEach((v,i)=>add('b'+v,'🎉',`Bingo ×${fmt(v)}`,`Get ${fmt(v)} bingos`,()=>S.st.bingos>=v,5+i*5));
+ [1,10,50,100,250,500,1000,2500,5000].forEach((v,i)=>add('r'+v,'🎱',`${fmt(v)} rounds`,`Play ${fmt(v)} rounds`,()=>S.st.rounds>=v,5+i*5));
+ [100,1000,5000,25000,100000,500000,1e6].forEach((v,i)=>add('d'+v,'🖍️',`Dauber ${i+1}`,`Daub ${fmt(v)} numbers`,()=>S.st.daubs>=v,5+i*6));
+ [1,10,50,200,500,1000,2500].forEach((v,i)=>add('e'+v,'⚡',`Quick hands ${i+1}`,`Catch ${fmt(v)} bonus events`,()=>S.st.events>=v,5+i*6));
+ [5,10,20,30,40,50].forEach((v,i)=>add('c'+v,'🔥',`Combo ${v}`,`Reach a ${v}× daub combo`,()=>S.st.bestCombo>=v,5+i*6));
+ for(let i=1;i<NL;i++)add('l'+i,LANDS[i].e,`Welcome to ${LANDS[i].n}`,`Unlock ${LANDS[i].n}`,()=>S.unlocked>i,10+i*5);
+ for(let i=0;i<NL;i++)add('k'+i,'🧩',`${LANDS[i].n} album`,`Complete the ${LANDS[i].n} souvenir album`,()=>S.colDone[i],15+i*5);
+ for(let i=0;i<NL;i++)add('m'+i,'⭐',`${LANDS[i].n} mastered`,`Max every building in ${LANDS[i].n}`,()=>S.b[i].every((l,k)=>l>=bMax(k)),25+i*8);
+ [5,10,15,20,30,40,50,75,100,150].forEach((v,i)=>add('lv'+v,'🎓',`Level ${v}`,`Reach player level ${v}`,()=>S.level>=v,5+i*6));
+ [1,5,10,20,40,60,85].forEach((v,i)=>add('g'+v,'🎒',`Collector ${i+1}`,`Own ${v} gear items`,()=>Object.keys(S.gear).length>=v,5+i*8));
+ [1,25,100,500,2000,5000].forEach((v,i)=>add('p'+v,'🔮',`Power player ${i+1}`,`Use ${fmt(v)} power-ups`,()=>S.st.powerups>=v,5+i*6));
+ [1,10,50,200,500].forEach((v,i)=>add('h'+v,'🎁',`Chest opener ${i+1}`,`Open ${v} chests`,()=>S.st.chests>=v,5+i*6));
+ [1e4,1e6,1e8,1e10,1e12,1e14,1e16,1e18].forEach((v,i)=>add('m$'+i,'🪙',`Rich spud ${i+1}`,`Earn ${fmt(v)} coins in total`,()=>S.st.coins>=v,5+i*6));
+ [1,2,3,5,10].forEach((v,i)=>add('t'+v,'🌍',`World Tour ${v}`,`Complete ${v} World Tour${v>1?'s':''}`,()=>S.tours>=v,50+i*25));
+ [7,30,100].forEach((v,i)=>add('s'+v,'📅',`Loyal spud ${i+1}`,`Log in ${v} days`,()=>S.login.total>=v,10+i*20));
+})();
+
+/* ---------- STATE ---------- */
+function fresh(){return{
+  v:1,coins:0,gems:25,xp:0,level:1,cur:0,unlocked:1,
+  b:LANDS.map(()=>Array(8).fill(0)),souv:LANDS.map(()=>Array(9).fill(0)),colDone:LANDS.map(()=>false),
+  gear:{},eq:{hat:null,dauber:null,charm:null,outfit:null,pet:null},bronze:1,
+  pl:{daub:1,double:1,coins:1,freeze:0,bomb:0,instant:0},
+  cards:1,speed:0,boost:0,
+  st:{rounds:0,bingos:0,daubs:0,events:0,coins:0,gems:0,chests:0,powerups:0,souvenirs:0,bestCombo:0,specials:0,upgrades:0,best1:0,playMs:0},
+  ach:{},achSeen:0,daily:null,login:{last:'',streak:0,total:0},
+  tours:0,last:Date.now(),sound:true,voice:false,tut:false,tab:'bingo'
+}}
+let S=fresh();
+function load(){
+  try{const d=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(d&&d.v===1){const f=fresh();S=Object.assign(f,d);S.st=Object.assign(f.st,d.st);S.eq=Object.assign(f.eq,d.eq);S.pl=Object.assign(f.pl,d.pl);S.login=Object.assign(f.login,d.login);
+    LANDS.forEach((_,i)=>{S.b[i]=S.b[i]||Array(8).fill(0);S.souv[i]=S.souv[i]||Array(9).fill(0)});}}catch(e){}
+}
+function save(){S.last=Date.now();try{localStorage.setItem(SAVE_KEY,JSON.stringify(S))}catch(e){}}
+
+/* ---------- DERIVED STATS ---------- */
+let ST={};
+function itemStat(it,lv){const o={};for(const k in it.st){const b=it.st[k];o[k]=k==='claim'?1:(k==='luck'||k==='balls')?+(b*(1+0.1*(lv-1))).toFixed(2):Math.round(b*(1+0.2*(lv-1)))}return o}
+function calc(){
+  const s={coin:0,xp:0,auto:0,charge:0,event:0,gem:0,luck:0,special:0,souv:0,balls:0,rival:0,idle:0,claim:0,lm:0,farm:0};
+  LANDS.forEach((L,i)=>{const b=S.b[i];s.farm+=b[0]*0.15*Bv(i);s.coin+=b[1]*4;s.special+=b[2]*3;s.souv+=b[2]*4;s.xp+=b[3]*5;s.charge+=b[4]*4;s.gem+=b[5]*4;s.event+=b[6]*6;s.lm+=b[7];if(S.colDone[i])s.coin+=5});
+  for(const sl in S.eq){const id=S.eq[sl];if(id&&S.gear[id]){const o=itemStat(ITEMS[id],S.gear[id]);for(const k in o)s[k]+=o[k]}}
+  s.coin+=(S.level-1);
+  s.auto=Math.min(100,s.auto);s.rival=Math.min(70,s.rival);
+  s.all=(1+0.1*s.lm)*(1+0.75*S.tours);
+  s.cm=(1+s.coin/100)*s.all;                      // coin multiplier on bingos
+  s.farmMin=s.farm*s.all*(1+s.idle/100);           // coins per minute
+  ST=s;
+}
+const maxCards=()=>S.level>=12?4:S.level>=7?3:S.level>=3?2:1;
+const SPEEDS=[{n:'Normal',t:2.4,lv:1},{n:'Fast',t:1.6,lv:5},{n:'Turbo',t:1.0,lv:15}];
+const xpNeed=l=>Math.floor(40*Math.pow(l,1.55));
+
+/* ---------- AUDIO ---------- */
+let AC=null;
+function tone(f,d=0.1,type='sine',v=0.12,delay=0){if(!S.sound)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const t=AC.currentTime+delay,o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(0.001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d)}catch(e){}}
+const SFX={
+  ball:()=>{tone(660,.08,'triangle',.1);tone(880,.1,'triangle',.08,.07)},
+  daub:()=>tone(420+rnd()*80,.07,'square',.05),
+  bad:()=>tone(140,.15,'sawtooth',.06),
+  coin:()=>{tone(988,.07,'square',.06);tone(1319,.12,'square',.06,.06)},
+  bingo:()=>[523,659,784,1047,1319].forEach((f,i)=>tone(f,.18,'triangle',.12,i*.08)),
+  event:()=>[880,660,880,660].forEach((f,i)=>tone(f,.09,'square',.07,i*.1)),
+  power:()=>[300,450,600,900].forEach((f,i)=>tone(f,.12,'sawtooth',.06,i*.05)),
+  level:()=>[523,784,1047,784,1047,1568].forEach((f,i)=>tone(f,.16,'triangle',.11,i*.1)),
+  buy:()=>{tone(523,.08,'triangle',.1);tone(784,.14,'triangle',.1,.08)}
+};
+function speak(t){if(!S.voice||!window.speechSynthesis)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=1.15;speechSynthesis.speak(u)}catch(e){}}
+
+/* ---------- FX / UI HELPERS ---------- */
+const fxEl=$('#fx');
+function floatTxt(x,y,t,c){const d=document.createElement('div');d.className='float';d.textContent=t;d.style.left=(x-20)+'px';d.style.top=(y-20)+'px';if(c)d.style.color=c;fxEl.appendChild(d);setTimeout(()=>d.remove(),1200)}
+function floatAt(el,t,c){const r=el.getBoundingClientRect();floatTxt(r.left+r.width/2,r.top,t,c)}
+function confetti(n=60){for(let i=0;i<n;i++){const d=document.createElement('div');d.className='conf';d.style.left=(rnd()*100)+'vw';d.style.top=(-20-rnd()*80)+'px';d.style.background=pick(LCOL.concat(['#fff','#ffcf4a']));d.style.setProperty('--dx',(rnd()*200-100)+'px');d.style.setProperty('--r',(rnd()*900)+'deg');d.style.animationDelay=(rnd()*.4)+'s';d.style.animationDuration=(1.2+rnd()*1)+'s';fxEl.appendChild(d);setTimeout(()=>d.remove(),2800)}}
+function bigTxt(t){const d=document.createElement('div');d.className='bigtxt';d.textContent=t;fxEl.appendChild(d);setTimeout(()=>d.remove(),1300)}
+function toast(t){const d=document.createElement('div');d.className='toast';d.innerHTML=t;$('#toasts').appendChild(d);setTimeout(()=>d.remove(),2600);while($('#toasts').children.length>4)$('#toasts').firstChild.remove()}
+let modalQ=[],modalOn=false;
+function modal(html){modalQ.push(html);if(!modalOn)nextModal()}
+function nextModal(){const h=modalQ.shift();if(!h){$('#modal').classList.remove('on');modalOn=false;return}modalOn=true;$('#mbox').innerHTML=h;$('#modal').classList.add('on')}
+function closeModal(){nextModal()}
+function modalLater(html){if(R&&!R.over)R.post.push(html);else modal(html)}
+const rarTag=r=>`<span class="rar" style="background:${RAR[r].c}">${RAR[r].n}</span>`;
+const statTxt=o=>Object.keys(o).map(k=>k==='claim'?'🤖 Auto-BINGO':`+${o[k]}${STAT[k][1]} ${STAT[k][0]}`).join(' · ');
+
+/* ---------- ECONOMY ---------- */
+function addCoins(n,src){n=Math.floor(n);if(n<=0)return 0;S.coins+=n;S.st.coins+=n;if(src!=='idle')track('coins',n);return n}
+function addGems(n){S.gems+=n;S.st.gems+=n}
+function addXP(n){n=Math.ceil(n*(1+ST.xp/100));S.xp+=n;let up=false;while(S.xp>=xpNeed(S.level)){S.xp-=xpNeed(S.level);S.level++;up=true;levelUp()}if(up)calc()}
+function levelUp(){const g=5+Math.floor(S.level/2);addGems(g);const c=addCoins(Bv(S.unlocked-1)*2*ST.cm);SFX.level();
+  const un=[];if(S.level===3)un.push('🎱 2 bingo cards');if(S.level===7)un.push('🎱 3 bingo cards');if(S.level===12)un.push('🎱 4 bingo cards');if(S.level===5)un.push('⏩ Fast speed');if(S.level===15)un.push('🚀 Turbo speed');if(S.level===4)un.push('👕 Outfit slot');if(S.level===8)un.push('🐾 Pet slot');
+  toast(`🎓 <b>LEVEL ${S.level}!</b> +${g} 💎 +${fmt(c)} 🪙 · +1% bingo coins${un.length?'<br>Unlocked: '+un.join(', '):''}`);if(un.length)confetti(40)}
+
+function quests(){const t=today();if(!S.daily||S.daily.day!==t){const ks=shuffle(QUESTS.slice()).slice(0,3);S.daily={day:t,spins:0,bonus:false,q:ks.map(q=>({k:q.k,n:Math.ceil(q.b*(q.max?1+S.level/40:1+S.level/12)),p:0,c:false}))}}return S.daily}
+function track(k,n=1){const d=quests();d.q.forEach(q=>{if(q.k===k){const def=QUESTS.find(x=>x.k===k);q.p=def.max?Math.max(q.p,n):q.p+n}});}
+function checkAch(){let n=0;ACH.forEach(a=>{if(!S.ach[a.id]&&a.f()){S.ach[a.id]=1;addGems(a.g);n++;toast(`🏆 <b>${a.n}</b> unlocked! +${a.g} 💎`)}});if(n){calc();updDots()}}
+
+/* ---------- IDLE ---------- */
+let idleAcc=0;
+function idleTick(dt){if(!ST.farmMin)return;idleAcc+=ST.farmMin*dt/60;if(idleAcc>=1){const n=Math.floor(idleAcc);idleAcc-=n;addCoins(n,'idle')}}
+function offline(quiet){const ms=Date.now()-(S.last||Date.now());if(ms<60000||!ST.farmMin)return;const mins=Math.min(ms/60000,8*60);const c=addCoins(ST.farmMin*mins,'idle');S.last=Date.now();
+  if(quiet){toast(`🌾 Your farms earned <b>+${fmt(c)} 🪙</b> while you were away`);return}
+  modal(`<div class="me">🌾</div><h2>Welcome back!</h2><p>Your farms worked hard for <b>${mins>=60?(mins/60).toFixed(1)+' hours':Math.floor(mins)+' minutes'}</b> while you were away.</p><div class="rl"><span>Farm income</span><b>+${fmt(c)} 🪙</b></div><p class="small">Farms store up to 8 hours of income.</p><div class="acts"><button class="btn big" data-a="close">Collect!</button></div>`)}
+
+/* ---------- RENDER ROOT ---------- */
+const view=$('#view');
+function setTheme(){const L=LANDS[S.cur];document.documentElement.style.setProperty('--c1',L.c1);document.documentElement.style.setProperty('--c2',L.c2)}
+function updHUD(){$('#hCoins').textContent=fmt(S.coins);$('#hGems').textContent=fmt(S.gems);$('#hLvl').textContent='Lv '+S.level;$('#hXp').style.width=(S.xp/xpNeed(S.level)*100)+'%';$('#sndBtn').textContent=S.sound?'🔊':'🔇'}
+function updDots(){
+  const d=quests();const qn=d.q.filter(q=>q.p>=q.n&&!q.c).length+(d.spins===0?1:0)+(S.login.last!==today()?1:0);
+  const dd=$('#dDaily');dd.textContent=qn;dd.classList.toggle('on',qn>0);
+  const tb=$('#dTown');const cn=canBuildAny();tb.textContent='!';tb.classList.toggle('on',cn);
+  const gb=$('#dGear');gb.textContent=S.bronze;gb.classList.toggle('on',S.bronze>0);
+  const ab=$('#dAch');const an=Object.keys(S.ach).length-S.achSeen;ab.textContent=an;ab.classList.toggle('on',an>0);
+}
+function canBuildAny(){const i=S.cur;for(let k=0;k<8;k++){const L=S.b[i][k];if(L<bMax(k)&&(k<7||lmReady(i))&&S.coins>=bCost(i,k,L))return true}return false}
+function lmReady(i){const r=REQ(i);return S.b[i].slice(0,7).every(l=>l>=r)}
+function render(){
+  if(R&&!R.over){S.tab='bingo'}
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===S.tab));
+  $('#nav').classList.toggle('lock',!!(R&&!R.over));
+  setTheme();
+  const f={map:vMap,town:vTown,bingo:vBingo,gear:vGear,album:vAlbum,daily:vDaily,trophy:vTrophy}[S.tab]||vBingo;
+  f();updHUD();updDots();
+}
+function rerender(){const st=view.scrollTop;render();view.scrollTop=st}
+
+/* ---------- MAP ---------- */
+function landProg(i){let t=0,m=0;for(let k=0;k<8;k++){t+=S.b[i][k];m+=bMax(k)}const s=S.souv[i].filter(x=>x>0).length;return (t+s)/(m+9)}
+function vMap(){
+  let h=`<div class="pad"><h2 class="t">🗺️ World Map</h2><p class="subt">Build each land's landmark to unlock the next adventure. ${S.tours?`🌍 World Tour ${S.tours} · all coins ×${(1+0.75*S.tours).toFixed(2)}`:''}</p><div class="journey">`;
+  LANDS.forEach((L,i)=>{const lock=i>=S.unlocked,here=i===S.cur,p=landProg(i);
+    h+=`<button class="land ${lock?'locked':''} ${here?'here':''}" style="background:linear-gradient(150deg,${L.c1},${L.c2})" data-a="travel" data-i="${i}" ${lock?'disabled':''}>
+      <span class="num">${here?'📍 HERE':lock?'🔒':'#'+(i+1)}</span><div class="le">${lock?'❔':L.e}</div><h3>${L.n}</h3><p>${lock?(i===S.unlocked?`Build the ${LANDS[i-1].b[7][1]} in ${LANDS[i-1].n}`:'Locked'):L.sub}</p>
+      ${lock?'':`<div class="small">Town ${Math.round(p*100)}% · Bingo pays ${fmt(Bv(i)*ST.cm)}</div><div class="pbar"><i style="width:${p*100}%"></i></div>`}</button>`});
+  h+=`</div>${S.b[NL-1][7]>0?`<div class="box" style="margin-top:16px;text-align:center"><h3 class="lil" style="font-size:24px;margin:0">🌍 World Tour available!</h3><p class="muted">Start a new tour to multiply all coins forever. See the Trophies tab.</p></div>`:''}</div>`;
+  view.innerHTML=h;
+}
+
+/* ---------- TOWN ---------- */
+function vTown(){
+  const i=S.cur,L=LANDS[i],b=S.b[i],r=REQ(i);
+  let h=`<div class="pad"><div class="scene" style="background:linear-gradient(140deg,${L.c1},${L.c2})"><div class="bigE">${L.e}</div><div><h2>${L.n}</h2><div class="small" style="opacity:.9">${L.sub}</div>
+    <div class="row" style="margin-top:8px"><span class="pill">🌾 ${fmt(ST.farmMin)}/min</span><span class="pill">🎱 ${fmt(Bv(i)*ST.cm)}/bingo</span></div></div><div class="skyline">${L.sky}</div></div>
+    <h3 class="sec">🏗️ Buildings</h3><div class="grid">`;
+  for(let k=0;k<8;k++){const lv=b[k],mx=bMax(k),c=lv<mx?bCost(i,k,lv):0,[e,n]=L.b[k];
+    const lm=k===7,ready=!lm||lmReady(i);
+    let eff=BT[k].d(lv);if(k===0)eff=`+${fmt(lv*0.15*Bv(i)*ST.all*(1+ST.idle/100))} coins/min (next +${fmt(0.15*Bv(i)*ST.all*(1+ST.idle/100))})`;
+    h+=`<div class="box bld ${lm?'lm':''}"><div class="top"><div class="be">${e}</div><div><h4>${n}</h4><div class="stars">${'★'.repeat(lv)}<span style="opacity:.3">${'★'.repeat(mx-lv)}</span></div></div></div>
+      <div class="eff">${eff}${lm?`<br>${lv===0?(i<NL-1?`🔓 Unlocks <b>${LANDS[i+1].n}</b>!`:'🌍 Unlocks the World Tour!'):''}`:''}</div>
+      ${lm&&lv===0?`<div class="req">Needs all buildings at level ${r}: ${L.b.slice(0,7).map((x,j)=>`<b class="${b[j]>=r?'ok':'no'}">${x[0]}${b[j]}</b>`).join(' ')}</div>`:''}
+      ${lv>=mx?`<button class="btn g" disabled>✔ MAXED</button>`:`<button class="btn" data-a="build" data-k="${k}" ${ready?`data-cost="${c}"`:''} ${(!ready||S.coins<c)?'disabled':''}>${lv===0?'Build':'Upgrade'} · 🪙 ${fmt(c)}</button>`}</div>`}
+  h+=`</div><h3 class="sec">🛍️ ${L.n} Gear Shop</h3><p class="subt">Unique items you can wear while playing bingo.</p><div class="grid">`;
+  L.g.forEach(g=>{const it=ITEMS['L'+i+'_'+g[0]],own=S.gear[it.id];
+    h+=`<div class="item" style="cursor:default"><div class="ie" style="color:${RAR[it.r].c}">${it.e}</div><div style="flex:1;min-width:0"><div class="in">${it.n} ${rarTag(it.r)}</div><div class="is">${SLOTS.find(s=>s.k===it.slot).n} · ${statTxt(itemStat(it,own||1))}</div>
+      <div style="margin-top:6px">${own?`<button class="btn g" data-a="tab" data-t="gear">Owned · Lv ${own}</button>`:`<button class="btn" data-a="buyItem" data-id="${it.id}" data-cost="${it.price}" ${S.coins<it.price?'disabled':''}>Buy · 🪙 ${fmt(it.price)}</button>`}</div></div></div>`});
+  h+=`</div></div>`;view.innerHTML=h;
+}
+function build(k){const i=S.cur,lv=S.b[i][k];if(lv>=bMax(k))return;if(k===7&&!lmReady(i))return;const c=bCost(i,k,lv);if(S.coins<c)return;
+  S.coins-=c;S.b[i][k]++;S.st.upgrades++;track('upgrades');SFX.buy();calc();
+  if(k===7&&lv===0){confetti(90);bigTxt(LANDS[i].b[7][0]+' BUILT!');
+    if(i<NL-1&&S.unlocked<=i+1){S.unlocked=i+2;addGems(25+i*10);modal(`<div class="me">✈️${LANDS[i+1].e}</div><h2>New land unlocked!</h2><p><b>${LANDS[i+1].n}</b> – ${LANDS[i+1].sub}.</p><p>Bingo pays <b>6× more</b> there, and you get a new gear shop, souvenir album and buildings!</p><div class="rl"><span>Bonus</span><b>+${25+i*10} 💎</b></div><div class="acts"><button class="btn big" data-a="travel" data-i="${i+1}">Travel now ✈️</button><button class="btn dk" data-a="close">Stay</button></div>`)}
+    else if(i===NL-1)modal(`<div class="me">🌍👑</div><h2>You conquered the universe!</h2><p>The Spud King bows to you. You can now start a <b>World Tour</b> from the Trophies tab: restart the journey with a permanent coin multiplier, keeping your gear, level, gems, albums and powers.</p><div class="acts"><button class="btn big" data-a="close">Amazing!</button></div>`)}
+  checkAch();save();rerender()}
+function travel(i){if(i>=S.unlocked)return;S.cur=i;closeModalAll();S.tab='town';toast(`✈️ Welcome to <b>${LANDS[i].n}</b> ${LANDS[i].e}`);save();render();view.scrollTop=0}
+function closeModalAll(){modalQ=[];nextModal()}
+
+/* ---------- GEAR ---------- */
+function vGear(){
+  let h=`<div class="pad"><h2 class="t">🎒 Gear</h2><p class="subt">Wear items to power up your bingo. Upgrade them to make them stronger.</p><div class="slots">`;
+  SLOTS.forEach(sl=>{const id=S.eq[sl.k],it=id&&ITEMS[id];const lock=S.level<sl.lv;
+    h+=`<div class="slot ${it?'f':''}" ${it?`style="border-color:${RAR[it.r].c}"`:''}><div class="se">${lock?'🔒':it?it.e:sl.e}</div><b style="color:var(--txt)">${sl.n}</b>${lock?`Level ${sl.lv}`:it?`${it.n}<br>Lv ${S.gear[id]}`:'Empty'}</div>`});
+  h+=`</div><div class="box" style="margin-top:12px"><b>Your bonuses</b><div class="stats" style="margin-top:8px">`;
+  [['coin','🪙'],['auto','🖍️'],['xp','🎓'],['charge','⚡'],['event','🎉'],['gem','💎'],['luck','🍀'],['special','✨'],['souv','🧩'],['balls','🎱'],['rival','🐢'],['idle','🌾']].forEach(([k,e])=>{h+=`<div>${e} ${STAT[k][0]}<b>+${+ST[k].toFixed(2)}${STAT[k][1]}</b></div>`});
+  h+=`<div>🤖 Auto-BINGO<b>${ST.claim?'ON':'OFF'}</b></div><div>🌍 Global coins<b>×${ST.all.toFixed(2)}</b></div></div></div>
+    <h3 class="sec">🎁 Treasure Chests</h3><div class="grid">`;
+  CHESTS.forEach((c,j)=>{h+=`<div class="box chest"><div class="ce">${c.e}</div><b>${c.n}</b><div class="small muted">${c.w.map((w,r)=>w?`${RAR[r].n} ${w}%`:'').filter(Boolean).join(' · ')}</div>
+    ${j===0?`<button class="btn" data-a="openChest" data-j="0" ${S.bronze<1?'disabled':''}>Open (${S.bronze} owned)</button><div class="small muted">Found on 🎁 bingo squares</div>`:`<button class="btn p" data-a="openChest" data-j="${j}" ${S.gems<c.gems?'disabled':''}>Open · 💎 ${c.gems}</button>`}</div>`});
+  h+=`</div><h3 class="sec">🧳 Inventory (${Object.keys(S.gear).length}/${Object.keys(ITEMS).length})</h3>`;
+  const own=Object.keys(S.gear).map(id=>ITEMS[id]).sort((a,b)=>b.r-a.r||SLOTS.findIndex(s=>s.k===a.slot)-SLOTS.findIndex(s=>s.k===b.slot));
+  if(!own.length)h+=`<p class="muted">No gear yet! Buy items in the Town shop or open chests.</p>`;
+  h+=`<div class="grid">`;
+  own.forEach(it=>{const lv=S.gear[it.id],mx=RAR[it.r].max,eq=S.eq[it.slot]===it.id,uc=upCost(it,lv),sl=SLOTS.find(s=>s.k===it.slot);
+    h+=`<div class="item ${eq?'eq':''}" style="cursor:default"><div class="ie" style="color:${RAR[it.r].c}">${it.e}</div><div style="flex:1;min-width:0"><div class="in">${it.n}</div><div class="is">${rarTag(it.r)} ${sl.n} · Lv ${lv}/${mx}</div><div class="is" style="color:var(--txt)">${statTxt(itemStat(it,lv))}</div>
+      <div class="row" style="margin-top:6px">${eq?`<button class="btn dk" data-a="unequip" data-s="${it.slot}">Remove</button>`:`<button class="btn g" data-a="equip" data-id="${it.id}" ${S.level<sl.lv?'disabled':''}>Wear</button>`}
+      ${lv<mx?`<button class="btn" data-a="upItem" data-id="${it.id}" data-cost="${uc}" ${S.coins<uc?'disabled':''}>⬆ 🪙 ${fmt(uc)}</button>`:'<span class="small" style="color:var(--gold)">★ MAX</span>'}</div></div></div>`});
+  h+=`</div></div>`;view.innerHTML=h;
+}
+function upCost(it,lv){return it.chest?3*(1+it.r*0.6)*Bv(S.unlocked-1)*Dv(S.unlocked-1)*Math.pow(1.3,lv-1):it.price*0.3*Math.pow(1.35,lv-1)}
+function giveItem(id){const it=ITEMS[id];if(!S.gear[id]){S.gear[id]=1;if(!S.eq[it.slot]&&S.level>=SLOTS.find(s=>s.k===it.slot).lv)S.eq[it.slot]=id;return 'new'}if(S.gear[id]<RAR[it.r].max){S.gear[id]++;return 'up'}const g=5+it.r*10;addGems(g);return 'gems:'+g}
+function openChest(j){const c=CHESTS[j];if(j===0){if(S.bronze<1)return;S.bronze--}else{if(S.gems<c.gems)return;S.gems-=c.gems}
+  const r=wpick(c.w);const pool=CHEST_ITEMS.map((_,x)=>'C'+x).filter(id=>ITEMS[id].r===r);const id=pick(pool),it=ITEMS[id];const res=giveItem(id);S.st.chests++;
+  SFX.level();confetti(r>=3?100:40);calc();
+  modal(`<div class="me">${c.e}➜${it.e}</div><h2 style="color:${RAR[r].c}">${RAR[r].n}!</h2><p><b style="color:var(--txt)">${it.n}</b><br>${statTxt(itemStat(it,S.gear[id]))}</p><div class="rl"><span>Result</span><b>${res==='new'?'🆕 New item!':res==='up'?'⬆ Duplicate → item level up!':'💎 Max level → +'+res.split(':')[1]+' gems'}</b></div><div class="acts"><button class="btn big" data-a="close">Awesome!</button></div>`);
+  checkAch();save();rerender()}
+
+/* ---------- ALBUM ---------- */
+function vAlbum(){
+  let h=`<div class="pad"><h2 class="t">🧩 Souvenir Album</h2><p class="subt">Daub 🧩 squares in bingo to find souvenirs from the land you're in. Complete an album for gems and a permanent +5% bingo coins.</p>`;
+  LANDS.forEach((L,i)=>{if(i>=S.unlocked){h+=`<div class="box" style="margin-bottom:10px;opacity:.5"><b>🔒 ${L.n}</b></div>`;return}
+    const n=S.souv[i].filter(x=>x>0).length;
+    h+=`<div class="box" style="margin-bottom:10px"><div class="row"><b style="font-size:18px">${L.e} ${L.n}</b><span class="sp"></span><span class="small ${S.colDone[i]?'':'muted'}">${S.colDone[i]?'✔ COMPLETE · +5% coins':`${n}/9 · reward 💎 ${albumGems(i)}`}</span></div>
+      <div class="alb" style="margin-top:8px">${L.s.map((s,j)=>`<div class="sv ${S.souv[i][j]?'':'no'}" title="${s[1]}">${s[0]}${S.souv[i][j]>1?`<small>×${S.souv[i][j]}</small>`:''}</div>`).join('')}</div></div>`});
+  h+=`</div>`;view.innerHTML=h;
+}
+const albumGems=i=>40+i*20;
+function findSouv(el){const i=S.cur;const own=S.souv[i];const miss=own.map((c,j)=>c?-1:j).filter(j=>j>=0);
+  // missing pieces are rarer the closer you get, so the last ones feel special
+  let j;if(miss.length&&rnd()<0.45+0.25*(miss.length/9))j=pick(miss);else j=ri(0,8);
+  own[j]++;S.st.souvenirs++;track('souvenirs');const s=LANDS[i].s[j];
+  if(own[j]===1){if(el)floatAt(el,'🧩 '+s[0]+' NEW!','#ffcf4a');toast(`🧩 New souvenir: <b>${s[0]} ${s[1]}</b> (${own.filter(x=>x).length}/9)`)}
+  else{const c=addCoins(Bv(i)*0.25*ST.cm);if(el)floatAt(el,s[0]+' +'+fmt(c),'#ffcf4a')}
+  if(!S.colDone[i]&&own.every(x=>x>0)){S.colDone[i]=true;addGems(albumGems(i));calc();confetti(80);modalLater(`<div class="me">🧩${LANDS[i].e}</div><h2>Album complete!</h2><p>You collected every souvenir from <b>${LANDS[i].n}</b>!</p><div class="rl"><span>Reward</span><b>+${albumGems(i)} 💎</b></div><div class="rl"><span>Forever</span><b>+5% bingo coins</b></div><div class="acts"><button class="btn big" data-a="close">Yay!</button></div>`)}}
+
+/* ---------- DAILY ---------- */
+const LOGIN=[{e:'🪙',t:'Coins',f:()=>`+${fmt(addCoins(Bv(S.unlocked-1)*6*ST.cm))} 🪙`},{e:'💎',t:'10 gems',f:()=>{addGems(10);return '+10 💎'}},{e:'🎁',t:'Chest',f:()=>{S.bronze++;return '+1 🎁 Bronze chest'}},{e:'💰',t:'Big coins',f:()=>`+${fmt(addCoins(Bv(S.unlocked-1)*15*ST.cm))} 🪙`},{e:'💎',t:'25 gems',f:()=>{addGems(25);return '+25 💎'}},{e:'⚡',t:'2× boost',f:()=>{S.boost+=5;return '2× bingo coins for 5 rounds'}},{e:'🧰',t:'Silver chest',f:()=>{const r=wpick(CHESTS[1].w);const id=pick(CHEST_ITEMS.map((_,x)=>'C'+x).filter(id=>ITEMS[id].r===r));giveItem(id);calc();addGems(30);return `${ITEMS[id].e} ${ITEMS[id].n} + 30 💎`}}];
+const WHEEL=[{e:'🪙',t:'Purse',w:22,f:()=>`+${fmt(addCoins(Bv(S.unlocked-1)*4*ST.cm))} 🪙`},{e:'💎',t:'5',w:20,f:()=>{addGems(5);return '+5 💎'}},{e:'💰',t:'Sack',w:15,f:()=>`+${fmt(addCoins(Bv(S.unlocked-1)*10*ST.cm))} 🪙`},{e:'🎁',t:'Chest',w:12,f:()=>{S.bronze++;return '+1 🎁 Bronze chest'}},{e:'💎',t:'15',w:10,f:()=>{addGems(15);return '+15 💎'}},{e:'⚡',t:'2×',w:10,f:()=>{S.boost+=3;return '2× coins for 3 rounds'}},{e:'🏆',t:'Jackpot',w:7,f:()=>`JACKPOT! +${fmt(addCoins(Bv(S.unlocked-1)*30*ST.cm))} 🪙`},{e:'👑',t:'40',w:4,f:()=>{addGems(40);return '+40 💎'}}];
+let wheelRot=0,spinning=false;
+function vDaily(){
+  const d=quests(),t=today(),claimed=S.login.last===t;const streakDay=claimed?((S.login.streak-1)%7):(S.login.last===yesterday()?S.login.streak%7:0);
+  let h=`<div class="pad"><h2 class="t">📅 Daily Rewards</h2><p class="subt">Come back every day – rewards grow with your streak! 🔥 Streak: <b>${S.login.streak}</b> days</p>
+   <div class="box"><div class="days">${LOGIN.map((l,j)=>`<div class="day ${j<streakDay||(claimed&&j===streakDay)?'done':''} ${j===streakDay&&!claimed?'today':''}"><div class="de">${l.e}</div>Day ${j+1}<br>${l.t}</div>`).join('')}</div>
+   <div style="text-align:center;margin-top:10px">${claimed?'<span class="muted">✔ Claimed today – see you tomorrow!</span>':'<button class="btn big" data-a="login">Claim Day '+(streakDay+1)+'!</button>'}</div></div>
+   <h3 class="sec">📜 Daily Quests</h3><div class="box">`;
+  d.q.forEach((q,j)=>{const def=QUESTS.find(x=>x.k===q.k),done=q.p>=q.n;h+=`<div class="quest"><div style="font-size:26px">${done?'✅':'📜'}</div><div style="flex:1"><div>${def.t(q.n)}</div><div class="bar" style="margin-top:4px"><i style="width:${Math.min(100,q.p/q.n*100)}%"></i></div><div class="small muted">${fmt(Math.min(q.p,q.n))}/${fmt(q.n)} · 💎 ${12+j*3} + 🪙</div></div>${q.c?'<span class="small muted">Done</span>':`<button class="btn g" data-a="quest" data-j="${j}" ${done?'':'disabled'}>Claim</button>`}</div>`});
+  const all=d.q.every(q=>q.c);
+  h+=`<div class="quest"><div style="font-size:26px">🎁</div><div style="flex:1">Complete all 3 quests<div class="small muted">Bonus: 🎁 Bronze chest + 20 💎</div></div>${d.bonus?'<span class="small muted">Done</span>':`<button class="btn p" data-a="qbonus" ${all?'':'disabled'}>Claim</button>`}</div></div>
+   <h3 class="sec">🎡 Lucky Wheel</h3><div class="box" style="text-align:center"><div class="wheelw"><div class="wptr">🔻</div><div class="wheel" id="wheel" style="transform:rotate(${wheelRot}deg);background:conic-gradient(${WHEEL.map((w,j)=>`${['#ff5a5a','#ffb52e','#3fcf6b','#4aa3ff','#b36bff','#ff5fa2','#4fe0a6','#ffcf4a'][j]} ${j*45}deg ${(j+1)*45}deg`).join(',')})">
+     ${WHEEL.map((w,j)=>`<span style="transform:rotate(${j*45+22.5}deg) translate(-50%,-95px) rotate(0deg)">${w.e}</span>`).join('')}</div><div class="whub">🥔</div></div>
+     <button class="btn big" data-a="spin" ${spinning?'disabled':''}>${d.spins===0?'FREE SPIN!':'Spin · 💎 15'}</button></div></div>`;
+  view.innerHTML=h;
+}
+function claimLogin(){const t=today();if(S.login.last===t)return;S.login.streak=S.login.last===yesterday()?S.login.streak+1:1;const j=(S.login.streak-1)%7;S.login.last=t;S.login.total++;const r=LOGIN[j].f();SFX.level();confetti(50);
+  modal(`<div class="me">${LOGIN[j].e}</div><h2>Day ${j+1} reward!</h2><p>${r}</p><p class="small">🔥 ${S.login.streak} day streak</p><div class="acts"><button class="btn big" data-a="close">Thanks!</button></div>`);checkAch();save();rerender()}
+function claimQuest(j){const q=quests().q[j];if(!q||q.c||q.p<q.n)return;q.c=true;const g=12+j*3;addGems(g);const c=addCoins(Bv(S.unlocked-1)*5*ST.cm);SFX.coin();toast(`📜 Quest done! +${g} 💎 +${fmt(c)} 🪙`);save();rerender()}
+function claimQBonus(){const d=quests();if(d.bonus||!d.q.every(q=>q.c))return;d.bonus=true;S.bronze++;addGems(20);SFX.level();confetti(40);toast('🎁 All quests done! +1 Bronze chest +20 💎');save();rerender()}
+function spin(){const d=quests();if(spinning)return;if(d.spins>0){if(S.gems<15)return toast('Not enough 💎');S.gems-=15}d.spins++;spinning=true;
+  const j=wpick(WHEEL.map(w=>w.w));wheelRot+=360*5+(360-(j*45+22.5))-(wheelRot%360)+ri(-15,15);const w=$('#wheel');if(w)w.style.transform=`rotate(${wheelRot}deg)`;
+  for(let k=0;k<16;k++)tone(500+k*30,.04,'square',.04,k*.22);
+  setTimeout(()=>{spinning=false;const r=WHEEL[j].f();SFX.coin();modal(`<div class="me">${WHEEL[j].e}</div><h2>You won!</h2><p>${r}</p><div class="acts"><button class="btn big" data-a="close">Nice!</button></div>`);checkAch();save();if(S.tab==='daily')rerender()},4100);save();updHUD()}
+
+/* ---------- TROPHIES ---------- */
+function vTrophy(){
+  S.achSeen=Object.keys(S.ach).length;
+  const n=Object.keys(S.ach).length;
+  let h=`<div class="pad"><h2 class="t">🏆 Trophies & Stats</h2><p class="subt">${n}/${ACH.length} trophies unlocked</p><div class="bar" style="margin-bottom:14px"><i style="width:${n/ACH.length*100}%"></i></div>
+   <div class="stats">${[['🎱 Rounds',S.st.rounds],['🎉 Bingos',S.st.bingos],['🖍️ Daubs',S.st.daubs],['⚡ Events caught',S.st.events],['🔮 Power-ups',S.st.powerups],['🔥 Best combo',S.st.bestCombo],['🧩 Souvenirs',S.st.souvenirs],['🎁 Chests',S.st.chests],['🪙 Coins earned',S.st.coins],['💎 Gems earned',S.st.gems],['🏗️ Upgrades',S.st.upgrades],['🌍 World Tours',S.tours]].map(([a,b])=>`<div>${a}<b>${fmt(b)}</b></div>`).join('')}</div>`;
+  // World tour
+  const can=S.b[NL-1][7]>0;
+  h+=`<div class="box" style="margin-top:14px;background:linear-gradient(135deg,#4a3410,#2e2266)"><h3 class="lil" style="margin:0;font-size:24px">🌍 World Tour ${S.tours?'#'+(S.tours+1):''}</h3>
+    <p class="muted small">Build the Spud King's Palace on Potato Planet to start a new World Tour. You restart from Ireland (coins, buildings and lands reset) but keep your <b>level, gems, gear, albums, power-ups and trophies</b> – and all coins are multiplied by <b>×${(1+0.75*(S.tours+1)).toFixed(2)}</b> forever.</p>
+    <button class="btn p" data-a="tour" ${can?'':'disabled'}>${can?'Start World Tour!':'🔒 Reach Potato Planet first'}</button></div>`;
+  h+=`<h3 class="sec">🏅 Trophies</h3><div class="grid">${ACH.map(a=>`<div class="ach ${S.ach[a.id]?'':'no'}"><div class="ae">${S.ach[a.id]?a.e:'🔒'}</div><div><b>${a.n}</b><div class="small muted">${a.d} · 💎 ${a.g}</div></div></div>`).join('')}</div>
+   <h3 class="sec">⚙️ Settings</h3><div class="box row"><button class="btn dk" data-a="sound">${S.sound?'🔊 Sound on':'🔇 Sound off'}</button><button class="btn dk" data-a="voice">${S.voice?'🗣️ Caller voice on':'🤐 Caller voice off'}</button><button class="btn dk" data-a="help">❓ How to play</button><span class="sp"></span><button class="btn dk" data-a="reset" style="color:#ff9a9a">Reset game</button></div>
+   <p class="small muted" style="margin-top:10px">Progress is saved automatically in this browser.</p></div>`;
+  view.innerHTML=h;
+}
+function startTour(){if(S.b[NL-1][7]<1)return;modal(`<div class="me">🌍</div><h2>Start World Tour?</h2><p>Coins, buildings and unlocked lands reset. You keep everything else and get <b>×${(1+0.75*(S.tours+1)).toFixed(2)}</b> coins forever.</p><div class="acts"><button class="btn p big" data-a="tourGo">Let's go!</button><button class="btn dk" data-a="close">Not yet</button></div>`)}
+function tourGo(){S.tours++;S.coins=0;S.b=LANDS.map(()=>Array(8).fill(0));S.unlocked=1;S.cur=0;S.bronze+=3;addGems(100);calc();checkAch();save();closeModalAll();confetti(120);bigTxt('WORLD TOUR '+S.tours+'!');S.tab='town';render()}
+
+/* =========================================================
+   BINGO
+   ========================================================= */
+let R=null;
+function vBingo(){if(R&&!R.over)return renderRound();vLobby()}
+function vLobby(){
+  const i=S.cur,L=LANDS[i],mc=maxCards();if(S.cards>mc)S.cards=mc;
+  const fee=(S.cards-1)*FEE(i);
+  let h=`<div class="pad"><div class="scene" style="background:linear-gradient(140deg,${L.c1},${L.c2});min-height:120px"><div class="bigE">🎱</div><div><h2>${L.b[1][1]}</h2><div class="small">${L.e} ${L.n} · Win bingos to earn coins for your town!</div>
+     ${S.boost>0?`<div class="pill" style="margin-top:6px;background:#ff5fa2aa">⚡ 2× coins for ${S.boost} more rounds</div>`:''}</div><div class="skyline">${L.sky}</div></div>
+   <div class="lobby" style="margin-top:14px"><div class="box"><b>🎫 Cards</b><div class="opt" style="margin:8px 0 12px">${[1,2,3,4].map(n=>`<button class="${S.cards===n?'on':''}" data-a="cards" data-n="${n}" ${n>mc?'disabled':''}>${n>mc?'🔒':n}</button>`).join('')}</div>
+     <div class="small muted" style="margin-top:-6px;margin-bottom:12px">${mc<4?`Next card at level ${[3,7,12][mc-1]}. `:''}1st card is free, extra cards cost 🪙 ${fmt(FEE(i))} each.</div>
+     <b>⏱️ Ball speed</b><div class="opt" style="margin:8px 0 12px">${SPEEDS.map((s,j)=>`<button class="${S.speed===j?'on':''}" data-a="speed" data-n="${j}" ${S.level<s.lv?'disabled':''}>${S.level<s.lv?'🔒 Lv'+s.lv:s.n}</button>`).join('')}</div>
+     <div class="rl"><span>Entry fee</span><b>${fee?'🪙 '+fmt(fee):'FREE'}</b></div><div class="rl"><span>Per bingo (up to 2× if early)</span><b>🪙 ${fmt(Bv(i)*ST.cm*(S.boost>0?2:1))}</b></div>
+     <div style="text-align:center;margin-top:12px"><button class="btn big" data-a="play" ${S.coins<fee?'disabled':''}>▶ PLAY BINGO</button>${S.coins<fee?'<div class="small muted">Not enough coins – play fewer cards.</div>':''}</div></div>
+    <div class="box"><b>🔮 Power Lab</b> <span class="small muted">· fill the power meter by daubing, then use a random power-up</span>`;
+  PW.forEach(p=>{const l=S.pl[p.k];h+=`<div class="pw"><div class="pe">${l?p.e:'🔒'}</div><div style="flex:1"><b>${p.n}</b> ${l?`<span class="small muted">Lv ${l}/10</span>`:''}<div class="small muted">${p.d(Math.max(1,l))}</div></div>
+     ${!l?`<button class="btn p" data-a="pwUnlock" data-k="${p.k}" ${S.gems<p.unlock?'disabled':''}>💎 ${p.unlock}</button>`:l<10?`<button class="btn b" data-a="pwUp" data-k="${p.k}" ${S.gems<pwUp(l)?'disabled':''}>⬆ 💎 ${pwUp(l)}</button>`:'<span class="small" style="color:var(--gold)">MAX</span>'}</div>`});
+  h+=`</div></div><div class="box" style="margin-top:14px"><b>💡 How it works</b><p class="small muted" style="margin:6px 0 0;line-height:1.6">Tap numbers on your card when they're called. Fast daubs build a <b>combo</b> (+coins). Complete a row, column or diagonal and hit <b>BINGO</b> – earlier bingos pay more, before the rivals take them all! Special squares hide 🪙 coins, 💎 gems, 🧩 souvenirs, ⚡ power and 🎁 chests. Watch out for surprise <b>bonus events</b> during the game – be quick to grab free coins!</p></div></div>`;
+  view.innerHTML=h;
+}
+function genCard(){
+  const cells=[];const cols=[0,1,2,3,4].map(c=>shuffle([...Array(15)].map((_,k)=>c*15+k+1)).slice(0,5));
+  for(let r=0;r<5;r++)for(let c=0;c<5;c++){const free=r===2&&c===2;cells.push({n:free?0:cols[c][r],d:free,free,sp:null,ca:0,magic:false})}
+  const ch=Math.min(0.35,0.12*(1+ST.special/100));
+  cells.forEach(cl=>{if(cl.free||rnd()>=ch)return;cl.sp=['coin','souv','charge','gem','chest'][wpick([50,22*(1+ST.souv/100),15,8*(1+ST.gem/100),5])]});
+  // lucky pre-daubs
+  let k=Math.floor(ST.luck)+(rnd()<ST.luck%1?1:0);const idx=shuffle(cells.map((c,j)=>j).filter(j=>!cells[j].free));
+  const card={cells,claimed:new Set(),bingos:0};
+  for(let j=0;j<k&&j<idx.length;j++){cells[idx[j]].d=true;cells[idx[j]].magic=true;cells[idx[j]].pre=true}
+  return card;
+}
+function startRound(){
+  const i=S.cur,fee=(S.cards-1)*FEE(i);if(S.coins<fee)return;S.coins-=fee;closeModalAll();
+  const pt=ri(10,16);
+  R={land:i,cards:[],order:shuffle([...Array(75)].map((_,k)=>k+1)),called:new Set(),hist:[],idx:0,maxBalls:50+Math.floor(ST.balls),poolTotal:pt,pool:pt,
+     tNext:1.2,speed:SPEEDS[S.speed].t,time:0,bingos:0,coins:0,xp:0,gems:0,souv:0,chests:0,combo:0,best:0,charge:0,need:Math.max(5,14/(1+ST.charge/100)),
+     frozen:0,dbl:0,dblM:1,ev:null,evCd:4,pending:[],over:false,endAt:0,players:ri(40,240),feed:[],boost:S.boost>0,claimQ:[],post:[]};
+  for(let c=0;c<S.cards;c++)R.cards.push(genCard());
+  // collect specials on lucky pre-daubs
+  S.tab='bingo';render();
+  R.cards.forEach((cd,ci)=>cd.cells.forEach((cl,j)=>{if(cl.pre&&cl.sp)collectSp(ci,j)}));
+  R.cards.forEach((_,ci)=>checkLines(ci));
+  feed(`🎱 ${R.players} players joined · ${R.pool} bingos up for grabs!`);
+  SFX.ball();
+}
+function renderRound(){
+  const nc=R.cards.length;
+  let h=`<div id="round"><div class="caller">
+    <div class="cbox c-ball"><div class="ballwrap"><div class="ball" id="ball"><span class="bl">🥔</span><span class="bn">…</span></div></div></div>
+    <div class="cbox"><div class="hist" id="hist"></div><div class="rstat" style="margin-top:8px"><div>Ball<b id="rBall">0/${R.maxBalls}</b></div><div class="pool">Bingos left<b id="rPool">${R.pool}</b></div><div>Won<b id="rWon">🪙 0</b></div><div>Players<b>👥 ${R.players}</b></div></div></div>
+    <div class="cbox c-pw"><div class="combo" id="rCombo"></div><button class="pwbtn" id="pwBtn" data-a="usePw"><i id="pwFill"></i><span id="pwTxt">⚡ Power-up</span></button><div class="feed" id="feed" style="margin-top:8px"></div></div>
+    </div><div class="cards n${nc}" id="cards">`;
+  R.cards.forEach((cd,ci)=>{h+=`<div class="card"><div class="chd">${[...LET].map((l,c)=>`<span style="background:${LCOL[c]}">${l}</span>`).join('')}</div><div class="cg">`;
+    cd.cells.forEach((cl,j)=>{h+=`<button class="cell" id="c${ci}_${j}" data-a="daub" data-c="${ci}" data-j="${j}"></button>`});
+    h+=`</div><button class="bingo" id="bg${ci}" data-a="claim" data-c="${ci}">BINGO!</button><div class="cinfo"><span id="ci${ci}">Card ${ci+1}</span><span>🎉 <b id="cb${ci}">0</b></span></div></div>`});
+  h+=`</div></div>`;view.innerHTML=h;
+  const dc=S.eq.dauber?RAR[ITEMS[S.eq.dauber].r].c:'#ff5fa2';document.documentElement.style.setProperty('--daub',dc);
+  R.cards.forEach((cd,ci)=>{cd.cells.forEach((_,j)=>updCell(ci,j));updClaim(ci)});
+  updCaller();updPw();
+}
+const SPI={coin:'🪙',souv:'🧩',charge:'⚡',gem:'💎',chest:'🎁'};
+function updCell(ci,j){const el=document.getElementById('c'+ci+'_'+j);if(!el)return;const cl=R.cards[ci].cells[j];
+  el.className='cell'+(cl.d?' d':'')+(cl.free?' free':'')+(cl.magic?' magic':'')+(cl.won?' won':'')+(!cl.d&&cl.ca&&R.idx-cl.ca>=3?' miss':'');
+  el.innerHTML=cl.free?'<span>🥔</span>':`<span>${cl.n}</span>${cl.sp&&!cl.d?`<i class="sq">${SPI[cl.sp]}</i>`:''}`}
+function ballLetter(n){return Math.floor((n-1)/15)}
+function updCaller(){
+  const b=document.getElementById('ball');if(!b)return;const n=R.hist[0];
+  if(n){const l=ballLetter(n);b.style.setProperty('--bc',LCOL[l]);b.innerHTML=`<span class="bl">${LET[l]}</span><span class="bn">${n}</span>`}
+  $('#hist').innerHTML=R.hist.slice(1,9).map(n=>`<span class="mb" style="--bc:${LCOL[ballLetter(n)]}">${n}</span>`).join('');
+  $('#rBall').textContent=R.idx+'/'+R.maxBalls;$('#rPool').textContent=R.pool+(R.frozen?' 🧊':'');$('#rWon').textContent='🪙 '+fmt(R.coins);
+  $('#rCombo').textContent=R.combo>=3?`🔥 ${R.combo}× COMBO (+${Math.round(Math.min(R.combo,40)*1.25)}%)`:R.dbl?`✖️ Next bingo ×${R.dblM.toFixed(2)}`:'';
+}
+function updPw(){const btn=$('#pwBtn');if(!btn)return;const ready=R.charge>=R.need;btn.classList.toggle('ready',ready);$('#pwFill').style.width=Math.min(100,R.charge/R.need*100)+'%';$('#pwTxt').textContent=ready?'⚡ USE POWER-UP!':`⚡ Power ${Math.floor(Math.min(100,R.charge/R.need*100))}%`}
+function updClaim(ci){const el=document.getElementById('bg'+ci);if(!el)return;const has=newLines(ci).length>0;el.classList.toggle('ready',has);const cb=document.getElementById('cb'+ci);if(cb)cb.textContent=R.cards[ci].bingos}
+function feed(t){R.feed.unshift(t);R.feed=R.feed.slice(0,2);const f=$('#feed');if(f)f.innerHTML=R.feed.join('<br>')}
+function newLines(ci){const cd=R.cards[ci];return LINES.map((ln,k)=>k).filter(k=>!cd.claimed.has(k)&&LINES[k].every(j=>cd.cells[j].d))}
+
+function callBall(){
+  if(R.idx>=R.maxBalls){if(!R.endAt)R.endAt=R.time+2.5;return}
+  const n=R.order[R.idx++];R.called.add(n);R.hist.unshift(n);
+  const gold=R.goldNext;R.goldNext=false;
+  R.cards.forEach((cd,ci)=>cd.cells.forEach((cl,j)=>{if(cl.n===n&&!cl.free){cl.ca=R.idx;if(!cl.d&&rnd()*100<ST.auto)R.pending.push({ci,j,at:R.time+0.55+rnd()*0.4});if(gold)cl.gold=R.time+2.5}}));
+  // combo breaker: a number called 3 balls ago is still not daubed
+  if(R.idx>3){const old=R.hist[3];let missed=false;R.cards.forEach(cd=>cd.cells.forEach(cl=>{if(cl.n===old&&!cl.d)missed=true}));if(missed&&R.combo>0){if(R.combo>=5)feed(`💔 Combo lost at ${R.combo}×`);R.combo=0}}
+  // rivals
+  if(R.frozen>0)R.frozen--;else if(R.idx>8){const x=0.016*(R.idx-8)*(1-ST.rival/100)*(R.poolTotal/13)*Math.min(1,0.6+S.level*0.04);let k=Math.floor(x)+(rnd()<x%1?1:0);while(k-->0&&R.pool>0){R.pool--;feed(`🏆 ${pick(RIVALS)} got BINGO!`)}if(R.pool<=0){endRound('All bingos have been claimed!');return}}
+  // events
+  R.evCd--;if(!R.ev&&R.evCd<=0&&R.idx>4&&R.idx<R.maxBalls-3&&rnd()<0.09*(1+Math.min(ST.event,300)/400)){startEvent()}
+  SFX.ball();speak(LET[ballLetter(n)]+' '+n);
+  const b=$('#ball');if(b){b.classList.remove('pop','gold');void b.offsetWidth;b.classList.add('pop');if(gold)b.classList.add('gold')}
+  R.cards.forEach((cd,ci)=>cd.cells.forEach((cl,j)=>{if(cl.ca&&!cl.d)updCell(ci,j)}));
+  updCaller();
+}
+function daub(ci,j,auto){
+  if(!R||R.over)return;const cd=R.cards[ci],cl=cd.cells[j];const el=document.getElementById('c'+ci+'_'+j);
+  if(cl.d||cl.free)return;
+  if(!R.called.has(cl.n)){if(!auto){SFX.bad();if(el){el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake')}if(R.combo>=3)feed('💔 Wrong number – combo lost');R.combo=0;updCaller()}return}
+  cl.d=true;const freshD=R.idx-cl.ca<=2;
+  if(freshD){R.combo++;R.best=Math.max(R.best,R.combo);if(R.combo>S.st.bestCombo)S.st.bestCombo=R.combo;track('combo',R.combo)}
+  if(cl.gold&&R.time<=cl.gold){const c=addCoins(Bv(R.land)*1.2*ST.cm*(1+ST.event/100));R.coins+=c;if(el)floatAt(el,'⭐ GOLDEN +'+fmt(c),'#ffd34a');SFX.coin();S.st.events++;track('events')}
+  S.st.daubs++;track('daubs');R.xp+=1;R.charge+=1;
+  if(!auto)SFX.daub();
+  if(cl.sp)collectSp(ci,j);
+  updCell(ci,j);checkLines(ci);updPw();updCaller();
+}
+function collectSp(ci,j){const cl=R.cards[ci].cells[j],el=document.getElementById('c'+ci+'_'+j),sp=cl.sp;cl.sp=null;S.st.specials++;track('specials');
+  if(sp==='coin'){const c=addCoins(Bv(R.land)*ri(15,40)/100*ST.cm);R.coins+=c;if(el)floatAt(el,'+'+fmt(c)+' 🪙','#ffcf4a');SFX.coin()}
+  else if(sp==='gem'){const g=ri(1,3);addGems(g);R.gems+=g;if(el)floatAt(el,'+'+g+' 💎','#7fd2ff');SFX.coin()}
+  else if(sp==='charge'){R.charge+=R.need*0.4;if(el)floatAt(el,'+40% ⚡','#b9a6ff');updPw()}
+  else if(sp==='chest'){S.bronze++;R.chests++;if(el)floatAt(el,'+1 🎁','#ff8cc0');SFX.coin()}
+  else if(sp==='souv'){R.souv++;findSouv(el)}}
+function checkLines(ci){const cd=R.cards[ci];const nl=newLines(ci);
+  if(nl.length){updClaim(ci);if(ST.claim&&!R.claimQ.includes(ci)){R.claimQ.push(ci);setTimeout(()=>{R&&(R.claimQ=R.claimQ.filter(x=>x!==ci));if(R&&!R.over)claim(ci,true)},450)}}
+  else updClaim(ci)}
+function claim(ci,auto){
+  if(!R||R.over)return;const nl=newLines(ci);const el=document.getElementById('bg'+ci);
+  if(!nl.length){if(!auto){SFX.bad();feed('❌ No bingo on that card yet!')}return}
+  if(R.pool<=0)return;
+  const cd=R.cards[ci];let tot=0,n=0;
+  for(const k of nl){if(R.pool<=0)break;
+    const rank=1+R.pool/R.poolTotal;R.pool--;cd.claimed.add(k);LINES[k].forEach(j=>{cd.cells[j].won=true;updCell(ci,j)});
+    let v=Bv(R.land)*ST.cm*rank*(1+Math.min(R.combo,40)*0.0125)*(nl.length>1?1.25:1)*(R.boost?2:1);
+    if(R.dbl>0){v*=R.dblM;R.dbl--}
+    tot+=addCoins(v);n++;cd.bingos++;R.bingos++;S.st.bingos++;track('bingos');R.xp+=15;
+    if(rnd()<0.05*(1+ST.gem/100)){const g=ri(1,3);addGems(g);R.gems+=g}
+  }
+  R.coins+=tot;SFX.bingo();confetti(n>1?90:50);bigTxt(n>2?'TRIPLE BINGO!':n>1?'DOUBLE BINGO!':'BINGO!');if(el)floatAt(el,'+'+fmt(tot)+' 🪙','#ffcf4a');
+  feed(`🎉 You got ${n>1?n+' bingos':'BINGO'}! +${fmt(tot)} 🪙`);
+  updClaim(ci);updCaller();
+  if(R.pool<=0)endRound('All bingos have been claimed!');
+}
+function usePw(){
+  if(!R||R.over||R.charge<R.need)return;R.charge-=R.need;S.st.powerups++;track('powerups');
+  const av=PW.filter(p=>S.pl[p.k]>0);const p=av[wpick(av.map(p=>p.k==='instant'?p.w*(1+0.1*(S.pl[p.k]-1)):p.w))],l=S.pl[p.k];
+  SFX.power();toast(`${p.e} <b>${p.n}!</b>`);
+  const undaubed=()=>{const a=[];R.cards.forEach((cd,ci)=>cd.cells.forEach((cl,j)=>{if(!cl.d)a.push([ci,j])}));return a};
+  const magic=(ci,j)=>{const cl=R.cards[ci].cells[j];if(cl.d)return;cl.d=true;cl.magic=true;S.st.daubs++;if(cl.sp)collectSp(ci,j);updCell(ci,j)};
+  if(p.k==='daub'){shuffle(undaubed()).slice(0,2+Math.floor(l/3)).forEach(([ci,j])=>magic(ci,j))}
+  else if(p.k==='double'){R.dbl++;R.dblM=2+0.15*(l-1)}
+  else if(p.k==='coins'){const c=addCoins(Bv(R.land)*ST.cm*(0.6+0.15*(l-1)));R.coins+=c;floatAt($('#pwBtn'),'+'+fmt(c)+' 🪙','#ffcf4a');SFX.coin()}
+  else if(p.k==='freeze'){R.frozen+=4+l;feed(`🧊 Rivals frozen for ${4+l} balls!`)}
+  else if(p.k==='bomb'){const ci=ri(0,R.cards.length-1),r=ri(1,3),c=ri(1,3);const cells=l>=5?[-6,-5,-4,-1,0,1,4,5,6]:[-5,-1,0,1,5];cells.forEach(o=>magic(ci,r*5+c+o))}
+  else if(p.k==='instant'){let best=null;R.cards.forEach((cd,ci)=>LINES.forEach((ln,k)=>{if(cd.claimed.has(k))return;const d=ln.filter(j=>cd.cells[j].d).length;if(d<5&&(!best||d>best.d))best={ci,k,d}}));if(best)LINES[best.k].forEach(j=>magic(best.ci,j))}
+  R.cards.forEach((_,ci)=>checkLines(ci));updPw();updCaller();
+}
+
+/* ---------- BONUS EVENTS ---------- */
+const EVENTS=['golden','rain','mash','chests','balloon'];
+function evReward(m){return Bv(R.land)*ST.cm*(1+ST.event/100)*m}
+function evDone(ok){if(!R||!R.ev)return;if(ok){S.st.events++;track('events');R.xp+=5}R.ev=null;R.evCd=8;document.querySelectorAll('.evx').forEach(e=>e.remove())}
+function startEvent(){
+  const t=pick(EVENTS);R.ev={t};SFX.event();
+  if(t==='golden'||t==='balloon'){
+    const d=document.createElement('div');d.className='ev evx '+(t==='golden'?'fly':'rise');d.textContent=t==='golden'?'🥔✨':'🎈🎁';
+    if(t==='golden'){d.style.left='0';d.style.top=(15+rnd()*55)+'vh';d.style.setProperty('--dur',(3.2-Math.min(1,ST.event/400))+'s');feed('✨ A GOLDEN POTATO! Tap it quick!')}
+    else{d.style.left=(10+rnd()*75)+'vw';d.style.top='100vh';d.style.setProperty('--dur','4.2s');feed('🎈 A gift balloon! Pop it!')}
+    d.onpointerdown=e=>{e.stopPropagation();const c=addCoins(evReward(t==='golden'?0.9:0.5));R.coins+=c;let txt='+'+fmt(c)+' 🪙';if(t==='balloon'){const g=ri(1,3);addGems(g);R.gems+=g;txt+=' +'+g+'💎'}floatTxt(e.clientX,e.clientY,txt,'#ffcf4a');SFX.coin();evDone(true);updCaller()};
+    d.addEventListener('animationend',()=>{if(R&&R.ev&&R.ev.t===t){feed('😢 It got away…');evDone(false)}});
+    fxEl.appendChild(d);
+  }else if(t==='rain'){
+    feed('🌧️ COIN RAIN! Tap the falling coins!');let left=10;R.ev.n=0;
+    for(let k=0;k<10;k++){const d=document.createElement('div');d.className='ev fall evx';d.textContent=pick(['🪙','🪙','🥔','💰']);d.style.left=(5+rnd()*85)+'vw';d.style.top='0';d.style.setProperty('--dur',(2.4+rnd()*1.2)+'s');d.style.animationDelay=(k*0.35)+'s';
+      d.onpointerdown=e=>{e.stopPropagation();const c=addCoins(evReward(0.14));R.coins+=c;R.ev&&R.ev.n++;floatTxt(e.clientX,e.clientY,'+'+fmt(c),'#ffcf4a');SFX.coin();d.remove();if(--left<=0)evDone(R.ev&&R.ev.n>0);updCaller()};
+      d.addEventListener('animationend',()=>{d.remove();if(--left<=0)evDone(R.ev&&R.ev.n>0)});fxEl.appendChild(d)}
+  }else if(t==='mash'){
+    const need=10+Math.floor(rnd()*5);R.ev.n=0;const p=document.createElement('div');p.className='evp evx';
+    p.innerHTML=`<h3>🥔 MASH THE SPUD!</h3><div class="small muted">Tap it <b id="mN">${need}</b> times in 4 seconds!</div><button class="mash" id="mashB">🥔</button><div class="tmr"><i id="mT"></i></div>`;fxEl.appendChild(p);
+    const st=performance.now(),dur=4000;
+    p.querySelector('#mashB').onpointerdown=e=>{e.stopPropagation();if(!R.ev)return;R.ev.n++;tone(300+R.ev.n*40,.05,'square',.05);$('#mN').textContent=Math.max(0,need-R.ev.n);if(R.ev.n>=need){const c=addCoins(evReward(1.3));R.coins+=c;floatTxt(e.clientX,e.clientY,'MASHED! +'+fmt(c),'#ffcf4a');SFX.coin();evDone(true);updCaller()}};
+    R.ev.tick=()=>{const f=1-(performance.now()-st)/dur;const ti=$('#mT');if(ti)ti.style.width=Math.max(0,f*100)+'%';if(f<=0){feed('😅 Too slow! The spud escaped.');evDone(false)}};
+  }else if(t==='chests'){
+    const p=document.createElement('div');p.className='evp evx';p.innerHTML=`<h3>🎁 MYSTERY CHESTS!</h3><div class="small muted">Pick one – quick!</div><div class="chs" style="margin-top:10px">${[0,1,2].map(k=>`<button data-k="${k}">🎁</button>`).join('')}</div><div class="tmr"><i id="mT"></i></div>`;fxEl.appendChild(p);
+    const st=performance.now(),dur=4500;
+    p.querySelectorAll('.chs button').forEach(b=>b.onpointerdown=e=>{e.stopPropagation();if(!R.ev)return;const r=wpick([50,25,15,10]);let txt;
+      if(r===0){const c=addCoins(evReward(0.4+rnd()*1.6));R.coins+=c;txt='+'+fmt(c)+' 🪙'}else if(r===1){const g=ri(2,8);addGems(g);R.gems+=g;txt='+'+g+' 💎'}else if(r===2){R.charge=Math.max(R.charge,R.need);txt='⚡ FULL POWER!';updPw()}else{S.bronze++;R.chests++;txt='+1 🎁 Chest'}
+      floatTxt(e.clientX,e.clientY,txt,'#ffcf4a');SFX.coin();evDone(true);updCaller()});
+    R.ev.tick=()=>{const f=1-(performance.now()-st)/dur;const ti=$('#mT');if(ti)ti.style.width=Math.max(0,f*100)+'%';if(f<=0){feed('⌛ The chests vanished…');evDone(false)}};
+  }
+  // golden ball bonus can piggyback on any event
+  if(rnd()<0.35){R.goldNext=true;feed('⭐ Next ball is GOLDEN – daub it fast for a bonus!')}
+}
+
+function endRound(msg){
+  if(!R||R.over)return;R.over=true;evDone(false);
+  S.st.rounds++;track('rounds');R.xp+=5;if(R.boost)S.boost=Math.max(0,S.boost-1);
+  const lv0=S.level;addXP(R.xp);
+  checkAch();save();
+  const r=R;
+  setTimeout(()=>{
+    r.post.forEach(modal);
+    modal(`<div class="me">${r.bingos?'🏆':'🥔'}</div><h2>${r.bingos>=3?'Bingo Legend!':r.bingos?'Great game!':'Round over'}</h2><p>${msg}</p>
+     <div class="rl"><span>🎉 Bingos</span><b>${r.bingos}</b></div><div class="rl"><span>🪙 Coins won</span><b>${fmt(r.coins)}</b></div>
+     ${r.gems?`<div class="rl"><span>💎 Gems</span><b>${r.gems}</b></div>`:''}${r.souv?`<div class="rl"><span>🧩 Souvenirs</span><b>${r.souv}</b></div>`:''}${r.chests?`<div class="rl"><span>🎁 Chests</span><b>${r.chests}</b></div>`:''}
+     <div class="rl"><span>🔥 Best combo</span><b>${r.best}×</b></div><div class="rl"><span>🎓 XP</span><b>+${Math.ceil(r.xp*(1+ST.xp/100))}${S.level>lv0?' · LEVEL UP!':''}</b></div>
+     <p class="small">${tipAfter()}</p>
+     <div class="acts"><button class="btn big" data-a="again">▶ Play again</button><button class="btn dk" data-a="toTown">🏘️ Town</button><button class="btn dk" data-a="toLobby">Lobby</button></div>`);
+    render();
+  },900);
+}
+function tipAfter(){const i=S.cur;if(canBuildAny())return '🏗️ You can afford an upgrade in your town!';if(S.bronze>0)return `🎁 You have ${S.bronze} chest${S.bronze>1?'s':''} to open in Gear.`;const d=quests();if(d.q.some(q=>q.p>=q.n&&!q.c))return '📜 A daily quest is ready to claim!';
+  return pick(['💡 Daub numbers fast to build a combo for bonus coins.','💡 Equip a dauber with auto-daub so you never miss a number.','💡 Upgrade your Bingo Hall for bigger payouts.','💡 Farms keep earning while you are away.','💡 Complete albums for permanent coin bonuses.','💡 Earlier bingos pay up to 2×!'])}
+
+/* ---------- MAIN LOOP ---------- */
+let lastT=performance.now(),saveT=0,achT=0;
+function loop(){
+  const now=performance.now();const dt=Math.min(0.25,(now-lastT)/1000);lastT=now;
+  idleTick(dt);S.st.playMs+=dt*1000;
+  if(R&&!R.over){
+    R.time+=dt;
+    if(R.ev&&R.ev.tick)R.ev.tick();
+    if(!R.ev||R.ev.t==='golden'||R.ev.t==='balloon'||R.ev.t==='rain'){R.tNext-=dt;if(R.tNext<=0){R.tNext=R.speed;callBall()}}
+    if(R.pending.length){const due=R.pending.filter(p=>p.at<=R.time);R.pending=R.pending.filter(p=>p.at>R.time);due.forEach(p=>daub(p.ci,p.j,true))}
+    if(R&&R.endAt&&R.time>=R.endAt&&!R.over)endRound('All the balls have been called!');
+  }
+  saveT+=dt;achT+=dt;
+  if(achT>2){achT=0;checkAch();updDots();if(!R||R.over)refreshAfford()}
+  if(saveT>8){saveT=0;save()}
+  updHUD();
+  requestAnimationFrame(loop);
+}
+// cheap refresh of buy-button states without rebuilding views mid-scroll
+function refreshAfford(){document.querySelectorAll('[data-cost]').forEach(b=>{b.disabled=S.coins<+b.dataset.cost})}
+
+/* ---------- INPUT ---------- */
+const ACT={
+  tab:d=>{if(R&&!R.over)return;S.tab=d.t;render();view.scrollTop=0},
+  close:()=>closeModal(),
+  sound:()=>{S.sound=!S.sound;save();if(S.tab==='trophy')rerender();updHUD()},
+  voice:()=>{S.voice=!S.voice;save();rerender()},
+  travel:d=>travel(+d.i),
+  build:d=>build(+d.k),
+  buyItem:d=>{const it=ITEMS[d.id];if(S.gear[d.id]||S.coins<it.price)return;S.coins-=it.price;giveItem(d.id);calc();SFX.buy();toast(`🛍️ Bought <b>${it.e} ${it.n}</b>!`);checkAch();save();rerender()},
+  equip:d=>{const it=ITEMS[d.id];S.eq[it.slot]=d.id;calc();SFX.buy();save();rerender()},
+  unequip:d=>{S.eq[d.s]=null;calc();save();rerender()},
+  upItem:d=>{const it=ITEMS[d.id],lv=S.gear[d.id],c=upCost(it,lv);if(lv>=RAR[it.r].max||S.coins<c)return;S.coins-=c;S.gear[d.id]++;calc();SFX.buy();save();rerender()},
+  openChest:d=>openChest(+d.j),
+  cards:d=>{S.cards=+d.n;save();rerender()},
+  speed:d=>{S.speed=+d.n;save();rerender()},
+  pwUnlock:d=>{const p=PW.find(x=>x.k===d.k);if(S.gems<p.unlock)return;S.gems-=p.unlock;S.pl[p.k]=1;SFX.level();save();rerender()},
+  pwUp:d=>{const l=S.pl[d.k],c=pwUp(l);if(l>=10||S.gems<c)return;S.gems-=c;S.pl[d.k]++;SFX.buy();save();rerender()},
+  play:()=>startRound(),
+  again:()=>{closeModalAll();R=null;const fee=(S.cards-1)*FEE(S.cur);if(S.coins<fee)S.cards=1;startRound()},
+  toTown:()=>{closeModalAll();R=null;S.tab='town';render()},
+  toLobby:()=>{closeModalAll();R=null;S.tab='bingo';render()},
+  daub:d=>daub(+d.c,+d.j,false),
+  claim:d=>claim(+d.c,false),
+  usePw:()=>usePw(),
+  login:()=>claimLogin(),
+  quest:d=>claimQuest(+d.j),
+  qbonus:()=>claimQBonus(),
+  spin:()=>spin(),
+  tour:()=>startTour(),
+  tourGo:()=>tourGo(),
+  help:()=>tutorial(),
+  reset:()=>modal(`<div class="me">⚠️</div><h2>Reset everything?</h2><p>All progress in Potato Bingo Adventures will be deleted forever.</p><div class="acts"><button class="btn p" data-a="resetGo">Yes, reset</button><button class="btn dk" data-a="close">Cancel</button></div>`),
+  resetGo:()=>{localStorage.removeItem(SAVE_KEY);S=fresh();R=null;calc();closeModalAll();save();render()}
+};
+// daub/claim respond on pointerdown for snappy play; everything else on click
+document.addEventListener('pointerdown',e=>{const el=e.target.closest('[data-a="daub"],[data-a="claim"],[data-a="usePw"]');if(!el||el.disabled)return;e.preventDefault();ACT[el.dataset.a](el.dataset)});
+document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el||el.disabled)return;const a=el.dataset.a;if(a==='daub'||a==='claim'||a==='usePw')return;if(ACT[a])ACT[a](el.dataset)});
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal'&&!(R&&R.over))closeModal()});
+document.addEventListener('keydown',e=>{if(!R||R.over)return;if(e.key===' '||e.key==='Enter'){e.preventDefault();R.cards.forEach((_,ci)=>{if(newLines(ci).length)claim(ci)})}if(e.key==='p'||e.key==='P')usePw()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)save();else{offline(true);lastT=performance.now()}});
+window.addEventListener('beforeunload',save);
+
+function tutorial(){
+  modal(`<div class="me">🥔🎱✈️</div><h2>Potato Bingo Adventures</h2><p>Travel the world – from Ireland to Potato Planet – and build amazing towns. But there's a catch: <b>the only way to earn coins is to win at bingo!</b></p>
+  <div class="rl"><span>🎱 Play bingo</span><b>Daub called numbers</b></div><div class="rl"><span>🎉 Get a line</span><b>Hit BINGO fast!</b></div><div class="rl"><span>🏘️ Spend coins</span><b>Build & upgrade</b></div><div class="rl"><span>🎒 Wear gear</span><b>Boost your bingo</b></div><div class="rl"><span>🏛️ Build landmark</span><b>Unlock a new land</b></div>
+  <p class="small">Catch surprise events during games for free coins, collect souvenirs, and come back daily for rewards!</p><div class="acts"><button class="btn big" data-a="close">Let's play! ▶</button></div>`)}
+
+/* ---------- BOOT ---------- */
+load();calc();quests();
+if(!S.tut){S.tut=true;tutorial();save()}else offline();
+render();requestAnimationFrame(loop);
+</script>
+</body>
+</html>
