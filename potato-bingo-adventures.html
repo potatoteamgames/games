@@ -94,7 +94,7 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
 .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#ff9b3a);border-radius:999px}
 
 /* ===== NAV ===== */
-#nav{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:6px 8px calc(6px + env(safe-area-inset-bottom));background:#120b2e;border-top:2px solid var(--line);z-index:5}
+#nav{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:6px 8px calc(6px + env(safe-area-inset-bottom));background:#120b2e;border-top:2px solid var(--line);z-index:5}
 #nav button{position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;padding:5px 2px;border-radius:12px;font-size:11px;color:var(--muted)}
 #nav button .e{font-size:22px;line-height:1.1}
 #nav button.on{background:var(--card2);color:var(--txt)}
@@ -102,6 +102,7 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
 #nav.lock{display:none}
 .dot{position:absolute;top:2px;right:calc(50% - 22px);min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:var(--red);color:#fff;font-size:11px;display:none;align-items:center;justify-content:center;border:2px solid #120b2e}
 .dot.on{display:flex}
+@media (max-width:820px){#nav .dk-only{display:none}}
 
 /* ===== DESKTOP LAYOUT: sidebar menu instead of the mobile bottom bar ===== */
 @media (min-width:821px){
@@ -118,6 +119,8 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
   #nav button.mid.on{box-shadow:0 4px 0 #82204a,0 0 0 3px var(--gold)}
   #nav button.mid:hover{filter:brightness(1.08)}
   .dot{position:static;margin-left:auto}
+  #nav button{order:var(--o)}
+  #nav button[data-t=more]{margin-top:auto}
   .pad{padding:24px 28px}
 }
 
@@ -163,6 +166,65 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
 .rar{font-size:10px;padding:1px 7px;border-radius:999px;color:#160c2b}
 .chest{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
 .chest .ce{font-size:50px;line-height:1}
+
+/* ===== PAGE PARTS ===== */
+.phead{display:flex;gap:14px;align-items:center;margin:2px 0 16px}
+.phead .phe{font-size:40px;width:64px;height:64px;border-radius:18px;background:var(--card);border:2px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.phead h2{margin:0;font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px}
+.phead p{margin:2px 0 0;color:var(--muted);font-size:14px;line-height:1.4;font-weight:700}
+.seg{display:flex;gap:4px;background:#0005;border:2px solid var(--line);border-radius:14px;padding:4px;margin-bottom:14px;overflow-x:auto}
+.seg button{flex:1;padding:9px 10px;border-radius:10px;font-size:14px;color:var(--muted);white-space:nowrap}
+.seg button.on{background:var(--card2);color:var(--txt);box-shadow:0 2px 0 #0006}
+.wallet{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.wallet span{background:#0005;border:2px solid var(--line);border-radius:999px;padding:5px 12px;font-size:14px}
+.note{font-size:13px;color:var(--muted);font-weight:700;line-height:1.45;margin:0 0 12px}
+.note b{color:var(--txt)}
+.empty{text-align:center;padding:26px 10px;color:var(--muted)}
+.empty .ee{font-size:46px}
+/* shop cards */
+.scard{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:14px 12px;border-radius:18px;background:var(--card);border:2px solid var(--line);position:relative}
+.scard .sce{font-size:44px;width:76px;height:76px;border-radius:20px;background:#0004;display:flex;align-items:center;justify-content:center;border:3px solid currentColor}
+.scard h4{margin:2px 0 0;font-size:16px}
+.scard .sd{font-size:12px;color:var(--muted);font-weight:700;min-height:30px}
+.scard .owned{position:absolute;top:8px;right:8px;font-size:10px;background:var(--mint);color:#063;padding:2px 7px;border-radius:999px}
+.odds{display:flex;height:8px;border-radius:9px;overflow:hidden;width:100%;background:#0005}
+.odds i{display:block;height:100%}
+.landchips{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;padding-bottom:2px}
+.landchips button{padding:6px 12px;border-radius:999px;background:#0005;border:2px solid var(--line);font-size:13px;white-space:nowrap}
+.landchips button.on{background:var(--card2);border-color:var(--gold)}
+/* bag */
+.equip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:420px;margin:0 auto}
+.eslot{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;aspect-ratio:1;border-radius:20px;background:#0004;border:3px dashed var(--line);font-size:11px;color:var(--muted);padding:4px;text-align:center;min-width:0}
+.eslot .se{font-size:36px;line-height:1.1}
+.eslot.f{border-style:solid;background:radial-gradient(circle at 50% 40%,#ffffff14,#0004)}
+.eslot.lk{opacity:.45}
+.eslot b{color:var(--txt);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.avatar{display:flex;align-items:center;justify-content:center;font-size:72px;filter:drop-shadow(0 8px 10px #0008);animation:bob 3s ease-in-out infinite}
+.bonus{display:flex;flex-wrap:wrap;gap:6px}
+.bonus span{background:#4fe0a622;border:2px solid #4fe0a666;border-radius:999px;padding:4px 10px;font-size:12px}
+.inv{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px}
+.itile{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px 8px;border-radius:16px;background:var(--card);border:3px solid currentColor;color:var(--txt);min-width:0}
+.itile .te{font-size:36px;line-height:1.1}
+.itile .tn{font-size:11px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.itile .tl{font-size:10px;color:var(--muted)}
+.itile .tq{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;background:var(--mint);color:#063;font-size:12px;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg)}
+.itile:hover{transform:translateY(-2px)}
+.statline{display:flex;justify-content:space-between;gap:8px;padding:6px 10px;background:#0004;border-radius:10px;margin:4px 0;font-size:14px;text-align:left}
+.statline em{font-style:normal;color:var(--mint)}
+/* upgrades */
+.hcard{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:18px;background:var(--card);border:2px solid var(--line);margin-bottom:10px}
+.hcard .hce{font-size:36px;width:60px;height:60px;border-radius:16px;background:#0004;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hcard h4{margin:0 0 2px;font-size:17px}
+.hcard p{margin:0 0 8px;font-size:13px;color:var(--muted);font-weight:700;line-height:1.4}
+.lvdots{display:flex;gap:3px;margin:4px 0 8px}
+.lvdots i{width:14px;height:6px;border-radius:3px;background:#ffffff22}
+.lvdots i.on{background:var(--gold)}
+/* more */
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.tile{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:18px 8px;border-radius:18px;background:var(--card);border:2px solid var(--line);font-size:15px;text-align:center}
+.tile .te{font-size:40px}
+.tile small{color:var(--muted);font-size:11px;font-weight:700}
+.tile .dot{top:6px;right:8px}
 
 /* ===== BINGO LOBBY ===== */
 .lobby{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;align-items:start}
@@ -380,13 +442,16 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
   </header>
   <main id="view"></main>
   <nav id="nav" aria-label="Game menu">
-    <button data-a="tab" data-t="map"><span class="e">🗺️</span>Map</button>
-    <button data-a="tab" data-t="town"><span class="e">🏘️</span>Town<span class="dot" id="dTown"></span></button>
-    <button data-a="tab" data-t="bingo" class="mid"><span class="e">🎱</span>Bingo</button>
-    <button data-a="tab" data-t="gear"><span class="e">🎒</span>Gear<span class="dot" id="dGear"></span></button>
-    <button data-a="tab" data-t="album"><span class="e">🧩</span>Album</button>
-    <button data-a="tab" data-t="daily"><span class="e">📅</span>Daily<span class="dot" id="dDaily"></span></button>
-    <button data-a="tab" data-t="trophy"><span class="e">🏆</span>Trophies<span class="dot" id="dAch"></span></button>
+    <button data-a="tab" data-t="town" style="--o:2"><span class="e">🏘️</span>Town<span class="dot" id="dTown"></span></button>
+    <button data-a="tab" data-t="map" class="dk-only" style="--o:3"><span class="e">🗺️</span>Map</button>
+    <button data-a="tab" data-t="shop" style="--o:4"><span class="e">🛍️</span>Shop</button>
+    <button data-a="tab" data-t="bingo" class="mid" style="--o:1"><span class="e">🎱</span>Bingo</button>
+    <button data-a="tab" data-t="bag" style="--o:5"><span class="e">🎒</span>Bag<span class="dot" id="dBag"></span></button>
+    <button data-a="tab" data-t="up" style="--o:6"><span class="e">⬆️</span>Upgrades</button>
+    <button data-a="tab" data-t="album" class="dk-only" style="--o:7"><span class="e">🧩</span>Album</button>
+    <button data-a="tab" data-t="daily" class="dk-only" style="--o:8"><span class="e">📅</span>Daily<span class="dot" id="dDaily"></span></button>
+    <button data-a="tab" data-t="trophy" class="dk-only" style="--o:9"><span class="e">🏆</span>Trophies<span class="dot" id="dAch"></span></button>
+    <button data-a="tab" data-t="more" style="--o:10"><span class="e">☰</span>More<span class="dot" id="dMore"></span></button>
   </nav>
 </div>
 <div id="fx"></div>
@@ -569,7 +634,7 @@ function fresh(){return{
   cards:1,speed:0,boost:0,
   st:{rounds:0,bingos:0,daubs:0,events:0,coins:0,gems:0,chests:0,powerups:0,souvenirs:0,bestCombo:0,specials:0,upgrades:0,best1:0,playMs:0},
   ach:{},achSeen:0,daily:null,login:{last:'',streak:0,total:0},
-  tours:0,last:Date.now(),sound:true,music:true,call:true,spd:2,spot:false,spotOn:true,autoB:false,autoBOn:true,tut:false,tab:'bingo'
+  tours:0,last:Date.now(),sound:true,music:true,call:true,spd:2,spot:false,spotOn:true,autoB:false,autoBOn:true,tokens:0,tut:false,tab:'bingo'
 }}
 let S=fresh();
 function load(){
@@ -685,6 +750,14 @@ function offline(quiet){const ms=Date.now()-(S.last||Date.now());if(ms<60000||!S
   if(quiet){toast(`🌾 Your farms earned <b>+${fmt(c)} 🪙</b> while you were away`);return}
   modal(`<div class="me">🌾</div><h2>Welcome back!</h2><p>Your farms worked hard for <b>${mins>=60?(mins/60).toFixed(1)+' hours':Math.floor(mins)+' minutes'}</b> while you were away.</p><div class="rl"><span>Farm income</span><b>+${fmt(c)} 🪙</b></div><p class="small">Farms store up to 8 hours of income.</p><div class="acts"><button class="btn big" data-a="close">Collect!</button></div>`)}
 
+/* ---------- PAGE HELPERS ---------- */
+const UI={shop:'gear',shopLand:null,bag:'all',up:'helpers',troph:'todo',item:null,sell:null};
+const phead=(e,t,txt)=>`<div class="phead"><div class="phe">${e}</div><div><h2>${t}</h2><p>${txt}</p></div></div>`;
+const seg=(k,opts)=>`<div class="seg">${opts.map(([v,l])=>`<button class="${UI[k]===v?'on':''}" data-a="sub" data-k="${k}" data-v="${v}">${l}</button>`).join('')}</div>`;
+const oddsBar=w=>`<div class="odds">${w.map((x,r)=>x?`<i style="width:${x}%;background:${RAR[r].c}" title="${RAR[r].n} ${x}%"></i>`:'').join('')}</div>`;
+const sellVal=(it,lv)=>Math.round([4,10,25,60,150][it.r]*(1+0.25*(lv-1)));
+const slotOf=k=>SLOTS.find(s=>s.k===k);
+
 /* ---------- RENDER ROOT ---------- */
 const view=$('#view');
 function setTheme(){const L=LANDS[S.cur];document.documentElement.style.setProperty('--c1',L.c1);document.documentElement.style.setProperty('--c2',L.c2)}
@@ -693,8 +766,9 @@ function updDots(){
   const d=quests();const qn=d.q.filter(q=>q.p>=q.n&&!q.c).length+(d.spins===0?1:0)+(S.login.last!==today()?1:0);
   const dd=$('#dDaily');dd.textContent=qn;dd.classList.toggle('on',qn>0);
   const tb=$('#dTown');const cn=canBuildAny();tb.textContent='!';tb.classList.toggle('on',cn);
-  const gb=$('#dGear');gb.textContent=S.bronze;gb.classList.toggle('on',S.bronze>0);
+  const gb=$('#dBag');gb.textContent=S.bronze;gb.classList.toggle('on',S.bronze>0);
   const ab=$('#dAch');const an=Object.keys(S.ach).length-S.achSeen;ab.textContent=an;ab.classList.toggle('on',an>0);
+  const mo=$('#dMore');mo.textContent=qn+an;mo.classList.toggle('on',qn+an>0);
 }
 function canBuildAny(){const i=S.cur;for(let k=0;k<8;k++){const L=S.b[i][k];if(L<bMax(k)&&(k<7||lmReady(i))&&S.coins>=bCost(i,k,L))return true}return false}
 function lmReady(i){const r=REQ(i);return S.b[i].slice(0,7).every(l=>l>=r)}
@@ -703,7 +777,7 @@ function render(){
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===S.tab));
   $('#nav').classList.toggle('lock',!!(R&&!R.over));$('#app').classList.toggle('inround',!!(R&&!R.over));
   setTheme();
-  const f={map:vMap,town:vTown,bingo:vBingo,gear:vGear,album:vAlbum,daily:vDaily,trophy:vTrophy}[S.tab]||vBingo;
+  const f={map:vMap,town:vTown,bingo:vBingo,shop:vShop,bag:vBag,up:vUp,more:vMore,album:vAlbum,daily:vDaily,trophy:vTrophy}[S.tab]||vBingo;
   f();updHUD();updDots();
 }
 function rerender(){const st=view.scrollTop;render();view.scrollTop=st}
@@ -711,7 +785,7 @@ function rerender(){const st=view.scrollTop;render();view.scrollTop=st}
 /* ---------- MAP ---------- */
 function landProg(i){let t=0,m=0;for(let k=0;k<8;k++){t+=S.b[i][k];m+=bMax(k)}const s=S.souv[i].filter(x=>x>0).length;return (t+s)/(m+9)}
 function vMap(){
-  let h=`<div class="pad"><h2 class="t">🗺️ World Map</h2><p class="subt">Build each land's landmark to unlock the next adventure. ${S.tours?`🌍 World Tour ${S.tours} · all coins ×${(1+0.75*S.tours).toFixed(2)}`:''}</p><div class="journey">`;
+  let h=`<div class="pad">${phead('🗺️','World Map',`Your journey from Ireland to Potato Planet. Tap a land you've unlocked to travel there. To unlock the next land, build the big landmark in your current town.${S.tours?` 🌍 World Tour ${S.tours}: all coins ×${(1+0.75*S.tours).toFixed(2)}`:''}`)}<div class="journey">`;
   LANDS.forEach((L,i)=>{const lock=i>=S.unlocked,here=i===S.cur,p=landProg(i);
     h+=`<button class="land ${lock?'locked':''} ${here?'here':''}" style="background:linear-gradient(150deg,${L.c1},${L.c2})" data-a="travel" data-i="${i}" ${lock?'disabled':''}>
       <span class="num">${here?'📍 HERE':lock?'🔒':'#'+(i+1)}</span><div class="le">${lock?'❔':L.e}</div><h3>${L.n}</h3><p>${lock?(i===S.unlocked?`Build the ${LANDS[i-1].b[7][1]} in ${LANDS[i-1].n}`:'Locked'):L.sub}</p>
@@ -722,22 +796,22 @@ function vMap(){
 
 /* ---------- TOWN ---------- */
 function vTown(){
-  const i=S.cur,L=LANDS[i],b=S.b[i],r=REQ(i);
+  const i=S.cur,L=LANDS[i],b=S.b[i],r=REQ(i),lmOk=lmReady(i),done=b.slice(0,7).filter(l=>l>=r).length;
+  const idleK=0.15*Bv(i)*ST.all*(1+ST.idle/100);
   let h=`<div class="pad"><div class="scene" style="background:linear-gradient(140deg,${L.c1},${L.c2})"><div class="bigE">${L.e}</div><div><h2>${L.n}</h2><div class="small" style="opacity:.9">${L.sub}</div>
     <div class="row" style="margin-top:8px"><span class="pill">🌾 ${fmt(ST.farmMin)}/min</span><span class="pill">🎱 ${fmt(Bv(i)*ST.cm)}/bingo</span></div></div><div class="skyline">${L.sky}</div></div>
-    <h3 class="sec">🏗️ Buildings</h3><div class="grid">`;
+    <p class="note" style="margin-top:14px">🏗️ Spend the coins you win in bingo on buildings here. <b>Every building gives a bonus that lasts forever</b> – even after you travel on. ${b[7]?'':`Get all 7 buildings to <b>level ${r}</b> (${done}/7 done), then build the <b>${L.b[7][1]}</b> to unlock ${i<NL-1?LANDS[i+1].n:'the World Tour'}.`}</p>
+    <div class="grid">`;
+  const nowNext=(k,lv)=>{if(k===0)return [`+${fmt(lv*idleK)}/min`,`+${fmt((lv+1)*idleK)}/min`];const t=BT[k].d(lv),n=BT[k].d(lv+1);return [t,n]};
+  const what=['🌾 Earns coins every minute, even when you are away','🪙 More coins from every bingo','✨ More bonus squares & souvenirs on your cards','🎓 More XP, so you level up faster','⚡ Your power-up meter fills faster','💎 More gems from bingo','🎉 Bigger rewards from bonus events','🌍 More coins from EVERYTHING'];
   for(let k=0;k<8;k++){const lv=b[k],mx=bMax(k),c=lv<mx?bCost(i,k,lv):0,[e,n]=L.b[k];
-    const lm=k===7,ready=!lm||lmReady(i);
-    let eff=BT[k].d(lv);if(k===0)eff=`+${fmt(lv*0.15*Bv(i)*ST.all*(1+ST.idle/100))} coins/min (next +${fmt(0.15*Bv(i)*ST.all*(1+ST.idle/100))})`;
-    h+=`<div class="box bld ${lm?'lm':''}"><div class="top"><div class="be">${e}</div><div><h4>${n}</h4><div class="stars">${'★'.repeat(lv)}<span style="opacity:.3">${'★'.repeat(mx-lv)}</span></div></div></div>
-      <div class="eff">${eff}${lm?`<br>${lv===0?(i<NL-1?`🔓 Unlocks <b>${LANDS[i+1].n}</b>!`:'🌍 Unlocks the World Tour!'):''}`:''}</div>
-      ${lm&&lv===0?`<div class="req">Needs all buildings at level ${r}: ${L.b.slice(0,7).map((x,j)=>`<b class="${b[j]>=r?'ok':'no'}">${x[0]}${b[j]}</b>`).join(' ')}</div>`:''}
+    const lm=k===7,ready=!lm||lmOk,[now,next]=nowNext(k,lv);
+    h+=`<div class="box bld ${lm?'lm':''}"><div class="top"><div class="be">${e}</div><div style="min-width:0"><h4>${n}</h4><div class="stars">${'★'.repeat(lv)}<span style="opacity:.3">${'★'.repeat(mx-lv)}</span></div></div></div>
+      <div class="eff">${what[k]}${lm&&lv===0?`<br>🔓 <b style="color:var(--txt)">Unlocks ${i<NL-1?LANDS[i+1].n:'the World Tour'}!</b>`:''}</div>
+      ${k===0||lv>0?`<div class="small" style="color:var(--mint)">${lv?`Now: ${k===0?now:now.replace(/\s*\(.*\)/,'')}`:''}${lv<mx?`${lv?' → ':''}Next: ${k===0?next:next.replace(/\s*\(.*\)/,'')}`:''}</div>`:''}
+      ${lm&&!lmOk?`<div class="req">First get every building to level ${r}: ${L.b.slice(0,7).map((x,j)=>`<b class="${b[j]>=r?'ok':'no'}">${x[0]}${b[j]}</b>`).join(' ')}</div>`:''}
       ${lv>=mx?`<button class="btn g" disabled>✔ MAXED</button>`:`<button class="btn" data-a="build" data-k="${k}" ${ready?`data-cost="${c}"`:''} ${(!ready||S.coins<c)?'disabled':''}>${lv===0?'Build':'Upgrade'} · 🪙 ${fmt(c)}</button>`}</div>`}
-  h+=`</div><h3 class="sec">🛍️ ${L.n} Gear Shop</h3><p class="subt">Unique items you can wear while playing bingo.</p><div class="grid">`;
-  L.g.forEach(g=>{const it=ITEMS['L'+i+'_'+g[0]],own=S.gear[it.id];
-    h+=`<div class="item" style="cursor:default"><div class="ie" style="color:${RAR[it.r].c}">${it.e}</div><div style="flex:1;min-width:0"><div class="in">${it.n} ${rarTag(it.r)}</div><div class="is">${SLOTS.find(s=>s.k===it.slot).n} · ${statTxt(itemStat(it,own||1))}</div>
-      <div style="margin-top:6px">${own?`<button class="btn g" data-a="tab" data-t="gear">Owned · Lv ${own}</button>`:`<button class="btn" data-a="buyItem" data-id="${it.id}" data-cost="${it.price}" ${S.coins<it.price?'disabled':''}>Buy · 🪙 ${fmt(it.price)}</button>`}</div></div></div>`});
-  h+=`</div></div>`;view.innerHTML=h;
+  h+=`</div><div class="box goal"><div class="ge">🛍️</div><div style="flex:1">${L.n} sells its own gear. Find it in the <b>Shop</b>.</div><button class="btn" data-a="shopLand" data-i="${i}">Open Shop →</button></div></div>`;view.innerHTML=h;
 }
 function build(k){const i=S.cur,lv=S.b[i][k];if(lv>=bMax(k))return;if(k===7&&!lmReady(i))return;const c=bCost(i,k,lv);if(S.coins<c)return;
   S.coins-=c;S.b[i][k]++;S.st.upgrades++;track('upgrades');SFX.buy();calc();
@@ -749,37 +823,112 @@ function travel(i){if(i>=S.unlocked)return;S.cur=i;closeModalAll();S.tab='town';
 function closeModalAll(){modalQ=[];nextModal()}
 
 /* ---------- GEAR ---------- */
-function vGear(){
-  let h=`<div class="pad"><h2 class="t">🎒 Gear</h2><p class="subt">Wear items to power up your bingo. Upgrade them to make them stronger.</p><div class="slots">`;
-  SLOTS.forEach(sl=>{const id=S.eq[sl.k],it=id&&ITEMS[id];const lock=S.level<sl.lv;
-    h+=`<div class="slot ${it?'f':''}" ${it?`style="border-color:${RAR[it.r].c}"`:''}><div class="se">${lock?'🔒':it?it.e:sl.e}</div><b style="color:var(--txt)">${sl.n}</b>${lock?`Level ${sl.lv}`:it?`${it.n}<br>Lv ${S.gear[id]}`:'Empty'}</div>`});
-  h+=`</div><div class="box" style="margin-top:12px"><b>Your bonuses</b><div class="stats" style="margin-top:8px">`;
-  [['coin','🪙'],['auto','🖍️'],['xp','🎓'],['charge','⚡'],['event','🎉'],['gem','💎'],['luck','🍀'],['special','✨'],['souv','🧩'],['balls','🎱'],['rival','🐢'],['idle','🌾']].forEach(([k,e])=>{h+=`<div>${e} ${STAT[k][0]}<b>+${+ST[k].toFixed(2)}${STAT[k][1]}</b></div>`});
-  h+=`<div>🤖 Auto-BINGO<b>${autoBOn()?'ON':hasAutoB()?'OFF (switched off)':'OFF'}</b></div><div>🌍 Global coins<b>×${ST.all.toFixed(2)}</b></div></div></div>
-    <h3 class="sec">🎁 Treasure Chests</h3><div class="grid">`;
-  CHESTS.forEach((c,j)=>{h+=`<div class="box chest"><div class="ce">${c.e}</div><b>${c.n}</b><div class="small muted">${c.w.map((w,r)=>w?`${RAR[r].n} ${w}%`:'').filter(Boolean).join(' · ')}</div>
-    ${j===0?`<button class="btn" data-a="openChest" data-j="0" ${S.bronze<1?'disabled':''}>Open (${S.bronze} owned)</button><div class="small muted">Found on 🎁 bingo squares</div>`:`<button class="btn p" data-a="openChest" data-j="${j}" ${S.gems<c.gems?'disabled':''}>Open · 💎 ${c.gems}</button>`}</div>`});
-  h+=`</div><h3 class="sec">🧳 Inventory (${Object.keys(S.gear).length}/${Object.keys(ITEMS).length})</h3>`;
-  const own=Object.keys(S.gear).map(id=>ITEMS[id]).sort((a,b)=>b.r-a.r||SLOTS.findIndex(s=>s.k===a.slot)-SLOTS.findIndex(s=>s.k===b.slot));
-  if(!own.length)h+=`<p class="muted">No gear yet! Buy items in the Town shop or open chests.</p>`;
-  h+=`<div class="grid">`;
-  own.forEach(it=>{const lv=S.gear[it.id],mx=RAR[it.r].max,eq=S.eq[it.slot]===it.id,uc=upCost(it,lv),sl=SLOTS.find(s=>s.k===it.slot);
-    h+=`<div class="item ${eq?'eq':''}" style="cursor:default"><div class="ie" style="color:${RAR[it.r].c}">${it.e}</div><div style="flex:1;min-width:0"><div class="in">${it.n}</div><div class="is">${rarTag(it.r)} ${sl.n} · Lv ${lv}/${mx}</div><div class="is" style="color:var(--txt)">${statTxt(itemStat(it,lv))}</div>
-      <div class="row" style="margin-top:6px">${eq?`<button class="btn dk" data-a="unequip" data-s="${it.slot}">Remove</button>`:`<button class="btn g" data-a="equip" data-id="${it.id}" ${S.level<sl.lv?'disabled':''}>Wear</button>`}
-      ${lv<mx?`<button class="btn" data-a="upItem" data-id="${it.id}" data-cost="${uc}" ${S.coins<uc?'disabled':''}>⬆ 🪙 ${fmt(uc)}</button>`:'<span class="small" style="color:var(--gold)">★ MAX</span>'}</div></div></div>`});
-  h+=`</div></div>`;view.innerHTML=h;
+function vBag(){
+  const own=Object.keys(S.gear).map(id=>ITEMS[id]);
+  let h=`<div class="pad">${phead('🎒','My Bag','Wear up to 5 items – they help you while you play bingo. Tap an item to wear it, upgrade it or sell it.')}`;
+  if(S.bronze>0)h+=`<div class="box goal" style="margin:0 0 14px"><div class="ge">🎁</div><div style="flex:1">You have <b>${S.bronze} Bronze Chest${S.bronze>1?'s':''}</b> with gear inside!</div><button class="btn p" data-a="openChest" data-j="0">Open</button></div>`;
+  const slotHtml=sl=>{const id=S.eq[sl.k],it=id&&ITEMS[id],lock=S.level<sl.lv;
+    return `<button class="eslot ${it?'f':''} ${lock?'lk':''}" ${it?`style="border-color:${RAR[it.r].c}" data-a="itemInfo" data-id="${id}"`:`data-a="sub" data-k="bag" data-v="${sl.k}"`}><div class="se">${lock?'🔒':it?it.e:sl.e}</div>${it?`<b>${it.n}</b>Lv ${S.gear[id]}`:`<b>${sl.n}</b>${lock?'Level '+sl.lv:'Empty'}`}</button>`};
+  const sl=k=>slotHtml(slotOf(k));
+  h+=`<div class="box"><div class="equip"><div></div>${sl('hat')}<div></div>${sl('dauber')}<div class="avatar">🥔</div>${sl('charm')}${sl('outfit')}<div></div>${sl('pet')}</div>`;
+  const bon=Object.keys(STAT).filter(k=>k!=='claim').filter(k=>{let v=0;for(const s2 in S.eq){const id=S.eq[s2];if(id&&S.gear[id]){const o=itemStat(ITEMS[id],S.gear[id]);v+=o[k]||0}}return v>0}).map(k=>{let v=0;for(const s2 in S.eq){const id=S.eq[s2];if(id&&S.gear[id])v+=itemStat(ITEMS[id],S.gear[id])[k]||0}return `<span>+${+v.toFixed(2)}${STAT[k][1]} ${STAT[k][0]}</span>`});
+  const anyClaim=Object.values(S.eq).some(id=>id&&ITEMS[id].st.claim);if(anyClaim)bon.push('<span>🤖 Auto-BINGO</span>');
+  h+=`<div style="margin-top:14px"><b>What your items give you</b><div class="bonus" style="margin-top:6px">${bon.length?bon.join(''):'<span style="background:#0004;border-color:var(--line)">Nothing yet – wear an item!</span>'}</div></div></div>`;
+  h+=`<h3 class="sec">🧳 Items (${own.length})</h3>`;
+  h+=seg('bag',[['all','All'],...SLOTS.map(x=>[x.k,x.e+' '+x.n])]);
+  const list=own.filter(it=>UI.bag==='all'||it.slot===UI.bag).sort((a,b)=>b.r-a.r||(S.gear[b.id]-S.gear[a.id]));
+  if(!list.length)h+=`<div class="empty"><div class="ee">🧺</div>No items here yet.<br>Buy gear in the Shop or win it from chests!<div style="margin-top:10px"><button class="btn" data-a="tab" data-t="shop">Go to Shop →</button></div></div>`;
+  else h+=`<div class="inv">${list.map(it=>`<button class="itile" style="color:${RAR[it.r].c}" data-a="itemInfo" data-id="${it.id}">${S.eq[it.slot]===it.id?'<span class="tq">✓</span>':''}<span class="te">${it.e}</span><span class="tn">${it.n}</span><span class="tl">Lv ${S.gear[it.id]}</span></button>`).join('')}</div>`;
+  h+=`<p class="note" style="margin-top:14px">💡 Colours show rarity: ${RAR.map(r=>`<b style="color:${r.c}">${r.n}</b>`).join(' · ')}. Items you won from chests can be <b>sold for 🎟️ tokens</b>, which you spend in the Shop.</p></div>`;
+  view.innerHTML=h;
+}
+function itemHtml(id){
+  const it=ITEMS[id],lv=S.gear[id],mx=RAR[it.r].max,eq=S.eq[it.slot]===id,sl=slotOf(it.slot),uc=upCost(it,lv);
+  const now=itemStat(it,lv),nx=lv<mx?itemStat(it,lv+1):null;
+  return `<div class="me">${it.e}</div><h2 style="color:${RAR[it.r].c}">${it.n}</h2><p style="margin:0 0 8px">${rarTag(it.r)} · ${sl.e} ${sl.n} · Level ${lv}/${mx}${it.chest?'':` · from ${LANDS[it.land].n}`}</p>
+   ${Object.keys(now).map(k=>`<div class="statline"><span>${k==='claim'?'🤖 Auto-BINGO':STAT[k][0]}</span><b>${k==='claim'?'Yes':'+'+now[k]+STAT[k][1]}${nx&&k!=='claim'&&nx[k]!==now[k]?` <em>→ +${nx[k]}${STAT[k][1]}</em>`:''}</b></div>`).join('')}
+   <div class="acts">${eq?`<button class="btn dk" data-a="unequip" data-s="${it.slot}">Take off</button>`:`<button class="btn g" data-a="equip" data-id="${id}" ${S.level<sl.lv?'disabled':''}>${S.level<sl.lv?'🔒 Level '+sl.lv:'Wear it'}</button>`}
+    ${lv<mx?`<button class="btn" data-a="upItem" data-id="${id}" ${S.coins<uc?'disabled':''}>⬆ Upgrade · 🪙 ${fmt(uc)}</button>`:'<span class="small" style="color:var(--gold)">★ MAX LEVEL</span>'}</div>
+   <div class="acts" style="margin-top:8px">${it.chest?`<button class="btn ${UI.sell===id?'p':'dk'}" data-a="sell" data-id="${id}">${UI.sell===id?`Tap again to sell for 🎟️ ${sellVal(it,lv)}`:`Sell · 🎟️ ${sellVal(it,lv)}`}</button>`:''}<button class="btn dk" data-a="close">Close</button></div>
+   ${it.chest?'':'<p class="small" style="margin:8px 0 0">Shop items can\'t be sold.</p>'}`}
+function showItem(id){UI.item=id;const h=itemHtml(id);if(modalOn)$('#mbox').innerHTML=h;else modal(h)}
+function afterItem(){if(UI.item&&modalOn&&S.gear[UI.item])showItem(UI.item);rerender()}
+function sellItem(id){const it=ITEMS[id],lv=S.gear[id];if(!it||!lv||!it.chest)return;if(UI.sell!==id){UI.sell=id;return showItem(id)}
+  const v=sellVal(it,lv);delete S.gear[id];if(S.eq[it.slot]===id)S.eq[it.slot]=null;S.tokens+=v;UI.sell=null;UI.item=null;calc();SFX.coin();closeModalAll();toast(`🎟️ Sold <b>${it.e} ${it.n}</b> for <b>${v} tokens</b>`);save();rerender()}
+
+const TSHOP=[
+ {e:'🎁',n:'Bronze Chest',d:'A random gear item.',c:6,f:()=>{S.bronze++;toast('🎁 +1 Bronze Chest – open it in your Bag')}},
+ {e:'⚡',n:'2× Coin Boost',d:'Double bingo coins for your next 3 games.',c:12,f:()=>{S.boost+=3;toast('⚡ 2× coins for your next 3 games!')}},
+ {e:'💎',n:'Gem Pouch',d:'10 gems for upgrades.',c:15,f:()=>{addGems(10);toast('💎 +10 gems')}},
+ {e:'🧰',n:'Silver Chest',d:'Good chance of Rare & Epic gear.',c:35,f:()=>openChest(1,true)},
+ {e:'💰',n:'Gold Chest',d:'Good chance of Epic & Legendary gear.',c:100,f:()=>openChest(2,true)}
+];
+function vShop(){
+  if(UI.shopLand===null||UI.shopLand>=S.unlocked)UI.shopLand=S.cur;
+  let h=`<div class="pad">${phead('🛍️','Shop','Buy gear to wear while you play, or open chests for a surprise. Everything you buy goes into your Bag.')}
+    <div class="wallet"><span>🪙 ${fmt(S.coins)}</span><span>💎 ${fmt(S.gems)}</span><span>🎟️ ${fmt(S.tokens)} tokens</span></div>`;
+  h+=seg('shop',[['gear','🎽 Gear'],['chests','🎁 Chests'],['tokens','🎟️ Token Shop']]);
+  if(UI.shop==='gear'){const li=UI.shopLand,L=LANDS[li];
+    h+=`<p class="note">Every land sells 5 unique items – one for each slot. Paid with 🪙 coins.</p>`;
+    if(S.unlocked>1)h+=`<div class="landchips">${LANDS.slice(0,S.unlocked).map((x,j)=>`<button class="${j===li?'on':''}" data-a="shopLand" data-i="${j}">${x.e} ${x.n}</button>`).join('')}</div>`;
+    h+=`<div class="grid">`;
+    L.g.forEach(g=>{const it=ITEMS['L'+li+'_'+g[0]],own=S.gear[it.id],sl=slotOf(it.slot);
+      h+=`<div class="scard">${own?'<span class="owned">OWNED</span>':''}<div class="sce" style="color:${RAR[it.r].c}">${it.e}</div><h4>${it.n}</h4><div>${rarTag(it.r)} <span class="small muted">${sl.e} ${sl.n}</span></div><div class="sd">${statTxt(itemStat(it,1))}</div>
+        ${own?`<button class="btn g" data-a="itemInfo" data-id="${it.id}">In your Bag · Lv ${own}</button>`:`<button class="btn" data-a="buyItem" data-id="${it.id}" data-cost="${it.price}" ${S.coins<it.price?'disabled':''}>Buy · 🪙 ${fmt(it.price)}</button>`}</div>`});
+    h+=`</div>`}
+  else if(UI.shop==='chests'){
+    h+=`<p class="note">Chests give a random item. The coloured bar shows the chance of each rarity. Getting an item you already have levels it up for free!</p><div class="grid">`;
+    CHESTS.forEach((c,j)=>{h+=`<div class="scard"><div class="sce" style="color:${['#c98436','#c7d0da','#ffcf4a','#ff8cc0'][j]}">${c.e}</div><h4>${c.n}</h4>${oddsBar(c.w)}<div class="sd">${c.w.map((w,r)=>w?`${RAR[r].n} ${w}%`:'').filter(Boolean).join(' · ')}</div>
+      ${j===0?`<button class="btn" data-a="openChest" data-j="0" ${S.bronze<1?'disabled':''}>Open · ${S.bronze} owned</button><div class="small muted">Find them on 🎁 bingo squares</div>`:`<button class="btn p" data-a="openChest" data-j="${j}" ${S.gems<c.gems?'disabled':''}>Open · 💎 ${c.gems}</button>`}</div>`});
+    h+=`</div>`}
+  else{
+    h+=`<p class="note">🎟️ <b>Tokens</b> are what you get when you <b>sell items</b> you won from chests (in your Bag). Spend them here.</p>`;
+    if(!S.tokens)h+=`<div class="box goal" style="margin:0 0 12px"><div class="ge">💡</div><div style="flex:1">You have no tokens yet. Open a chest, then sell items you don't need from your Bag.</div><button class="btn" data-a="tab" data-t="bag">My Bag →</button></div>`;
+    h+=`<div class="grid">${TSHOP.map((t,j)=>`<div class="scard"><div class="sce" style="color:var(--gold)">${t.e}</div><h4>${t.n}</h4><div class="sd">${t.d}</div><button class="btn b" data-a="tbuy" data-j="${j}" ${S.tokens<t.c?'disabled':''}>Buy · 🎟️ ${t.c}</button></div>`).join('')}</div>`}
+  h+=`</div>`;view.innerHTML=h;
+}
+function vUp(){
+  let h=`<div class="pad">${phead('⬆️','Upgrades','Permanent upgrades you buy with 💎 gems. They make every bingo game better.')}
+    <div class="wallet"><span>💎 ${fmt(S.gems)} gems</span></div>`;
+  h+=seg('up',[['helpers','🧰 Bingo helpers'],['power','🔮 Power-ups']]);
+  const toggle=(on,act)=>`<div class="opt"><button class="${on?'on':''}" data-a="${on?'':act}">On</button><button class="${on?'':'on'}" data-a="${on?act:''}">Off</button></div>`;
+  if(UI.up==='helpers'){
+    h+=`<div class="hcard"><div class="hce">🔍</div><div style="flex:1"><h4>Number Spotter</h4><p>Called numbers glow softly on your cards, so you can see where to put your marker. Without it, you have to watch carefully yourself.</p>
+      ${S.spot?toggle(S.spotOn,'spotToggle'):`<button class="btn p" data-a="spotBuy" ${S.gems<SPOT_COST?'disabled':''}>Buy · 💎 ${SPOT_COST}</button>`}</div></div>
+     <div class="hcard"><div class="hce">🤖</div><div style="flex:1"><h4>Auto-BINGO</h4><p>BINGO is pressed for you the moment you finish a line, so you never lose a bingo to slow fingers. You still place your own markers.</p>
+      ${hasAutoB()?toggle(S.autoBOn,'autoBToggle'):`<button class="btn p" data-a="autoBBuy" ${S.gems<AUTOB_COST?'disabled':''}>Buy · 💎 ${AUTOB_COST}</button>`}</div></div>`;
+  }else{
+    h+=`<p class="note">⚡ Every marker you place fills the <b>power meter</b> in the game. When it's full, tap it to get a <b>random power-up</b> from the ones you've unlocked here. Upgrading makes it stronger.</p>`;
+    PW.forEach(p=>{const l=S.pl[p.k];h+=`<div class="hcard"><div class="hce">${l?p.e:'🔒'}</div><div style="flex:1"><h4>${p.n}</h4><p>${p.d(Math.max(1,l))}${l&&l<10?` <span style="color:var(--mint)">→ next: ${p.d(l+1)}</span>`:''}</p>
+      ${l?`<div class="lvdots">${[...Array(10)].map((_,j)=>`<i class="${j<l?'on':''}"></i>`).join('')}</div>`:''}
+      ${!l?`<button class="btn p" data-a="pwUnlock" data-k="${p.k}" ${S.gems<p.unlock?'disabled':''}>Unlock · 💎 ${p.unlock}</button>`:l<10?`<button class="btn b" data-a="pwUp" data-k="${p.k}" ${S.gems<pwUp(l)?'disabled':''}>Upgrade · 💎 ${pwUp(l)}</button>`:'<span class="small" style="color:var(--gold)">★ MAX LEVEL</span>'}</div></div>`});
+  }
+  h+=`<p class="note" style="margin-top:6px">💎 Get gems from trophies, daily quests, the lucky wheel, level-ups and 💎 bingo squares.</p></div>`;view.innerHTML=h;
+}
+function vMore(){
+  const d=quests(),qn=d.q.filter(q=>q.p>=q.n&&!q.c).length+(d.spins===0?1:0)+(S.login.last!==today()?1:0),an=Object.keys(S.ach).length-S.achSeen;
+  const tile=(t,e,n,sub,dot)=>`<button class="tile" data-a="tab" data-t="${t}"><span class="te">${e}</span>${n}<small>${sub}</small>${dot?`<span class="dot on">${dot}</span>`:''}</button>`;
+  view.innerHTML=`<div class="pad">${phead('☰','More','Everything else in one place.')}
+   <div class="tiles">${tile('map','🗺️','World Map','Travel between lands')}${tile('album','🧩','Album','Collect souvenirs')}${tile('daily','📅','Daily','Free daily rewards',qn)}${tile('trophy','🏆','Trophies','Goals & stats',an)}</div>
+   <h3 class="sec">⚙️ Settings</h3><div class="box">
+    <div class="set"><div class="sl"><b>🎵 Music</b><span>Calm background music.</span></div><div class="opt"><button class="${S.music?'on':''}" data-a="${S.music?'':'music'}">On</button><button class="${S.music?'':'on'}" data-a="${S.music?'music':''}">Off</button></div></div>
+    <div class="set"><div class="sl"><b>🔊 Sound effects</b><span>Clicks, coins and bingo sounds.</span></div><div class="opt"><button class="${S.sound?'on':''}" data-a="${S.sound?'':'sound'}">On</button><button class="${S.sound?'':'on'}" data-a="${S.sound?'sound':''}">Off</button></div></div>
+    <div class="set"><div class="sl"><b>🗣️ Read numbers aloud</b><span>The caller says each number in bingo.</span></div><div class="opt"><button class="${S.call?'on':''}" data-a="${S.call?'':'call'}">On</button><button class="${S.call?'':'on'}" data-a="${S.call?'call':''}">Off</button></div></div>
+   </div>
+   <div class="row" style="margin-top:14px"><button class="btn dk" data-a="help">❓ How to play</button><span class="sp"></span><button class="btn dk" data-a="reset" style="color:#ff9a9a">Reset game</button></div>
+   <p class="small muted" style="margin-top:10px">Your progress is saved automatically in this browser.</p></div>`;
 }
 function upCost(it,lv){return it.chest?3*(1+it.r*0.6)*Bv(S.unlocked-1)*Dv(S.unlocked-1)*Math.pow(1.3,lv-1):it.price*0.3*Math.pow(1.35,lv-1)}
 function giveItem(id){const it=ITEMS[id];if(!S.gear[id]){S.gear[id]=1;if(!S.eq[it.slot]&&S.level>=SLOTS.find(s=>s.k===it.slot).lv)S.eq[it.slot]=id;return 'new'}if(S.gear[id]<RAR[it.r].max){S.gear[id]++;return 'up'}const g=5+it.r*10;addGems(g);return 'gems:'+g}
-function openChest(j){const c=CHESTS[j];if(j===0){if(S.bronze<1)return;S.bronze--}else{if(S.gems<c.gems)return;S.gems-=c.gems}
+function openChest(j,free){const c=CHESTS[j];if(!free){if(j===0){if(S.bronze<1)return;S.bronze--}else{if(S.gems<c.gems)return;S.gems-=c.gems}}
   const r=wpick(c.w);const pool=CHEST_ITEMS.map((_,x)=>'C'+x).filter(id=>ITEMS[id].r===r);const id=pick(pool),it=ITEMS[id];const res=giveItem(id);S.st.chests++;
   SFX.level();confetti(r>=3?100:40);calc();
-  modal(`<div class="me">${c.e}➜${it.e}</div><h2 style="color:${RAR[r].c}">${RAR[r].n}!</h2><p><b style="color:var(--txt)">${it.n}</b><br>${statTxt(itemStat(it,S.gear[id]))}</p><div class="rl"><span>Result</span><b>${res==='new'?'🆕 New item!':res==='up'?'⬆ Duplicate → item level up!':'💎 Max level → +'+res.split(':')[1]+' gems'}</b></div><div class="acts"><button class="btn big" data-a="close">Awesome!</button></div>`);
+  modal(`<div class="me">${c.e}➜${it.e}</div><h2 style="color:${RAR[r].c}">${RAR[r].n}!</h2><p><b style="color:var(--txt)">${it.n}</b><br>${statTxt(itemStat(it,S.gear[id]))}</p><div class="rl"><span>Result</span><b>${res==='new'?'🆕 New item!':res==='up'?'⬆ Duplicate → item level up!':'💎 Max level → +'+res.split(':')[1]+' gems'}</b></div><div class="acts"><button class="btn big" data-a="close">Awesome!</button><button class="btn dk" data-a="itemInfo" data-id="${id}">See item</button></div>`);
   checkAch();save();rerender()}
 
 /* ---------- ALBUM ---------- */
 function vAlbum(){
-  let h=`<div class="pad"><h2 class="t">🧩 Souvenir Album</h2><p class="subt">Daub 🧩 squares in bingo to find souvenirs from the land you're in. Complete an album for gems and a permanent +5% bingo coins.</p>`;
+  let h=`<div class="pad">${phead('🧩','Souvenir Album','Bingo squares with a 🧩 hide souvenirs from the land you are playing in. Find all 9 from a land to get gems and +5% bingo coins forever.')}`;
   LANDS.forEach((L,i)=>{if(i>=S.unlocked){h+=`<div class="box" style="margin-bottom:10px;opacity:.5"><b>🔒 ${L.n}</b></div>`;return}
     const n=S.souv[i].filter(x=>x>0).length;
     h+=`<div class="box" style="margin-bottom:10px"><div class="row"><b style="font-size:18px">${L.e} ${L.n}</b><span class="sp"></span><span class="small ${S.colDone[i]?'':'muted'}">${S.colDone[i]?'✔ COMPLETE · +5% coins':`${n}/9 · reward 💎 ${albumGems(i)}`}</span></div>
@@ -801,7 +950,7 @@ const WHEEL=[{e:'🪙',t:'Purse',w:22,f:()=>`+${fmt(addCoins(Bv(S.unlocked-1)*4*
 let wheelRot=0,spinning=false;
 function vDaily(){
   const d=quests(),t=today(),claimed=S.login.last===t;const streakDay=claimed?((S.login.streak-1)%7):(S.login.last===yesterday()?S.login.streak%7:0);
-  let h=`<div class="pad"><h2 class="t">📅 Daily Rewards</h2><p class="subt">Come back every day – rewards grow with your streak! 🔥 Streak: <b>${S.login.streak}</b> days</p>
+  let h=`<div class="pad">${phead('📅','Daily Rewards',`Free stuff every day! Claim your login gift, finish 3 small quests and spin the wheel once for free. 🔥 Streak: <b>${S.login.streak}</b> day${S.login.streak===1?'':'s'}`)}
    <div class="box"><div class="days">${LOGIN.map((l,j)=>`<div class="day ${j<streakDay||(claimed&&j===streakDay)?'done':''} ${j===streakDay&&!claimed?'today':''}"><div class="de">${l.e}</div>Day ${j+1}<br>${l.t}</div>`).join('')}</div>
    <div style="text-align:center;margin-top:10px">${claimed?'<span class="muted">✔ Claimed today – see you tomorrow!</span>':'<button class="btn big" data-a="login">Claim Day '+(streakDay+1)+'!</button>'}</div></div>
    <h3 class="sec">📜 Daily Quests</h3><div class="box">`;
@@ -826,17 +975,19 @@ function spin(){const d=quests();if(spinning)return;if(d.spins>0){if(S.gems<15)r
 function vTrophy(){
   S.achSeen=Object.keys(S.ach).length;
   const n=Object.keys(S.ach).length;
-  let h=`<div class="pad"><h2 class="t">🏆 Trophies & Stats</h2><p class="subt">${n}/${ACH.length} trophies unlocked</p><div class="bar" style="margin-bottom:14px"><i style="width:${n/ACH.length*100}%"></i></div>
-   <div class="stats">${[['🎱 Rounds',S.st.rounds],['🎉 Bingos',S.st.bingos],['🖍️ Daubs',S.st.daubs],['⚡ Events caught',S.st.events],['🔮 Power-ups',S.st.powerups],['🔥 Best combo',S.st.bestCombo],['🧩 Souvenirs',S.st.souvenirs],['🎁 Chests',S.st.chests],['🪙 Coins earned',S.st.coins],['💎 Gems earned',S.st.gems],['🏗️ Upgrades',S.st.upgrades],['🌍 World Tours',S.tours]].map(([a,b])=>`<div>${a}<b>${fmt(b)}</b></div>`).join('')}</div>`;
-  // World tour
-  const can=S.b[NL-1][7]>0;
-  h+=`<div class="box" style="margin-top:14px;background:linear-gradient(135deg,#4a3410,#2e2266)"><h3 class="lil" style="margin:0;font-size:24px">🌍 World Tour ${S.tours?'#'+(S.tours+1):''}</h3>
-    <p class="muted small">Build the Spud King's Palace on Potato Planet to start a new World Tour. You restart from Ireland (coins, buildings and lands reset) but keep your <b>level, gems, gear, albums, power-ups and trophies</b> – and all coins are multiplied by <b>×${(1+0.75*(S.tours+1)).toFixed(2)}</b> forever.</p>
-    <button class="btn p" data-a="tour" ${can?'':'disabled'}>${can?'Start World Tour!':'🔒 Reach Potato Planet first'}</button></div>`;
-  h+=`<h3 class="sec">🏅 Trophies</h3><div class="grid">${ACH.map(a=>`<div class="ach ${S.ach[a.id]?'':'no'}"><div class="ae">${S.ach[a.id]?a.e:'🔒'}</div><div><b>${a.n}</b><div class="small muted">${a.d} · 💎 ${a.g}</div></div></div>`).join('')}</div>
-   <h3 class="sec">⚙️ Settings</h3><div class="box row"><button class="btn dk" data-a="sound">${S.sound?'🔊 Sound on':'🔇 Sound off'}</button><button class="btn dk" data-a="music">${S.music?'🎵 Music on':'🎵 Music off'}</button><button class="btn dk" data-a="call">${S.call?'🗣️ Read numbers aloud: on':'🤐 Read numbers aloud: off'}</button><button class="btn dk" data-a="help">❓ How to play</button><span class="sp"></span><button class="btn dk" data-a="reset" style="color:#ff9a9a">Reset game</button></div>
-   <p class="small muted" style="margin-top:10px">Progress is saved automatically in this browser.</p></div>`;
-  view.innerHTML=h;
+  let h=`<div class="pad">${phead('🏆','Trophies',`Little goals that give you 💎 gems when you reach them. You have <b>${n}/${ACH.length}</b>.`)}<div class="bar" style="margin-bottom:14px"><i style="width:${n/ACH.length*100}%"></i></div>`;
+  h+=seg('troph',[['todo','🎯 Next goals'],['done','✅ Done ('+n+')'],['stats','📊 Stats']]);
+  const card=a=>`<div class="ach ${S.ach[a.id]?'':'no'}"><div class="ae">${S.ach[a.id]?a.e:'🎯'}</div><div><b>${a.n}</b><div class="small muted">${a.d} · 💎 ${a.g}</div></div></div>`;
+  if(UI.troph==='todo'){const seen={},next=[];ACH.forEach(a=>{const k=a.id.match(/^[a-z$]+/)[0];if(S.ach[a.id]||seen[k])return;seen[k]=1;next.push(a)});
+    h+=`<p class="note">Your next goal in each category. Reach one and the next appears.</p><div class="grid">${next.map(card).join('')}</div>`}
+  else if(UI.troph==='done'){const d=ACH.filter(a=>S.ach[a.id]);h+=d.length?`<div class="grid">${d.map(card).join('')}</div>`:`<div class="empty"><div class="ee">🏆</div>No trophies yet – play some bingo!</div>`}
+  else{
+    h+=`<div class="stats">${[['🎱 Games played',S.st.rounds],['🎉 Bingos',S.st.bingos],['🖍️ Markers placed',S.st.daubs],['⚡ Events caught',S.st.events],['🔮 Power-ups used',S.st.powerups],['🔥 Best combo',S.st.bestCombo],['🧩 Souvenirs',S.st.souvenirs],['🎁 Chests opened',S.st.chests],['🪙 Coins earned',S.st.coins],['💎 Gems earned',S.st.gems],['🏗️ Upgrades',S.st.upgrades],['🌍 World Tours',S.tours]].map(([a,b])=>`<div>${a}<b>${fmt(b)}</b></div>`).join('')}</div>`;
+    const can=S.b[NL-1][7]>0;
+    if(can||S.tours||S.unlocked>=NL-2)h+=`<div class="box" style="margin-top:14px;background:linear-gradient(135deg,#4a3410,#2e2266)"><h3 class="lil" style="margin:0;font-size:24px">🌍 World Tour ${S.tours?'#'+(S.tours+1):''}</h3>
+      <p class="muted small">When you build the Spud King's Palace on Potato Planet you can start over from Ireland, keeping your level, gems, gear, albums and upgrades – and all coins are multiplied by <b>×${(1+0.75*(S.tours+1)).toFixed(2)}</b> forever.</p>
+      <button class="btn p" data-a="tour" ${can?'':'disabled'}>${can?'Start World Tour!':'🔒 Reach Potato Planet first'}</button></div>`}
+  h+=`</div>`;view.innerHTML=h;
 }
 function startTour(){if(S.b[NL-1][7]<1)return;modal(`<div class="me">🌍</div><h2>Start World Tour?</h2><p>Coins, buildings and unlocked lands reset. You keep everything else and get <b>×${(1+0.75*(S.tours+1)).toFixed(2)}</b> coins forever.</p><div class="acts"><button class="btn p big" data-a="tourGo">Let's go!</button><button class="btn dk" data-a="close">Not yet</button></div>`)}
 function tourGo(){S.tours++;S.coins=0;S.b=LANDS.map(()=>Array(8).fill(0));S.unlocked=1;S.cur=0;S.bronze+=3;addGems(100);calc();checkAch();save();closeModalAll();confetti(120);bigTxt('WORLD TOUR '+S.tours+'!');S.tab='town';render()}
@@ -853,8 +1004,8 @@ function nextGoal(){
   const i=S.cur,L=LANDS[i];
   if(!S.st.rounds)return['👋','Welcome! Press <b>PLAY BINGO</b> to start your very first game – it\'s free.',null];
   if(canBuildAny())return['🏗️','You have enough coins to build in your town!',['tab','town','Go to Town']];
-  if(S.bronze>0)return['🎁',`You have ${S.bronze} unopened chest${S.bronze>1?'s':''} with gear inside.`,['tab','gear','Open chests']];
-  if(!S.spot&&S.gems>=SPOT_COST)return['🔍','Tip: buy the <b>Number Spotter</b> below – it shows you where to put your marker.',null];
+  if(S.bronze>0)return['🎁',`You have ${S.bronze} unopened chest${S.bronze>1?'s':''} with gear inside.`,['tab','bag','Open in Bag']];
+  if(!S.spot&&S.gems>=SPOT_COST)return['🔍','Tip: the <b>Number Spotter</b> shows you where to put your marker.',['tab','up','Upgrades']];
   if(S.b[i][7]===0){const r=REQ(i),done=S.b[i].slice(0,7).filter(l=>l>=r).length;
     return['🎯',`Goal: build the <b>${L.b[7][1]}</b> to unlock ${i<NL-1?LANDS[i+1].n:'the World Tour'}. Buildings at level ${r}: <b>${done}/7</b>. Win bingos to earn the coins!`,['tab','town','See Town']]}
   if(i<S.unlocked-1)return['✈️',`${LANDS[S.unlocked-1].n} is unlocked – bingo pays much more there!`,['travel',S.unlocked-1,'Travel']];
@@ -881,12 +1032,9 @@ function vLobby(){
        <span class="small muted">${sp.e} ${sp.n}: a new number every ${sp.t} seconds</span></div>
      <div class="set"><div class="sl"><b>🗣️ Read numbers aloud</b><span>The caller says each number, e.g. "B 12".</span></div>
        <div class="opt"><button class="${S.call?'on':''}" data-a="${S.call?'':'call'}">On</button><button class="${S.call?'':'on'}" data-a="${S.call?'call':''}">Off</button></div></div>
-     <div class="set"><div class="sl"><b>🔍 Number Spotter</b><span>Upgrade: called numbers glow softly on your cards, so you see where to put your marker. Without it you have to watch carefully yourself!</span></div>
-       ${S.spot?`<div class="opt"><button class="${S.spotOn?'on':''}" data-a="${S.spotOn?'':'spotToggle'}">On</button><button class="${S.spotOn?'':'on'}" data-a="${S.spotOn?'spotToggle':''}">Off</button></div>`
-        :`<button class="btn p" data-a="spotBuy" ${S.gems<SPOT_COST?'disabled':''}>Buy · 💎 ${SPOT_COST}</button>${S.gems<SPOT_COST?` <span class="small muted">You have 💎 ${S.gems} – earn gems from trophies, quests and special squares.</span>`:''}`}</div>
-     <div class="set"><div class="sl"><b>🤖 Auto-BINGO</b><span>Upgrade: BINGO is pressed for you the moment you complete a line, so you never lose a bingo to slow fingers. You still place your own markers.</span></div>
-       ${hasAutoB()?`<div class="opt"><button class="${S.autoBOn?'on':''}" data-a="${S.autoBOn?'':'autoBToggle'}">On</button><button class="${S.autoBOn?'':'on'}" data-a="${S.autoBOn?'autoBToggle':''}">Off</button></div>`
-        :`<button class="btn p" data-a="autoBBuy" ${S.gems<AUTOB_COST?'disabled':''}>Buy · 💎 ${AUTOB_COST}</button>${S.gems<AUTOB_COST?` <span class="small muted">You have 💎 ${S.gems}</span>`:''}`}</div>
+     ${S.spot?`<div class="set"><div class="sl"><b>🔍 Number Spotter</b><span>Called numbers glow softly on your cards.</span></div><div class="opt"><button class="${S.spotOn?'on':''}" data-a="${S.spotOn?'':'spotToggle'}">On</button><button class="${S.spotOn?'':'on'}" data-a="${S.spotOn?'spotToggle':''}">Off</button></div></div>`:''}
+     ${hasAutoB()?`<div class="set"><div class="sl"><b>🤖 Auto-BINGO</b><span>BINGO is pressed for you when you finish a line.</span></div><div class="opt"><button class="${S.autoBOn?'on':''}" data-a="${S.autoBOn?'':'autoBToggle'}">On</button><button class="${S.autoBOn?'':'on'}" data-a="${S.autoBOn?'autoBToggle':''}">Off</button></div></div>`:''}
+     ${S.spot&&hasAutoB()?'':`<div class="set"><div class="sl"><b>🧰 Need a little help?</b><span>${!S.spot?'🔍 Number Spotter shows where to put your marker. ':''}${!hasAutoB()?'🤖 Auto-BINGO presses BINGO for you.':''}</span></div><button class="btn dk" data-a="tab" data-t="up">See Upgrades →</button></div>`}
     </div>
     <details class="box howto" ${newbie?'open':''}><summary class="lil bh">📖 How to play bingo</summary>
      <ol class="steps">
@@ -899,11 +1047,8 @@ function vLobby(){
      </ol>
      <div class="small muted">Keys: <b>Space</b> = BINGO · <b>P</b> = power-up</div>
     </details>
-   </div>
-   <div class="box" style="margin-top:14px"><h3 class="lil bh">🔮 Power Lab</h3><p class="small muted" style="margin:-4px 0 6px">Every marker you place fills your power meter. When it's full, tap ⚡ in the game for a random power-up. Unlock and upgrade them with 💎 gems.</p>`;
-  PW.forEach(p=>{const l=S.pl[p.k];h+=`<div class="pw"><div class="pe">${l?p.e:'🔒'}</div><div style="flex:1"><b>${p.n}</b> ${l?`<span class="small muted">Lv ${l}/10</span>`:''}<div class="small muted">${p.d(Math.max(1,l))}</div></div>
-     ${!l?`<button class="btn p" data-a="pwUnlock" data-k="${p.k}" ${S.gems<p.unlock?'disabled':''}>💎 ${p.unlock}</button>`:l<10?`<button class="btn b" data-a="pwUp" data-k="${p.k}" ${S.gems<pwUp(l)?'disabled':''}>⬆ 💎 ${pwUp(l)}</button>`:'<span class="small" style="color:var(--gold)">MAX</span>'}</div>`});
-  h+=`</div></div>`;
+   </div>`;
+  h+=`<div class="box goal"><div class="ge">🔮</div><div style="flex:1">Power-ups help you win faster. Unlock and upgrade them in <b>Upgrades</b>.</div><button class="btn dk" data-a="sub" data-k="up" data-v="power">Power-ups →</button></div></div>`;
   view.innerHTML=h;
 }
 function genCard(){
@@ -1117,10 +1262,15 @@ function refreshAfford(){document.querySelectorAll('[data-cost]').forEach(b=>{b.
 
 /* ---------- INPUT ---------- */
 const ACT={
-  tab:d=>{if(R&&!R.over)return;S.tab=d.t;render();view.scrollTop=0},
-  close:()=>closeModal(),
-  sound:()=>{S.sound=!S.sound;save();if(S.tab==='trophy')rerender();updHUD()},
-  music:()=>{S.music=!S.music;if(S.music)musicStart();else musicStop();save();if(S.tab==='trophy')rerender();updHUD()},
+  tab:d=>{if(R&&!R.over)return;closeModalAll();S.tab=d.t;render();view.scrollTop=0},
+  sub:d=>{if(R&&!R.over)return;UI[d.k]=d.v;if(d.k==='up')S.tab='up';UI.sell=null;rerender()},
+  shopLand:d=>{UI.shopLand=+d.i;UI.shop='gear';S.tab='shop';rerender()},
+  itemInfo:d=>{UI.sell=null;closeModalAll();showItem(d.id)},
+  sell:d=>sellItem(d.id),
+  tbuy:d=>{const t=TSHOP[+d.j];if(S.tokens<t.c)return;S.tokens-=t.c;t.f();SFX.buy();checkAch();save();rerender()},
+  close:()=>{UI.item=null;UI.sell=null;closeModal()},
+  sound:()=>{S.sound=!S.sound;save();if(S.tab==='more')rerender();updHUD()},
+  music:()=>{S.music=!S.music;if(S.music)musicStart();else musicStop();save();if(S.tab==='more')rerender();updHUD()},
   call:()=>{S.call=!S.call;if(!S.call&&window.speechSynthesis)speechSynthesis.cancel();save();if(R&&!R.over)updCtl();else rerender()},
   spotToggle:()=>{S.spotOn=!S.spotOn;save();if(R&&!R.over){R.cards.forEach((cd,ci)=>cd.cells.forEach((_,j)=>updCell(ci,j)));updCtl()}else rerender()},
   autoBBuy:()=>{if(S.autoB||S.gems<AUTOB_COST)return;S.gems-=AUTOB_COST;S.autoB=true;S.autoBOn=true;SFX.level();toast('🤖 <b>Auto-BINGO</b> unlocked! BINGO is now pressed for you when you get a line.');save();rerender()},
@@ -1132,10 +1282,10 @@ const ACT={
   leaveGo:()=>{closeModalAll();if(!R||R.over)return;R.over=true;evDone(false);if(window.speechSynthesis)speechSynthesis.cancel();addXP(R.xp);checkAch();save();const won=R.coins;R=null;S.tab='bingo';render();view.scrollTop=0;if(won)toast(`🚪 You left the hall with <b>${fmt(won)} 🪙</b>`)},
   travel:d=>travel(+d.i),
   build:d=>build(+d.k),
-  buyItem:d=>{const it=ITEMS[d.id];if(S.gear[d.id]||S.coins<it.price)return;S.coins-=it.price;giveItem(d.id);calc();SFX.buy();toast(`🛍️ Bought <b>${it.e} ${it.n}</b>!`);checkAch();save();rerender()},
-  equip:d=>{const it=ITEMS[d.id];S.eq[it.slot]=d.id;calc();SFX.buy();save();rerender()},
-  unequip:d=>{S.eq[d.s]=null;calc();save();rerender()},
-  upItem:d=>{const it=ITEMS[d.id],lv=S.gear[d.id],c=upCost(it,lv);if(lv>=RAR[it.r].max||S.coins<c)return;S.coins-=c;S.gear[d.id]++;calc();SFX.buy();save();rerender()},
+  buyItem:d=>{const it=ITEMS[d.id];if(S.gear[d.id]||S.coins<it.price)return;S.coins-=it.price;giveItem(d.id);calc();SFX.buy();toast(`🛍️ Bought <b>${it.e} ${it.n}</b>! ${S.eq[it.slot]===d.id?'You are wearing it now.':'Find it in your Bag.'}`);checkAch();save();rerender()},
+  equip:d=>{const it=ITEMS[d.id];S.eq[it.slot]=d.id;calc();SFX.buy();save();afterItem()},
+  unequip:d=>{S.eq[d.s]=null;calc();save();afterItem()},
+  upItem:d=>{const it=ITEMS[d.id],lv=S.gear[d.id],c=upCost(it,lv);if(lv>=RAR[it.r].max||S.coins<c)return;S.coins-=c;S.gear[d.id]++;calc();SFX.buy();save();afterItem()},
   openChest:d=>openChest(+d.j),
   cards:d=>{S.cards=+d.n;save();rerender()},
   speed:d=>setSpeed(+d.n),
@@ -1161,14 +1311,14 @@ const ACT={
 // daub/claim respond on pointerdown for snappy play; everything else on click
 document.addEventListener('pointerdown',e=>{const el=e.target.closest('[data-a="daub"],[data-a="claim"],[data-a="usePw"]');if(!el||el.disabled)return;e.preventDefault();ACT[el.dataset.a](el.dataset)});
 document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el||el.disabled)return;const a=el.dataset.a;if(a==='daub'||a==='claim'||a==='usePw')return;if(ACT[a])ACT[a](el.dataset)});
-$('#modal').addEventListener('click',e=>{if(e.target.id==='modal'&&!R)closeModal()});
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal'&&!R){UI.item=null;UI.sell=null;closeModal()}});
 document.addEventListener('keydown',e=>{if(!R||R.over)return;if(e.key===' '||e.key==='Enter'){e.preventDefault();R.cards.forEach((_,ci)=>{if(newLines(ci).length)claim(ci)})}if(e.key==='p'||e.key==='P')usePw()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){save();musicStop()}else{if(S.music)musicStart();offline(true);lastT=performance.now()}});
 window.addEventListener('beforeunload',save);
 
 function tutorial(){
   modal(`<div class="me">🥔🎱✈️</div><h2>Potato Bingo Adventures</h2><p>Travel the world – from Ireland to Potato Planet – and build amazing towns. But there's a catch: <b>the only way to earn coins is to win at bingo!</b></p>
-  <div class="rl"><span>🎱 Play bingo</span><b>Daub called numbers</b></div><div class="rl"><span>🎉 Get a line</span><b>Hit BINGO fast!</b></div><div class="rl"><span>🏘️ Spend coins</span><b>Build & upgrade</b></div><div class="rl"><span>🎒 Wear gear</span><b>Boost your bingo</b></div><div class="rl"><span>🏛️ Build landmark</span><b>Unlock a new land</b></div>
+  <div class="rl"><span>🎱 Play bingo</span><b>Daub called numbers</b></div><div class="rl"><span>🎉 Get a line</span><b>Hit BINGO fast!</b></div><div class="rl"><span>🏘️ Spend coins</span><b>Build & upgrade</b></div><div class="rl"><span>🛍️ Buy gear</span><b>Wear it from your Bag</b></div><div class="rl"><span>🏛️ Build landmark</span><b>Unlock a new land</b></div>
   <p class="small">Catch surprise events during games for free coins, collect souvenirs, and come back daily for rewards!</p><div class="acts"><button class="btn big" data-a="close">Let's play! ▶</button></div>`)}
 
 /* ---------- BOOT ---------- */
