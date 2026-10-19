@@ -354,6 +354,7 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
 .wst b{color:var(--txt)}
 .wft{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:11px;color:var(--muted);font-weight:700;border-top:1px solid var(--line);padding-top:6px}
 .wsell b{color:var(--gold)}
+.vsel{flex:1;min-width:0;max-width:100%;padding:9px 10px;border-radius:12px;background:#0005;color:var(--txt);border:2px solid var(--line);font:inherit;font-size:13px}
 .tile{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:18px 8px;border-radius:18px;background:var(--card);border:2px solid var(--line);font-size:15px;text-align:center}
 .tile .te{font-size:40px}
 .tile small{color:var(--muted);font-size:11px;font-weight:700}
@@ -819,7 +820,7 @@ function fresh(){return{
   cards:1,speed:0,boost:0,
   st:{rounds:0,bingos:0,daubs:0,events:0,coins:0,gems:0,chests:0,powerups:0,souvenirs:0,bestCombo:0,specials:0,upgrades:0,best1:0,playMs:0},
   ach:{},achSeen:0,daily:null,login:{last:'',streak:0,total:0},
-  tours:0,last:Date.now(),sound:true,music:true,call:true,spd:2,spot:false,spotOn:true,autoB:false,autoBOn:true,tokens:0,bp:{},slots:1,cardOffers:0,menuT:0,afk:false,tut:false,tab:'bingo'
+  tours:0,last:Date.now(),sound:true,music:true,call:true,spd:2,spot:false,spotOn:true,autoB:false,autoBOn:true,tokens:0,bp:{},voiceName:'',slots:1,cardOffers:0,menuT:0,afk:false,tut:false,tab:'bingo'
 }}
 let S=fresh();
 function load(){
@@ -909,7 +910,17 @@ function musicStop(){if(!MZ.on)return;MZ.on=false;clearInterval(MZ.timer);try{MZ
 // browsers only allow audio after the first tap/key press
 ['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,e=>{if(S.music&&!document.hidden&&!(e.target.closest&&e.target.closest('[data-a=music]')))musicStart()},{passive:true}));
 
-function speak(t){if(!S.call||!window.speechSynthesis)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=R&&R.speed<1.6?1.35:1.0;u.pitch=1.05;speechSynthesis.speak(u)}catch(e){}}
+/* Caller voice. Browsers differ a lot here: voices load late, some PCs have no English voice,
+   and Chrome can silently drop an utterance spoken right after cancel(), so all of that is handled. */
+let VOICES=[];
+function loadVoices(){try{VOICES=window.speechSynthesis?speechSynthesis.getVoices():[]}catch(e){VOICES=[]}}
+if(window.speechSynthesis){loadVoices();try{speechSynthesis.addEventListener('voiceschanged',()=>{loadVoices();if(UI.settings&&modalOn)$('#mbox').innerHTML=settingsHtml()})}catch(e){}}
+function pickVoice(){if(!VOICES.length)loadVoices();if(!VOICES.length)return null;
+  return VOICES.find(v=>v.name===S.voiceName)||VOICES.find(v=>/^en[-_]US/i.test(v.lang)&&v.localService)||VOICES.find(v=>/^en[-_]GB/i.test(v.lang)&&v.localService)||VOICES.find(v=>/^en/i.test(v.lang))||VOICES.find(v=>v.default)||VOICES[0]}
+function speak(t,force){if((!S.call&&!force)||!window.speechSynthesis)return;try{const ss=speechSynthesis,busy=ss.speaking||ss.pending;if(busy)ss.cancel();ss.resume();
+  const u=new SpeechSynthesisUtterance(t),v=pickVoice();if(v){u.voice=v;u.lang=v.lang}else u.lang='en-US';
+  u.rate=R&&!R.over&&R.speed<1.6?1.3:1.0;u.pitch=1.05;u.volume=1;
+  if(busy)setTimeout(()=>ss.speak(u),80);else ss.speak(u)}catch(e){}}
 
 /* ---------- FX / UI HELPERS ---------- */
 const fxEl=$('#fx');
@@ -1333,7 +1344,10 @@ function settingsHtml(){
   return `<div class="me">⚙️</div><h2>Settings</h2><div style="text-align:left">
    <div class="set"><div class="sl"><b>🎵 Music</b><span>Calm background music.</span></div>${onOff(S.music,'music')}</div>
    <div class="set"><div class="sl"><b>🔊 Sound effects</b><span>Clicks, coins and bingo sounds.</span></div>${onOff(S.sound,'sound')}</div>
-   <div class="set"><div class="sl"><b>🗣️ Read numbers aloud</b><span>The caller says each number, e.g. "B 12".</span></div>${onOff(S.call,'call')}</div>
+   <div class="set"><div class="sl"><b>🗣️ Read numbers aloud</b><span>The caller says each number, e.g. "B 12".</span></div>${onOff(S.call,'call')}
+     ${!window.speechSynthesis?'<span class="small" style="color:#ff9a9a">Your browser can\'t read text aloud. Try Chrome or Edge.</span>'
+      :`<div class="row" style="width:100%">${VOICES.length?`<select id="voiceSel" class="vsel" aria-label="Caller voice">${VOICES.map(v=>`<option value="${v.name.replace(/"/g,'&quot;')}" ${(pickVoice()||{}).name===v.name?'selected':''}>${v.name} (${v.lang})</option>`).join('')}</select>`:''}<button class="btn dk" data-a="testVoice">🔊 Test voice</button></div>
+       ${VOICES.length?'<span class="small muted">No sound? Pick another voice and press Test. English voices sound best.</span>':'<span class="small" style="color:#ff9a9a">No voices found yet. Press Test – if it stays silent, add a voice in your computer settings (Windows: Settings → Time &amp; language → Speech) or try Chrome/Edge.</span>'}`}</div>
    <div class="set"><div class="sl"><b>⏱️ Calling speed</b><span>How fast numbers are drawn. You can also change it during a game.</span></div>
      <div class="opt">${SPEEDS.map((x,j)=>`<button class="${S.spd===j?'on':''}" data-a="speed" data-n="${j}">${x.e} ${x.n}</button>`).join('')}</div></div>
    ${S.spot?`<div class="set"><div class="sl"><b>🔍 Number Spotter</b><span>Called numbers glow on your cards.</span></div>${onOff(S.spotOn,'spotToggle')}</div>`:''}
@@ -1606,6 +1620,7 @@ const ACT={
   wf:d=>{UI[d.k]=d.v;rerender()},
   buyCard:()=>buyCard(),
   cardOffer:()=>{closeModalAll();modal(cardOfferHtml())},
+  testVoice:()=>speak('B. 12. Bingo!',true),
   settings:()=>{closeModalAll();if(R&&!R.over)R.paused=true;showSettings()},
   howBingo:()=>{closeModalAll();howToBingo()},
   go:d=>{if(R&&!R.over)return;UI[d.k]=d.v;S.tab=d.t;UI.sell=null;render();view.scrollTop=0},
@@ -1662,6 +1677,7 @@ $('#modal').addEventListener('click',e=>{if(e.target.id==='modal'&&!R&&!UI.afk){
 document.addEventListener('keydown',e=>{if(!R||R.over)return;if(e.key===' '||e.key==='Enter'){e.preventDefault();R.cards.forEach((_,ci)=>{if(newLines(ci).length)claim(ci)})}if(e.key==='p'||e.key==='P')usePw()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){save();musicStop()}else{if(S.music)musicStart();lastT=performance.now()}});
 window.addEventListener('beforeunload',save);
+document.addEventListener('change',e=>{if(e.target.id==='voiceSel'){S.voiceName=e.target.value;save();speak('B. 12',true)}});
 window.addEventListener('resize',()=>{if(S.tab==='pass'&&UI.bpPer!==bpPer()){UI.bpPage=null;rerender()}});
 
 function tutorial(){
