@@ -186,6 +186,13 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
 .mchk span.ok{background:#2bb38a55;border-color:var(--mint)}
 .blist{display:flex;flex-direction:column;gap:8px}
 .brow{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:16px;background:var(--card);border:2px solid var(--line)}
+.brow.newb{border-style:dashed;border-color:#4fe0a688;background:linear-gradient(90deg,#14403a,var(--card) 70%)}
+.brow .btn{flex-direction:column;gap:0;line-height:1.15;min-width:112px}
+.brow .btn small{font-size:11px;opacity:.85}
+.lvbtn{background:linear-gradient(#ffd86a,#e0a42a)}
+.plot .pl.nb{background:#2bb38a;color:#fff}
+.tagb{font-size:11px;padding:2px 8px;border-radius:999px;margin-right:4px}
+.tagb.new{background:#2bb38a;color:#fff}.tagb.own{background:var(--gold);color:var(--ink)}
 .brow.rec{border-color:var(--gold);box-shadow:0 0 0 2px #ffcf4a33}
 .brow.lmrow{background:linear-gradient(90deg,#4a3410,var(--card) 60%)}
 .be2{font-size:30px;width:52px;height:52px;border-radius:14px;background:#0004;flex-shrink:0}
@@ -883,7 +890,7 @@ function vTown(){
   const afford=k=>b[k]<bMax(k)&&(k<7||lmOk)&&S.coins>=bCost(i,k,b[k]);
   const plot=(k,x,y)=>{const lv=b[k],[e,n]=L.b[k],lm=k===7;
     return `<button class="plot ${lv?'':'empty'} ${lm?'lmk':''} ${k===rec?'rec':''}" style="left:${x}%;top:${y}%" data-a="bld" data-k="${k}" title="${n}">
-      ${afford(k)?'<i class="up">⬆</i>':''}<span class="pe" style="font-size:${lm?(lv?62+lv*4:50):(lv?30+lv*2.2:28)}px">${lv?e:(lm?e:'🚧')}</span><span class="pl">${lv?`Lv ${lv}`:(lm?'Landmark':'Build')}</span></button>`};
+      ${afford(k)?'<i class="up">⬆</i>':''}<span class="pe" style="font-size:${lm?(lv?62+lv*4:50):(lv?30+lv*2.2:28)}px">${lv?e:(lm?e:'🚧')}</span><span class="pl ${lv||lm?'':'nb'}">${lv?`Lv ${lv}`:(lm?'Landmark':'🏗️ New')}</span></button>`};
   let h=`<div class="pad">
    <div class="townhead"><div><div class="small muted">${L.e} Your town in</div><h2 class="lil" style="margin:0;font-size:30px">${L.n}</h2></div>
      <div class="row"><span class="pill">🌾 ${fmt(ST.farmMin)}/min</span><span class="pill">🏘️ Town ${Math.round(tot/max*100)}%</span><button class="btn dk" data-a="tab" data-t="map">🗺️ Map</button></div></div>
@@ -891,7 +898,7 @@ function vTown(){
      <div class="tsky">${L.sky.split('').length?L.sky:''}</div><div class="cloud c1">☁️</div><div class="cloud c2">☁️</div><div class="tground"></div>
      ${plot(7,50,26)}${PLOTS.map(([x,y],k)=>plot(k,x,y)).join('')}
    </div>
-   <div class="howtown"><span>🎱 Win coins in bingo</span><b>→</b><span>🏗️ Tap a building to upgrade it</span><b>→</b><span>🏆 Build the landmark</span><b>→</b><span>✈️ New land!</span></div>`;
+   <div class="howtown"><span>🎱 Win coins in bingo</span><b>→</b><span>🏗️ Build &amp; level up buildings</span><b>→</b><span>🏆 Build the landmark</span><b>→</b><span>✈️ New land!</span></div>`;
   // mission
   if(!b[7]){
     h+=`<div class="box mission"><div class="me2">🎯</div><div style="flex:1;min-width:0"><b class="lil" style="font-size:20px">Mission: build the ${L.b[7][1]}</b>
@@ -900,23 +907,28 @@ function vTown(){
       <div class="mchk">${L.b.slice(0,7).map((x,j)=>`<span class="${b[j]>=r?'ok':''}" title="${x[1]}">${x[0]} ${Math.min(b[j],r)}/${r}</span>`).join('')}</div></div>
       ${lmOk?`<button class="btn big p" data-a="build" data-k="7" data-cost="${bCost(i,7,0)}" ${S.coins<bCost(i,7,0)?'disabled':''}>🏆 Build · 🪙 ${fmt(bCost(i,7,0))}</button>`:''}</div>`;
   }else h+=`<div class="box mission"><div class="me2">✅</div><div style="flex:1"><b class="lil" style="font-size:20px">${L.b[7][1]} is built!</b><div class="small muted">${next?`${next.e} ${next.n} is unlocked. Keep upgrading here – bonuses work in every land.`:'You can start a World Tour from Trophies.'}</div></div>${next&&S.cur<S.unlocked-1?`<button class="btn" data-a="travel" data-i="${i+1}">✈️ Travel</button>`:''}</div>`;
-  // list
-  h+=`<h3 class="sec">🏗️ Buildings <span class="small muted" style="font-family:Nunito">· tap one to see what it does</span></h3><div class="blist">`;
-  [7,0,1,2,3,4,5,6].forEach(k=>{const lv=b[k],mx=bMax(k),[e,n]=L.b[k],c=lv<mx?bCost(i,k,lv):0,lock=k===7&&!lmOk&&!lv;
-    h+=`<div class="brow ${k===rec?'rec':''} ${k===7?'lmrow':''}"><button class="be2" data-a="bld" data-k="${k}">${lv||k===7?e:'🚧'}</button>
-      <button class="bt" data-a="bld" data-k="${k}"><b>${n}${k===rec?' <span class="rtag">👍 Next</span>':''}</b><span>${B_SHORT[k]}${lv?` · <em>${bonusTxt(k,lv)}</em>`:''}</span><span class="lvd">${[...Array(mx)].map((_,j)=>`<i class="${j<lv?'on':''}"></i>`).join('')}</span></button>
-      ${lv>=mx?'<span class="small" style="color:var(--gold)">★ MAX</span>':lock?`<span class="small muted">🔒 Lv ${r} first</span>`:`<button class="btn ${S.coins>=c?'':'dk'}" data-a="build" data-k="${k}" data-cost="${c}" ${S.coins<c?'disabled':''}>${lv?'⬆':'Build'} 🪙 ${fmt(c)}</button>`}</div>`});
-  h+=`</div><div class="box goal"><div class="ge">🛍️</div><div style="flex:1">${L.n} also sells its own gear. Find it in the <b>Shop</b>.</div><button class="btn" data-a="shopLand" data-i="${i}">Open Shop →</button></div></div>`;
+  // list: new buildings and levelling up existing ones are shown apart, so they never look alike
+  const row=k=>{const lv=b[k],mx=bMax(k),[e,n]=L.b[k],c=lv<mx?bCost(i,k,lv):0,lock=k===7&&!lmOk&&!lv;
+    return `<div class="brow ${lv?'':'newb'} ${k===rec?'rec':''} ${k===7?'lmrow':''}"><button class="be2" data-a="bld" data-k="${k}">${lv||k===7?e:'🚧'}</button>
+      <button class="bt" data-a="bld" data-k="${k}"><b>${n}${k===rec?' <span class="rtag">👍 Next</span>':''}</b><span>${B_SHORT[k]}${lv?` · <em>${bonusTxt(k,lv)}</em>`:''}</span>${lv?`<span class="lvd">${[...Array(mx)].map((_,j)=>`<i class="${j<lv?'on':''}"></i>`).join('')}</span>`:''}</button>
+      ${lv>=mx?'<span class="small" style="color:var(--gold)">★ MAX</span>':lock?`<span class="small muted">🔒 Lv ${r} first</span>`
+        :lv?`<button class="btn lvbtn" data-a="build" data-k="${k}" data-cost="${c}" ${S.coins<c?'disabled':''}><span>🔨 Level ${lv} → ${lv+1}</span><small>🪙 ${fmt(c)}</small></button>`
+        :`<button class="btn g newbtn" data-a="build" data-k="${k}" data-cost="${c}" ${S.coins<c?'disabled':''}><span>🏗️ Build</span><small>🪙 ${fmt(c)}</small></button>`}</div>`};
+  const newK=[0,1,2,3,4,5,6].filter(k=>!b[k]),ownK=[0,1,2,3,4,5,6].filter(k=>b[k]);if(b[7])ownK.unshift(7);
+  if(newK.length)h+=`<h3 class="sec">🏗️ New buildings <span class="small muted" style="font-family:Nunito">· not built yet – build them to get their bonus</span></h3><div class="blist">${newK.map(row).join('')}</div>`;
+  if(ownK.length)h+=`<h3 class="sec">🔨 Your buildings <span class="small muted" style="font-family:Nunito">· level them up to make their bonus bigger</span></h3><div class="blist">${ownK.map(row).join('')}</div>`;
+  h+=`<div class="box goal" style="margin-top:14px"><div class="ge">🛍️</div><div style="flex:1">${L.n} also sells its own gear. Find it in the <b>Shop</b>.</div><button class="btn" data-a="shopLand" data-i="${i}">Open Shop →</button></div></div>`;
   view.innerHTML=h;
 }
 function bldHtml(k){
   const i=S.cur,L=LANDS[i],lv=S.b[i][k],mx=bMax(k),[e,n]=L.b[k],c=lv<mx?bCost(i,k,lv):0,lock=k===7&&!lmReady(i)&&!lv,r=REQ(i);
-  return `<div class="me">${lv||k===7?e:'🚧'}</div><h2>${n}</h2><p style="margin:0 0 6px">Level <b style="color:var(--txt)">${lv}/${mx}</b></p>
-   <div class="lvd big" style="justify-content:center">${[...Array(mx)].map((_,j)=>`<i class="${j<lv?'on':''}"></i>`).join('')}</div>
+  return `<div class="me">${lv||k===7?e:'🚧'}</div><h2>${n}</h2>
+   ${lv?`<p style="margin:0 0 6px"><span class="tagb own">🔨 YOUR BUILDING</span> Level <b style="color:var(--txt)">${lv}/${mx}</b></p><div class="lvd big" style="justify-content:center">${[...Array(mx)].map((_,j)=>`<i class="${j<lv?'on':''}"></i>`).join('')}</div>`
+       :`<p style="margin:0 0 6px"><span class="tagb new">🏗️ NOT BUILT YET</span></p>`}
    <p>${B_WHAT[k]}</p>
-   ${lv?`<div class="statline"><span>Now</span><b>${bonusTxt(k,lv)}</b></div>`:''}${lv<mx?`<div class="statline"><span>${lv?'After upgrade':'When built'}</span><b><em>${bonusTxt(k,lv+1)}</em></b></div>`:''}
+   ${lv?`<div class="statline"><span>Now</span><b>${bonusTxt(k,lv)}</b></div>`:''}${lv<mx?`<div class="statline"><span>${lv?`At level ${lv+1}`:'When built'}</span><b><em>${bonusTxt(k,lv+1)}</em></b></div>`:''}
    ${lock?`<p class="small">🔒 First get every other building to level ${r}.</p>`:''}
-   <div class="acts">${lv>=mx?'<span style="color:var(--gold)">★ Fully upgraded!</span>':lock?'':`<button class="btn big" data-a="build" data-k="${k}" ${S.coins<c?'disabled':''}>${lv?'⬆ Upgrade':'🏗️ Build'} · 🪙 ${fmt(c)}</button>`}<button class="btn dk" data-a="close">Close</button></div>
+   <div class="acts">${lv>=mx?'<span style="color:var(--gold)">★ Fully upgraded!</span>':lock?'':`<button class="btn big ${lv?'':'g'}" data-a="build" data-k="${k}" ${S.coins<c?'disabled':''}>${lv?`🔨 Level up to ${lv+1}`:'🏗️ Build it'} · 🪙 ${fmt(c)}</button>`}<button class="btn dk" data-a="close">Close</button></div>
    ${lv<mx&&!lock&&S.coins<c?`<p class="small">You need 🪙 ${fmt(c-S.coins)} more – win some bingo!</p>`:''}`}
 function showBld(k){UI.bld=k;const h=bldHtml(k);if(modalOn)$('#mbox').innerHTML=h;else modal(h)}
 function build(k){const i=S.cur,lv=S.b[i][k];if(lv>=bMax(k))return;if(k===7&&!lmReady(i))return;const c=bCost(i,k,lv);if(S.coins<c)return;
@@ -1402,7 +1414,7 @@ const ACT={
   leaveNo:()=>{closeModal();if(R)R.paused=false},
   leaveGo:()=>{closeModalAll();if(!R||R.over)return;R.over=true;evDone(false);if(window.speechSynthesis)speechSynthesis.cancel();addXP(R.xp);checkAch();save();const won=R.coins;R=null;S.tab='bingo';render();view.scrollTop=0;if(won)toast(`🚪 You left the hall with <b>${fmt(won)} 🪙</b>`)},
   travel:d=>travel(+d.i),
-  build:d=>{const k=+d.k,first=k===7&&!S.b[S.cur][7],lv=S.b[S.cur][k];build(k);if(S.b[S.cur][k]>lv){const el=document.querySelector(`.plot[data-k="${k}"]`);if(el){el.classList.add('pop');floatAt(el,lv?'⬆ Level '+(lv+1):'🏗️ Built!','#ffcf4a')}confetti(lv?14:30)}if(UI.bld===k&&modalOn&&!first)showBld(k);else if(first)UI.bld=null},
+  build:d=>{const k=+d.k,first=k===7&&!S.b[S.cur][7],lv=S.b[S.cur][k];build(k);if(S.b[S.cur][k]>lv){const el=document.querySelector(`.plot[data-k="${k}"]`);if(el){el.classList.add('pop');floatAt(el,lv?'🔨 Level '+(lv+1):'🏗️ Built!',lv?'#ffcf4a':'#6ff0b8')}confetti(lv?14:30);toast(lv?`🔨 <b>${LANDS[S.cur].b[k][1]}</b> is now level ${lv+1}`:`🏗️ New building: <b>${LANDS[S.cur].b[k][0]} ${LANDS[S.cur].b[k][1]}</b>!`)}if(UI.bld===k&&modalOn&&!first)showBld(k);else if(first)UI.bld=null},
   bld:d=>{closeModalAll();showBld(+d.k)},
   buyItem:d=>{const it=ITEMS[d.id];if(S.gear[d.id]||S.coins<it.price)return;S.coins-=it.price;giveItem(d.id);calc();SFX.buy();toast(`🛍️ Bought <b>${it.e} ${it.n}</b>! ${S.eq[it.slot]===d.id?'You are wearing it now.':'Find it in your Bag.'}`);checkAch();save();rerender()},
   equip:d=>{const it=ITEMS[d.id];S.eq[it.slot]=d.id;calc();SFX.buy();save();afterItem()},
