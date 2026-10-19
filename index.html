@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Potato Team Games – Free Browser Games | Play Online, No Download</title>
-<meta name="description" content="Potato Team Games makes free browser games you can play instantly on PC and mobile. Play The Potato Empire, a classic property trading board game (in English or Danish), Potato Bingo Adventures and Potato Clicker. No download.">
+<meta name="description" content="Potato Team Games makes free browser games you can play instantly on PC and mobile. Play Potato Ville, a cozy virtual pet game, The Potato Empire, a classic property trading board game, Potato Bingo Adventures and Potato Clicker. No download.">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#1c1230">
 <link rel="canonical" href="https://potatoteamgames.github.io/games/">
@@ -17,11 +17,11 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Potato Team Games">
 <meta property="og:title" content="Potato Team Games – Free Browser Games">
-<meta property="og:description" content="Free browser games you can play instantly on PC and mobile. Play The Potato Empire, Potato Bingo Adventures and Potato Clicker!">
+<meta property="og:description" content="Free browser games you can play instantly on PC and mobile. Play Potato Ville, The Potato Empire, Potato Bingo Adventures and Potato Clicker!">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Potato Team Games – Free Browser Games">
-<meta name="twitter:description" content="Free browser games you can play instantly on PC and mobile. Play The Potato Empire, Potato Bingo Adventures and Potato Clicker!">
+<meta name="twitter:description" content="Free browser games you can play instantly on PC and mobile. Play Potato Ville, The Potato Empire, Potato Bingo Adventures and Potato Clicker!">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🥔%3C/text%3E%3C/svg%3E">
 <script type="application/ld+json">
 {
@@ -38,9 +38,10 @@
       "@type": "ItemList",
       "name": "Potato Team Games",
       "itemListElement": [
-        {"@type": "ListItem", "position": 1, "name": "The Potato Empire", "url": "https://potatoteamgames.github.io/games/potato-empire.html"},
-        {"@type": "ListItem", "position": 2, "name": "Potato Bingo Adventures", "url": "https://potatoteamgames.github.io/games/potato-bingo-adventures.html"},
-        {"@type": "ListItem", "position": 3, "name": "Potato Clicker", "url": "https://potatoteamgames.github.io/games/potato-clicker.html"}
+        {"@type": "ListItem", "position": 1, "name": "Potato Ville", "url": "https://potatoteamgames.github.io/games/potato-ville.html"},
+        {"@type": "ListItem", "position": 2, "name": "The Potato Empire", "url": "https://potatoteamgames.github.io/games/potato-empire.html"},
+        {"@type": "ListItem", "position": 3, "name": "Potato Bingo Adventures", "url": "https://potatoteamgames.github.io/games/potato-bingo-adventures.html"},
+        {"@type": "ListItem", "position": 4, "name": "Potato Clicker", "url": "https://potatoteamgames.github.io/games/potato-clicker.html"}
       ]
     }
   ]
@@ -155,6 +156,24 @@ a{color:inherit}
 /* "THE" in the logo */
 .the{font-size:.5em;vertical-align:.45em;margin-right:.12em;letter-spacing:.08em}
 
+/* POTATO VILLE FEATURED BANNER */
+.featured.ville{background:radial-gradient(ellipse at 70% 110%,#7fd36b 0 35%,transparent 36%),radial-gradient(ellipse at 15% 115%,#66c45a 0 30%,transparent 31%),linear-gradient(180deg,#8fd3ff,#cdeeff 70%);border-color:#16304d}
+.featured.ville::after{display:none}
+.featured.ville .tag{background:#ff5fa2}
+.featured.ville .ftitle{font-family:'Lilita One',sans-serif;color:#ff9a2e;font-size:clamp(40px,6vw,66px);text-shadow:3px 3px 0 #fff,-2px -2px 0 #fff,2px -2px 0 #fff,-2px 2px 0 #fff,0 6px 0 rgba(0,0,0,.18)}
+.featured.ville .ftitle b{color:#3fa0ff;font-weight:400}
+.featured.ville .fdesc{color:#16304d;text-shadow:none}
+.featured.ville .progress{color:#16304d;text-shadow:none}
+.featured.ville .play{font-family:'Lilita One',sans-serif;background:linear-gradient(#ffe27a,#ffb21e);color:#16304d;border-color:#16304d;box-shadow:0 6px 0 #16304d}
+.featured.ville .chips span{background:#fff;border-color:#16304d;color:#16304d}
+.vart{position:relative;display:flex;align-items:flex-end;justify-content:center;min-height:250px}
+.vart img{width:min(420px,100%);filter:drop-shadow(0 12px 10px rgba(0,40,80,.25));animation:bob 3s ease-in-out infinite}
+.vart .vh{position:absolute;right:4%;top:2%;font-size:56px;filter:drop-shadow(0 6px 4px rgba(0,0,0,.2))}
+.vart .vc{position:absolute;left:6%;top:6%;font-size:34px;animation:bob 4s ease-in-out infinite}
+.thumb.ville{background:radial-gradient(ellipse at 50% 120%,#7fd36b 0 40%,transparent 41%),linear-gradient(180deg,#8fd3ff,#d8f2ff)}
+.thumb.ville img{height:120px;margin-top:20px}
+.thumb.mono .tb{white-space:nowrap}
+
 /* GAMES GRID */
 section.games{padding:34px 0 10px}
 .shead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:14px}
@@ -198,6 +217,8 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between}
   .bball{width:48px;height:48px;font-size:15px}
   .flags{display:none}
   .mart{order:-1;min-height:200px}
+  .vart{order:-1;min-height:170px}
+  .vart img{width:min(300px,90%)}
   .mboard{width:160px}
   .mdie{width:36px;height:36px;padding:5px}.mdie s{width:6px;height:6px}
   .shead{flex-direction:column;align-items:start}
@@ -212,6 +233,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between}
     <nav aria-label="Main">
       <a href="#games">Games</a>
       <a href="#about">About</a>
+      <a href="potato-ville.html">Potato Ville</a>
       <a href="potato-empire.html">The Potato Empire</a>
       <a href="potato-bingo-adventures.html">Potato Bingo</a>
       <a href="potato-clicker.html">Potato Clicker</a>
@@ -226,20 +248,19 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between}
   </section>
 
   <!-- FEATURED GAME BANNER (newest game) -->
-  <a class="featured mono" href="potato-empire.html" aria-label="Play The Potato Empire">
+  <a class="featured ville" href="potato-ville.html" aria-label="Play Potato Ville">
     <div class="fin">
       <div>
         <span class="tag">🆕 NEW · FEATURED GAME</span>
-        <h2 class="ftitle"><span class="the">THE</span> POTATO EMPIRE</h2>
-        <p class="fdesc">The classic property trading board game on a real table! Roll the dice, buy streets, build houses and hotels, trade and bankrupt your rivals. Play vs the computer, pass the dice with friends, or on your own devices over the same Wi-Fi.</p>
-        <div class="chips"><span>🎲 Board game</span><span>🏨 Build &amp; trade</span><span>👥 2–6 players</span><span>📶 Wi-Fi multiplayer</span><span>🇬🇧/🇩🇰</span><span>📱 Mobile</span></div>
-        <span class="play" id="monoPlay">▶ PLAY NOW</span>
-        <div class="progress" id="monoProgress"></div>
+        <h2 class="ftitle">Potato <b>Ville</b></h2>
+        <p class="fdesc">Create your own potato pet, dress it up and decorate your home! Work fun jobs for coins, shop in town, make friends with the neighbours – and visit your friends' homes on the same Wi-Fi.</p>
+        <div class="chips"><span>🐰 Virtual pet</span><span>🛋️ Decorate</span><span>👗 Dress up</span><span>💼 Mini-game jobs</span><span>📶 Wi-Fi friends</span><span>🇬🇧/🇩🇰</span></div>
+        <span class="play" id="villePlay">▶ PLAY NOW</span>
+        <div class="progress" id="villeProgress"></div>
       </div>
-      <div class="mart" aria-hidden="true">
-        <div class="mboard"><i style="grid-area:1/1;--c:#e1262c"></i><i style="grid-area:1/2"></i><i style="grid-area:1/3;--c:#e1262c"></i><i style="grid-area:1/4;--c:#f6d023"></i><i style="grid-area:1/5"></i><i style="grid-area:1/6"></i><i style="grid-area:2/1;--c:#f28c1e"></i><i style="grid-area:2/6;--c:#1e9c52"></i><i style="grid-area:3/1;--c:#f28c1e"></i><i style="grid-area:3/6"></i><i style="grid-area:4/1"></i><i style="grid-area:4/6;--c:#1e9c52"></i><i style="grid-area:5/1;--c:#d8418f"></i><i style="grid-area:5/6;--c:#1d4ea6"></i><i style="grid-area:6/1"></i><i style="grid-area:6/2;--c:#8fd3f4"></i><i style="grid-area:6/3"></i><i style="grid-area:6/4;--c:#8b4a26"></i><i style="grid-area:6/5;--c:#8b4a26"></i><i style="grid-area:6/6"></i><div class="mc"><b>POTATO<br>EMPIRE</b></div></div>
-        <span class="mdie a"><s style="grid-area:1/1"></s><s style="grid-area:1/3"></s><s style="grid-area:2/2"></s><s style="grid-area:3/1"></s><s style="grid-area:3/3"></s></span><span class="mdie b"><s style="grid-area:1/1"></s><s style="grid-area:2/2"></s><s style="grid-area:3/3"></s></span>
-        <span class="mpiece">🎩</span><span class="mhouse">🏠🏨</span>
+      <div class="vart" aria-hidden="true">
+        <span class="vc">☁️</span><span class="vh">🏡</span>
+        <img src="images/potato-ville-pets.png" alt="" width="500" height="320">
       </div>
     </div>
   </a>
@@ -252,16 +273,24 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between}
     </div>
     <div class="grid">
       <!-- To add a new game: copy one <a class="game"> block, change the link, title and text. The newest game is also the featured banner above. -->
+      <a class="game" href="potato-ville.html">
+        <div class="thumb ville"><span class="badge hot">NEW</span><img src="images/potato-ville-pets.png" alt="" width="188" height="120"></div>
+        <div class="body">
+          <h3>Potato Ville</h3>
+          <p>Cozy virtual pet game. Raise and dress your potato pet, decorate your home, work jobs, shop in town and visit friends on the same Wi-Fi.</p>
+          <div class="meta"><span id="villeMeta">🐰 Pet · Life sim</span><span class="btn" id="villeBtn">Play ▶</span></div>
+        </div>
+      </a>
       <a class="game" href="potato-empire.html">
-        <div class="thumb mono"><span class="badge hot">NEW</span><span class="tb"><span class="the">THE</span> POTATO EMPIRE</span></div>
+        <div class="thumb mono"><span class="badge">HOT</span><span class="tb"><span class="the">THE</span> POTATO EMPIRE</span></div>
         <div class="body">
           <h3>The Potato Empire</h3>
           <p>Classic property trading board game. Buy streets, build hotels, trade and bankrupt your rivals – vs computer, with friends on one device or over the same Wi-Fi.</p>
-          <div class="meta"><span id="monoMeta">🎲 Board game · 2–6</span><span class="btn">Play ▶</span></div>
+          <div class="meta"><span id="monoMeta">🎲 Board game · 2–6</span><span class="btn" id="monoBtn">Play ▶</span></div>
         </div>
       </a>
       <a class="game" href="potato-bingo-adventures.html">
-        <div class="thumb bingo"><span class="badge">HOT</span>🎱</div>
+        <div class="thumb bingo"><span class="badge">POPULAR</span>🎱</div>
         <div class="body">
           <h3>Potato Bingo Adventures</h3>
           <p>Win bingo to build towns in 14 lands. Catch bonus events, collect souvenirs, wear lucky gear and travel all the way to Potato Planet.</p>
@@ -290,7 +319,8 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between}
   <section class="about" id="about" aria-labelledby="aboutH">
     <h2 id="aboutH">About Potato Team Games</h2>
     <p><b>Potato Team Games</b> makes free, fun browser games that run on any device — PC, Mac, Chromebook, iPhone and Android. Every game works right in your browser with no download, no account and no ads. Your progress is saved automatically on your device.</p>
-    <p>Our newest game, <a href="potato-empire.html"><b>The Potato Empire</b></a>, is a classic property trading board game that looks like it's sitting on your table. Roll the dice, buy streets, build houses and hotels and trade your way to the top – against the computer, with friends on one device, or on your own devices over the same Wi-Fi. Play in English or Danish.</p>
+    <p>Our newest game, <a href="potato-ville.html"><b>Potato Ville</b></a>, is a cozy virtual pet game: create a potato animal, dress it up, decorate your home in build mode, work mini-game jobs, shop in town and make friends with the neighbours. Friends on the same Wi-Fi can walk around town together and visit each other's homes. Play in English or Danish.</p>
+    <p><a href="potato-empire.html"><b>The Potato Empire</b></a> is a classic property trading board game that looks like it's sitting on your table. Roll the dice, buy streets, build houses and hotels and trade your way to the top – against the computer, with friends on one device, or on your own devices over the same Wi-Fi. Play in English or Danish.</p>
     <p><a href="potato-bingo-adventures.html"><b>Potato Bingo Adventures</b></a> is a bingo game with a twist: win bingo to build towns all around the world, from Ireland to the Moon and beyond.</p>
     <p>Our first game, <a href="potato-clicker.html"><b>Potato Clicker</b></a>, is an idle clicker game like Cookie Clicker — but with potatoes, cowboys and a whole lot of upgrades.</p>
   </section>
@@ -331,9 +361,21 @@ document.getElementById('yr').textContent=new Date().getFullYear();
     const s=JSON.parse(localStorage.getItem('monongoly_save_v1')||'null');
     if(!s||!s.players)return;
     const left=s.players.filter(p=>!p.out).length;if(left<2)return;
-    document.getElementById('monoProgress').textContent='💾 Saved game · Round '+(s.round||1)+' · '+left+' players left — continue your game!';
-    document.getElementById('monoPlay').textContent='▶ CONTINUE';
     document.getElementById('monoMeta').textContent='💾 Round '+(s.round||1);
+    document.getElementById('monoBtn').textContent='Continue ▶';
+  }catch(e){}
+})();
+</script>
+<script>
+// Show the player's Potato Ville pet
+(function(){
+  try{
+    const s=JSON.parse(localStorage.getItem('potato_ville_v1')||'null');
+    if(!s||!s.created)return;
+    document.getElementById('villeProgress').textContent='🐾 '+s.name+' · Level '+(s.lvl||1)+' · '+(s.coins||0)+' coins — your pet misses you!';
+    document.getElementById('villePlay').textContent='▶ CONTINUE';
+    document.getElementById('villeMeta').textContent='🐾 '+s.name+' · Lv '+(s.lvl||1);
+    document.getElementById('villeBtn').textContent='Continue ▶';
   }catch(e){}
 })();
 </script>
