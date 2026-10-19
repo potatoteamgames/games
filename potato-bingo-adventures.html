@@ -279,6 +279,17 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
 .afkopts{display:flex;gap:12px;justify-content:center;margin:10px 0}
 .afkb{font-size:44px;width:80px;height:80px;border-radius:20px;background:#0005;border:3px solid var(--line)}
 .afkb:hover{border-color:var(--gold);transform:scale(1.06)}
+.wiki{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.wcard{display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:16px;background:var(--card);border:2px solid var(--line);border-left:5px solid var(--rc)}
+.wcard.own{cursor:pointer;background:linear-gradient(135deg,#2bb38a22,var(--card) 50%)}
+.wcard.own:hover{border-color:var(--rc)}
+.wtop{display:flex;gap:10px;align-items:center;position:relative}
+.wie{font-size:30px;width:50px;height:50px;border-radius:14px;background:#0004;border:2px solid var(--rc);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.wown{position:absolute;top:0;right:0;font-size:10px;background:var(--mint);color:#063;padding:2px 7px;border-radius:999px}
+.wst{display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--muted);font-weight:700}
+.wst b{color:var(--txt)}
+.wft{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:11px;color:var(--muted);font-weight:700;border-top:1px solid var(--line);padding-top:6px}
+.wsell b{color:var(--gold)}
 .tile{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:18px 8px;border-radius:18px;background:var(--card);border:2px solid var(--line);font-size:15px;text-align:center}
 .tile .te{font-size:40px}
 .tile small{color:var(--muted);font-size:11px;font-weight:700}
@@ -536,7 +547,8 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
     <button data-a="tab" data-t="album" class="dk-only" style="--o:7"><span class="e">🧩</span>Album</button>
     <button data-a="tab" data-t="daily" class="dk-only" style="--o:8"><span class="e">📅</span>Daily<span class="dot" id="dDaily"></span></button>
     <button data-a="tab" data-t="trophy" class="dk-only" style="--o:9"><span class="e">🏆</span>Trophies<span class="dot" id="dAch"></span></button>
-    <button data-a="tab" data-t="more" style="--o:10"><span class="e">☰</span>More<span class="dot" id="dMore"></span></button>
+    <button data-a="tab" data-t="wiki" class="dk-only" style="--o:10"><span class="e">📖</span>Item Wiki</button>
+    <button data-a="tab" data-t="more" style="--o:11"><span class="e">☰</span>More<span class="dot" id="dMore"></span></button>
   </nav>
 </div>
 <div id="fx"></div>
@@ -565,7 +577,7 @@ const SLOTS=[{k:'hat',e:'🎩',n:'Hat',lv:1},{k:'dauber',e:'🖍️',n:'Dauber',
 const STAT={coin:['Bingo coins','%'],xp:['XP','%'],auto:['Auto-daub','%'],charge:['Power charge','%'],event:['Event rewards','%'],gem:['Gem luck','%'],luck:['Lucky pre-daubs','/card'],special:['Special squares','%'],souv:['Souvenir luck','%'],balls:['Extra balls',''],rival:['Rival slowdown','%'],idle:['Farm income','%'],claim:['Auto-BINGO','']};
 // building types: stat per level
 const BT=[
-  {k:'farm',d:l=>`Earns coins every minute, even offline`},
+  {k:'farm',d:l=>`Earns coins every minute while you play`},
   {k:'hall',d:l=>`+${l*4}% bingo coins (+4%/lvl)`},
   {k:'market',d:l=>`+${l*3}% special squares, +${l*4}% souvenirs`},
   {k:'inn',d:l=>`+${l*5}% XP (+5%/lvl)`},
@@ -651,7 +663,12 @@ const CHEST_ITEMS=[
  ['hat','🎩','Fancy Top Hat',1,{coin:9,event:5}],['dauber','💡','Neon Dauber',1,{auto:14,charge:6}],['charm','🧲','Lucky Horseshoe',1,{luck:1}],['outfit','🤵','Bingo Tuxedo',1,{xp:14}],['pet','🐹','Hamster Hank',1,{event:15}],
  ['hat','🧙','Wizard Hat',2,{coin:15,gem:10}],['dauber','🔦','Laser Dauber',2,{auto:25}],['charm','🎲','Dice of Fate',2,{special:18,luck:1}],['outfit','🦸','Super Cape',2,{rival:12,xp:10}],['pet','🐉','Dragon Whelp',2,{coin:10,event:20}],
  ['hat','👑','Golden Crown',3,{coin:30}],['dauber','🤖','Butler Bot',3,{auto:40,claim:1}],['charm','🪔','Genie Lamp',3,{gem:30,luck:1}],['outfit','💎','Diamond Suit',3,{coin:15,xp:25}],['pet','🔥','Phoenix',3,{charge:30,event:30}],
- ['hat','🥔','Crown of the Spud King',4,{coin:50,xp:20}],['dauber','♾️','Infinity Dauber',4,{auto:80,claim:1}],['charm','🌈','Rainbow Charm',4,{luck:3,special:25}],['outfit','🌌','Cosmic Robe',4,{rival:30,event:40}],['pet','🦄','Unicorn',4,{gem:50,souv:40}]
+ ['hat','🥔','Crown of the Spud King',4,{coin:50,xp:20}],['dauber','♾️','Infinity Dauber',4,{auto:80,claim:1}],['charm','🌈','Rainbow Charm',4,{luck:3,special:25}],['outfit','🌌','Cosmic Robe',4,{rival:30,event:40}],['pet','🦄','Unicorn',4,{gem:50,souv:40}],
+ ['hat','🧢','Baseball Cap',0,{xp:5,coin:2}],['dauber','✏️','Pencil Dauber',0,{auto:5,charge:3}],['charm','🔑','Old Key',0,{special:6}],['outfit','🧥','Raincoat',0,{event:8}],
+ ['hat','⛑️','Explorer Helmet',1,{souv:15,coin:4}],['dauber','🖌️','Paintbrush Dauber',1,{auto:12,special:5}],['charm','🧿','Evil Eye',1,{rival:6,gem:5}],['pet','🐢','Turtle Tim',1,{rival:10}],
+ ['hat','🎓','Graduation Cap',2,{xp:25}],['outfit','🥋','Bingo Gi',2,{charge:18,auto:8}],['charm','⏳','Hourglass',2,{balls:2,rival:6}],['pet','🦉','Wise Owl',2,{xp:15,souv:20}],
+ ['hat','👸','Royal Tiara',3,{coin:22,gem:15}],['dauber','🪄','Magic Wand',3,{auto:45,luck:1}],['outfit','🧛','Vampire Cloak',3,{rival:22,event:20}],['pet','🐲','Golden Dragon',3,{coin:20,charge:20}],
+ ['hat','😇','Halo of Luck',4,{luck:3,gem:30}],['dauber','🌟','Starlight Dauber',4,{auto:70,charge:30}],['outfit','🦸','Bingo Hero Suit',4,{coin:35,rival:25}],['pet','🐣','Cosmic Chick',4,{balls:4,xp:30}]
 ];
 CHEST_ITEMS.forEach(([slot,e,n,r,st],j)=>{ITEMS['C'+j]={id:'C'+j,slot,e,n,r,st,chest:true}});
 const CHESTS=[
@@ -844,9 +861,7 @@ function showAfk(){const opts=shuffle(AFK_PICKS.slice()).slice(0,3);afkWant=pick
 function afkAnswer(e){if(!S.afk)return;if(e!==afkWant){SFX.bad();toast('❌ Not that one – try again!');return showAfk()}
   S.afk=false;S.menuT=0;UI.afk=false;afkWant=null;closeModalAll();SFX.coin();toast('🌾 Welcome back! Your farms are working again.');save();rerender()}
 function idleTick(dt){if(!ST.farmMin||S.afk)return;idleAcc+=ST.farmMin*dt/60;if(idleAcc>=1){const n=Math.floor(idleAcc);idleAcc-=n;addCoins(n,'idle')}}
-function offline(quiet){const ms=Date.now()-(S.last||Date.now());if(ms<60000||!ST.farmMin||S.afk)return;const mins=Math.min(ms/60000,8*60);const c=addCoins(ST.farmMin*mins,'idle');S.last=Date.now();
-  if(quiet){toast(`🌾 Your farms earned <b>+${fmt(c)} 🪙</b> while you were away`);return}
-  modal(`<div class="me">🌾</div><h2>Welcome back!</h2><p>Your farms worked hard for <b>${mins>=60?(mins/60).toFixed(1)+' hours':Math.floor(mins)+' minutes'}</b> while you were away.</p><div class="rl"><span>Farm income</span><b>+${fmt(c)} 🪙</b></div><p class="small">Farms store up to 8 hours of income.</p><div class="acts"><button class="btn big" data-a="close">Collect!</button></div>`)}
+// No offline income: farms only earn while the game is open (and the AFK check is answered).
 
 /* ---------- PAGE HELPERS ---------- */
 const UI={shop:'gear',shopLand:null,bag:'all',up:'helpers',troph:'todo',item:null,sell:null};
@@ -875,7 +890,7 @@ function render(){
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===S.tab));
   $('#nav').classList.toggle('lock',!!(R&&!R.over));$('#app').classList.toggle('inround',!!(R&&!R.over));
   setTheme();
-  const f={map:vMap,town:vTown,bingo:vBingo,shop:vShop,bag:vBag,up:vUp,more:vMore,album:vAlbum,daily:vDaily,trophy:vTrophy}[S.tab]||vBingo;
+  const f={map:vMap,town:vTown,bingo:vBingo,shop:vShop,bag:vBag,up:vUp,more:vMore,wiki:vWiki,album:vAlbum,daily:vDaily,trophy:vTrophy}[S.tab]||vBingo;
   f();updHUD();updDots();
 }
 function rerender(){const st=view.scrollTop;render();view.scrollTop=st}
@@ -893,8 +908,8 @@ function vMap(){
 }
 
 /* ---------- TOWN ---------- */
-const B_WHAT=['Makes coins for you every minute – even while you are away (up to 8 hours).','Every bingo you win pays more coins.','More bonus squares (🪙 💎 🧩 ⚡ 🎁) on your bingo cards, and more souvenirs.','You earn more XP, so you level up faster and unlock more bingo cards.','Your ⚡ power-up meter fills up faster.','Better chance to win 💎 gems in bingo.','Bonus events during bingo give bigger rewards.','The pride of the town! Building it unlocks the next land, and every level boosts ALL your coins.'];
-const B_SHORT=['Coins while you are away','More coins per bingo','More bonus squares','More XP','Faster power-ups','More gems','Bigger event rewards','Unlocks next land · boosts all coins'];
+const B_WHAT=['Makes coins for you every minute while the game is open. (No coins while you are away, and they pause if you stay 10 minutes in the menus without playing bingo.)','Every bingo you win pays more coins.','More bonus squares (🪙 💎 🧩 ⚡ 🎁) on your bingo cards, and more souvenirs.','You earn more XP, so you level up faster and unlock more bingo cards.','Your ⚡ power-up meter fills up faster.','Better chance to win 💎 gems in bingo.','Bonus events during bingo give bigger rewards.','The pride of the town! Building it unlocks the next land, and every level boosts ALL your coins.'];
+const B_SHORT=['Coins every minute while you play','More coins per bingo','More bonus squares','More XP','Faster power-ups','More gems','Bigger event rewards','Unlocks next land · boosts all coins'];
 const PLOTS=[[13,58],[33,52],[67,52],[87,58],[24,82],[50,86],[76,82]];
 function bonusTxt(k,lv){const i=S.cur;if(k===0)return `+${fmt(lv*0.15*Bv(i)*ST.all*(1+ST.idle/100))} coins/min`;return BT[k].d(lv).replace(/\s*\(.*\)/,'')}
 function recBuilding(){const i=S.cur,b=S.b[i],r=REQ(i);let best=-1,bc=Infinity;
@@ -1039,11 +1054,31 @@ function vUp(){
   }
   h+=`<p class="note" style="margin-top:6px">💎 Get gems from trophies, daily quests, the lucky wheel, level-ups and 💎 bingo squares.</p></div>`;view.innerHTML=h;
 }
+UI.wsrc='all';UI.wslot='all';UI.wrar='all';
+function vWiki(){
+  const all=Object.values(ITEMS),own=all.filter(it=>S.gear[it.id]).length;
+  const chip=(k,v,l)=>`<button class="${UI[k]===v?'on':''}" data-a="wf" data-k="${k}" data-v="${v}">${l}</button>`;
+  let h=`<div class="pad">${phead('📖','Item Wiki',`All <b>${all.length}</b> items in the game: where to get them, what they do and what they sell for. You have found <b>${own}</b>.`)}
+   <div class="bar" style="margin-bottom:14px"><i style="width:${own/all.length*100}%"></i></div>
+   <div class="seg">${[['all','All'],['chest','🎁 From chests'],['shop','🛍️ From shops']].map(([v,l])=>`<button class="${UI.wsrc===v?'on':''}" data-a="wf" data-k="wsrc" data-v="${v}">${l}</button>`).join('')}</div>
+   <div class="landchips">${chip('wslot','all','All slots')}${SLOTS.map(x=>chip('wslot',x.k,x.e+' '+x.n)).join('')}</div>
+   <div class="landchips">${chip('wrar','all','All rarities')}${RAR.map((r,j)=>`<button class="${UI.wrar===String(j)?'on':''}" data-a="wf" data-k="wrar" data-v="${j}" style="color:${r.c}">● ${r.n}</button>`).join('')}</div>`;
+  const list=all.filter(it=>(UI.wsrc==='all'||(UI.wsrc==='chest')===!!it.chest)&&(UI.wslot==='all'||it.slot===UI.wslot)&&(UI.wrar==='all'||it.r===+UI.wrar))
+    .sort((a,b)=>a.r-b.r||(a.chest?1:0)-(b.chest?1:0)||(a.land||0)-(b.land||0));
+  h+=`<p class="note">Showing ${list.length} item${list.length===1?'':'s'}. Tap an item you own to wear, upgrade or sell it.</p><div class="wiki">`;
+  list.forEach(it=>{const lv=S.gear[it.id],mx=RAR[it.r].max,sl=slotOf(it.slot),s1=itemStat(it,1),sM=itemStat(it,mx);
+    const src=it.chest?`🎁 ${CHESTS.filter(c=>c.w[it.r]).map(c=>c.n.replace(' Chest','')).join(', ')} chest`:(it.land<S.unlocked?`🛍️ Shop in ${LANDS[it.land].e} ${LANDS[it.land].n} · 🪙 ${fmt(it.price)}`:`🔒 Shop in ${LANDS[it.land].n} (not unlocked yet)`);
+    h+=`<div class="wcard ${lv?'own':''}" style="--rc:${RAR[it.r].c}" ${lv?`data-a="itemInfo" data-id="${it.id}"`:''}>
+      <div class="wtop"><div class="wie">${it.e}</div><div style="min-width:0"><b>${it.n}</b><div>${rarTag(it.r)} <span class="small muted">${sl.e} ${sl.n}</span></div></div>${lv?`<span class="wown">✔ Lv ${lv}</span>`:''}</div>
+      <div class="wst">${Object.keys(s1).map(k=>k==='claim'?'<span>🤖 Auto-BINGO</span>':`<span>${STAT[k][0]}: <b>+${s1[k]}${STAT[k][1]}</b> → <b style="color:var(--mint)">+${sM[k]}${STAT[k][1]}</b></span>`).join('')}<span class="small muted">Level 1 → max level ${mx}</span></div>
+      <div class="wft"><span>${src}</span><span class="wsell">${it.chest?`Sells for 🎟️ <b>${sellVal(it,1)}</b>–<b>${sellVal(it,mx)}</b>`:'Can\'t be sold'}</span></div></div>`});
+  h+=`</div></div>`;view.innerHTML=h;
+}
 function vMore(){
   const d=quests(),qn=d.q.filter(q=>q.p>=q.n&&!q.c).length+(d.spins===0?1:0)+(S.login.last!==today()?1:0),an=Object.keys(S.ach).length-S.achSeen;
   const tile=(t,e,n,sub,dot)=>`<button class="tile" data-a="tab" data-t="${t}"><span class="te">${e}</span>${n}<small>${sub}</small>${dot?`<span class="dot on">${dot}</span>`:''}</button>`;
   view.innerHTML=`<div class="pad">${phead('☰','More','Everything else in one place.')}
-   <div class="tiles">${tile('map','🗺️','World Map','Travel between lands')}${tile('album','🧩','Album','Collect souvenirs')}${tile('daily','📅','Daily','Free daily rewards',qn)}${tile('trophy','🏆','Trophies','Goals & stats',an)}</div>
+   <div class="tiles">${tile('map','🗺️','World Map','Travel between lands')}${tile('album','🧩','Album','Collect souvenirs')}${tile('daily','📅','Daily','Free daily rewards',qn)}${tile('wiki','📖','Item Wiki','Every item in the game')}${tile('trophy','🏆','Trophies','Goals & stats',an)}</div>
    <div class="row" style="margin-top:14px"><button class="btn" data-a="settings">⚙️ Settings</button><button class="btn dk" data-a="help">❓ Game guide</button><button class="btn dk" data-a="howBingo">🎱 Bingo rules</button></div>
    <p class="small muted" style="margin-top:10px">Your progress is saved automatically in this browser.</p></div>`;
 }
@@ -1192,6 +1227,7 @@ function vLobby(){
    ['tab','trophy','','','🏆','Trophies',`${Object.keys(S.ach).length}/${ACH.length}`],
    ['tab','map','','','🗺️','World Map',`${S.unlocked}/${NL} lands`],
    ['howBingo','','','','❓','Bingo rules','How to play'],
+   ['tab','wiki','','','📖','Item Wiki',`${Object.keys(S.gear).length}/${Object.keys(ITEMS).length} found`],
    ['settings','','','','⚙️','Settings','Sound, speed & more']
   ];
   h+=`<h3 class="sec">🎮 Explore</h3><div class="stiles">${tiles.map(([a,t,k,v,e,n,sub])=>`<button class="stile" data-a="${a}" ${t?`data-t="${t}"`:''} ${k?`data-k="${k}" data-v="${v}"`:''}><span class="se">${e}</span><b>${n}</b><small>${sub}</small></button>`).join('')}</div></div>`;
@@ -1382,7 +1418,7 @@ function endRound(msg){
   },900);
 }
 function tipAfter(){const i=S.cur;if(canBuildAny())return '🏗️ You can afford an upgrade in your town!';if(S.bronze>0)return `🎁 You have ${S.bronze} chest${S.bronze>1?'s':''} to open in Gear.`;const d=quests();if(d.q.some(q=>q.p>=q.n&&!q.c))return '📜 A daily quest is ready to claim!';
-  return pick(['💡 Daub numbers fast to build a combo for bonus coins.','💡 Equip a dauber with auto-daub so you never miss a number.','💡 Upgrade your Bingo Hall for bigger payouts.','💡 Farms keep earning while you are away.','💡 Complete albums for permanent coin bonuses.','💡 Earlier bingos pay up to 2×!'])}
+  return pick(['💡 Daub numbers fast to build a combo for bonus coins.','💡 Equip a dauber with auto-daub so you never miss a number.','💡 Upgrade your Bingo Hall for bigger payouts.','💡 Farms earn coins every minute while you play.','💡 Complete albums for permanent coin bonuses.','💡 Earlier bingos pay up to 2×!'])}
 
 /* ---------- MAIN LOOP ---------- */
 let lastT=performance.now(),saveT=0,achT=0;
@@ -1410,6 +1446,7 @@ function refreshAfford(){document.querySelectorAll('[data-cost]').forEach(b=>{b.
 const ACT={
   tab:d=>{if(R&&!R.over)return;closeModalAll();S.tab=d.t;render();view.scrollTop=0},
   afk:d=>afkAnswer(d.e),
+  wf:d=>{UI[d.k]=d.v;rerender()},
   settings:()=>{closeModalAll();if(R&&!R.over)R.paused=true;showSettings()},
   howBingo:()=>{closeModalAll();howToBingo()},
   go:d=>{if(R&&!R.over)return;UI[d.k]=d.v;S.tab=d.t;UI.sell=null;render();view.scrollTop=0},
@@ -1464,7 +1501,7 @@ document.addEventListener('pointerdown',e=>{const el=e.target.closest('[data-a="
 document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el||el.disabled)return;const a=el.dataset.a;if(a==='daub'||a==='claim'||a==='usePw')return;if(ACT[a])ACT[a](el.dataset);if(UI.settings&&modalOn)$('#mbox').innerHTML=settingsHtml()});
 $('#modal').addEventListener('click',e=>{if(e.target.id==='modal'&&!R&&!UI.afk){UI.item=null;UI.sell=null;UI.settings=false;closeModal()}});
 document.addEventListener('keydown',e=>{if(!R||R.over)return;if(e.key===' '||e.key==='Enter'){e.preventDefault();R.cards.forEach((_,ci)=>{if(newLines(ci).length)claim(ci)})}if(e.key==='p'||e.key==='P')usePw()});
-document.addEventListener('visibilitychange',()=>{if(document.hidden){save();musicStop()}else{if(S.music)musicStart();offline(true);lastT=performance.now()}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){save();musicStop()}else{if(S.music)musicStart();lastT=performance.now()}});
 window.addEventListener('beforeunload',save);
 
 function tutorial(){
@@ -1474,7 +1511,7 @@ function tutorial(){
 
 /* ---------- BOOT ---------- */
 load();calc();quests();
-if(!S.tut){S.tut=true;tutorial();save()}else offline();
+if(!S.tut){S.tut=true;tutorial();save()}
 render();requestAnimationFrame(loop);
 </script>
 </body>
