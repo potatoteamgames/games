@@ -132,9 +132,10 @@ button:disabled{cursor:not-allowed;opacity:.45}
 .tile.hl{animation:hl 1.1s ease-out}
 @keyframes hl{0%,60%{box-shadow:inset 0 0 0 calc(var(--u)*.08) #ffcb52,inset 0 0 calc(var(--u)*.4) #ffcb52}100%{box-shadow:none}}
 /* corners */
-.cgo .big{font-family:'Lilita One',sans-serif;font-size:calc(var(--u)*.62);color:var(--red);-webkit-text-stroke:1px #000;line-height:1}
-.cgo .sm{font-size:calc(var(--u)*.12);padding:0 8%}
-.cgo .arrow{font-size:calc(var(--u)*.5);color:var(--red);line-height:.6}
+.cgo .big{font-family:'Lilita One',sans-serif;font-size:calc(var(--u)*.56);color:var(--red);-webkit-text-stroke:1px #000;line-height:1}
+.cgo .big.long{font-size:calc(var(--u)*.4)}
+.cgo .sm{font-size:calc(var(--u)*.15);line-height:1.08;font-weight:700;white-space:nowrap;letter-spacing:.02em}
+.cgo .arrow{font-size:calc(var(--u)*.4);color:var(--red);line-height:.6}
 .cin{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--u)*.04)}
 .cin .ic{margin:0}
 .jailcell{position:absolute;right:0;top:0;width:calc(var(--u)*1.12);height:calc(var(--u)*1.12);background:#f2913b;border-left:1px solid var(--line);border-bottom:1px solid var(--line);
@@ -371,6 +372,9 @@ button:disabled{cursor:not-allowed;opacity:.45}
 
 /* "THE" in the logo */
 .the{font-size:.5em;vertical-align:.45em;margin-right:.12em;letter-spacing:.08em}
+.rdy{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;background:#e9dcc0;color:#6b5a3e;font-size:11px}
+.rdy.on{background:#2fb35a;color:#fff}
+.cdTxt{font-family:'Lilita One',sans-serif;font-weight:400;font-size:22px;color:#c3241c}
 /* language switch */
 .langSeg{display:flex;justify-content:flex-end;gap:4px;margin:-6px 0 10px}
 .langSeg button{padding:5px 10px;border-radius:999px;border:2px solid #000;background:#efe4c8;font-size:13px;color:#1d1a16}
@@ -720,7 +724,7 @@ function buildBoard(){
     else if(s.t==='tax')h=`<div class="nm">${nm}</div><div class="ic big">${s.ic}</div><div class="pr">${L('Pay','Betal')} ${M(s.a)}</div>`;
     else if(s.t==='chance')h=`<div class="nm">${L('Chance','Prøv<br>lykken')}</div><div class="qm">?</div>`;
     else if(s.t==='chest')h=`<div class="nm">${L('Potato<br>Sack','Kartoffel-<br>sækken')}</div><div class="ic big" style="margin:auto 0">💰</div>`;
-    else if(s.t==='go'){rot=-45;h=`<div class="cin cgo"><div class="sm">${L('COLLECT ₱200 SALARY AS YOU PASS','MODTAG ₱200 HVER GANG DU PASSERER')}</div><div class="big">${L('GO','START')}</div><div class="arrow">⬅</div></div>`}
+    else if(s.t==='go'){rot=-45;h=`<div class="cin cgo"><div class="sm">${L('COLLECT<br>₱200 SALARY<br>AS YOU PASS','MODTAG ₱200<br>HVER GANG<br>DU PASSERER')}</div><div class="big${LANG==='da'?' long':''}">${L('GO','START')}</div><div class="arrow">⬅</div></div>`}
     else if(s.t==='jail'){rot=0;h=`<div class="jailcell"><div class="bars"></div><b>${L('IN','I')}</b><b style="font-size:1.6em">🚔</b><b>${L('JAIL','FÆNGSEL')}</b></div><div class="jv1"><span>${L('JUST','KUN PÅ')}</span></div><div class="jv2">${L('VISITING','BESØG')}</div>`}
     else if(s.t==='park'){rot=135;h=`<div class="cin"><div>${L('FREE','GRATIS')}</div><div class="ic big">🚗</div><div>${L('PARKING','PARKERING')}</div></div>`}
     else if(s.t==='gojail'){rot=225;h=`<div class="cin"><div>${L('GO TO','GÅ I')}</div><div class="ic big">👮</div><div>${L('JAIL','FÆNGSEL')}</div></div>`}
@@ -1627,6 +1631,7 @@ function hostMsg(c,m){
   }
   if(m.t==='tok'&&!NET.started){const g=NET.lobby.find(g=>g.peer===c.peer),t=+m.token;
     if(g&&TOKENS[t]&&![CFG.players[0].token,...NET.lobby.filter(x=>x!==g).map(x=>x.token)].includes(t))g.token=t;drawHostLobby();return}
+  if(m.t==='ready'&&!NET.started){const g=NET.lobby.find(g=>g.peer===c.peer);if(g){g.ready=!!m.v;drawHostLobby()}return}
   if(m.t==='bye'){hostLost(c.peer);try{c.close()}catch(e){}return}
   if(m.t==='ans'){const x=NET.pend[m.id];if(x&&G&&G.players[x.pid].ctl===c.peer){delete NET.pend[m.id];x.res(m.v)}return}
   if(m.t==='cmd')hostCmd(c,m);
@@ -1659,24 +1664,34 @@ function leaveSeat(p){ // a guest left: their property goes back to the bank and
 }
 function lobbySeats(){
   const me=CFG.players[0];
-  return[{name:(me.name||'').trim()||'Host',token:me.token,host:1},...NET.lobby.map(g=>({name:g.name,token:g.token,peer:g.peer})),...Array.from({length:CFG.cpu},(_,k)=>({name:CPU_NAMES[k],cpu:1}))];
+  return[{name:(me.name||'').trim()||'Host',token:me.token,host:1,ready:!!NET.hostReady},...NET.lobby.map(g=>({name:g.name,token:g.token,peer:g.peer,ready:!!g.ready})),...Array.from({length:CFG.cpu},(_,k)=>({name:CPU_NAMES[k],cpu:1,ready:true}))];
+}
+// lobby: every human presses Ready; when all are ready a short countdown starts the game
+const readyTag=s=>s.cpu?'':(s.ready?`<span class="rdy on">${L('✅ Ready','✅ Klar')}</span>`:`<span class="rdy">${L('⏳ Not ready','⏳ Ikke klar')}</span>`);
+const readyHint=(seats,cd)=>{const h=seats.filter(x=>!x.cpu),r=h.filter(x=>x.ready).length;
+  return cd!=null?`<b class="cdTxt">${L(`🎲 Starting in ${cd}…`,`🎲 Starter om ${cd}…`)}</b>`:seats.length<2?L('Waiting for players… (add a computer player to play right away)','Venter på spillere… (tilføj en computerspiller for at spille med det samme)'):L(`Waiting for everyone to press Ready (${r}/${h.length})`,`Venter på at alle trykker Klar (${r}/${h.length})`)};
+function hostCountdown(seats){
+  const all=seats.length>=2&&seats.every(x=>x.ready);
+  if(all&&NET.cd==null){NET.cd=3;SFX.bid();NET.cdT=setInterval(()=>{NET.cd--;if(NET.cd<=0){clearInterval(NET.cdT);NET.cdT=null;NET.cd=null;hostStart()}else{SFX.click();drawHostLobby()}},1000)}
+  if(!all&&NET.cd!=null){clearInterval(NET.cdT);NET.cdT=null;NET.cd=null}
 }
 function drawHostLobby(){
-  const seats=lobbySeats();
+  if(NET.started)return;
+  const seats=lobbySeats();hostCountdown(seats);
   $('#onlineBox').innerHTML=`<div class="codeBox"><small>${L('Table code','Bordkode')}</small><span class="code">${NET.code}</span><small>${L('Your friends open <u>The Potato Empire</u> on their own device, choose <b>Join</b> and type this code.','Dine venner åbner <u>The Potato Empire</u> på deres egen enhed, vælger <b>Join</b> og skriver koden.')}</small></div>
     ${tokPicker(CFG.players[0].token,NET.lobby.map(g=>g.token),PCOLORS[0])}
-    <div class="lob">${seats.map((s,i)=>`<div class="lobRow" style="--pc:${PCOLORS[i]}"><span class="tk">${s.cpu?'🤖':tokSVG(s.token)}</span><b>${esc(s.name)}</b><small>${s.host?L('🏠 You (host)','🏠 Dig (host)'):s.cpu?'Computer':L('🌐 Joined','🌐 Med')}</small></div>`).join('')}</div>
+    <div class="lob">${seats.map((s,i)=>`<div class="lobRow" style="--pc:${PCOLORS[i]}"><span class="tk">${s.cpu?'🤖':tokSVG(s.token)}</span><b>${esc(s.name)}</b><small>${s.host?L('🏠 You (host)','🏠 Dig (host)'):s.cpu?'Computer':L('🌐 Joined','🌐 Med')} ${readyTag(s)}</small></div>`).join('')}</div>
     <div class="opt" style="margin-top:8px">${L('🤖 Computer players','🤖 Computerspillere')}<div class="seg" id="cpuSeg">${[0,1,2,3,4].map(n=>`<button class="${CFG.cpu===n?'on':''}" ${NET.lobby.length+1+n>6?'disabled':''}>${n}</button>`).join('')}</div></div>
-    <div class="lidBtns"><button class="btn danger" id="leaveBtn">${L('✖ Close table','✖ Luk bordet')}</button><button class="btn go" id="hostStart" ${seats.length<2?'disabled':''}>${L('🎲 Start online game','🎲 Start online-spil')}</button></div>
-    <p class="hint">${seats.length<2?L('Waiting for players… (add a computer player to play right away)','Venter på spillere… (tilføj en computerspiller for at spille med det samme)'):L('Everyone in? Press start!','Er alle med? Tryk start!')}</p>`;
+    <div class="lidBtns"><button class="btn danger" id="leaveBtn">${L('✖ Close table','✖ Luk bordet')}</button><button class="btn ${NET.hostReady?'':'go'}" id="readyBtn">${NET.hostReady?L('↩ Not ready','↩ Ikke klar'):L("✋ I'm ready","✋ Jeg er klar")}</button></div>
+    <p class="hint">${readyHint(seats,NET.cd)}</p>`;
   $$('#cpuSeg button').forEach((b,n)=>b.onclick=()=>{CFG.cpu=n;SFX.click();drawHostLobby()});
   $$('#onlineBox .tokPick button').forEach(b=>b.onclick=()=>{CFG.players[0].token=+b.dataset.tok;SFX.click();drawHostLobby()});
   $('#leaveBtn').onclick=()=>location.reload();
-  $('#hostStart').onclick=hostStart;
-  bcast({t:'lobby',seats:seats.map(s=>({name:s.name,token:s.token,cpu:!!s.cpu,host:!!s.host,peer:s.peer||null}))});
+  $('#readyBtn').onclick=()=>{NET.hostReady=!NET.hostReady;SFX.click();drawHostLobby()};
+  bcast({t:'lobby',cd:NET.cd,seats:seats.map(s=>({name:s.name,token:s.token,cpu:!!s.cpu,host:!!s.host,peer:s.peer||null,ready:!!s.ready}))});
 }
 function hostStart(){
-  const seats=lobbySeats();if(seats.length<2)return;
+  const seats=lobbySeats();if(NET.started||seats.length<2||!seats.every(x=>x.ready))return;
   // unique tokens
   const used=new Set(),players=seats.map(s=>{let t=s.cpu?-1:s.token;if(t<0||used.has(t)){t=0;while(used.has(t))t++}used.add(t);
     return{name:s.name,token:t,human:!s.cpu,ctl:s.peer||'host'}});
@@ -1713,10 +1728,13 @@ async function guestMsg(m){
   switch(m.t){
     case'full':$('#onlineBox').innerHTML=`<p class="err">${esc(m.why)}</p><div class="lidBtns"><button class="btn" onclick="location.reload()">${L('↩ Back','↩ Tilbage')}</button></div>`;break;
     case'lobby':if(!NET.started){const meS=m.seats.find(x=>x.peer===NET.id),myI=m.seats.indexOf(meS);
-      $('#onlineBox').innerHTML=`<div class="codeBox"><small>${L('Table','Bord')}</small><span class="code">${esc(NET.code)}</span><small>${L("✅ You're in! Waiting for the host to start…",'✅ Du er med! Venter på, at hosten starter…')}</small></div>
+      $('#onlineBox').innerHTML=`<div class="codeBox"><small>${L('Table','Bord')}</small><span class="code">${esc(NET.code)}</span><small>${L("✅ You're in! Press <b>Ready</b> when you're set – the game starts when everyone is ready.",'✅ Du er med! Tryk <b>Klar</b>, når du er klar – spillet starter, når alle er klar.')}</small></div>
       ${meS?tokPicker(meS.token,m.seats.filter(x=>x!==meS&&!x.cpu).map(x=>x.token),PCOLORS[myI]):''}
-      <div class="lob">${m.seats.map((s,i)=>`<div class="lobRow" style="--pc:${PCOLORS[i]}"><span class="tk">${s.cpu?'🤖':tokSVG(s.token)}</span><b>${esc(s.name)}</b><small>${s.host?'🏠 Host':s.cpu?'Computer':L('🌐 Player','🌐 Spiller')}</small></div>`).join('')}</div>
-      <div class="lidBtns"><button class="btn danger" onclick="location.reload()">${L('✖ Leave','✖ Forlad')}</button></div>`;
+      <div class="lob">${m.seats.map((s,i)=>`<div class="lobRow" style="--pc:${PCOLORS[i]}"><span class="tk">${s.cpu?'🤖':tokSVG(s.token)}</span><b>${esc(s.name)}</b><small>${s.host?'🏠 Host':s.cpu?'Computer':L('🌐 Player','🌐 Spiller')} ${readyTag(s)}</small></div>`).join('')}</div>
+      <div class="lidBtns"><button class="btn danger" onclick="location.reload()">${L('✖ Leave','✖ Forlad')}</button>${meS?`<button class="btn ${meS.ready?'':'go'}" id="gReadyBtn">${meS.ready?L('↩ Not ready','↩ Ikke klar'):L("✋ I'm ready","✋ Jeg er klar")}</button>`:''}</div>
+      <p class="hint">${readyHint(m.seats,m.cd)}</p>`;
+      if(m.cd!=null)SFX.click();
+      const rb=$('#gReadyBtn');if(rb)rb.onclick=()=>{SFX.click();rb.disabled=true;NET.conn.send({t:'ready',v:!meS.ready})};
       $$('#onlineBox .tokPick button').forEach(b=>b.onclick=()=>{CFG.players[0].token=+b.dataset.tok;SFX.click();NET.conn.send({t:'tok',token:+b.dataset.tok})});}
       break;
     case'start':NET.started=true;$('#log').innerHTML='';if(m.lang&&m.lang!==LANG){LANG=m.lang;applyLang(false)}break; // everyone plays in the host's language
