@@ -355,6 +355,13 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
 .wft{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:11px;color:var(--muted);font-weight:700;border-top:1px solid var(--line);padding-top:6px}
 .wsell b{color:var(--gold)}
 .vsel{flex:1;min-width:0;max-width:100%;padding:9px 10px;border-radius:12px;background:#0005;color:var(--txt);border:2px solid var(--line);font:inherit;font-size:13px}
+.pats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:10px 0}
+.pat{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px;border-radius:14px;background:#0004;border:2px solid var(--line)}
+.pat b{font-size:14px}.pat small{font-size:11px;color:var(--muted);font-weight:700;text-align:center}
+.pgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;width:100px;margin-bottom:4px}
+.pgrid i{aspect-ratio:1;border-radius:3px;background:#fff8ec33;display:flex;align-items:center;justify-content:center;font-size:9px;font-style:normal}
+.pgrid i.on{background:var(--pink);box-shadow:0 0 6px #ff5fa288}
+.pgrid i.fr{background:#ffcf4a66}
 .tile{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:18px 8px;border-radius:18px;background:var(--card);border:2px solid var(--line);font-size:15px;text-align:center}
 .tile .te{font-size:40px}
 .tile small{color:var(--muted);font-size:11px;font-weight:700}
@@ -776,6 +783,7 @@ const LINES=[];
 for(let r=0;r<5;r++)LINES.push([0,1,2,3,4].map(c=>r*5+c));
 for(let c=0;c<5;c++)LINES.push([0,1,2,3,4].map(r=>r*5+c));
 LINES.push([0,6,12,18,24],[4,8,12,16,20]);
+LINES.push([0,4,20,24]);   // four corners
 const LET='BINGO', LCOL=['#ff5a5a','#ffb52e','#3fcf6b','#4aa3ff','#b36bff'];
 const RIVALS=['SpudLord88','TaterTot','MashQueen','FryGuy','Chipster','BakedBetty','HashBrownie','Gnocchi_G','SweetPotatoPie','PotatoPaula','RustyRusset','YukonJoe','KingEdward','DaubDaddy','BingoBaron','LuckyLlama','CroquetteCarl','Rösti_Rita','Pommes_Pete','Latke_Lou'];
 
@@ -1075,7 +1083,7 @@ function build(k){const i=S.cur,lv=S.b[i][k];if(lv>=bMax(k))return;if(k===7&&!lm
     else if(i===NL-1)modal(`<div class="me">🌍👑</div><h2>You conquered the universe!</h2><p>The Spud King bows to you. You can now start a <b>World Tour</b> from the Trophies tab: restart the journey with a permanent coin multiplier, keeping your gear, level, gems, albums and powers.</p><div class="acts"><button class="btn big" data-a="close">Amazing!</button></div>`)}
   checkAch();save();rerender()}
 function travel(i){if(i>=S.unlocked)return;S.cur=i;closeModalAll();S.tab='town';toast(`✈️ Welcome to <b>${LANDS[i].n}</b> ${LANDS[i].e}`);save();render();view.scrollTop=0}
-function closeModalAll(){modalQ=[];UI.settings=false;nextModal()}
+function closeModalAll(){modalQ=[];UI.settings=false;UI.patterns=false;nextModal()}
 
 /* ---------- GEAR ---------- */
 function vBag(){
@@ -1337,8 +1345,18 @@ function nextGoal(){
   if(i<S.unlocked-1)return['✈️',`${LANDS[S.unlocked-1].n} is unlocked – bingo pays much more there!`,['travel',S.unlocked-1,'Travel']];
   return['⭐','Keep winning bingos to max out your town, gear and albums!',null]}
 function setSpeed(n){S.spd=clamp(n,0,SPEEDS.length-1);if(R&&!R.over){R.speed=SPEEDS[S.spd].t;R.tNext=Math.min(R.tNext,R.speed);updCtl()}else rerender();save()}
-const BINGO_STEPS=[['🎱','<b>Numbers are drawn</b> one at a time, like <b>B 7</b> or <b>O 68</b>.'],['👆','<b>Find it on your card and tap it</b> to place your marker. Only called numbers count!'],['🎉','Get <b>5 in a row</b> – across, down or diagonal (the 🥔 is free). Then press <b>BINGO!</b>'],['⚡','<b>Be quick!</b> Other players race you and earlier bingos pay up to 2×.'],['🎁','Squares with icons give <b>bonus coins, gems, souvenirs and chests</b>.'],['🏘️','<b>Spend your coins in Town</b> to build and unlock new lands.']];
-function howToBingo(){modal(`<div class="me">🎱</div><h2>How to play bingo</h2><ol class="steps" style="text-align:left">${BINGO_STEPS.map(([e,t])=>`<li><span>${e}</span><div>${t}</div></li>`).join('')}</ol><p class="small">Keys: <b>Space</b> = BINGO · <b>P</b> = power-up</p><div class="acts"><button class="btn big" data-a="close">Got it!</button></div>`)}
+const BINGO_STEPS=[['🎱','<b>Numbers are drawn</b> one at a time, like <b>B 7</b> or <b>O 68</b>.'],['👆','<b>Find it on your card and tap it</b> to place your marker. Only called numbers count!'],['🎉','Get <b>5 in a row</b> – across, down or diagonal (the 🥔 is free) – or all <b>4 corners</b>. Then press <b>BINGO!</b>'],['⚡','<b>Be quick!</b> Other players race you and earlier bingos pay up to 2×.'],['🎁','Squares with icons give <b>bonus coins, gems, souvenirs and chests</b>.'],['🏘️','<b>Spend your coins in Town</b> to build and unlock new lands.']];
+// all the ways to win, drawn as mini cards
+const PATTERNS=[['Row','Any of the 5 rows across',[10,11,12,13,14]],['Column','Any of the 5 columns down',[2,7,12,17,22]],['Diagonal','Corner to corner, both ways',[0,6,12,18,24]],['Four corners','All 4 corner squares',[0,4,20,24]]];
+function patternsHtml(){return `<div class="pats">${PATTERNS.map(([n,d,cells])=>`<div class="pat"><div class="pgrid">${[...Array(25)].map((_,j)=>`<i class="${cells.includes(j)?'on':''} ${j===12?'fr':''}">${j===12?'🥔':''}</i>`).join('')}</div><b>${n}</b><small>${d}</small></div>`).join('')}</div>
+  <p class="small">The 🥔 in the middle is free. You can win several bingos on one card – every new pattern counts! Getting 2+ at once gives a bonus.</p>`}
+function showPause(){if(!R||R.over)return;if(R.ev){toast('⏳ Finish the bonus event first!');return}R.paused=true;UI.patterns=true;if(window.speechSynthesis)speechSynthesis.cancel();
+  const h=`<div class="me">⏸️</div><h2>Game paused</h2><p>Take your time – no numbers are drawn while the game is paused.</p>
+   <div class="rl"><span>Ball</span><b>${R.idx}/${R.maxBalls}</b></div><div class="rl"><span>Bingos left</span><b>${R.pool}</b></div><div class="rl"><span>Won so far</span><b>🪙 ${fmt(R.coins)}</b></div>
+   <div class="acts"><button class="btn big g" data-a="close">▶ Resume</button><button class="btn dk" data-a="patterns">📋 Ways to win</button><button class="btn dk" data-a="leave">🚪 Leave</button></div>`;
+  if(modalOn)$('#mbox').innerHTML=h;else modal(h)}
+function showPatterns(){if(R&&!R.over)R.paused=true;UI.patterns=true;const h=`<div class="me">📋</div><h2>How to win</h2>${R&&!R.over?'<p class="small" style="margin-top:-4px">⏸️ The game is paused.</p>':''}${patternsHtml()}<div class="acts"><button class="btn big" data-a="close">${R&&!R.over?'▶ Hide & continue':'Got it!'}</button></div>`;if(modalOn)$('#mbox').innerHTML=h;else modal(h)}
+function howToBingo(){modal(`<div class="me">🎱</div><h2>How to play bingo</h2><ol class="steps" style="text-align:left">${BINGO_STEPS.map(([e,t])=>`<li><span>${e}</span><div>${t}</div></li>`).join('')}</ol><h3 class="lil" style="margin:12px 0 6px;font-size:20px">Ways to win</h3>${patternsHtml()}<p class="small">Keys: <b>Space</b> = BINGO · <b>P</b> = power-up · <b>Esc</b> = pause</p><div class="acts"><button class="btn big" data-a="close">Got it!</button></div>`)}
 const onOff=(on,act)=>`<div class="opt"><button class="${on?'on':''}" data-a="${on?'':act}">On</button><button class="${on?'':'on'}" data-a="${on?act:''}">Off</button></div>`;
 function settingsHtml(){
   return `<div class="me">⚙️</div><h2>Settings</h2><div style="text-align:left">
@@ -1394,6 +1412,7 @@ function vLobby(){
    ['tab','trophy','','','🏆','Trophies',`${Object.keys(S.ach).length}/${ACH.length}`],
    ['tab','map','','','🗺️','World Map',`${S.unlocked}/${NL} lands`],
    ['howBingo','','','','❓','Bingo rules','How to play'],
+   ['patterns','','','','📋','Ways to win','Rows, corners & more'],
    ['tab','wiki','','','📖','Item Wiki',`${Object.keys(S.gear).length}/${Object.keys(ITEMS).length} found`],
    ['settings','','','','⚙️','Settings','Sound, speed & more']
   ];
@@ -1454,7 +1473,7 @@ function updCaller(){
   $('#rCombo').textContent=R.combo>=3?`🔥 ${R.combo}× COMBO (+${Math.round(Math.min(R.combo,40)*1.25*(1+ST.combo/100))}%)`:R.dbl?`✖️ Next bingo ×${R.dblM.toFixed(2)}`:'';
 }
 function updCtl(){const c=$('#ctl');if(!c)return;const sp=SPEEDS[S.spd];
-  c.innerHTML=`<button class="cb leave" data-a="leave" title="Leave the bingo hall">🚪 Leave</button>
+  c.innerHTML=`<button class="cb leave" data-a="leave" title="Leave the bingo hall">🚪 Leave</button><button class="cb" data-a="pause" title="Pause the game (Esc)">⏸️<i class="cl"> Pause</i></button><button class="cb" data-a="patterns" title="How to win (pauses the game)">📋<i class="cl"> Patterns</i></button>
    <div class="spd"><button class="cb" data-a="spdDown" ${S.spd<=0?'disabled':''} title="Slower">−</button><span title="${sp.t}s per number">${sp.e} ${sp.n}</span><button class="cb" data-a="spdUp" ${S.spd>=SPEEDS.length-1?'disabled':''} title="Faster">+</button></div>
    <button class="cb ${S.call?'on':''}" data-a="call" title="Read numbers aloud">${S.call?'🗣️':'🤐'}<i class="cl"> Voice</i></button>${S.spot?`<button class="cb ${S.spotOn?'on':''}" data-a="spotToggle" title="Number Spotter">🔍<i class="cl"> Spotter</i></button>`:''}${hasAutoB()?`<button class="cb ${S.autoBOn?'on':''}" data-a="autoBToggle" title="Auto-BINGO">🤖<i class="cl"> Auto</i></button>`:''}`}
 function updPw(){const btn=$('#pwBtn');if(!btn)return;const ready=R.charge>=R.need;btn.classList.toggle('ready',ready);$('#pwFill').style.width=Math.min(100,R.charge/R.need*100)+'%';$('#pwTxt').textContent=ready?'⚡ USE POWER-UP!':`⚡ Power ${Math.floor(Math.min(100,R.charge/R.need*100))}%`}
@@ -1629,7 +1648,9 @@ const ACT={
   itemInfo:d=>{UI.sell=null;closeModalAll();showItem(d.id)},
   sell:d=>sellItem(d.id),
   tbuy:d=>{const t=TSHOP[+d.j];if(S.tokens<t.c)return;S.tokens-=t.c;t.f();SFX.buy();checkAch();save();rerender()},
-  close:()=>{if(UI.settings&&R&&!R.over)R.paused=false;UI.bld=null;UI.item=null;UI.sell=null;UI.settings=false;closeModal()},
+  patterns:()=>{closeModalAll();showPatterns()},
+  pause:()=>{closeModalAll();showPause()},
+  close:()=>{if((UI.settings||UI.patterns)&&R&&!R.over)R.paused=false;UI.patterns=false;UI.bld=null;UI.item=null;UI.sell=null;UI.settings=false;closeModal()},
   sound:()=>{S.sound=!S.sound;save();if(S.tab==='more')rerender();updHUD()},
   music:()=>{S.music=!S.music;if(S.music)musicStart();else musicStop();save();if(S.tab==='more')rerender();updHUD()},
   call:()=>{S.call=!S.call;if(!S.call&&window.speechSynthesis)speechSynthesis.cancel();save();if(R&&!R.over)updCtl();else rerender()},
@@ -1638,7 +1659,7 @@ const ACT={
   autoBToggle:()=>{S.autoBOn=!S.autoBOn;save();if(R&&!R.over){updCtl();if(S.autoBOn)R.cards.forEach((_,ci)=>checkLines(ci))}else rerender()},
   spotBuy:()=>{if(S.spot||S.gems<SPOT_COST)return;S.gems-=SPOT_COST;S.spot=true;S.spotOn=true;SFX.level();toast('🔍 <b>Number Spotter</b> unlocked! Called numbers now glow softly on your cards.');save();rerender()},
   spdUp:()=>setSpeed(S.spd+1),spdDown:()=>setSpeed(S.spd-1),
-  leave:()=>{if(!R||R.over)return;R.paused=true;modal(`<div class="me">🚪</div><h2>Leave the bingo hall?</h2><p>This game ends now. Coins, gems and souvenirs you already won are yours to keep.</p><div class="acts"><button class="btn p big" data-a="leaveGo">Leave game</button><button class="btn dk" data-a="leaveNo">Keep playing</button></div>`)},
+  leave:()=>{if(!R||R.over)return;closeModalAll();R.paused=true;modal(`<div class="me">🚪</div><h2>Leave the bingo hall?</h2><p>This game ends now. Coins, gems and souvenirs you already won are yours to keep.</p><div class="acts"><button class="btn p big" data-a="leaveGo">Leave game</button><button class="btn dk" data-a="leaveNo">Keep playing</button></div>`)},
   leaveNo:()=>{closeModal();if(R)R.paused=false},
   leaveGo:()=>{closeModalAll();if(!R||R.over)return;R.over=true;evDone(false);if(window.speechSynthesis)speechSynthesis.cancel();addXP(R.xp);checkAch();save();const won=R.coins;R=null;S.tab='bingo';render();view.scrollTop=0;if(won)toast(`🚪 You left the hall with <b>${fmt(won)} 🪙</b>`)},
   travel:d=>travel(+d.i),
@@ -1674,7 +1695,7 @@ const ACT={
 document.addEventListener('pointerdown',e=>{const el=e.target.closest('[data-a="daub"],[data-a="claim"],[data-a="usePw"]');if(!el||el.disabled)return;e.preventDefault();ACT[el.dataset.a](el.dataset)});
 document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el||el.disabled)return;const a=el.dataset.a;if(a==='daub'||a==='claim'||a==='usePw')return;if(ACT[a])ACT[a](el.dataset);if(UI.settings&&modalOn)$('#mbox').innerHTML=settingsHtml()});
 $('#modal').addEventListener('click',e=>{if(e.target.id==='modal'&&!R&&!UI.afk){UI.item=null;UI.sell=null;UI.settings=false;closeModal()}});
-document.addEventListener('keydown',e=>{if(!R||R.over)return;if(e.key===' '||e.key==='Enter'){e.preventDefault();R.cards.forEach((_,ci)=>{if(newLines(ci).length)claim(ci)})}if(e.key==='p'||e.key==='P')usePw()});
+document.addEventListener('keydown',e=>{if(!R||R.over)return;if(e.key==='Escape'){e.preventDefault();if(modalOn&&R.paused&&UI.patterns){UI.patterns=false;R.paused=false;closeModal()}else if(!modalOn)showPause();return}if(modalOn)return;if(e.key===' '||e.key==='Enter'){e.preventDefault();R.cards.forEach((_,ci)=>{if(newLines(ci).length)claim(ci)})}if(e.key==='p'||e.key==='P')usePw()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){save();musicStop()}else{if(S.music)musicStart();lastT=performance.now()}});
 window.addEventListener('beforeunload',save);
 document.addEventListener('change',e=>{if(e.target.id==='voiceSel'){S.voiceName=e.target.value;save();speak('B. 12',true)}});
