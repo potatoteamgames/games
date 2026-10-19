@@ -103,6 +103,24 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
 .dot{position:absolute;top:2px;right:calc(50% - 22px);min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:var(--red);color:#fff;font-size:11px;display:none;align-items:center;justify-content:center;border:2px solid #120b2e}
 .dot.on{display:flex}
 
+/* ===== DESKTOP LAYOUT: sidebar menu instead of the mobile bottom bar ===== */
+@media (min-width:821px){
+  #app{grid-template-columns:220px minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);grid-template-areas:"top top" "nav view"}
+  #app.inround{grid-template-columns:minmax(0,1fr);grid-template-areas:"top" "view"}
+  #top{grid-area:top;padding:10px 20px}
+  #view{grid-area:view}
+  #nav{grid-area:nav;display:flex;flex-direction:column;gap:6px;padding:16px 12px;border-top:none;border-right:2px solid var(--line);background:linear-gradient(180deg,#160e38,#120b2e);overflow-y:auto}
+  #nav button{flex-direction:row;justify-content:flex-start;gap:12px;padding:12px 14px;border-radius:14px;font-size:16px;color:var(--muted);transition:background .15s,color .15s}
+  #nav button .e,#nav button.mid .e{font-size:24px}
+  #nav button:hover{background:#ffffff12;color:var(--txt)}
+  #nav button.on{background:linear-gradient(90deg,var(--card2),#4a3a96);color:var(--txt);box-shadow:inset 4px 0 0 var(--gold)}
+  #nav button.mid{order:-1;margin-bottom:8px;background:linear-gradient(#ff8cc0,#e0427f);color:#fff;box-shadow:0 4px 0 #82204a;font-family:'Lilita One',sans-serif;font-size:20px;letter-spacing:.5px}
+  #nav button.mid.on{box-shadow:0 4px 0 #82204a,0 0 0 3px var(--gold)}
+  #nav button.mid:hover{filter:brightness(1.08)}
+  .dot{position:static;margin-left:auto}
+  .pad{padding:24px 28px}
+}
+
 /* ===== MAP ===== */
 .journey{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;counter-reset:land}
 .land{position:relative;border-radius:20px;padding:14px;min-height:150px;border:3px solid #0005;overflow:hidden;display:flex;flex-direction:column;gap:6px;box-shadow:0 8px 20px #0005;text-align:left}
@@ -303,6 +321,7 @@ h2.t{font-family:'Lilita One',sans-serif;font-weight:400;font-size:28px;margin:4
   .slots{grid-template-columns:repeat(3,1fr)}
   .alb{grid-template-columns:repeat(5,1fr)}
   .scene .bigE{font-size:56px}
+  .scene .skyline{display:none}
   #nav button{font-size:9px}
   #nav button .e{font-size:20px}
 }
@@ -605,7 +624,7 @@ function lmReady(i){const r=REQ(i);return S.b[i].slice(0,7).every(l=>l>=r)}
 function render(){
   if(R&&!R.over){S.tab='bingo'}
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===S.tab));
-  $('#nav').classList.toggle('lock',!!(R&&!R.over));
+  $('#nav').classList.toggle('lock',!!(R&&!R.over));$('#app').classList.toggle('inround',!!(R&&!R.over));
   setTheme();
   const f={map:vMap,town:vTown,bingo:vBingo,gear:vGear,album:vAlbum,daily:vDaily,trophy:vTrophy}[S.tab]||vBingo;
   f();updHUD();updDots();
