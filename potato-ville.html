@@ -272,7 +272,7 @@ input.tx,select.tx{width:100%;padding:10px 12px;border-radius:12px;border:3px so
     <button class="pill" id="clk" title="Time" style="cursor:pointer"><i id="clkI">☀️</i><span id="clkT">12:00</span></button>
     <div class="pill" title="Energy"><i>⚡</i><span id="enT">30/30</span><small id="enN"></small></div>
     <div class="pill" title="Coins"><i>🪙</i><span id="coT">0</span></div>
-    <div class="topbtns"><button class="rb" id="bLang" title="Language">🇩🇰</button><button class="rb" id="bSnd" title="Sound">🔊</button><button class="rb" id="bMenu" title="Menu">☰</button></div>
+    <div class="topbtns"><button class="rb" id="bLang" title="Language">🇩🇰</button><button class="rb" id="bMus" title="Music">🎵</button><button class="rb" id="bSnd" title="Sound">🔊</button><button class="rb" id="bMenu" title="Menu">☰</button></div>
   </div>
 </div>
 
@@ -310,7 +310,7 @@ let PREF={lang:'en',snd:true,slot:0};try{Object.assign(PREF,JSON.parse(localStor
 let LANG=PREF.lang==='da'?'da':'en';
 const L=(en,da)=>LANG==='da'?da:en;
 const N=n=>Math.round(n).toLocaleString(L('en-US','da-DK'));
-const savePref=()=>{try{localStorage.setItem(PREF_KEY,JSON.stringify({lang:LANG,snd:SFX.on,slot:PREF.slot||0}))}catch(e){}};
+const savePref=()=>{try{localStorage.setItem(PREF_KEY,JSON.stringify({lang:LANG,snd:SFX.on,slot:PREF.slot||0,music:PREF.music!==false,mvol:PREF.mvol!=null?PREF.mvol:.6}))}catch(e){}};
 const today=()=>{const d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate()};
 
 /* ---------------- sound ---------------- */
@@ -1119,6 +1119,8 @@ function openSettings(first){
   const tzs=[...new Set([DEV_TZ,...COUNTRIES.map(c=>c[4]),'UTC'])].sort();
   panel({title:L('⚙️ Settings','⚙️ Indstillinger'),sm:true,html:`<div class="opt"><b>${L('Where do you live?','Hvor bor du?')}</b><select class="tx" id="sCountry">${opts}</select></div>
     <div class="opt"><b>${L('Time zone','Tidszone')}</b><select class="tx" id="sTz"><option value="">${L('Automatic','Automatisk')} (${esc(DEV_TZ)})</option>${tzs.map(t=>`<option value="${t}">${t.replace(/_/g,' ')}</option>`).join('')}</select></div>
+    <div class="opt"><b>🎵 ${L('Music','Musik')}</b><div class="row" style="gap:8px"><button class="btn sm" id="sMus">${MUSIC.on?'🔕 '+L('Turn off','Slå fra'):'🎵 '+L('Turn on','Slå til')}</button><input type="range" id="sVol" min="0" max="1" step="0.05" value="${MUSIC.vol}" style="flex:1;accent-color:#2f8fe0"><button class="btn sm" id="sSkip" title="Skip">⏭</button></div><p class="hint" style="margin:4px 0 0">${L('Now playing','Spiller nu')}: <b id="musNow">${MUSIC.track?esc(L(MUSIC.track.en,MUSIC.track.da)):'–'}</b></p></div>
+    <div class="opt"><b>🔊 ${L('Sound effects','Lydeffekter')}</b><button class="btn sm" id="sSfx">${SFX.on?'🔇 '+L('Turn off','Slå fra'):'🔊 '+L('Turn on','Slå til')}</button></div>
     <p class="hint">🕐 ${L('In-game time','Tid i spillet')}: <b id="sNow"></b> · ${L('Day and night follow your real time.','Dag og nat følger din rigtige tid.')}</p>
     <div class="goal" style="margin-top:12px"><div class="ic">💾</div><div class="tx">${L('Backup','Backup')}<small>${L('Download your save as a file, or restore everything from a file.','Hent dit spil som en fil, eller gendan alt fra en fil.')}</small></div><div style="display:flex;flex-direction:column;gap:4px"><button class="btn sm ok" id="sExp">⬇️ ${L('Export','Eksportér')}</button><button class="btn sm" id="sImp">⬆️ ${L('Import','Importér')}</button></div></div>
     <div class="goal"><div class="ic">🗑️</div><div class="tx">${L('Start over','Start forfra')}<small>${L('Deletes your pet, progress, home and world on this device.','Sletter dit kæledyr, dine fremskridt, dit hjem og din verden på denne enhed.')}</small></div><button class="btn sm no" id="sReset">${L('Reset','Nulstil')}</button></div>`,
@@ -1126,6 +1128,9 @@ function openSettings(first){
       const upd=()=>{$('#sNow',b).textContent=clockText()+' '+(nightF()>.5?'🌙':'☀️')};upd();
       c.onchange=()=>{S.country=c.value;const k=countryOf(c.value);S.tz=k?k[4]:'';t.value=S.tz;TZK='';upd();save();hud();net.me()};
       t.onchange=()=>{S.tz=t.value;TZK='';upd();save();hud()};
+      $('#sMus',b).onclick=()=>{MUSIC.toggle();$('#sMus',b).textContent=MUSIC.on?'🔕 '+L('Turn off','Slå fra'):'🎵 '+L('Turn on','Slå til')};
+      $('#sVol',b).oninput=e=>MUSIC.setVol(+e.target.value);$('#sSkip',b).onclick=()=>MUSIC.skip();
+      $('#sSfx',b).onclick=()=>{SFX.on=!SFX.on;$('#bSnd').textContent=SFX.on?'🔊':'🔇';savePref();$('#sSfx',b).textContent=SFX.on?'🔇 '+L('Turn off','Slå fra'):'🔊 '+L('Turn on','Slå til')};
       $('#sExp',b).onclick=()=>exportSave();$('#sImp',b).onclick=()=>importSave();
       $('#sReset',b).onclick=async()=>{if(await panel({title:L('Start over?','Start forfra?'),sm:true,html:`<p>${L('Your pet, progress, home and world will be deleted for good. This cannot be undone.','Dit kæledyr, dine fremskridt, dit hjem og din verden bliver slettet for altid. Det kan ikke fortrydes.')}</p>`,buttons:[{label:L('Cancel','Annuller'),v:0},{label:L('Delete everything','Slet alt'),cls:'no',v:1}]})){RESETTING=true;net.leave();localStorage.removeItem(saveKey());location.reload()}}},buttons:[{label:L('Done','Færdig'),cls:'go'}]});
 }
@@ -2868,6 +2873,7 @@ function help(){panel({title:L('❓ How to play','❓ Sådan spiller du'),html:L
   <p>🌻 <b>Green Thumb Garden Center</b> sells everything for outside – birdhouses, fountains, a greenhouse (crops grow 50% faster), swings, a treehouse and much more. 🎁 <b>Holly's Holiday Shop</b> sells Halloween, Christmas and Valentine's things. In December it snows all month!</p>
   <p>🪙 <b>Sell:</b> in any shop, tap 🪙 Sell to sell things from your bag for half price. 💾 Back up or restore your game in ⚙️ Settings. You can have 3 characters – switch in ☰ Menu → Main menu.</p>
   <p>🎒 <b>Bag &amp; storage:</b> your bag holds a limited number of things – upgrade it in the 🎒 bag, and keep extra things in cabinets, cupboards and chests at home (tap them). 🎁 Tap a friend to give them coins or something from your bag.</p>
+  <p>🎵 <b>Music:</b> cozy tracks play while you play and change by themselves. Turn the music off with the 🎵 button, or change the volume and skip tracks in ⚙️ Settings.</p>
   <p>⚔️ <b>Duels:</b> challenge friends on the same Wi-Fi to arcade games or dice for a stake – winner takes all.</p>
   <p>💬 <b>Neighbours:</b> talk to the potato animals in town every day to make friends ❤. Help them with tasks for coins – best friends give gifts!</p>
   <p>🎯 <b>Goals:</b> collect a daily reward, finish daily tasks and goals, and level up to unlock new items.</p>
@@ -2883,6 +2889,7 @@ function help(){panel({title:L('❓ How to play','❓ Sådan spiller du'),html:L
   <p>🌻 <b>Den Grønne Tommelfinger Havecenter</b> sælger alt til udenfor – fuglehuse, springvand, drivhus (afgrøder gror 50% hurtigere), gynger, træhus og meget mere. 🎁 <b>Hollys Højtidsbutik</b> sælger halloween-, jule- og valentinsting. I december sner det hele måneden!</p>
   <p>🪙 <b>Sælg:</b> i alle butikker kan du trykke på 🪙 Sælg og sælge ting fra din taske til halv pris. 💾 Tag backup eller gendan dit spil i ⚙️ Indstillinger. Du kan have 3 karakterer – skift i ☰ Menu → Hovedmenu.</p>
   <p>🎒 <b>Taske &amp; opbevaring:</b> din taske kan kun rumme et vist antal ting – opgradér den i 🎒 tasken, og gem ekstra ting i skabe og kister derhjemme (tryk på dem). 🎁 Tryk på en ven for at give mønter eller noget fra din taske.</p>
+  <p>🎵 <b>Musik:</b> hyggelige numre spiller, mens du spiller, og skifter af sig selv. Slå musikken fra med 🎵-knappen, eller skift lydstyrke og spring numre over i ⚙️ Indstillinger.</p>
   <p>⚔️ <b>Dueller:</b> udfordr venner på samme wifi i arkadespil eller terninger om en indsats – vinderen tager alt.</p>
   <p>💬 <b>Naboer:</b> snak med kartoffeldyrene i byen hver dag for at blive venner ❤. Hjælp dem med opgaver for mønter – bedste venner giver gaver!</p>
   <p>🎯 <b>Mål:</b> hent din daglige belønning, klar dagens opgaver og mål, og stig i niveau for at låse nye ting op.</p>
@@ -3390,11 +3397,84 @@ $('#aL').onclick=()=>switchRoom(-1);$('#aR').onclick=()=>switchRoom(1);
 $('#bLang').onclick=()=>{SFX.click();setLang(LANG==='da'?'en':'da')};
 $('#bSnd').onclick=()=>{SFX.on=!SFX.on;$('#bSnd').textContent=SFX.on?'🔊':'🔇';savePref();SFX.click()};
 $('#bSnd').textContent=SFX.on?'🔊':'🔇';
+$('#bMus').onclick=()=>{MUSIC.toggle();toast(MUSIC.on?'🎵 '+L('Music on','Musik til'):'🔕 '+L('Music off','Musik fra'))};
 $('#bMenu').onclick=()=>{SFX.click();openMenu()};
 $('#clk').onclick=()=>{SFX.click();openSettings()};
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&!RESETTING)saveNow()});
 let RESETTING=false;
 addEventListener('beforeunload',()=>{if(!RESETTING)saveNow();net.leave()});
+/* ---------------- cozy background music: generated live, several tracks that rotate ---------------- */
+const SCALES={major:[0,2,4,5,7,9,11],dorian:[0,2,3,5,7,9,10],mixo:[0,2,4,5,7,9,10],lydian:[0,2,4,6,7,9,11]};
+const TRACKS=[
+ {id:'morning',en:'Morning in Potato Ville',da:'Morgen i Potato Ville',bpm:84,root:53,scale:'major',prog:[0,4,5,3],comp:'arp',mel:'piano',drums:'soft',swing:0},
+ {id:'stroll',en:'Sunny Stroll',da:'Solskinstur',bpm:98,root:48,scale:'major',prog:[0,3,0,4,5,3,1,4],comp:'strum',mel:'pluck',drums:'brush',swing:.12},
+ {id:'cafe',en:'Rainy Café',da:'Regnvejrscafé',bpm:70,root:50,scale:'dorian',prog:[0,3,0,4],comp:'jazz',mel:'piano',drums:'jazz',swing:.5,rain:1,sev:1},
+ {id:'garden',en:'Garden Breeze',da:'Havebrise',bpm:90,root:46,scale:'mixo',prog:[0,6,3,0],comp:'strum',mel:'bell',drums:'soft',swing:.08,pad:1},
+ {id:'stars',en:'Starry Night',da:'Stjernenat',bpm:60,root:43,scale:'lydian',prog:[0,3,5,4],comp:'pad',mel:'bell',drums:null,swing:0,pad:1,night:1},
+ {id:'cocoa',en:'Snowy Cocoa',da:'Kakao i sneen',bpm:76,root:51,scale:'major',prog:[0,5,1,4],comp:'arp',mel:'bell',drums:'sleigh',swing:.2,xmas:1}];
+const MUSIC={on:PREF.music!==false,vol:PREF.mvol!=null?PREF.mvol:.6,playing:false,paused:false,track:null,
+  init(){const c=SFX.ac();if(!c)return null;this.c=c;if(this.out)return c;
+    this.out=c.createGain();this.out.gain.value=0;const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=6000;const comp=c.createDynamicsCompressor();comp.threshold.value=-18;
+    this.out.connect(lp).connect(comp).connect(c.destination);
+    // small generated reverb for a soft, roomy sound
+    const len=c.sampleRate*2.4,ir=c.createBuffer(2,len,c.sampleRate);for(let ch=0;ch<2;ch++){const d=ir.getChannelData(ch);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.6)}
+    this.rev=c.createConvolver();this.rev.buffer=ir;this.wet=c.createGain();this.wet.gain.value=.32;this.rev.connect(this.wet).connect(this.out);
+    const nb=c.createBuffer(1,c.sampleRate*2,c.sampleRate),nd=nb.getChannelData(0);for(let i=0;i<nd.length;i++)nd[i]=Math.random()*2-1;this.noise=nb;return c},
+  level(){return this.vol*.8},
+  start(){if(!this.on||this.playing||document.visibilityState==='hidden')return;const c=this.init();if(!c)return;this.playing=true;this.newTrack();this.timer=setInterval(()=>this.sched(),100);this.fade(this.level(),2.5)},
+  stop(){if(!this.playing)return;this.playing=false;clearInterval(this.timer);this.fade(0,.8);this.stopRain()},
+  fade(v,s){const g=this.out.gain,t=this.c.currentTime;g.cancelScheduledValues(t);g.setValueAtTime(g.value,t);g.linearRampToValueAtTime(v,t+s)},
+  setVol(v){this.vol=v;PREF.mvol=v;savePref();if(this.playing)this.fade(this.level(),.2)},
+  toggle(){this.on=!this.on;PREF.music=this.on;savePref();if(this.on)this.start();else this.stop();updMusicBtn()},
+  pickTrack(){const night=NIGHT>.55,dec=isSnow();let pool=TRACKS.filter(t=>(!t.xmas||dec)&&t!==this.track);if(night)pool=pool.filter(t=>t.night||t.id==='cafe'||t.xmas)||pool;if(!pool.length)pool=TRACKS.filter(t=>!t.xmas);return pick(pool)},
+  newTrack(t){this.track=t||this.pickTrack();const tr=this.track;this.sd=60/tr.bpm/2;this.nextT=this.c.currentTime+.15;this.step=0;this.bar=0;this.bars=Math.round(200/(this.sd*8));this.phr={};this.stopRain();if(tr.rain)this.startRain();
+    const ttl=$('#musNow');if(ttl)ttl.textContent=L(tr.en,tr.da)},
+  skip(){if(!this.playing)return;this.fade(0,.6);setTimeout(()=>{if(!this.playing)return;this.newTrack();this.fade(this.level(),1.5)},700)},
+  startRain(){const c=this.c,s=c.createBufferSource();s.buffer=this.noise;s.loop=true;const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=2400;f.Q.value=.4;const g=c.createGain();g.gain.value=.028;s.connect(f).connect(g).connect(this.out);s.start();this.rain=s},
+  stopRain(){if(this.rain){try{this.rain.stop()}catch(e){}this.rain=null}},
+  sched(){if(!this.playing)return;const c=this.c;if(c.state!=='running')return;
+    if(this.nextT<c.currentTime-1)this.nextT=c.currentTime+.05;
+    while(this.nextT<c.currentTime+.45){this.play(this.nextT);this.step++;if(this.step%8===0){this.bar++;if(this.bar>=this.bars){this.bar=0;this.fade(0,3);const nt=this.pickTrack();setTimeout(()=>{if(this.playing){this.newTrack(nt);this.fade(this.level(),3)}},3200);this.nextT+=99;return}}this.nextT+=this.sd}},
+  midi:m=>440*Math.pow(2,(m-69)/12),
+  deg(d,oct=0){const tr=this.track,sc=SCALES[tr.scale],n=sc.length;const o=Math.floor(d/n);return tr.root+12*(o+oct)+sc[((d%n)+n)%n]},
+  chord(){const tr=this.track;return tr.prog[this.bar%tr.prog.length]},
+  // melody phrases: 2-bar motifs arranged A A' B A, refreshed every 8 bars
+  phrase(k){if(this.phr[k])return this.phr[k];const ch=this.chord(),notes=[];let p=7+rnd(3);const R=[[1,0,1,0,1,1,0,0],[1,0,0,1,0,1,0,0],[1,1,0,1,0,0,1,0],[1,0,0,0,1,0,1,0],[0,0,1,0,1,0,0,1]];
+    for(let b=0;b<2;b++){const r=pick(R);for(let s=0;s<8;s++){if(r[s]&&Math.random()<(this.track.bpm<70?.55:.8)){p+=pick([-2,-1,-1,0,1,1,2,-3,3]);p=clamp(p,4,13);if(s%4===0){const ct=[ch,ch+2,ch+4,ch+7];p=ct.reduce((a,c2)=>Math.abs(c2-p)<Math.abs(a-p)?c2:a,p)}notes.push([b*8+s,p,r[s+1]?1:2])}}}
+    return this.phr[k]=notes},
+  play(t){const tr=this.track,s=this.step%8,ch=this.chord(),sw=s%2?this.sd*tr.swing*.5:0,T=t+sw,c=this.c;
+    // chords
+    const tones=[ch,ch+2,ch+4].concat(tr.sev?[ch+6]:[]);
+    if(tr.comp==='arp'){const a=[0,1,2,1,0,2,1,2][s];this.piano(T,this.deg(tones[a],0)+0,this.sd*2,.055)}
+    if(tr.comp==='strum'&&(s===0||s===3||s===4||s===6))tones.forEach((d,i)=>this.pluck(T+i*.018,this.deg(d,0),.06-(s?.015:0)));
+    if(tr.comp==='jazz'&&(s===0||s===5))tones.forEach(d=>this.piano(T,this.deg(d,0),this.sd*3,.034));
+    if((tr.pad||tr.comp==='pad')&&s===0)this.pad(T,tones.slice(0,3).map(d=>this.deg(d,0)),this.sd*8);
+    // bass
+    if(s===0)this.bass(T,this.deg(ch,-1),this.sd*3);else if(s===4)this.bass(T,this.deg(tr.comp==='jazz'?ch+pick([2,4,-1]):ch+4,-1),this.sd*3);
+    // drums
+    const d=tr.drums;if(d==='soft'){if(s===0||s===4)this.kick(T,.12);if(s%2)this.hat(T,.018)}
+    if(d==='brush'){if(s===0||s===5)this.kick(T,.11);if(s===2||s===6)this.snare(T,.05);if(s%2)this.hat(T,.016)}
+    if(d==='jazz'){if(s%2===0)this.hat(T,.022,.12);if(s===2||s===6)this.snare(T,.035)}
+    if(d==='sleigh'){this.hat(T,s%2?.03:.015,.06,9000);if(s===0)this.kick(T,.09)}
+    // melody (rests on some bars so it breathes)
+    const blk=Math.floor(this.bar/2)%4,key=['A','A2','B','A'][blk]+Math.floor(this.bar/8),ph=this.phrase(key),pos=(this.bar%2)*8+s;
+    if(this.bar%8!==7)for(const n of ph)if(n[0]===pos){const m=this.deg(n[1]+(blk===2?1:0),1);if(tr.mel==='bell')this.bell(T,m,.06);else if(tr.mel==='pluck')this.pluck(T,m,.09,true);else this.piano(T,m,this.sd*n[2]*1.5,.085,true)}},
+  env(g,t,a,peak,dec){g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(peak,t+a);g.gain.exponentialRampToValueAtTime(.0005,t+a+dec)},
+  voice(t,type,f,dec,peak,wet,a=.006,flt=3000){const c=this.c,o=c.createOscillator(),g=c.createGain(),lp=c.createBiquadFilter();o.type=type;o.frequency.value=f;lp.type='lowpass';lp.frequency.value=flt;o.connect(lp).connect(g);g.connect(this.out);if(wet)g.connect(this.rev);this.env(g,t,a,peak,dec);o.start(t);o.stop(t+a+dec+.05)},
+  piano(t,m,dur,v,wet){const f=this.midi(m),d=Math.max(.7,dur*1.6);this.voice(t,'triangle',f,d,v,wet,.005,2600);this.voice(t,'sine',f*2,d*.6,v*.25,wet,.005,4000)},
+  pluck(t,m,v,wet){const f=this.midi(m);this.voice(t,'triangle',f,.38,v,wet,.003,2000);this.voice(t,'sine',f*2,.18,v*.3,0,.003,3000)},
+  bell(t,m,v){const f=this.midi(m);this.voice(t,'sine',f,1.8,v,1,.004,6000);this.voice(t,'sine',f*2.76,.9,v*.22,1,.004,6000)},
+  bass(t,m,dur){const f=this.midi(m);this.voice(t,'sine',f,Math.max(.4,dur),.13,0,.01,600);this.voice(t,'triangle',f,Math.max(.3,dur*.7),.05,0,.01,500)},
+  pad(t,ms,dur){const c=this.c;ms.forEach(m=>[-7,7].forEach(cent=>{const o=c.createOscillator(),g=c.createGain(),lp=c.createBiquadFilter();o.type='sawtooth';o.frequency.value=this.midi(m);o.detune.value=cent;lp.type='lowpass';lp.frequency.value=800;
+    o.connect(lp).connect(g);g.connect(this.out);g.connect(this.rev);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.012,t+dur*.35);g.gain.linearRampToValueAtTime(0,t+dur*1.05);o.start(t);o.stop(t+dur*1.1)}))},
+  kick(t,v){const c=this.c,o=c.createOscillator(),g=c.createGain();o.frequency.setValueAtTime(110,t);o.frequency.exponentialRampToValueAtTime(45,t+.14);o.connect(g).connect(this.out);this.env(g,t,.003,v,.22);o.start(t);o.stop(t+.3)},
+  noiseHit(t,v,dec,type,f){const c=this.c,s=c.createBufferSource(),fl=c.createBiquadFilter(),g=c.createGain();s.buffer=this.noise;fl.type=type;fl.frequency.value=f;s.connect(fl).connect(g).connect(this.out);this.env(g,t,.002,v,dec);s.start(t,Math.random()*1.5);s.stop(t+dec+.05)},
+  hat(t,v,dec=.045,f=7500){this.noiseHit(t,v,dec,'highpass',f)},
+  snare(t,v){this.noiseHit(t,v,.16,'bandpass',1900)}};
+function updMusicBtn(){const b=$('#bMus');if(b){b.textContent=MUSIC.on?'🎵':'🔕';b.title=MUSIC.on?L('Music on','Musik til'):L('Music off','Musik fra')}}
+addEventListener('pointerdown',()=>{if(MUSIC.on&&!MUSIC.playing)MUSIC.start()},{passive:true});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')MUSIC.stop();else if(MUSIC.on)setTimeout(()=>MUSIC.start(),300)});
+
 /* ---------------- loading screen & main menu (3 character slots, each with its own save) ---------------- */
 const slotData=i=>{try{const d=JSON.parse(localStorage.getItem(slotKey(i))||'null');return d&&d.created?d:null}catch(e){return null}};
 async function boot(){
@@ -3436,6 +3516,7 @@ function chooseSlot(i){SFX.click();SLOT=i;PREF.slot=i;savePref();S=fresh();load(
 function toMainMenu(){saveNow();net.leave();RESETTING=true;location.reload()}
 
 // boot
+updMusicBtn();
 $('#hud').style.display='none';$('#nav').style.display='none';$('.rbtns').style.display='none';
 boot();
 requestAnimationFrame(frame);
