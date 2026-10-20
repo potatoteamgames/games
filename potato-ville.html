@@ -98,6 +98,14 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .arrow{position:fixed;top:50%;transform:translateY(-50%);width:50px;height:50px;border-radius:50%;border:3px solid #fff;background:rgba(10,30,60,.7);color:#fff;font-size:26px;z-index:4;box-shadow:0 3px 0 rgba(0,0,0,.3);display:none;align-items:center;justify-content:center;padding:0}
 .arrow.on{display:flex}
 #aL{left:8px}#aR{right:8px}
+.arrow small{position:absolute;top:56px;left:50%;transform:translateX(-50%);font-size:11px;line-height:1.1;background:rgba(10,30,60,.8);border:2px solid #fff;border-radius:10px;padding:2px 7px;white-space:nowrap;font-family:Nunito}
+.arrow small:empty{display:none}
+#aL small{left:0;transform:none}#aR small{left:auto;right:0;transform:none}
+.roomban{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:4;display:none;align-items:center;gap:8px;background:linear-gradient(#5fb6ff,#2f7fd0);border:3px solid #fff;border-radius:16px;padding:4px 16px;color:#fff;font-family:'Lilita One',sans-serif;font-size:22px;text-shadow:2px 2px 0 var(--ink);box-shadow:0 4px 0 rgba(0,0,0,.3);pointer-events:none;white-space:nowrap}
+.roomban.on{display:flex}
+.roomban i{font-style:normal;display:flex;gap:4px}
+.roomban i b{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.45);border:1px solid var(--ink)}
+.roomban i b.on{background:#ffc93c}
 .buildbar{position:fixed;left:50%;bottom:8px;transform:translateX(-50%);z-index:6;display:none;flex-direction:column;align-items:center;gap:6px;max-width:calc(100vw - 16px)}
 .buildbar.on{display:flex}
 .bbtools{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
@@ -200,11 +208,12 @@ input.tx{width:100%;padding:10px 12px;border-radius:12px;border:3px solid var(--
 .code{font-family:'Lilita One',sans-serif;font-size:48px;letter-spacing:.3em;color:var(--blueD);text-align:center;background:#eaf4ff;border-radius:16px;padding:6px 0 2px .3em}
 @media (min-width:1100px) and (min-height:680px){:root{--ui:1.22}}
 @media (min-width:1500px) and (min-height:820px){:root{--ui:1.42}}
-.hud,.nav,.rbtns,.buildbar,.dlg,.chat,.toast,.arrow,.pn,.mgw{zoom:var(--ui)}
+.hud,.nav,.rbtns,.buildbar,.dlg,.chat,.toast,.arrow,.pn,.mgw,.roomban{zoom:var(--ui)}
 .bhint{position:fixed;left:50%;top:64px;transform:translateX(-50%);z-index:6;background:rgba(10,30,60,.7);color:#fff;border-radius:14px;padding:4px 12px;font-size:12px;display:none;pointer-events:none;max-width:90vw;text-align:center}
 .bhint.on{display:block}
 @media (max-width:640px){
   .pf.mclose{display:flex}
+  .roomban{bottom:64px;font-size:17px;padding:3px 12px}
   .bhint{top:118px}
   .bbtools button{padding:6px 8px;font-size:12px;border-radius:10px}
   .ti{width:64px}.ti canvas{width:58px;height:46px}
@@ -253,7 +262,8 @@ input.tx{width:100%;padding:10px 12px;border-radius:12px;border:3px solid var(--
   <button class="nb" id="nNet">📶<small>Friends</small><span class="dot" id="dNet"></span></button>
 </div>
 <div class="rbtns"><button class="nb" id="nChat" style="display:none">💬<small>Chat</small></button><button class="nb" id="nBuild">🔨<small>Build</small></button></div>
-<button class="arrow" id="aL">‹</button><button class="arrow" id="aR">›</button>
+<button class="arrow" id="aL">‹<small></small></button><button class="arrow" id="aR">›<small></small></button>
+<div class="roomban" id="roomban"></div>
 <div class="buildbar" id="buildbar">
   <div class="bbtools" id="bbtools"></div>
   <div class="tray" id="tray"></div>
@@ -1249,12 +1259,12 @@ function buildShops(){
   const B=id=>BLD.find(b=>b.id===id);
   // ---------- Spud & Sofa: a big furniture store ----------
   const FS=[['Living Room','Stue',['seat','table','rug'],'wp_cream','fl_light'],['Bedroom','Soveværelse',['bed','store'],'wp_lilac','fl_carpet'],['Kitchen & Bath','Køkken & bad',['kitchen','bath'],'wp_sky','fl_tiles'],['Fun & Tech','Sjov & teknik',['tech','decor'],'wp_peach','fl_wood']];
-  const furn=FS.map(([en,da,cats,wall,floor],i)=>{const s=SEC(en,da,wall,floor);const ids=cats.flatMap(c=>listCat(c)).filter(id=>FURN[id].kind!=='wall');s.w=Math.max(1280,floorRows(s,ids,i===0?600:200,.9)+160);lamps(s);return s});
+  const furn=FS.map(([en,da,cats,wall,floor],i)=>{const s=SEC(en,da,wall,floor);const ids=cats.flatMap(c=>listCat(c)).filter(id=>FURN[id].kind!=='wall');s.w=Math.max(1280,floorRows(s,ids,i===0?600:300,.9)+160);lamps(s);return s});
   shopDoor(furn[0],'furn');furn[0].fix.push(fxCounter(380,600,190));addKeeper(furn[0],'furn',380,560);
   poster(furn[0],420,250,()=>L('SALE!','UDSALG!'),'#ef4444');bigWin(furn[1],furn[1].w-260);bigWin(furn[3],furn[3].w/2,200,220,160);
   const sm=SEC('Little Things','Småting','wp_sun','fl_light');lamps(sm);
-  const smIds=listCat('small');for(let i=0,k=0;i<smIds.length;i+=4,k++){const back=k%2===0,tx=300+Math.floor(k/2)*440+(back?0:220),ty=back?596:706;const t=fxTable(tx,ty,360);sm.fix.push(t);smIds.slice(i,i+4).forEach((id,j)=>sm.goods.push(G('furn',id,tx-135+j*90,t.top,1.15,t,Math.min(FLOOR_MAX,ty+30))));sm.w=Math.max(sm.w,tx+340)}
-  const gd=SEC('Garden','Have','yard','grass');gd.w=Math.max(1280,floorRows(gd,listCat('garden'),200,.9)+160);
+  const smIds=listCat('small');for(let i=0,k=0;i<smIds.length;i+=4,k++){const back=k%2===0,tx=420+Math.floor(k/2)*440+(back?0:220),ty=back?596:706;const t=fxTable(tx,ty,360);sm.fix.push(t);smIds.slice(i,i+4).forEach((id,j)=>sm.goods.push(G('furn',id,tx-135+j*90,t.top,1.15,t,Math.min(FLOOR_MAX,ty+30))));sm.w=Math.max(sm.w,tx+340)}
+  const gd=SEC('Garden','Have','yard','grass');gd.w=Math.max(1280,floorRows(gd,listCat('garden'),300,.9)+160);
   [...furn,sm].forEach(s=>wallSign(s,Math.min(s.w/2,900),150,()=>L(s.name[0],s.name[1])));
   SHOPDEF.furn={secs:[...furn,sm,gd]};
   // ---------- Mashterpiece Gallery ----------
@@ -1262,11 +1272,11 @@ function buildShops(){
   const hang=(s,ids,x0)=>{let x=x0,k=0;const cols=[];for(const id of ids){const f=FURN[id];if(k%2===0)cols.push({x,w:0});const c=cols[cols.length-1];c.w=Math.max(c.w,f.w);k++}
     let i=0,cx=x0;cols.forEach(c=>{const mid=cx+c.w/2;for(let t=0;t<2&&i<ids.length;t++,i++){const f=FURN[ids[i]];s.goods.push(G('furn',ids[i],mid,t?345:140,1));s.deco.push(g=>{g.fillStyle='rgba(255,250,200,.18)';g.beginPath();g.moveTo(mid-20,0);g.lineTo(mid+20,0);g.lineTo(mid+f.w/2+20,t?440:230);g.lineTo(mid-f.w/2-20,t?440:230);g.fill()})}cx+=c.w+110});return cx};
   const a1=SEC('Paintings','Malerier','wp_white','fl_marble');a1.w=Math.max(1280,hang(a1,paint,420)+120);shopDoor(a1,'gallery');a1.fix.push(fxCounter(300,610,150,'#334155','#e2e8f0'));addKeeper(a1,'art',300,570);a1.fix.push(fxDeco('garden_bench',700,700,.9));
-  const a2=SEC('Wall Decor','Vægpynt','wp_white','fl_marble');a2.w=Math.max(1280,hang(a2,wdeco,200)+120);a2.fix.push(fxDeco('plant_big',a2.w-120,620));
-  const a3=SEC('Walls & Floors','Vægge & gulve','wp_white','fl_wood');let x=220;const wps=listCat('wp'),fls=listCat('fl');
+  const a2=SEC('Wall Decor','Vægpynt','wp_white','fl_marble');a2.w=Math.max(1280,hang(a2,wdeco,330)+120);a2.fix.push(fxDeco('plant_big',a2.w-120,620));
+  const a3=SEC('Walls & Floors','Vægge & gulve','wp_white','fl_wood');let x=320;const wps=listCat('wp'),fls=listCat('fl');
   wps.forEach((id,i)=>{a3.goods.push(G('furn',id,x+60+(i>>1)*210,i%2?455:250,1,null,FLOOR_MIN+40))});x=220;
   fls.forEach((id,i)=>{a3.goods.push(G('furn',id,x+(i>>1)*230+(i%2?115:0),i%2?705:600,1))});
-  a3.w=Math.max(1280,280+Math.ceil(wps.length/2)*210+160);
+  a3.w=Math.max(1280,380+Math.ceil(wps.length/2)*210+160);
   SHOPDEF.art={secs:[a1,a2,a3]};
   // ---------- Peel & Co. boutique ----------
   const cl=slot=>Object.values(CLOTH).filter(c=>c.slot===slot&&c.price>0).sort((a,b)=>a.lvl-b.lvl||a.price-b.price).map(c=>c.id);
@@ -1274,8 +1284,8 @@ function buildShops(){
   const shelfRow=(s,ids,x0,per=4,sc=.42)=>{let x=x0;for(let i=0;i<ids.length;i+=per*3){const chunk=ids.slice(i,i+per*3),w=per*92+20,sh=fxShelf(x+w/2,600,w,'#f9a8d4');s.fix.push(sh);chunk.forEach((id,j)=>s.goods.push(G('cloth',id,x+56+(j%per)*92,sh.lv(Math.floor(j/per))-2,sc,sh,640)));x+=w+80}return x};
   const c1=SEC('Tops','Overdele','wp_pink','fl_light');shopDoor(c1,'boutique');c1.fix.push(fxCounter(320,610,150,'#ec4899','#fff'));addKeeper(c1,'cloth',320,570,()=>{keeperSay(L('Use the mirror to try things on!','Brug spejlet til at prøve tøj!'))});
   c1.w=Math.max(1280,manRow(c1,cl('top'),520)+260);c1.fix.push(fxRack(c1.w-150,600,200));
-  const c2=SEC('Bottoms & Shoes','Underdele & sko','wp_pink','fl_light');let e2=manRow(c2,cl('bottom'),220);c2.w=Math.max(1280,shelfRow(c2,cl('shoes'),e2+60,3,.5)+120);
-  const c3=SEC('Hats, Glasses & More','Hatte, briller & mere','wp_lilac','fl_carpet');let e3=shelfRow(c3,cl('hat'),200,4,.42);e3=shelfRow(c3,[...cl('glasses'),...cl('acc')],e3,4,.5);c3.w=Math.max(1280,e3+300);
+  const c2=SEC('Bottoms & Shoes','Underdele & sko','wp_pink','fl_light');let e2=manRow(c2,cl('bottom'),300);c2.w=Math.max(1280,shelfRow(c2,cl('shoes'),e2+60,3,.5)+120);
+  const c3=SEC('Hats, Glasses & More','Hatte, briller & mere','wp_lilac','fl_carpet');let e3=shelfRow(c3,cl('hat'),260,4,.42);e3=shelfRow(c3,[...cl('glasses'),...cl('acc')],e3,4,.5);c3.w=Math.max(1280,e3+300);
   c3.deco.push(g=>{g.save();g.translate(c3.w-170,250);DRAW.mirror(g);g.restore()});c3.spots.push({r:{x:c3.w-230,y:170,w:120,h:170},wx:c3.w-170,wy:FLOOR_MIN+40,act:()=>openWardrobe()});
   c1.deco.push(g=>{g.save();g.translate(c1.w-150,240);DRAW.mirror(g);g.restore()});c1.spots.push({r:{x:c1.w-210,y:160,w:120,h:170},wx:c1.w-150,wy:FLOOR_MIN+40,act:()=>openWardrobe()});
   wallSign(c1,c1.w/2+60,170,()=>'👕 '+L('New collection!','Ny kollektion!'));wallSign(c2,c2.w/2,170,()=>'👖 '+L('Bottoms & Shoes','Underdele & sko'));wallSign(c3,c3.w/2-100,120,()=>'🎩 '+L('Hats & Accessories','Hatte & tilbehør'));
@@ -1288,13 +1298,13 @@ function buildShops(){
   const m1=SEC('Fresh Produce','Frugt & grønt','wp_lime','fl_tiles');shopDoor(m1,'market');
   const reg=fxCounter(420,640,200,'#16a34a','#e5e7eb');reg.draw=((d)=>g=>{d(g);box(g,370,520,60,40,6,'#334155');box(g,376,526,48,20,3,'#22d3ee',2);box(g,440,522,70,8,3,'#111',2);line(g,330,524,510,524,'#111',3)})(reg.draw);m1.fix.push(reg);
   m1.spots.push({r:{x:310,y:500,w:220,h:150},wx:420,wy:FLOOR_MAX,act:()=>jobPrompt('cashier')});
-  m1.deco.push(g=>{box(g,330,330,180,60,10,'#16a34a',4);g.font='22px Lilita One,Nunito';g.fillStyle='#fff';g.textAlign='center';g.textBaseline='middle';g.fillText('🛒 '+L('CHECKOUT','KASSE'),420,360);g.font='bold 13px Nunito';g.fillText(L('Tap to work here!','Tryk for at arbejde her!'),420,410)});
+  m1.deco.push(g=>{box(g,330,330,180,60,10,'#16a34a',4);g.font='22px Lilita One,Nunito';g.fillStyle='#fff';g.textAlign='center';g.textBaseline='middle';g.fillText('🛒 '+L('CHECKOUT','KASSE'),420,360);g.font='bold 14px Nunito';g.fillStyle=OL;g.fillText(L('Tap to work here!','Tryk for at arbejde her!'),420,410)});
   addKeeper(m1,'food',660,600);m1.fix.push(fxCounter(660,640,170,'#16a34a','#e5e7eb'));
   ['apple','banana','carrot','bread'].forEach((id,i)=>{const c=fxCrate(880+i*170,(i%2)?706:610);m1.fix.push(c);[-40,0,40].forEach((dx,j)=>{if(j===1)m1.goods.push(G('food',id,c.x+dx,c.top-4,1,c,Math.min(FLOOR_MAX,c.y+30)));else{const ox=c.x+dx;c.draw=((d)=>g=>{d(g);g.font='38px serif';g.textAlign='center';g.textBaseline='bottom';g.fillText(FOOD[id].e,ox,c.top+2)})(c.draw)}})});
   m1.w=1600;lamps(m1);wallSign(m1,1150,250,()=>'🍎 '+L('Fresh every day!','Friskt hver dag!'));
-  const m2=SEC('Groceries','Dagligvarer','wp_lime','fl_tiles');let e=shelfFood(m2,'food',['sandwich','soup','fries','cake','cheese','cookie'].filter(id=>!CAFE_ONLY.includes(id)),200);e=shelfFood(m2,'food',['juice','milk','icecream'],e,3,fxFridge);m2.w=Math.max(1280,e+120);lamps(m2);wallSign(m2,m2.w/2,200,()=>'🥪 '+L('Groceries','Dagligvarer'));
-  const m3=SEC('Care & Toys','Pleje & legetøj','wp_sky','fl_tiles');m3.w=Math.max(1280,shelfFood(m3,'food',['soap','bubbles','shampoo'],220,3)+40);m3.w=Math.max(1280,shelfFood(m3,'food',['ball','kite','yoyo'],m3.w,3)+120);lamps(m3);wallSign(m3,m3.w/2,200,()=>'🧼 '+L('Care & Toys','Pleje & legetøj'));
-  const m4=SEC('Garden Center','Havecenter','yard','grass');m4.w=Math.max(1280,shelfFood(m4,'sup',Object.values(SUP).filter(s=>s.type==='seed'||s.type==='fert').sort((a,b)=>a.lvl-b.lvl).map(s=>s.id),220,3)+260);
+  const m2=SEC('Groceries','Dagligvarer','wp_lime','fl_tiles');let e=shelfFood(m2,'food',['sandwich','soup','fries','cake','cheese','cookie'].filter(id=>!CAFE_ONLY.includes(id)),280);e=shelfFood(m2,'food',['juice','milk','icecream'],e,3,fxFridge);m2.w=Math.max(1280,e+120);lamps(m2);wallSign(m2,m2.w/2,200,()=>'🥪 '+L('Groceries','Dagligvarer'));
+  const m3=SEC('Care & Toys','Pleje & legetøj','wp_sky','fl_tiles');m3.w=Math.max(1280,shelfFood(m3,'food',['soap','bubbles','shampoo'],280,3)+40);m3.w=Math.max(1280,shelfFood(m3,'food',['ball','kite','yoyo'],m3.w,3)+120);lamps(m3);wallSign(m3,m3.w/2,200,()=>'🧼 '+L('Care & Toys','Pleje & legetøj'));
+  const m4=SEC('Garden Center','Havecenter','yard','grass');m4.w=Math.max(1280,shelfFood(m4,'sup',Object.values(SUP).filter(s=>s.type==='seed'||s.type==='fert').sort((a,b)=>a.lvl-b.lvl).map(s=>s.id),280,3)+260);
   m4.fix.push(fxDeco('planter',m4.w-200,700,.9));wallSign(m4,m4.w/2,120,()=>'🌱 '+L('Seeds & Fertilizer','Frø & gødning'));m4.fix.push(fxDeco('scarecrow',m4.w-150,600,.8));
   SHOPDEF.food={secs:[m1,m2,m3,m4]};
   // ---------- Mash Café ----------
@@ -1303,19 +1313,27 @@ function buildShops(){
     box(g,1100,300,160,150,6,'#a0672e',4);box(g,1120,320,50,70,6,'#cbd5e1',3);ell(g,1145,400,14,6,'#fff',2);box(g,1190,330,50,60,6,'#ef4444',3)});
   bigWin(cf,300,220,240,180);lamps(cf);
   const ctr=fxCounter(780,640,460,'#8b5a2b','#fef3c7');ctr.draw=((d)=>g=>{d(g);box(g,570,470,420,60,10,'rgba(220,245,255,.55)',3)})(ctr.draw);cf.fix.push(ctr);
-  ['cookie','donut','cake','pancakes','cocoa','icecream','soup','fries'].forEach((id,i)=>cf.goods.push(G('food',id,600+(i%4)*110+(i>3?55:0),i>3?604:528,.75,ctr,FLOOR_MAX)));
+  ['cocoa','juice','milk','icecream','sandwich','soup','fries','pancakes'].forEach((id,i)=>cf.goods.push(G('food',id,600+(i%4)*110+(i>3?55:0),i>3?604:528,.75,ctr,FLOOR_MAX)));
   keeper(cf,880,590,NPC_BY.murphy.look,NPC_BY.murphy.outfit,'Murphy',()=>jobPrompt('cafe'));
   cf.fix.push(fxCafeTable(330,700));cf.fix.push(fxCafeTable(1300,700));cf.fix.push(fxDeco('plant_big',1500,620));
-  SHOPDEF.cafe={secs:[cf]};
+  const bk=SEC('Bakery','Bageri','wp_peach','fl_wood');bk.w=1500;lamps(bk);bigWin(bk,1150,220,240,180);
+  bk.deco.push(g=>{box(g,560,170,300,280,14,'#b45f3c',5);box(g,600,250,220,150,60,'#1c1917',4);ell(g,710,360,70,22,'#f97316',0);ell(g,700,350,34,26,'#fbbf24',0);g.font='22px Lilita One,Nunito';g.fillStyle='#fff';g.textAlign='center';g.textBaseline='middle';g.fillText('🔥 '+L('OVEN','OVN'),710,205)});
+  wallSign(bk,330,170,()=>'🥐 '+L('Fresh from the oven!','Frisk fra ovnen!'));
+  let be=shelfFood(bk,'food',['bread','cookie','donut','cake','cheese','pancakes'],260,2);
+  const bt=fxTable(be+170,700,300,'#fde68a');bk.fix.push(bt);['cookie','donut','cake'].forEach((id,j)=>bk.goods.push(G('food',id,be+80+j*90,bt.top,.85,bt,FLOOR_MAX)));
+  bk.fix.push(fxCafeTable(1350,700));
+  SHOPDEF.cafe={secs:[cf,bk]};
   // ---------- Paws & Peels pet shop ----------
   const p1=SEC('Pets','Kæledyr','wp_sun','fl_wood');shopDoor(p1,'petshop');p1.fix.push(fxCounter(360,610,180,'#f59e0b','#fff7ed'));addKeeper(p1,'pet',360,570,()=>openPetCounter());
   ['dog','cat','bunny'].forEach((id,i)=>{const pen=fxPen(640+i*300,640,250);p1.fix.push(pen);p1.goods.push(G('pet',id,pen.x,pen.y-14,1.4,pen,FLOOR_MAX))});
   p1.goods.push(G('furn','incubator',1560,640,1));p1.w=1760;lamps(p1);poster(p1,1560,250,()=>L('🥚 EGGS HATCH!','🥚 ÆG KLÆKKES!'),'#f59e0b');
   wallSign(p1,360,230,()=>'🪙 '+L('Sell pets & eggs','Sælg dyr & æg'));wallSign(p1,960,150,()=>'🐾 '+L('Adopt a friend!','Adoptér en ven!'));
-  const p2=SEC('Supplies','Tilbehør','wp_sun','fl_wood');let pe=floorRows(p2,listCat('pet','floor').filter(id=>id!=='incubator'),200,1.25);
+  const p2=SEC('Supplies','Tilbehør','wp_sun','fl_wood');let pe=floorRows(p2,listCat('pet','floor').filter(id=>id!=='incubator'),300,1.25);
   const psh=fxShelf(pe+200,598,340,'#f59e0b');p2.fix.push(psh);[['sup','kibble'],['sup','treat'],['furn','pet_ball'],['furn','chew_toy']].forEach(([k,id],j)=>p2.goods.push(G(k,id,pe+70+(j%2)*150,psh.lv(j>>1)-2,k==='furn'?1.3:.9,psh,640)));
   p2.w=Math.max(1280,pe+460);lamps(p2);
   SHOPDEF.pet={secs:[p1,p2]};
+  // room for the doorway to the next showroom
+  Object.values(SHOPDEF).forEach(sh=>sh.secs.forEach((sc,i)=>{if(i<sh.secs.length-1)sc.w+=150}));
 }
 
 /* ---------------- NPC actors ---------------- */
@@ -1380,11 +1398,18 @@ function setPlace(){
   arrows();
 }
 function navList(){if(SCENE.type==='shop')return SHOPDEF[SCENE.shop].secs.map((_,i)=>i);if(SCENE.type!=='home'||SCENE.yard)return null;const st=curRoom().st||0;return curRooms().map((r,i)=>[r,i]).filter(([r])=>(r.st||0)===st).map(([,i])=>i)}
-function arrows(){const l=navList();if(!l){$('#aL').classList.remove('on');$('#aR').classList.remove('on');return}const p=l.indexOf(SCENE.room);
-  $('#aL').classList.toggle('on',p>0);$('#aR').classList.toggle('on',p<l.length-1||(SCENE.type==='home'&&SCENE.owner==='me'&&!BUILD.on))}
-function switchRoom(d){const l=navList();if(!l)return;const p=l.indexOf(SCENE.room)+d;
+function arrows(){const l=navList(),ban=$('#roomban');
+  if(!l){$('#aL').classList.remove('on');$('#aR').classList.remove('on');ban.classList.remove('on');return}const p=l.indexOf(SCENE.room);
+  const nmOf=i=>{const r=SCENE.type==='shop'?SHOPDEF[SCENE.shop].secs[i]:curRooms()[i];return SCENE.type==='shop'?L(r.name[0],r.name[1]):roomName(r)};
+  $('#aL').classList.toggle('on',p>0);$('#aR').classList.toggle('on',p<l.length-1||(SCENE.type==='home'&&SCENE.owner==='me'&&!BUILD.on));
+  $('#aL small').textContent=p>0?nmOf(l[p-1]):'';$('#aR small').textContent=p<l.length-1?nmOf(l[p+1]):(SCENE.type==='home'&&SCENE.owner==='me'?'🏗️ '+L('Expand','Udvid'):'');
+  // room name at the bottom of the screen with one dot per room
+  const show=l.length>1&&!BUILD.on;ban.classList.toggle('on',show);
+  if(show)ban.innerHTML=`${esc(nmOf(SCENE.room))}<i>${l.map((_,i)=>`<b class="${i===p?'on':''}"></b>`).join('')}</i>`}
+function switchRoom(d){const l=navList();if(!l||anyPanel())return;const p=l.indexOf(SCENE.room)+d;
   if(p>=l.length){if(SCENE.type==='home'&&SCENE.owner==='me'&&!BUILD.on)openExpand();return}
   if(p<0)return;SCENE.room=l[p];const W=sceneW();ME.x=d>0?160:W-160;ME.y=650;ME.tx=null;ME.act=null;
+  if(SCENE.type==='shop'){const a=shopArches(curRoom()).find(a=>a.d===-d);if(a){ME.x=a.x;ME.y=FLOOR_MIN+40}}
   if(BUILD.on){BUILD.sel=-1;BUILD.cx=ME.x;drawBuildBar()}SFX.click();setPlace();net.scene()}
 const roomPrice=()=>1000*(S.rooms.length-2),roomLvl=()=>2+(S.rooms.length-3)*2;
 function openExpand(){
@@ -1538,12 +1563,22 @@ function houseLayers(g,room,sp){
 function shopLayers(g,sec,sp,t,VW){
   sec.deco.forEach(d=>d(g,t));
   if(sec.door!=null){g.save();g.translate(sec.door,DOOR_Y);DRAW.door_exit(g);g.restore()}
+  shopArches(sec).forEach(a=>drawArch(g,a,t));
   for(const gd of sec.goods){if(gd.fx)continue;const f=gd.k==='furn'&&FURN[gd.id];
     if(f&&(f.kind==='wall'||f.kind==='wp'||f.kind==='fl')){drawGood(g,gd,t);drawTag(g,gd.tx,gd.ty,gd)}
     else sp.push({y:gd.y,draw:()=>{drawGood(g,gd,t);drawTag(g,gd.tx,gd.ty,gd)}})}
   const k=sec.keeper;if(k)sp.push({y:k.y,draw:()=>{drawPet(g,k.x,k.y,PET_HOME,{look:k.look,outfit:k.outfit,t:t/1000+2,dir:-1,talk:k.sayT>0});nameTag(g,k.name,k.x,k.y-232,true);if(k.sayT>0){k.sayT-=1/60;bubble(g,k.x,k.y-250,k.say)}}});
   for(const f of sec.fix)sp.push({y:f.y,draw:()=>{f.draw(g,t);const own=sec.goods.filter(gd=>gd.fx===f);own.forEach(gd=>drawGood(g,gd,t));f.front&&f.front(g,t);own.forEach(gd=>drawTag(g,gd.tx,gd.ty,gd))}});
 }
+// open doorways at the room edges lead to the next/previous showroom
+function shopArches(sec){const secs=SHOPDEF[SCENE.shop].secs,i=secs.indexOf(sec),a=[];
+  if(i>0)a.push({x:sec.door!=null?280:110,d:-1,to:secs[i-1]});if(i<secs.length-1)a.push({x:sec.w-110,d:1,to:secs[i+1]});return a}
+function drawArch(g,a,t){const x=a.x;
+  c_arch(g,x);
+  const tx=L(a.to.name[0],a.to.name[1]);g.font='17px Lilita One,Nunito';const w=g.measureText(tx).width+44;box(g,x-w/2,DOOR_Y-292,w,32,10,'#ffc93c',3);
+  g.fillStyle=OL;g.textAlign='center';g.textBaseline='middle';g.fillText((a.d<0?'◀ ':'')+tx+(a.d>0?' ▶':''),x,DOOR_Y-276);
+  const bob=Math.sin(t/250)*5;g.font='30px serif';g.fillText(a.d<0?'⬅️':'➡️',x+bob*a.d,DOOR_Y-120)}
+function c_arch(g,x){g.beginPath();g.moveTo(x-70,DOOR_Y+8);g.lineTo(x-70,DOOR_Y-190);g.arc(x,DOOR_Y-190,70,Math.PI,0);g.lineTo(x+70,DOOR_Y+8);g.closePath();g.fillStyle='rgba(30,41,59,.18)';g.fill();g.lineWidth=10;g.strokeStyle='#fff7ed';g.stroke();g.lineWidth=3;g.strokeStyle=OL;g.stroke()}
 function drawItemAt(g,it){
   const f=FURN[it.id];if(!f||!DRAW[it.id])return;
   g.save();g.translate(it.x,it.y-(it.z||0));if(it.f)g.scale(-1,1);DRAW[it.id](g,it);g.restore();
@@ -1667,6 +1702,7 @@ function clickHome(w){
 }
 function clickShop(w){
   const sec=curRoom(),inR=r=>w.x>=r.x&&w.x<=r.x+r.w&&w.y>=r.y&&w.y<=r.y+r.h;
+  for(const a of shopArches(sec))if(inR({x:a.x-75,y:DOOR_Y-300,w:150,h:330})){walkTo(a.x,FLOOR_MIN+30,()=>switchRoom(a.d));return}
   for(const sp of sec.spots)if(inR(sp.r)){walkTo(sp.wx+(Math.abs(ME.x-sp.wx)<30?0:ME.x<sp.wx?-40:40),sp.wy,sp.act);return}
   const gs=[...sec.goods].sort((a,b)=>b.y-a.y);
   for(const gd of gs)if(inR(gd.r)){walkTo(gd.x+(ME.x<gd.x?-70:70),gd.wy,()=>openBuy(gd));return}
