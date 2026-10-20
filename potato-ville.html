@@ -345,11 +345,17 @@ const FURN_RAW=[
  ['bed_single','bed','floor','Cozy Bed','Hyggelig seng',150,1,230,110,'sleep',3],
  ['bed_double','bed','floor','Big Comfy Bed','Stor dobbeltseng',450,5,300,130,'sleep',7],
  ['bookshelf','store','floor','Bookshelf','Reol',130,2,140,200,'read',4],
- ['dresser','store','floor','Dresser','Kommode',120,2,150,100,'',3],
+ ['dresser','store','floor','Dresser','Kommode',120,2,150,100,'store',3,{store:10}],
+ ['cabinet','store','floor','Cabinet','Skab',150,2,120,140,'store',2,{store:12,surf:140}],
+ ['storage_chest','store','floor','Storage Chest','Kiste',110,1,130,80,'store',2,{store:15}],
+ ['wall_cupboard','store','wall','Wall Cupboard','Vægskab',90,1,110,90,'store',2,{store:8}],
  ['closet','store','floor','Wardrobe Closet','Klædeskab',200,3,130,210,'ward',4],
  ['fridge','kitchen','floor','Fridge','Køleskab',220,2,110,210,'eat',3],
  ['stove','kitchen','floor','Stove','Komfur',180,3,120,120,'cook',3],
- ['counter','kitchen','floor','Kitchen Counter','Køkkenbord',100,3,150,110,'',2],
+ ['counter','kitchen','floor','Kitchen Counter','Køkkenbord',100,3,150,110,'store',2,{store:8}],
+ ['kitchen_wall_cabinet','kitchen','wall','Kitchen Wall Cabinet','Køkkenoverskab',120,2,170,90,'store',2,{store:10}],
+ ['kitchen_wall_glass','kitchen','wall','Glass Wall Cabinet','Vitrineskab',160,3,150,100,'store',3,{store:10}],
+ ['pantry','kitchen','floor','Pantry Cupboard','Spisekammerskab',220,3,120,220,'store',3,{store:20}],
  ['bathtub','bath','floor','Bubble Bathtub','Boblebadekar',240,2,240,105,'bath',4],
  ['sink','bath','floor','Sink','Håndvask',90,2,90,120,'wash',2],
  ['tv_retro','tech','floor','Retro TV','Retro-tv',160,1,140,150,'tv',3],
@@ -1029,6 +1035,12 @@ const DRAW={
  kiddie_pool(c){ell(c,0,-26,110,28,'#3fa0ff');ell(c,0,-30,92,18,'#7fd0ff',2);ell(c,-30,-32,14,6,'rgba(255,255,255,.7)',0);ell(c,40,-40,14,10,'#facc15',2);poly(c,[52,-42,58,-38,52,-36],'#f97316',1)},
  treehouse(c){box(c,-16,-150,32,150,6,'#8b5a2b');ell(c,0,-260,140,90,'#4caf50');ell(c,-60,-280,60,40,'#66c46a',0);box(c,-70,-210,140,80,6,'#c48a52');poly(c,[-84,-206,0,-260,84,-206],'#ef4444');box(c,-20,-190,40,60,4,'#7a4b22',2);box(c,30,-196,28,24,3,'#bfe6ff',2);for(let y=-130;y<0;y+=22)line(c,40,y,70,y,'#a0672e',4);line(c,40,-130,40,0,'#a0672e',4);line(c,70,-130,70,0,'#a0672e',4)},
  gazebo(c){[-110,-40,40,110].forEach(x=>box(c,x-6,-170,12,170,3,'#fff',2));poly(c,[-140,-166,0,-250,140,-166],'#7c3aed');box(c,-140,-176,280,14,4,'#fff',2);box(c,-120,-14,240,14,4,'#e5e7eb',2);ell(c,0,-254,8,8,'#ffc93c',2)},
+ cabinet(c){box(c,-60,-140,120,136,6,'#c48a52');line(c,0,-132,0,-12,OL,3);box(c,-52,-132,48,118,4,'#d8a066',2);box(c,4,-132,48,118,4,'#d8a066',2);ell(c,-10,-72,3,5,'#7a4b22',1.5);ell(c,10,-72,3,5,'#7a4b22',1.5);legs(c,[-48,48],0)},
+ storage_chest(c){box(c,-65,-64,130,60,8,'#a0672e');c.beginPath();c.moveTo(-65,-60);c.quadraticCurveTo(0,-96,65,-60);c.closePath();c.fillStyle='#8b5a2b';c.fill();c.lineWidth=3;c.strokeStyle=OL;c.stroke();[-40,40].forEach(x=>line(c,x,-82,x,-6,'#ffc93c',5));box(c,-8,-66,16,14,3,'#ffc93c',2)},
+ wall_cupboard(c){box(c,-55,-45,110,90,6,'#f1f5f9');line(c,0,-40,0,40,OL,2.5);box(c,-48,-38,44,76,4,'#e2e8f0',2);box(c,4,-38,44,76,4,'#e2e8f0',2);ell(c,-8,0,3,4,'#64748b',1);ell(c,8,0,3,4,'#64748b',1)},
+ kitchen_wall_cabinet(c){box(c,-85,-45,170,90,6,'#f8fafc');for(let k=0;k<3;k++){box(c,-79+k*54,-39,50,78,4,'#e2e8f0',2);box(c,-79+k*54+(k%2?6:38),-4,6,14,3,'#64748b',1)}box(c,-90,38,180,8,3,'#94a3b8',2)},
+ kitchen_wall_glass(c){box(c,-75,-50,150,100,6,'#c48a52');[-1,1].forEach(s=>{box(c,s>0?4:-68,-42,64,84,4,'rgba(200,235,255,.75)',2);line(c,s>0?36:-36,-42,s>0?36:-36,42,'#a0672e',2)});[[-50,-16,'#fff'],[-24,-16,'#fde68a'],[24,-16,'#fff'],[50,-16,'#bfdbfe']].forEach(([x,y,col])=>{box(c,x-9,y-12,18,16,3,col,1.5)});line(c,-68,0,68,0,'#a0672e',3);[[-44,20],[30,20],[50,20]].forEach(([x,y])=>ell(c,x,y,8,6,'#fff',1.5))},
+ pantry(c){box(c,-60,-220,120,216,8,'#f1f5f9');line(c,0,-210,0,-12,OL,3);box(c,-52,-210,48,196,4,'#e2e8f0',2);box(c,4,-210,48,196,4,'#e2e8f0',2);box(c,-14,-120,6,24,3,'#64748b',1.5);box(c,8,-120,6,24,3,'#64748b',1.5)},
  watering_can(c){box(c,-20,-34,40,32,8,'#22c55e');poly(c,[20,-28,46,-44,48,-38,22,-18],'#22c55e',2);c.beginPath();c.arc(0,-36,14,Math.PI,0);c.lineWidth=4;c.strokeStyle=OL;c.stroke()},
  jack_o_lantern(c,it){const on=lampOn(it);ell(c,0,-28,30,26,'#f97316');[-14,0,14].forEach(x=>ell(c,x,-28,6,25,'rgba(0,0,0,.08)',0));box(c,-4,-60,8,10,3,'#3f6212',2);const f=on?'#fde047':'#3b2414';poly(c,[-16,-36,-6,-36,-11,-26],f,1.5);poly(c,[6,-36,16,-36,11,-26],f,1.5);poly(c,[-16,-18,16,-18,10,-10,4,-14,-4,-10,-10,-14],f,1.5)},
  pumpkin_big(c){ell(c,0,-50,70,50,'#f97316');[-36,-12,12,36].forEach(x=>ell(c,x,-50,10,48,'rgba(0,0,0,.08)',0));box(c,-8,-108,16,18,4,'#3f6212');ell(c,22,-104,16,7,'#65a30d',2,-.4)},
@@ -1269,14 +1281,14 @@ const BATHROOM=()=>({n:'bath',st:0,wall:'wp_mint',floor:'fl_tiles',items:[mk('wi
 const START_ROOM=()=>LIVING();
 const ROOM_N={living:['Living Room','Stue'],bed:['Bedroom','Soveværelse'],bath:['Bathroom','Badeværelse'],room:['Extra Room','Ekstra værelse'],up:['Upstairs Room','Værelse ovenpå'],yard:['Garden','Have']};
 const roomName=r=>{const n=ROOM_N[r&&r.n]||ROOM_N.room;return L(n[0],n[1])};
-function fresh(){UIDN=1;FRESHING=true;const rooms=[LIVING(),BEDROOM(),BATHROOM()];FRESHING=false;return{v:1,mig:3,uid:UIDN+1,created:false,sup:{kibble:2,s_lettuce:3},recipes:[],pets:[],eggs:[],yard:null,bowlDay:0,bowlStreak:0,bowlPrev:0,name:'',look:{animal:'bunny',color:'#f2c879',eyes:'round',mouth:'smile',eyeCol:'#3b2414',pattern:'none',cheek:'pink'},
+function fresh(){UIDN=1;FRESHING=true;const rooms=[LIVING(),BEDROOM(),BATHROOM()];FRESHING=false;return{v:1,mig:3,bagCap:40,uid:UIDN+1,created:false,sup:{kibble:2,s_lettuce:3},recipes:[],pets:[],eggs:[],yard:null,bowlDay:0,bowlStreak:0,bowlPrev:0,name:'',look:{animal:'bunny',color:'#f2c879',eyes:'round',mouth:'smile',eyeCol:'#3b2414',pattern:'none',cheek:'pink'},
   outfit:{hat:null,top:'top_tee',bottom:'bot_jeans',shoes:'sh_sneak',glasses:null,acc:null},
   wardrobe:['top_tee','bot_jeans','sh_sneak'],coins:250,xp:0,lvl:1,energy:32,enT:Date.now(),
   st:{hunger:80,clean:80,fun:80},stT:Date.now(),inv:{},walls:['wp_cream'],floors:['fl_wood'],food:{apple:2,soap:1},
   rooms,npc:{},quests:[],daily:null,goalsDone:[],streak:{day:0,n:0,claimed:0},visits:{},cd:{},
   cnt:{jobs:0,talks:0,bought:0,placed:0,visits:0,fed:0,quests:0,coinsEarned:0,clothes:0,washed:0,slept:0,wishes:0,harvest:0,planted:0,petted:0,bowls:0,hatched:0,expand:0},firstHelp:true}}
 let S=null;S=fresh();
-function load(){try{const d=JSON.parse(localStorage.getItem(saveKey())||'null');if(d&&d.v===1){const f=fresh();S=Object.assign(f,d);S.st=Object.assign(f.st,d.st);S.cnt=Object.assign(f.cnt,d.cnt);S.outfit=Object.assign(f.outfit,d.outfit);S.look=Object.assign(f.look,d.look);S.mig=d.mig||1;migrate();migrate3()}}catch(e){}}
+function load(){try{const d=JSON.parse(localStorage.getItem(saveKey())||'null');if(d&&d.v===1){const f=fresh();S=Object.assign(f,d);S.st=Object.assign(f.st,d.st);S.cnt=Object.assign(f.cnt,d.cnt);S.outfit=Object.assign(f.outfit,d.outfit);S.look=Object.assign(f.look,d.look);S.mig=d.mig||1;migrate();migrate3();if(!S.bagCap){const need=bagCount()+10;S.bagCap=need<=40?40:(BAG_UP.map(u=>u[1]).find(c=>c>=need)||Math.ceil(need/10)*10)}}}catch(e){}}
 function migrate(){
   if(S.mig>=2)return;
   S.uid=S.uid||1000;const all=()=>[...S.rooms.flatMap(r=>r.items)];
@@ -2158,6 +2170,7 @@ function useItem(it){
   if(f.use==='bowlF'||f.use==='bowlW'){fillBowl(it);return}
   if(f.use==='egg'){openIncubator(it);return}
   if(f.use==='eat'){if(own)openFood();return}
+  if(f.use==='store'){if(own)openStorage(it);else toast(L('That belongs to your host 🙂','Det tilhører værten 🙂'));return}
   if(f.use==='ward'){if(own)openWardrobe();return}
   if(f.use==='mirror'){if(own)openCreator(true);return}
   if(f.use==='arcade'){jobPrompt('bubble');return}
@@ -2555,12 +2568,13 @@ function openBuy(gd){
       b.innerHTML=`<div style="display:flex;gap:12px;align-items:center"><div class="preview" style="width:130px;height:110px;flex:none" id="bTh"></div><div><div class="pr" style="font-family:Lilita One;font-size:26px;color:#b8860b">${N(it.price)} 🪙</div>${info?`<p class="hint" style="margin:4px 0">${info}</p>`:''}${own?`<p class="hint">🎒 ${L('You have','Du har')} ${own}</p>`:''}${st===1?`<p style="color:#d0457e">🔒 ${L('Unlocks at level','Låses op på niveau')} ${it.lvl}</p>`:''}</div></div>
         <div class="row" style="justify-content:flex-end;margin-top:12px">${st===2?`<span class="chip on">✓ ${L('Owned','Ejet')}</span>`:`${many?`<button class="btn" data-n="5" ${st||S.coins<it.price*5?'disabled':''}>×5 · ${N(it.price*5)} 🪙</button>`:''}<button class="btn go" data-n="1" ${st||S.coins<it.price?'disabled':''}>${L('Buy','Køb')}</button>`}</div>`;
       const th=gThumb(k,id,120,100);th.style.width='120px';th.style.height='100px';$('#bTh',b).appendChild(th);
-      $$('[data-n]',b).forEach(x=>x.onclick=()=>{for(let i=0;i<+x.dataset.n;i++)buy(k,id);if(k==='pet'||k==='cloth'||!many&&it.kind!=='floor')close();else draw()})};
+      $$('[data-n]',b).forEach(x=>x.onclick=()=>{for(let i=0;i<+x.dataset.n;i++)if(buy(k,id)===false)break;if(k==='pet'||k==='cloth'||!many&&it.kind!=='floor')close();else draw()})};
     draw()}});
 }
 const fmtDur=ms=>{const m=Math.ceil(ms/60000);return m<60?m+' min':m<1440?Math.floor(m/60)+L(' h',' t')+(m%60?' '+m%60+' min':''):Math.floor(m/1440)+L(' d',' d')+(Math.floor(m%1440/60)?' '+Math.floor(m%1440/60)+L(' h',' t'):'')};
 function buy(kind,id){
-  const it=kind==='cloth'?CLOTH[id]:kind==='food'?FOOD[id]:kind==='sup'?SUP[id]:kind==='pet'?PET_T[id]:FURN[id];if(!it||S.coins<it.price||it.lvl>S.lvl)return;
+  const it=kind==='cloth'?CLOTH[id]:kind==='food'?FOOD[id]:kind==='sup'?SUP[id]:kind==='pet'?PET_T[id]:FURN[id];if(!it||S.coins<it.price||it.lvl>S.lvl)return false;
+  const takesSpace=kind==='food'||(kind==='sup'&&it.type!=='recipe')||(kind==='furn'&&!['wp','fl'].includes(it.kind));if(takesSpace&&bagFull())return false;
   S.coins-=it.price;SFX.buy();
   if(kind==='cloth'){S.wardrobe.push(id);bump('clothes');toast(L(`👕 ${it.en} is in your wardrobe! Tap 👕 to wear it.`,`👕 ${it.da} ligger i dit klædeskab! Tryk 👕 for at tage det på.`))}
   else if(kind==='food'){S.food[id]=(S.food[id]||0)+1;toast(L(`${it.e} ${it.en} added to your bag 🎒`,`${it.e} ${it.da} lagt i din taske 🎒`))}
@@ -2589,6 +2603,28 @@ function openSell(){
     $$('.card[data-i]',b).forEach(cd=>{const x=list[+cd.dataset.i];const th=x.k==='sup'?thumb('sup',x.id):thumb(x.k,x.id);$('.cv',cd).appendChild(th);
       $('button',cd).onclick=()=>{const bag=x.k==='furn'?S.inv:x.k==='food'?S.food:x.k==='sup'?S.sup:null;if(bag){bag[x.id]--;if(!bag[x.id])delete bag[x.id]}else S.wardrobe=S.wardrobe.filter(id=>id!==x.id);
         addCoins(val(x),cd);bump('sold');SFX.coin();save();draw()}})};draw()}});
+}
+// how much you can carry; upgrade the bag with coins
+const BAG_UP=[[40,60,300],[60,80,700],[80,100,1500],[100,130,3000],[130,160,6000],[160,200,12000]];
+const sumObj=o=>Object.values(o||{}).reduce((a,n)=>a+(n>0?n:0),0);
+const bagCount=()=>sumObj(S.food)+sumObj(S.sup)+sumObj(S.inv)+(S.eggs||[]).length;
+const bagCap=()=>S.bagCap||40;
+function bagFull(n=1){if(bagCount()+n<=bagCap())return false;toast(L('🎒 Your bag is full! Put things in a cabinet at home or upgrade your bag.','🎒 Din taske er fuld! Læg ting i et skab derhjemme, eller opgradér din taske.'),3600);SFX.bad();return true}
+function upgradeBag(){const u=BAG_UP.find(u=>u[0]===bagCap());if(!u){toast(L('Your bag is as big as it gets!','Din taske er så stor, den kan blive!'));return}if(S.coins<u[2]){toast(L('Not enough coins!','Ikke nok mønter!'));SFX.bad();return}S.coins-=u[2];S.bagCap=u[1];SFX.buy();hud();save();toast(L(`🎒 Bigger bag! Now ${u[1]} slots.`,`🎒 Større taske! Nu ${u[1]} pladser.`))}
+// storage furniture: cabinets, cupboards, chests hold things from your bag
+function openStorage(it){
+  const f=FURN[it.id],cap=f.store;it.box=it.box||{food:{},sup:{},inv:{}};const B=it.box;
+  panel({title:'🗄️ '+esc(nm(f)),render:(b)=>{const draw=()=>{
+    const inBox=sumObj(B.food)+sumObj(B.sup)+sumObj(B.inv);
+    const rows=(src,dir)=>{const out=[];[['food',FOOD],['sup',SUP],['inv',FURN]].forEach(([k,cat])=>{const o=src[k]||{};Object.entries(o).filter(([id,n])=>n>0&&cat[id]).forEach(([id,n])=>out.push({k,id,n,it:cat[id]}))});
+      return out.map((x,i)=>`<div class="pp"><div style="font-size:26px;width:34px;text-align:center">${x.k==='inv'?'📦':x.it.e}</div><div class="tx">${esc(nm(x.it))} <b>×${x.n}</b></div><button class="btn sm ${dir==='in'?'ok':''}" data-m="${dir}" data-k="${x.k}" data-id="${x.id}">${dir==='in'?'➡️':'⬅️'}</button></div>`).join('')||`<p class="hint">${L('Empty','Tom')}</p>`};
+    const bag={food:S.food,sup:S.sup,inv:S.inv};
+    b.innerHTML=`<div class="split" style="grid-template-columns:1fr 1fr"><div><h3 style="margin:0 0 6px">🎒 ${L('Bag','Taske')} <small class="hint">${bagCount()}/${bagCap()}</small></h3><div class="ppl">${rows(bag,'in')}</div></div>
+      <div><h3 style="margin:0 0 6px">🗄️ ${esc(nm(f))} <small class="hint">${inBox}/${cap}</small></h3><div class="ppl">${rows(B,'out')}</div></div></div>`;
+    $$('[data-m]',b).forEach(x=>x.onclick=()=>{const k=x.dataset.k,id=x.dataset.id,from=x.dataset.m==='in'?bag[k]:B[k],to=x.dataset.m==='in'?(B[k]=B[k]||{}):bag[k];
+      if(x.dataset.m==='in'&&inBox>=cap){toast(L('This one is full!','Den her er fuld!'));SFX.bad();return}
+      if(x.dataset.m==='out'&&bagFull())return;
+      from[id]--;if(!from[id])delete from[id];to[id]=(to[id]||0)+1;SFX.click();save();draw()})};draw()}});
 }
 function ownedCount(id){return(S.inv[id]||0)+[...S.rooms,S.yard].filter(Boolean).reduce((a,r)=>a+r.items.filter(i=>i.id===id).length,0)}
 function addPet(type,name){S.pets.push({u:uid(),type,name:name||nm(PET_T[type]),love:0,where:'home',room:0});goalsCheck();save();net.houseChanged()}
@@ -2712,7 +2748,9 @@ function openBag(onlyFood,startTab){
   closeDlg();let tab=onlyFood?'food':startTab||'food';
   panel({title:onlyFood?L('🧊 Fridge','🧊 Køleskab'):L('🎒 Your bag','🎒 Din taske'),render:(b,close)=>{
     const draw=()=>{
-      const tabs=onlyFood?'':`<div class="tabs">${[['food','🍎',L('Food','Mad')],['sup','🧰',L('Supplies','Forsyninger')],['furn','📦',L('Furniture','Møbler')],['eggs','🥚',L('Eggs','Æg')],['pets','🐾',L('Pets','Kæledyr')]].map(([k,i,t])=>`<button data-t="${k}" class="${tab===k?'on':''}">${i} ${t}</button>`).join('')}</div>`;
+      const nx=BAG_UP.find(u=>u[0]===bagCap());
+      const cap=onlyFood?'':`<div class="goal" style="margin-bottom:8px"><div class="ic">🎒</div><div class="tx">${L('Bag space','Plads i tasken')}: <b>${bagCount()}/${bagCap()}</b><div class="prog"><b style="width:${Math.min(100,bagCount()/bagCap()*100)}%;background:${bagCount()>=bagCap()?'#ef4444':'#43c46b'}"></b></div><small>${L('Store extra things in cabinets and chests at home.','Gem ekstra ting i skabe og kister derhjemme.')}</small></div>${nx?`<button class="btn sm go" id="bagUp" ${S.coins<nx[2]?'disabled':''}>+${nx[1]-nx[0]} · ${N(nx[2])} 🪙</button>`:''}</div>`;
+      const tabs=onlyFood?'':cap+`<div class="tabs">${[['food','🍎',L('Food','Mad')],['sup','🧰',L('Supplies','Forsyninger')],['furn','📦',L('Furniture','Møbler')],['eggs','🥚',L('Eggs','Æg')],['pets','🐾',L('Pets','Kæledyr')]].map(([k,i,t])=>`<button data-t="${k}" class="${tab===k?'on':''}">${i} ${t}</button>`).join('')}</div>`;
       let h='';
       if(tab==='food'){const list=Object.entries(S.food).filter(([id,n])=>n>0&&FOOD[id]&&(!onlyFood||FOOD[id].h>0));
         h=`<div class="grid">${list.map(([id,n])=>{const f=FOOD[id];return`<div class="card" data-id="${id}"><span class="own">×${n}</span><div class="cv"></div><div class="nm">${esc(nm(f))}</div><div class="hint">${f.h?'🍎+'+f.h+' ':''}${f.c?'🧼+'+f.c+' ':''}${f.f?'🎈+'+f.f:''}</div><button class="btn sm ok">${f.h?L('Eat','Spis'):f.c?L('Use','Brug'):L('Play','Leg')}</button></div>`}).join('')||`<p class="hint">${L('Empty! Buy food and supplies at Tater Market in town.','Tom! Køb mad og ting i Kartoffelmarkedet i byen.')}</p>`}</div>`}
@@ -2726,6 +2764,7 @@ function openBag(onlyFood,startTab){
           <div style="display:flex;flex-direction:column;gap:4px">${home&&(p.where==='bag'||p.room!==here)?`<button class="btn sm ok" data-here="${i}">🏠 ${L('Here','Herhen')}</button>`:''}${p.where!=='bag'?`<button class="btn sm" data-bag="${i}">🎒 ${L('Bag','Taske')}</button>`:''}<button class="btn sm" data-tr="${i}" ${S.sup.treat?'':'disabled'}>🍖 ${L('Treat','Godbid')}</button></div></div>`).join('')||`<p class="hint">${L('No pets yet! Adopt one at Paws & Peels, or hatch an egg.','Ingen kæledyr endnu! Adoptér et hos Poter & Skræller, eller klæk et æg.')}</p>`;
         h+=`<p class="hint">${L('Tap your pets at home to pet them. Fill their 🦴 food and 💧 water bowls every day for a bonus!','Tryk på dine kæledyr derhjemme for at ae dem. Fyld deres 🦴 mad- og 💧 vandskål hver dag for en bonus!')}</p>`}
       b.innerHTML=tabs+h;
+      const bu=$('#bagUp',b);if(bu)bu.onclick=()=>{upgradeBag();draw()};
       $$('.tabs button',b).forEach(x=>x.onclick=()=>{tab=x.dataset.t;SFX.click();draw()});
       $$('.card[data-id]',b).forEach(cd=>{$('.cv',cd).appendChild(thumb('food',cd.dataset.id));$('button',cd).onclick=()=>{consume(cd.dataset.id);draw()}});
       $$('.card[data-f]',b).forEach(cd=>$('.cv',cd).appendChild(thumb('furn',cd.dataset.f)));
@@ -2828,6 +2867,7 @@ function help(){panel({title:L('❓ How to play','❓ Sådan spiller du'),html:L
   <p>🍳 <b>At home:</b> cook recipes on the stove with ingredients from the market or your garden, shop online on a laptop or computer, work out on an exercise bike and play music on a piano, drum kit or guitar.</p>
   <p>🌻 <b>Green Thumb Garden Center</b> sells everything for outside – birdhouses, fountains, a greenhouse (crops grow 50% faster), swings, a treehouse and much more. 🎁 <b>Holly's Holiday Shop</b> sells Halloween, Christmas and Valentine's things. In December it snows all month!</p>
   <p>🪙 <b>Sell:</b> in any shop, tap 🪙 Sell to sell things from your bag for half price. 💾 Back up or restore your game in ⚙️ Settings. You can have 3 characters – switch in ☰ Menu → Main menu.</p>
+  <p>🎒 <b>Bag &amp; storage:</b> your bag holds a limited number of things – upgrade it in the 🎒 bag, and keep extra things in cabinets, cupboards and chests at home (tap them). 🎁 Tap a friend to give them coins or something from your bag.</p>
   <p>⚔️ <b>Duels:</b> challenge friends on the same Wi-Fi to arcade games or dice for a stake – winner takes all.</p>
   <p>💬 <b>Neighbours:</b> talk to the potato animals in town every day to make friends ❤. Help them with tasks for coins – best friends give gifts!</p>
   <p>🎯 <b>Goals:</b> collect a daily reward, finish daily tasks and goals, and level up to unlock new items.</p>
@@ -2842,6 +2882,7 @@ function help(){panel({title:L('❓ How to play','❓ Sådan spiller du'),html:L
   <p>🍳 <b>Derhjemme:</b> lav mad på komfuret med ingredienser fra markedet eller din have, køb ind online på en bærbar eller computer, træn på en motionscykel og spil musik på klaver, trommer eller guitar.</p>
   <p>🌻 <b>Den Grønne Tommelfinger Havecenter</b> sælger alt til udenfor – fuglehuse, springvand, drivhus (afgrøder gror 50% hurtigere), gynger, træhus og meget mere. 🎁 <b>Hollys Højtidsbutik</b> sælger halloween-, jule- og valentinsting. I december sner det hele måneden!</p>
   <p>🪙 <b>Sælg:</b> i alle butikker kan du trykke på 🪙 Sælg og sælge ting fra din taske til halv pris. 💾 Tag backup eller gendan dit spil i ⚙️ Indstillinger. Du kan have 3 karakterer – skift i ☰ Menu → Hovedmenu.</p>
+  <p>🎒 <b>Taske &amp; opbevaring:</b> din taske kan kun rumme et vist antal ting – opgradér den i 🎒 tasken, og gem ekstra ting i skabe og kister derhjemme (tryk på dem). 🎁 Tryk på en ven for at give mønter eller noget fra din taske.</p>
   <p>⚔️ <b>Dueller:</b> udfordr venner på samme wifi i arkadespil eller terninger om en indsats – vinderen tager alt.</p>
   <p>💬 <b>Naboer:</b> snak med kartoffeldyrene i byen hver dag for at blive venner ❤. Hjælp dem med opgaver for mønter – bedste venner giver gaver!</p>
   <p>🎯 <b>Mål:</b> hent din daglige belønning, klar dagens opgaver og mål, og stig i niveau for at låse nye ting op.</p>
@@ -3075,6 +3116,7 @@ function shared(m){ // messages relayed between friends: balls, park events and 
   if(m.t==='ball'){const b=BALLS[m.i];if(b&&m.s.own!==net.myId())Object.assign(b,m.s);return}
   if(m.t==='pev'){if(SCENE.type==='park'){toast(m.d.txt);SFX.coin()}if(m.d.side)PSCORE[m.d.side]++;return}
   if(m.to!==net.myId())return;
+  if(m.t==='gift'){recvGift(m);return}
   if(m.t==='duel'){if(DUEL||MINI){net.duel({t:'duelAns',to:m.from,id:m.id,ok:false,busy:1});return}
     const gname=m.game==='dice'?L('Dice Duel','Terningeduel'):L(JOBS[m.game].en,JOBS[m.game].da);SFX.talk();
     panel({title:'⚔️ '+L('Challenge!','Udfordring!'),sm:true,html:`<p style="text-align:center"><b>${esc(m.name)}</b> ${L('challenges you to','udfordrer dig til')} <b>${esc(gname)}</b>${m.stake?` ${L('for','om')} <b>${m.stake} 🪙</b>`:''}!</p>`,
@@ -3084,6 +3126,25 @@ function shared(m){ // messages relayed between friends: balls, park events and 
     S.coins-=DUEL.stake;hud();toast(L('⚔️ Challenge accepted! Get ready…','⚔️ Udfordring accepteret! Gør dig klar…'));setTimeout(()=>duelStart(),400);return}
   if(m.t==='duelScore'){if(!DUEL||DUEL.id!==m.id)return;DUEL.their=m.score;duelCheck()}
 }
+// give coins or something from your bag to a friend on the same Wi-Fi
+function openGive(o){
+  const STARTERS=['top_tee','bot_jeans','sh_sneak'];
+  panel({title:'🎁 '+L('Give to','Giv til')+' '+esc(o.name),render:(b,close)=>{const draw=()=>{
+    const items=[];[['food',S.food,FOOD],['sup',S.sup,SUP],['inv',S.inv,FURN]].forEach(([k,o2,cat])=>Object.entries(o2).filter(([id,n])=>n>0&&cat[id]&&!(k==='sup'&&cat[id].type==='recipe')).forEach(([id,n])=>items.push({k,id,n,it:cat[id]})));
+    S.wardrobe.filter(id=>CLOTH[id]&&!STARTERS.includes(id)&&!Object.values(S.outfit).includes(id)).forEach(id=>items.push({k:'cloth',id,n:1,it:CLOTH[id]}));
+    b.innerHTML=`<div class="opt"><b>🪙 ${L('Coins','Mønter')} <small class="hint">(${L('you have','du har')} ${N(S.coins)})</small></b><div class="row" style="gap:5px">${[10,50,100,250,500].map(v=>`<button class="chip" data-c="${v}" ${S.coins<v?'disabled':''}>${v} 🪙</button>`).join('')}</div></div>
+      <div class="opt"><b>🎒 ${L('Something from your bag','Noget fra din taske')}</b><div class="ppl">${items.map((x,i)=>`<div class="pp"><div style="font-size:26px;width:34px;text-align:center">${x.k==='inv'?'📦':x.k==='cloth'?'👕':x.it.e}</div><div class="tx">${esc(nm(x.it))} <b>×${x.n}</b></div><button class="btn sm go" data-i="${i}">🎁 ${L('Give','Giv')}</button></div>`).join('')||`<p class="hint">${L('Your bag is empty.','Din taske er tom.')}</p>`}</div></div>`;
+    const send=m=>{net.duel({t:'gift',to:o.id,from:net.myId(),name:S.name,...m});SFX.buy();bump('given');save();hud()};
+    $$('[data-c]',b).forEach(x=>x.onclick=()=>{const v=+x.dataset.c;if(S.coins<v)return;S.coins-=v;send({kind:'coins',n:v});toast(L(`🎁 You gave ${v} coins to ${esc(o.name)}!`,`🎁 Du gav ${v} mønter til ${esc(o.name)}!`));close()});
+    $$('[data-i]',b).forEach(x=>x.onclick=()=>{const it=items[+x.dataset.i];if(it.k==='cloth')S.wardrobe=S.wardrobe.filter(id=>id!==it.id);else{const bag=it.k==='food'?S.food:it.k==='sup'?S.sup:S.inv;bag[it.id]--;if(!bag[it.id])delete bag[it.id]}
+      send({kind:it.k,id:it.id,n:1});toast(L(`🎁 You gave ${esc(it.it.en)} to ${esc(o.name)}!`,`🎁 Du gav ${esc(it.it.da)} til ${esc(o.name)}!`));draw()})};draw()}});
+}
+function recvGift(m){let what;
+  if(m.kind==='coins'){addCoins(m.n);what=`${N(m.n)} 🪙`}
+  else if(m.kind==='cloth'&&CLOTH[m.id]){if(S.wardrobe.includes(m.id)){const c=Math.floor(CLOTH[m.id].price/2);addCoins(c);what=nm(CLOTH[m.id])+` (${L('you had it – +','du havde den – +')}${c} 🪙)`}else{S.wardrobe.push(m.id);what='👕 '+nm(CLOTH[m.id])}}
+  else{const cat=m.kind==='food'?FOOD:m.kind==='sup'?SUP:FURN,bag=m.kind==='food'?S.food:m.kind==='sup'?S.sup:S.inv;if(!cat[m.id])return;bag[m.id]=(bag[m.id]||0)+1;what=(m.kind==='inv'?'📦 ':cat[m.id].e+' ')+nm(cat[m.id])}
+  SFX.buy();confetti();save();hud();
+  panel({title:'🎁 '+L('A gift!','En gave!'),sm:true,html:`<p style="text-align:center;font-size:17px"><b>${esc(m.name)}</b> ${L('gave you','gav dig')}<br><b>${esc(what)}</b></p>`,buttons:[{label:L('Thank you!','Tak!'),cls:'go'}]}).then(()=>net.chat(L('Thank you! 💖','Tak! 💖')))}
 function openDuel(game){
   const fr=net.others();if(!fr.length){toast(L('📶 Play with friends on the same Wi-Fi to challenge them!','📶 Spil med venner på samme wifi for at udfordre dem!'));return}
   let to=fr[0].id,stake=0,g=game||'snake';
@@ -3176,7 +3237,7 @@ const net=(()=>{
     else if(m.t==='prof'){Object.assign(p,m.prof);bcast(playersMsg())}
     else if(m.t==='house'){houseUpdate(c.peer,m.rooms);bcast({t:'house',owner:c.peer,rooms:m.rooms},c.peer)}
     else if(m.t==='chat'){p.say=String(m.text).slice(0,60);p.sayT=5;bcast({t:'chat',id:c.peer,text:p.say},c.peer)}
-    else if(['ball','pev','duel','duelAns','duelScore'].includes(m.t)){shared(m);bcast(m,c.peer)}
+    else if(['ball','pev','duel','duelAns','duelScore','gift'].includes(m.t)){shared(m);bcast(m,c.peer)}
   }
   function hostLost(id){if(!NS.players[id])return;const nmx=NS.players[id].name;delete NS.players[id];delete NS.conns[id];bcast({t:'bye',id});toast(L(`👋 ${esc(nmx)} left`,`👋 ${esc(nmx)} gik`));kickIfVisiting(id);refreshNet()}
   function kickIfVisiting(id){if(SCENE.type==='home'&&SCENE.owner===id){goTown('home');toast(L('Your friend left, so you walked back to town.','Din ven gik, så du gik tilbage til byen.'))}}
@@ -3187,7 +3248,7 @@ const net=(()=>{
     if(m.t==='players'){const seen=new Set();m.list.forEach(d=>{if(d.id===NS.id)return;seen.add(d.id);const p=upsert(d.id,d);if(d.say&&d.say!==p.lastSay){p.lastSay=d.say;p.sayT=5}});Object.keys(NS.players).forEach(id=>{if(!seen.has(id)){delete NS.players[id];kickIfVisiting(id)}});refreshNet(true);return}
     if(m.t==='house'){houseUpdate(m.owner,m.rooms);return}
     if(m.t==='chat'){const p=NS.players[m.id];if(p){p.say=m.text;p.sayT=5;p.lastSay=m.text}return}
-    if(['ball','pev','duel','duelAns','duelScore'].includes(m.t)){shared(m);return}
+    if(['ball','pev','duel','duelAns','duelScore','gift'].includes(m.t)){shared(m);return}
     if(m.t==='bye'){delete NS.players[m.id];kickIfVisiting(m.id);refreshNet();return}
   }
   function sendMe(force){
@@ -3269,13 +3330,14 @@ function drawNet(box,prefill){
 }
 function drawNetList(box){const l=$('#nList',box);if(!l)return;
   const rows=[{id:'me',name:S.name+L(' (you)',' (dig)'),look:S.look,outfit:S.outfit,lvl:S.lvl},...net.others()];
-  l.innerHTML=rows.map(p=>`<div class="pp"><canvas data-p="${p.id}" width="92" height="104"></canvas><div class="tx">${esc(p.name)}<br><small class="hint">${L('Level','Niveau')} ${p.lvl||1} · ${p.scene==='town'?L('in town','i byen'):p.id==='me'?'':L('at home','hjemme')}</small></div>${p.id!=='me'?`<button class="btn sm go" data-v="${p.id}">🏡 ${L('Visit','Besøg')}</button>`:''}</div>`).join('');
+  l.innerHTML=rows.map(p=>`<div class="pp"><canvas data-p="${p.id}" width="92" height="104"></canvas><div class="tx">${esc(p.name)}<br><small class="hint">${L('Level','Niveau')} ${p.lvl||1} · ${p.scene==='town'?L('in town','i byen'):p.id==='me'?'':L('at home','hjemme')}</small></div>${p.id!=='me'?`<button class="btn sm" data-g="${p.id}">🎁</button><button class="btn sm go" data-v="${p.id}">🏡 ${L('Visit','Besøg')}</button>`:''}</div>`).join('');
   $$('canvas[data-p]',l).forEach(c=>{const p=rows.find(r=>String(r.id)===c.dataset.p);drawPet(c.getContext('2d'),46,100,.48,{look:p.look,outfit:p.outfit,t:0})});
   $$('[data-v]',l).forEach(b=>b.onclick=()=>{$$('.ov').forEach(o=>o._close&&o._close());net.visit(b.dataset.v)});
+  $$('[data-g]',l).forEach(b=>b.onclick=()=>{const p=rows.find(r=>String(r.id)===b.dataset.g);if(p)openGive(p)});
 }
 function playerMenu(o){
   panel({title:esc(o.name),sm:true,html:`<div style="text-align:center"><canvas id="pmC" width="240" height="260" style="width:120px;height:130px"></canvas><p>${L('Level','Niveau')} ${o.lvl||1}</p></div>`,render:b=>{drawPet($('#pmC',b).getContext('2d'),120,252,1.05,{look:o.look,outfit:o.outfit,t:0})},
-    buttons:[{label:'👋 '+L('Wave','Vink'),v:'wave'},{label:'⚔️ '+L('Challenge','Udfordr'),v:'duel'},{label:'🏡 '+L('Visit house','Besøg hus'),cls:'go',v:'visit'}]}).then(v=>{if(v==='wave'){net.chat('👋');SFX.talk()}if(v==='visit')net.visit(o.id);if(v==='duel')openDuel()});
+    buttons:[{label:'👋 '+L('Wave','Vink'),v:'wave'},{label:'🎁 '+L('Give','Giv'),v:'gift'},{label:'⚔️ '+L('Challenge','Udfordr'),v:'duel'},{label:'🏡 '+L('Visit house','Besøg hus'),cls:'go',v:'visit'}]}).then(v=>{if(v==='wave'){net.chat('👋');SFX.talk()}if(v==='visit')net.visit(o.id);if(v==='duel')openDuel();if(v==='gift')openGive(o)});
 }
 
 /* =====================================================================
