@@ -1136,7 +1136,7 @@ function openSettings(first){
     <div class="opt"><b>🎵 ${L('Music','Musik')}</b><div class="row" style="gap:8px"><button class="btn sm" id="sMus">${MUSIC.on?'🔕 '+L('Turn off','Slå fra'):'🎵 '+L('Turn on','Slå til')}</button><input type="range" id="sVol" min="0" max="1" step="0.05" value="${MUSIC.vol}" style="flex:1;accent-color:#2f8fe0"><button class="btn sm" id="sSkip" title="Skip">⏭</button></div><p class="hint" style="margin:4px 0 0">${L('Now playing','Spiller nu')}: <b id="musNow">${MUSIC.track?esc(L(MUSIC.track.en,MUSIC.track.da)):'–'}</b></p></div>
     <div class="opt"><b>🔊 ${L('Sound effects','Lydeffekter')}</b><button class="btn sm" id="sSfx">${SFX.on?'🔇 '+L('Turn off','Slå fra'):'🔊 '+L('Turn on','Slå til')}</button></div>
     <p class="hint">🕐 ${L('In-game time','Tid i spillet')}: <b id="sNow"></b> · ${L('Day and night follow your real time.','Dag og nat følger din rigtige tid.')}</p>
-    <div class="goal" style="margin-top:12px"><div class="ic">💾</div><div class="tx">${L('Backup','Backup')}<small>${L('Download your save as a file, or restore everything from a file.','Hent dit spil som en fil, eller gendan alt fra en fil.')}</small></div><div style="display:flex;flex-direction:column;gap:4px"><button class="btn sm ok" id="sExp">⬇️ ${L('Export','Eksportér')}</button><button class="btn sm" id="sImp">⬆️ ${L('Import','Importér')}</button></div></div>
+    <div class="goal" style="margin-top:12px"><div class="ic">💾</div><div class="tx">${L('Backup','Backup')}<small>${L('Download your save as a file, or restore everything from a file.','Hent dit spil som en fil, eller gendan alt fra en fil.')}</small></div><div style="display:flex;flex-direction:column;gap:4px"><button class="btn sm ok" id="sExp">⬇️ ${L('Export','Eksportér')}</button><button class="btn sm" id="sImp">⬆️ ${L('Import','Importér')}</button>${bakData(SLOT)?`<button class="btn sm" id="sBak">♻️ ${L('Backup','Backup')}</button>`:''}</div></div>
     <div class="goal"><div class="ic">🗑️</div><div class="tx">${L('Start over','Start forfra')}<small>${L('Deletes your pet, progress, home and world on this device.','Sletter dit kæledyr, dine fremskridt, dit hjem og din verden på denne enhed.')}</small></div><button class="btn sm no" id="sReset">${L('Reset','Nulstil')}</button></div>`,
     render:b=>{const c=$('#sCountry',b),t=$('#sTz',b);c.value=S.country||guessCountry();t.value=S.tz||'';
       const upd=()=>{$('#sNow',b).textContent=clockText()+' '+(nightF()>.5?'🌙':'☀️')};upd();
@@ -1145,7 +1145,7 @@ function openSettings(first){
       $('#sMus',b).onclick=()=>{MUSIC.toggle();$('#sMus',b).textContent=MUSIC.on?'🔕 '+L('Turn off','Slå fra'):'🎵 '+L('Turn on','Slå til')};
       $('#sVol',b).oninput=e=>MUSIC.setVol(+e.target.value);$('#sSkip',b).onclick=()=>MUSIC.skip();
       $('#sSfx',b).onclick=()=>{SFX.on=!SFX.on;$('#bSnd').textContent=SFX.on?'🔊':'🔇';savePref();$('#sSfx',b).textContent=SFX.on?'🔇 '+L('Turn off','Slå fra'):'🔊 '+L('Turn on','Slå til')};
-      $('#sExp',b).onclick=()=>exportSave();$('#sImp',b).onclick=()=>importSave();
+      $('#sExp',b).onclick=()=>exportSave();$('#sImp',b).onclick=()=>importSave();const sb=$('#sBak',b);if(sb)sb.onclick=()=>{saveNow();restoreBackup(SLOT)};
       $('#sReset',b).onclick=async()=>{if(await panel({title:L('Start over?','Start forfra?'),sm:true,html:`<p>${L('Your pet, progress, home and world will be deleted for good. This cannot be undone.','Dit kæledyr, dine fremskridt, dit hjem og din verden bliver slettet for altid. Det kan ikke fortrydes.')}</p>`,buttons:[{label:L('Cancel','Annuller'),v:0},{label:L('Delete everything','Slet alt'),cls:'no',v:1}]})){RESETTING=true;net.leave();localStorage.removeItem(saveKey());location.reload()}}},buttons:[{label:L('Done','Færdig'),cls:'go'}]});
 }
 
@@ -1307,7 +1307,7 @@ function fresh(){UIDN=1;FRESHING=true;const rooms=[LIVING(),BEDROOM(),BATHROOM()
   rooms,npc:{},quests:[],daily:null,goalsDone:[],streak:{day:0,n:0,claimed:0},visits:{},cd:{},
   cnt:{jobs:0,talks:0,bought:0,placed:0,visits:0,fed:0,quests:0,coinsEarned:0,clothes:0,washed:0,slept:0,wishes:0,harvest:0,planted:0,petted:0,bowls:0,hatched:0,expand:0},firstHelp:true}}
 let S=null;S=fresh();
-function load(){try{const d=JSON.parse(localStorage.getItem(saveKey())||'null');if(d&&d.v===1){const f=fresh();S=Object.assign(f,d);S.st=Object.assign(f.st,d.st);S.cnt=Object.assign(f.cnt,d.cnt);S.outfit=Object.assign(f.outfit,d.outfit);S.look=Object.assign(f.look,d.look);S.mig=d.mig||1;migrate();migrate3();if(!S.bagCap){const need=bagCount()+10;S.bagCap=need<=40?40:(BAG_UP.map(u=>u[1]).find(c=>c>=need)||Math.ceil(need/10)*10)}}}catch(e){}}
+function load(){let raw=null;try{raw=localStorage.getItem(saveKey());const d=JSON.parse(raw||'null');if(d&&d.v===1){const f=fresh();S=Object.assign(f,d);S.st=Object.assign(f.st,d.st);S.cnt=Object.assign(f.cnt,d.cnt);S.outfit=Object.assign(f.outfit,d.outfit);S.look=Object.assign(f.look,d.look);S.mig=d.mig||1;migrate();migrate3();if(!S.bagCap){const need=bagCount()+10;S.bagCap=need<=40?40:(BAG_UP.map(u=>u[1]).find(c=>c>=need)||Math.ceil(need/10)*10)}MYSV=S._sv||0}}catch(e){try{if(raw)localStorage.setItem(saveKey()+'_broken',raw)}catch(e2){}}}
 function migrate(){
   if(S.mig>=2)return;
   S.uid=S.uid||1000;const all=()=>[...S.rooms.flatMap(r=>r.items)];
@@ -1321,8 +1321,23 @@ function migrate(){
   S.mig=2;
 }
 function migrate3(){if(S.mig>=3)return;S.inv.pendant_lamp=(S.inv.pendant_lamp||0)+1;S.inv.table_lamp=(S.inv.table_lamp||0)+1;S.mig=3}
-let saveT=0;function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem(saveKey(),JSON.stringify(S))}catch(e){}},300)}
-function saveNow(){clearTimeout(saveT);try{localStorage.setItem(saveKey(),JSON.stringify(S))}catch(e){}}
+/* Saving is only switched on once a character has been picked on the main menu (LIVE), so closing the page
+   on the menu can never write an empty character over a real one. _sv counts saves: if another tab or window
+   has saved something newer, this one stops saving instead of overwriting it. */
+let LIVE=false,MYSV=0,STALE=false,SAVE_WARN=0;
+function writeSave(){if(!LIVE||STALE||RESETTING)return;try{const k=saveKey(),raw=localStorage.getItem(k);
+  if(raw){const sv=+((raw.match(/"_sv":(\d+)/)||[])[1]||0);if(sv>MYSV){STALE=true;staleWarn();return}if(!S.created&&/"created":true/.test(raw))return}
+  S._sv=++MYSV;localStorage.setItem(k,JSON.stringify(S));backup()}catch(e){if(!SAVE_WARN++)toast(L('⚠️ Could not save – is the browser storage full?','⚠️ Kunne ikke gemme – er browserens lager fuldt?'),4000)}}
+// a spare copy of each character, refreshed every few minutes, that settings and the main menu can restore
+const bakKey=i=>slotKey(i)+'_bak',bakData=i=>{try{const b=JSON.parse(localStorage.getItem(bakKey(i))||'null');return b&&b.d&&b.d.created?b:null}catch(e){return null}};
+function backup(force){const now=Date.now();if(!S.created||(!force&&now-(backup.t||0)<4*60e3))return;backup.t=now;try{localStorage.setItem(bakKey(SLOT),JSON.stringify({at:now,d:S}))}catch(e){}}
+async function restoreBackup(i){const b=bakData(i);if(!b)return;const d=b.d,when=new Date(b.at).toLocaleString(LANG==='da'?'da-DK':'en-GB',{dateStyle:'short',timeStyle:'short'});
+  if(!await panel({title:L('Restore backup?','Gendan backup?'),sm:true,html:`<p>${L(`Bring back <b>${esc(d.name)}</b> (level ${d.lvl||1}, 🪙 ${N(d.coins||0)}) as saved ${when}?`,`Hent <b>${esc(d.name)}</b> tilbage (niveau ${d.lvl||1}, 🪙 ${N(d.coins||0)}) som gemt ${when}?`)}</p>`,buttons:[{label:L('Cancel','Annuller'),v:0},{label:L('Restore','Gendan'),cls:'go',v:1}]}))return;
+  try{localStorage.setItem(slotKey(i),JSON.stringify(d))}catch(e){toast('❌');return}PREF.slot=i;savePref();RESETTING=true;net.leave();location.reload()}
+function staleWarn(){panel({title:L('Open somewhere else','Åben et andet sted'),sm:true,html:`<p>${L('Potato Ville was saved in another tab or window. To keep your newest progress safe, this one has stopped saving. Reload to carry on.','Potato Ville er blevet gemt i en anden fane eller et andet vindue. For at passe på dine nyeste fremskridt gemmer denne ikke længere. Genindlæs for at fortsætte.')}</p>`,buttons:[{label:'🔄 '+L('Reload','Genindlæs'),cls:'go',v:1}]}).then(()=>{RESETTING=true;net.leave();location.reload()})}
+addEventListener('storage',e=>{if(!LIVE||STALE||e.key!==saveKey()||!e.newValue)return;const sv=+((e.newValue.match(/"_sv":(\d+)/)||[])[1]||0);if(sv>MYSV){STALE=true;staleWarn()}});
+let saveT=0;function save(){clearTimeout(saveT);saveT=setTimeout(writeSave,300)}
+function saveNow(){clearTimeout(saveT);writeSave()}
 
 /* ---------------- care stats, energy, xp ---------------- */
 const DECAY={hunger:90,clean:120,fun:100}; // seconds per point
@@ -3532,18 +3547,18 @@ function showMainMenu(){
     wrap.innerHTML=`<div class="pn"><div class="ph"><h2>🏡 Potato Ville</h2><div class="langs"><button data-l="en">🇬🇧</button><button data-l="da">🇩🇰</button></div></div>
       <div class="pb"><div class="logo">Potato <b>Ville</b></div><p class="hint" style="text-align:center;margin:4px 0 12px">${L('Choose a character – each one has its own home, pets and coins.','Vælg en karakter – hver har sit eget hjem, kæledyr og mønter.')}</p><p style="text-align:center;margin:-6px 0 12px"><span class="chip" style="background:#fff3c4;border-style:dashed">🚧 ${L('Early Access – still in development','Early Access – stadig under udvikling')}</span></p>
       <div class="slots3">${[0,1,2].map(i=>{const d=slotData(i);return d?`<div class="slot"><canvas data-s="${i}" width="240" height="250"></canvas><b>${esc(d.name)}</b><small>${L('Level','Niveau')} ${d.lvl||1} · 🪙 ${N(d.coins||0)}</small>
-        <button class="btn go" data-play="${i}">▶ ${L('Play','Spil')}</button><button class="btn sm no" data-del="${i}">🗑️ ${L('Delete','Slet')}</button></div>`:`<div class="slot empty"><div class="plus">＋</div><b>${L('Empty slot','Tom plads')}</b><small>${L('Slot','Plads')} ${i+1}</small><button class="btn ok" data-new="${i}">✨ ${L('New character','Ny karakter')}</button></div>`}).join('')}</div></div>
+        <button class="btn go" data-play="${i}">▶ ${L('Play','Spil')}</button><button class="btn sm no" data-del="${i}">🗑️ ${L('Delete','Slet')}</button></div>`:`<div class="slot empty"><div class="plus">＋</div><b>${L('Empty slot','Tom plads')}</b><small>${L('Slot','Plads')} ${i+1}</small><button class="btn ok" data-new="${i}">✨ ${L('New character','Ny karakter')}</button>${bakData(i)?`<button class="btn sm" data-bak="${i}">♻️ ${L('Restore','Gendan')} ${esc(bakData(i).d.name)}</button>`:''}</div>`}).join('')}</div></div>
       <div class="pf"><button class="btn" id="mmHelp">❓ ${L('How to play','Sådan spiller du')}</button><button class="btn" id="mmAll">← ${L('All games','Alle spil')}</button></div></div>`;
     $$('canvas[data-s]',wrap).forEach(c=>{const d=slotData(+c.dataset.s);const g=c.getContext('2d');g.setTransform(2,0,0,2,0,0);drawPet(g,60,118,.85,{look:d.look,outfit:d.outfit,t:0})});
     $$('.langs button',wrap).forEach(b=>{b.classList.toggle('on',b.dataset.l===LANG);b.onclick=()=>{setLang(b.dataset.l);draw()}});
     $$('[data-play]',wrap).forEach(b=>b.onclick=()=>chooseSlot(+b.dataset.play));
-    $$('[data-new]',wrap).forEach(b=>b.onclick=()=>chooseSlot(+b.dataset.new));
+    $$('[data-new]',wrap).forEach(b=>b.onclick=()=>chooseSlot(+b.dataset.new));$$('[data-bak]',wrap).forEach(b=>b.onclick=()=>restoreBackup(+b.dataset.bak));
     $$('[data-del]',wrap).forEach(b=>b.onclick=async()=>{const i=+b.dataset.del,d=slotData(i);if(await panel({title:L('Delete character?','Slet karakter?'),sm:true,html:`<p>${L(`${esc(d.name)}, the home, pets and coins in this slot will be deleted for good.`,`${esc(d.name)} samt hjemmet, kæledyrene og mønterne på denne plads bliver slettet for altid.`)}</p>`,buttons:[{label:L('Cancel','Annuller'),v:0},{label:L('Delete','Slet'),cls:'no',v:1}]})){localStorage.removeItem(slotKey(i));draw()}});
     $('#mmHelp',wrap).onclick=()=>help();$('#mmAll',wrap).onclick=()=>{location.href='./'};
   };
   document.body.appendChild(wrap);draw();
 }
-function chooseSlot(i){SFX.click();SLOT=i;PREF.slot=i;savePref();S=fresh();load();tickStats(Date.now(),true);$('.mainmenu')&&$('.mainmenu').remove();
+function chooseSlot(i){SFX.click();SLOT=i;PREF.slot=i;savePref();S=fresh();load();LIVE=true;backup(true);tickStats(Date.now(),true);$('.mainmenu')&&$('.mainmenu').remove();
   if(!S.created)openCreator(false);else startGame(false)}
 function toMainMenu(){saveNow();net.leave();RESETTING=true;location.reload()}
 
