@@ -18,7 +18,12 @@
 <meta property="og:title" content="Potato Pool – Free 8-Ball Billiards Game">
 <meta property="og:description" content="Cue up! 8-ball pool with real physics, spin and a campaign tour from Spudville Pub to the Grand Potato Championship. Free in your browser.">
 <meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://potatoteamgames.github.io/games/images/og-potato-pool.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Potato Pool – free 8-ball billiards game">
+<meta name="twitter:image" content="https://potatoteamgames.github.io/games/images/og-potato-pool.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Potato Pool – Free 8-Ball Billiards Game">
 <meta name="twitter:description" content="8-ball pool with real physics, spin, a campaign tour and trophies. Free, no download.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎱%3C/text%3E%3C/svg%3E">
@@ -28,6 +33,7 @@
   "@type": "VideoGame",
   "name": "Potato Pool",
   "url": "https://potatoteamgames.github.io/games/potato-pool.html",
+  "image": "https://potatoteamgames.github.io/games/images/og-potato-pool.jpg",
   "author": {"@type": "Organization", "name": "Potato Team Games", "url": "https://potatoteamgames.github.io/games/"},
   "description": "A free 8-ball pool game in your browser with real ball physics, spin, a campaign tour across 8 potato cities, collectible trophies, daily quests and multiplayer on one device or over the same Wi-Fi.",
   "genre": ["Sports game", "Billiards", "Pool"],
@@ -214,7 +220,7 @@ h1,h2,h3,.lil{font-family:'Lilita One',Nunito,sans-serif;font-weight:400;letter-
 .opp .rd{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
 .quote{font-style:italic;color:var(--muted);font-size:12.5px;margin-top:4px}
 /* trophies */
-.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
 .tro{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;border-radius:14px;border:2px solid #000;background:radial-gradient(circle at 50% 30%,#5a3a20,#2b1b10 70%);box-shadow:0 3px 0 #000;text-align:center}
 .tro canvas{width:96px;height:112px}
 .tro b{font-size:12.5px;line-height:1.15}
@@ -269,6 +275,7 @@ h1,h2,h3,.lil{font-family:'Lilita One',Nunito,sans-serif;font-weight:400;letter-
 </style>
 </head>
 <body>
+<noscript><div style="padding:24px;background:#2a1a10;color:#fff4df;font-family:sans-serif"><h1>Potato Pool – free 8-ball billiards game</h1><p>Potato Pool is a free 2D 8-ball pool game in your browser with real physics and spin. Tour eight cities in the campaign, beat AI rivals in tournaments, collect trophies, level up, buy new cues and ball sets with coins, complete daily and weekly quests – or play friends on the same device or the same Wi-Fi. Works on PC and mobile, in English and Danish.</p><p>Please turn on JavaScript to play. <a href="./">More free games from Potato Team Games</a></p></div></noscript>
 <div id="load"><div class="ldBall"><span>8</span></div><h1>Potato Pool</h1><div class="bar"><i id="ldFill"></i></div></div>
 
 <div id="menu" class="screen">
@@ -377,7 +384,7 @@ const BALLSETS=[
   {id:'classic',n:B('Classic','Klassisk'),price:0,lvl:1,c:['#f6c400','#1c49c9','#d41f2a','#5b2a8c','#f27a10','#147a3c','#7a1d1d','#141414'],cue:'#fbf5e4'},
   {id:'pastel',n:B('Pastel','Pastel'),price:400,lvl:2,c:['#ffe27a','#8fb8ff','#ff9a9a','#c7a4ff','#ffbf80','#8fe0b0','#d99a8a','#3a3540'],cue:'#ffffff'},
   {id:'neon',n:B('Neon Night','Neonnat'),price:900,lvl:5,c:['#e8ff2a','#29d8ff','#ff2a6d','#b026ff','#ff9f1a','#2aff8f','#ff5cd1','#101018'],cue:'#f0fbff'},
-  {id:'earth',n:B('Potato Patch','Kartoffelmark'),price:700,lvl:4,c:['#d8b04a','#5f7fa0','#b5523a','#7a5a8a','#c8803a','#6f8f4a','#8a5a3a','#2b1d12'],cue:'#f3e2bf'},
+  {id:'earth',n:B('Potato Faces','Kartoffelansigter'),price:700,lvl:4,faces:1,c:['#d8b04a','#5f7fa0','#b5523a','#7a5a8a','#c8803a','#6f8f4a','#8a5a3a','#2b1d12'],cue:'#f3e2bf'},
   {id:'royal',n:B('Royal Gold','Kongeguld'),price:2000,lvl:9,c:['#ffd24a','#1b3f99','#a3122a','#4a1a7a','#e07a1a','#0f6a4a','#5a1020','#0b0b0b'],cue:'#fff8e0'},
   {id:'ice',n:B('Ice Crystal','Iskrystal'),price:1500,lvl:7,c:['#e9f4ff','#7fd3ff','#a9c4ff','#c9b3ff','#9ff0e6','#b7ffd0','#ffc6e6','#25324a'],cue:'#ffffff'},
 ];
@@ -394,15 +401,15 @@ const CLOTHS=[
 ];
 // cue sticks: shaft wood, butt colours, pattern
 const CUES=[
-  {id:'spud',n:B('Spud Stick','Spudstok'),price:0,lvl:1,sh:'#e8c995',b1:'#7a3d16',b2:'#3a1c0a',pat:'plain',ring:'#ddd'},
-  {id:'oak',n:B('Old Oak','Gammel eg'),price:350,lvl:2,sh:'#e3c18a',b1:'#5b3a1a',b2:'#a8783e',pat:'points',ring:'#e8d6a8'},
-  {id:'fry',n:B('Golden Fry','Gylden fritte'),price:600,lvl:3,sh:'#f2d38a',b1:'#f2b630',b2:'#d4231f',pat:'stripes',ring:'#fff'},
-  {id:'carbon',n:B('Carbon Pro','Carbon Pro'),price:1100,lvl:5,sh:'#2a2d33',b1:'#15171b',b2:'#3a3f48',pat:'weave',ring:'#9aa4b5'},
-  {id:'neon',n:B('Neon Blade','Neonklinge'),price:1400,lvl:6,sh:'#e9e4ff',b1:'#18122e',b2:'#2affd8',pat:'stripes',ring:'#ff2a9d'},
-  {id:'dragon',n:B('Red Dragon','Rød drage'),price:1800,lvl:8,sh:'#e6c48a',b1:'#7a0d12',b2:'#ffb02a',pat:'points',ring:'#ffd24a'},
-  {id:'ice',n:B('Frost Bite','Frostbid'),price:2000,lvl:10,sh:'#f2f8ff',b1:'#5cc8ff',b2:'#ffffff',pat:'points',ring:'#bfe9ff'},
-  {id:'royal',n:B('Royal Scepter','Kongescepter'),price:3200,lvl:12,sh:'#f0d9a0',b1:'#3a0f5a',b2:'#ffd24a',pat:'rings',ring:'#ffd24a'},
-  {id:'diamond',n:B('Diamond King','Diamantkonge'),price:5000,lvl:15,sh:'#fbf7ec',b1:'#101010',b2:'#e9f6ff',pat:'diamonds',ring:'#e9f6ff'},
+  {id:'spud',n:B('Spud Stick','Spudstok'),price:0,lvl:1,sh:'#e8c995',b1:'#7a3d16',b2:'#3a1c0a',pat:'plain',ring:'#ddd',tip:'#3a6ad0',wrap:'#2a1a10'},
+  {id:'oak',n:B('Old Oak','Gammel eg'),price:350,lvl:2,sh:'#e3c18a',b1:'#5b3a1a',b2:'#a8783e',pat:'points',ring:'#e8d6a8',tip:'#2a8a3a',wrap:'#1a1a1a'},
+  {id:'fry',n:B('Golden Fry','Gylden fritte'),price:600,lvl:3,sh:'#f2d38a',b1:'#f2b630',b2:'#d4231f',pat:'stripes',ring:'#fff',tip:'#d4231f',wrap:'#d4231f',perk:{spin:1.15}},
+  {id:'carbon',n:B('Carbon Pro','Carbon Pro'),price:1100,lvl:5,sh:'#2a2d33',b1:'#15171b',b2:'#3a3f48',pat:'weave',ring:'#9aa4b5',tip:'#3a6ad0',wrap:'#55606e',perk:{aim:1}},
+  {id:'neon',n:B('Neon Blade','Neonklinge'),price:1400,lvl:6,sh:'#e9e4ff',b1:'#18122e',b2:'#2affd8',pat:'stripes',ring:'#ff2a9d',tip:'#ff2a9d',wrap:'#2affd8',perk:{spin:1.25}},
+  {id:'dragon',n:B('Red Dragon','Rød drage'),price:1800,lvl:8,sh:'#e6c48a',b1:'#7a0d12',b2:'#ffb02a',pat:'points',ring:'#ffd24a',tip:'#ffb02a',wrap:'#3a0508',perk:{aim:1}},
+  {id:'ice',n:B('Frost Bite','Frostbid'),price:2000,lvl:10,sh:'#f2f8ff',b1:'#5cc8ff',b2:'#ffffff',pat:'points',ring:'#bfe9ff',tip:'#bfe9ff',wrap:'#2a7ab0',perk:{spin:1.3}},
+  {id:'royal',n:B('Royal Scepter','Kongescepter'),price:3200,lvl:12,sh:'#f0d9a0',b1:'#3a0f5a',b2:'#ffd24a',pat:'rings',ring:'#ffd24a',tip:'#7a2ab0',wrap:'#ffd24a',perk:{aim:1,spin:1.2}},
+  {id:'diamond',n:B('Diamond King','Diamantkonge'),price:5000,lvl:15,sh:'#fbf7ec',b1:'#101010',b2:'#e9f6ff',pat:'diamonds',ring:'#e9f6ff',tip:'#e9f6ff',wrap:'#101010',perk:{aim:2,spin:1.35}},
 ];
 // Venues (campaign cities)
 const CITIES=[
@@ -571,19 +578,19 @@ function cushions(W,b){
     else{if(b.y<s.a||b.y>s.b)continue;const pen=s.n>0?(s.c+BR)-b.x:b.x-(s.c-BR);if(pen<=0)continue;b.x+=s.n*pen;const vn=b.vx*s.n;if(vn<0)bounce(W,b,s.n,0,vn)}
   }
   const rr=BR+JR;
-  for(const j of JAWS){const dx=b.x-j[0],dy=b.y-j[1],d2=dx*dx+dy*dy;if(d2<rr*rr&&d2>1e-9){const d=Math.sqrt(d2),nx=dx/d,ny=dy/d;b.x=j[0]+nx*rr;b.y=j[1]+ny*rr;const vn=b.vx*nx+b.vy*ny;if(vn<0)bounce(W,b,nx,ny,vn)}}
+  for(const j of JAWS){const dx=b.x-j[0],dy=b.y-j[1],d2=dx*dx+dy*dy;if(d2<rr*rr&&d2>1e-9){const d=Math.sqrt(d2),nx=dx/d,ny=dy/d;b.x=j[0]+nx*rr;b.y=j[1]+ny*rr;const vn=b.vx*nx+b.vy*ny;if(vn<0)bounce(W,b,nx,ny,vn,1)}}
 }
-function bounce(W,b,nx,ny,vn){
+function bounce(W,b,nx,ny,vn,jaw){
   const tx=-ny,ty=nx;let vt=b.vx*tx+b.vy*ty;
   if(b.n===0&&b.side){const sp=Math.hypot(b.vx,b.vy)||1,rx=-b.vy/sp,ry=b.vx/sp,pr=rx*tx+ry*ty;vt+=b.side*(-vn)*.34*(pr<0?-1:1);b.side*=.5;if(Math.abs(b.side)<.03)b.side=0}
   vt*=.97;const nv=-vn*E_CUSH;b.vx=tx*vt+nx*nv;b.vy=ty*vt+ny*nv;
   const ev=W.ev;if(ev){if(ev.first>=0)ev.rail=true;if(b.n===0)ev.cueRails++}
-  if(b.n!==0&&b.struck)b.rails++;
+  if(b.n!==0&&b.struck&&!jaw){b.rails++;b.rx=b.x;b.ry=b.y}
   if(W.onCush)W.onCush(-vn);
 }
 function potBall(W,b){
   let best=0,bd=1e12;POCK.forEach((p,i)=>{const d=(p.x-b.x)**2+(p.y-b.y)**2;if(d<bd){bd=d;best=i}});
-  if(W.ev){W.ev.potted.push(b.n);W.ev.pot.push({n:b.n,rails:b.rails,dist:b.struck?Math.hypot(b.x-b.sx,b.y-b.sy):0})}
+  if(W.ev){W.ev.potted.push(b.n);W.ev.pot.push({n:b.n,rails:b.rails&&Math.hypot(b.x-b.rx,b.y-b.ry)>260?b.rails:0,dist:b.struck?Math.hypot(b.x-b.sx,b.y-b.sy):0})}
   if(W.live){b.drop={p:best,t:0,x:b.x,y:b.y}}else b.on=false;
   b.vx=b.vy=0;if(W.onPot)W.onPot(b,best);
 }
@@ -647,7 +654,7 @@ function ballSprite(b,rpx){
   const sz=Math.ceil(rpx*2)+2;let s=SPR[b.n];
   if(!s||s.sz!==sz){const c=document.createElement('canvas');c.width=c.height=sz;s=SPR[b.n]={c,g:c.getContext('2d'),sz,ver:-1,gv:-1};s.img=s.g.createImageData(sz,sz)}
   if(s.ver===b.ver&&s.gv===SPRV)return s.c;s.ver=b.ver;s.gv=SPRV;
-  const d=s.img.data,ce=sz/2,inv=1/rpx,m=b.m,n=b.n,col=ballRGB(n),stripe=n>8,gl=glyph(n),gw=gl.w,rot=V.rot;
+  const GF=glyph(0),d=s.img.data,ce=sz/2,inv=1/rpx,m=b.m,n=b.n,col=ballRGB(n),stripe=n>8,gl=glyph(n),gw=gl.w,rot=V.rot;
   const wr=255,wg=252,wb=244;let i=0;
   for(let py=0;py<sz;py++){const y=(py+.5-ce)*inv;for(let px=0;px<sz;px++,i+=4){const x=(px+.5-ce)*inv,r2=x*x+y*y;
     if(r2>=1.06){d[i+3]=0;continue}
@@ -660,8 +667,8 @@ function ballSprite(b,rpx){
     }else{
       if(stripe&&(l2>.6||l2<-.6)){R=wr;G=wg;Bc=wb}
       const al=l0<0?-l0:l0;
-      if(al>.875){R=wr;G=wg;Bc=wb;const u=(l0<0?-l1:l1)/.48,v=l2/.48,gx=((u+1)*.5*gw)|0,gy=((v+1)*.5*gw)|0;
-        if(gx>=0&&gy>=0&&gx<gw&&gy<gw){const a=gl.a[gy*gw+gx];if(a>0){R=lerp(R,20,a);G=lerp(G,18,a);Bc=lerp(Bc,16,a)}}}
+      if(al>.875){R=wr;G=wg;Bc=wb;const fc=BSET.faces&&l0<0,gg=fc?GF:gl,u=(l0<0?-l1:l1)/(fc?.5:.48),v=l2/(fc?.5:.48),gx=((u+1)*.5*gw)|0,gy=((v+1)*.5*gw)|0;
+        if(fc){R=240;G=205;Bc=140}if(gx>=0&&gy>=0&&gx<gw&&gy<gw){const a=gg.a[gy*gw+gx];if(a>0){R=lerp(R,20,a);G=lerp(G,18,a);Bc=lerp(Bc,16,a)}}}
       else if(al>.855){const t=(al-.855)/.02;R=lerp(R,wr,t);G=lerp(G,wg,t);Bc=lerp(Bc,wb,t)}
     }
     const df=x*LX+y*LY+z*LZ,sh=.3+.8*(df>0?df:0)+.12*z;let hs=x*HX+y*HY+z*HZ;hs=hs>0?hs:0;
@@ -768,10 +775,10 @@ function drawCue(g,x,y,a,pull,cue){
   const w0=6,w1=14,ww=t=>w0+(w1-w0)*t;
   const seg=(t0,t1,fill)=>{const a0=start+L*t0,a1=start+L*t1;g.beginPath();g.moveTo(a0,-ww(t0));g.lineTo(a1,-ww(t1));g.lineTo(a1,ww(t1));g.lineTo(a0,ww(t0));g.closePath();g.fillStyle=fill;g.fill()};
   const lg=(c1,c2)=>{const gr=g.createLinearGradient(0,-14,0,14);gr.addColorStop(0,c1);gr.addColorStop(.45,c2);gr.addColorStop(1,shade(c2.startsWith('#')?c2:'#888888',-.45));return gr};
-  seg(0,.008,'#3a6ad0');seg(.008,.03,lg('#ffffff','#e8e6e0'));
+  seg(0,.008,cue.tip||'#3a6ad0');seg(.008,.03,lg('#ffffff','#e8e6e0'));
   seg(.03,.56,lg(shade(cue.sh,.4),cue.sh));
   seg(.56,.575,lg('#fff',cue.ring));
-  seg(.575,.98,lg(shade(cue.b1,.35),cue.b1));
+  seg(.575,.98,lg(shade(cue.b1,.35),cue.b1));seg(.80,.93,lg(shade(cue.wrap||'#222222',.25),cue.wrap||'#222222'));
   // butt pattern
   g.save();const a0=start+L*.575,a1=start+L*.98;g.beginPath();g.moveTo(a0,-ww(.575));g.lineTo(a1,-ww(.98));g.lineTo(a1,ww(.98));g.lineTo(a0,ww(.575));g.closePath();g.clip();g.fillStyle=cue.b2;
   if(cue.pat==='points'){for(let k=0;k<4;k++){g.beginPath();g.moveTo(a0+20,0);g.lineTo(a0+200+k*6,-16+k*10.6);g.lineTo(a0+200+k*6,-12+k*10.6);g.fill()}g.beginPath();g.moveTo(a0,-20);g.lineTo(a0+190,0);g.lineTo(a0,20);g.fill()}
@@ -792,6 +799,8 @@ const DBG=window.__pool=Object.assign({fast:0,auto:false,autoLvl:.92},window.__p
 const wait=ms=>new Promise(r=>setTimeout(r,DBG.fast?Math.min(ms,5):ms));
 const GUIDES=[{main:620,obj:110,defl:60,refl:0},{main:1e4,obj:220,defl:120,refl:0},{main:1e4,obj:380,defl:220,refl:320},{main:1e4,obj:560,defl:320,refl:620}];
 const cueDef=()=>CUES.find(c=>c.id===S.eq.cue)||CUES[0];
+const cueOf=i=>CUES.find(c=>c.id===(G.players[i]&&G.players[i].cue))||CUES[0];
+const cuePerk=(i,k,d)=>{const p=cueOf(i).perk;return p&&p[k]!=null?p[k]:d};
 const isMine=i=>G&&G.players[i]&&G.players[i].me&&G.players[i].ai==null;
 const canControl=()=>G&&G.phase==='aim'&&isMine(G.cur)&&!G.aiBusy&&!DBG.auto;
 const ctlName=i=>G.players[i].name;
@@ -799,7 +808,7 @@ function setTheme(t){THEME=Object.assign({felt:'#1f7d46',rail:'#6b3a18',bg:'pub'
 function newMatch(cfg){
   G={mode:cfg.mode,players:cfg.players,race:cfg.race||1,score:[0,0],frameNo:0,breaker:cfg.breaker||0,guide:cfg.guide==null?2:cfg.guide,city:cfg.city,round:cfg.round,
     fouls:[0,0],pots:[0,0],tok:0,aim:0,pow:0,spin:{x:0,y:0},phase:'idle',net:cfg.net||null,acc:0,aiBusy:false,shots:0};
-  BSET=BALLSETS.find(b=>b.id===S.eq.balls)||BALLSETS[0];SPRV++;
+  BSET=BALLSETS.find(b=>b.id===(cfg.balls||S.eq.balls))||BALLSETS[0];SPRV++;
   showScreen('game');layout();setTheme(cfg.theme);
   if(G.net!=='guest')newFrame();else{G.W={b:rack(),live:true,ev:null};G.cur=0;G.groups=[null,null];G.bih=false;G.phase='wait';updateHud()}
   startLoop();
@@ -845,9 +854,9 @@ function update(dt){
   const sp=DBG.fast||1;
   if(G.phase==='strike'){
     G.strikeT+=dt*sp;DIRTY=true;
-    if(G.strikeT>=.09){
+    if(G.strikeT>=.09){setTimeout(renderPower,0);
       if(G.net==='guest'){G.phase='moving';return}
-      strike(G.W,G.aim,G.pow,G.spin.x,G.spin.y);SFX.cue(.3+G.pow*.7);G.phase='moving';G.acc=0;G.netFrT=0;
+      const sm=cuePerk(G.cur,'spin',1);strike(G.W,G.aim,G.pow,G.spin.x*sm,G.spin.y*sm);SFX.cue(.3+G.pow*.7);G.phase='moving';G.acc=0;G.netFrT=0;
     }
   }
   if(G.phase==='moving'){
@@ -1084,12 +1093,12 @@ function render(){
       if(G.kitchen){g.fillStyle='rgba(255,255,255,.05)';g.fillRect(0,0,KITCHEN,TH)}}
     if(G.phase==='aim'&&!ai&&!DBG.auto)drawGuide(g,c,mineT?1:.6);
     let pull=G.pow*150;if(G.phase==='strike')pull=G.pow*150*Math.max(0,1-G.strikeT/.09)-6;
-    drawCue(g,c.x,c.y,G.aim,pull,G.players[G.cur].cue?CUES.find(q=>q.id===G.players[G.cur].cue)||cueDef():cueDef());
+    drawCue(g,c.x,c.y,G.aim,pull,cueOf(G.cur));
     g.setTransform(1,0,0,1,0,0);
   }
 }
 function drawGuide(g,c,alpha){
-  const gl=GUIDES[clamp(G.guide,0,3)],dx=Math.cos(G.aim),dy=Math.sin(G.aim),bs=G.W.b,lw=2.2/V.S;
+  const gl=GUIDES[clamp(G.guide+cuePerk(G.cur,'aim',0),0,3)],dx=Math.cos(G.aim),dy=Math.sin(G.aim),bs=G.W.b,lw=2.2/V.S;
   const r=rayCast(bs,c.x,c.y,dx,dy,c);
   const ok=!r.ball||legalTargets(bs,G.groups[G.cur]).includes(r.ball)||G.breakShot;
   const len=Math.min(r.t,gl.main);
@@ -1187,7 +1196,7 @@ $('#power').addEventListener('pointermove',e=>{if(!PW.drag||e.pointerId!==PW.id)
 const pwEnd=e=>{if(!PW.drag||e.pointerId!==PW.id)return;PW.drag=false;if(!canControl())return;if(G.pow>.03)takeShot(G.aim,G.pow,G.spin.x,G.spin.y);else{G.pow=0;renderPower()}};
 $('#power').addEventListener('pointerup',pwEnd);$('#power').addEventListener('pointercancel',e=>{PW.drag=false;if(G){G.pow=0;renderPower()}});
 function renderPower(){
-  const p=G?G.pow:0,pr=$('#power'),k=$('#powKnob'),f=$('#powFill');
+  const p=G&&(G.phase==='aim'||G.phase==='wait')?G.pow:0,pr=$('#power'),k=$('#powKnob'),f=$('#powFill');
   if(V.rot){const len=pr.clientWidth-56;k.style.left=(2+p*len)+'px';f.style.cssText=`left:0;top:0;bottom:0;right:auto;height:auto;width:${2+p*len+26}px;background:linear-gradient(90deg,#ffd96a,#f08a1c 60%,#e8453c)`}
   else{const len=pr.clientHeight-50;k.style.top=(2+p*len)+'px';f.style.cssText=`height:${2+p*len+22}px`}
   $('#powPct').textContent=p>0?Math.round(p*100)+'%':'';
@@ -1502,7 +1511,7 @@ function startCampaignMatch(ci){
   const c=CITIES[ci];if(!S.tour||S.tour.city!==ci)S.tour={city:ci,round:0,fouls:0};save();
   const r=S.tour.round,o=OPPS[ci*3+r];
   const cfg={mode:'campaign',city:ci,round:r,race:c.race[r],guide:[3,3,2,2,1,1,1,0][ci],breaker:0,
-    players:[{name:myName(),me:true,port:MEPORT},{name:o.n,ai:c.ai[r],port:o}],theme:{felt:c.felt,rail:c.rail,bg:c.bg,trim:ci===7?'#d8a530':ci===6?'#c8961f':null}};
+    players:[{name:myName(),me:true,port:MEPORT,cue:S.eq.cue},{name:o.n,ai:c.ai[r],port:o,cue:CUES[Math.min(8,ci+r)].id}],theme:{felt:c.felt,rail:c.rail,bg:c.bg,trim:ci===7?'#d8a530':ci===6?'#c8961f':null}};
   const go=()=>{newMatch(cfg);G.cfg=cfg};
   if(DBG.fast){closeSheet();go();return}
   modal({title:LL(ROUNDS[r]),html:`<canvas id="oppC" width="200" height="200" style="width:120px;height:120px"></canvas><h3 style="font-size:24px">${esc(o.n)}</h3><p class="quote">“${esc(LL(o.q))}”</p><p class="muted">${esc(LL(c.n))} · ${c.race[r]>1?`${L('Race to','Først til')} ${c.race[r]}`:L('One frame','Ét spil')}</p>`,
@@ -1545,7 +1554,7 @@ const SHEETS={
       <button class="btn go wide" id="qGo" style="font-size:18px;padding:14px;margin-top:6px">🎱 ${L('Play','Spil')}</button></div>`,
       after(){$$('#qD button').forEach(b=>b.onclick=()=>{Q.d=+b.dataset.v;SFX.click();renderSheet()});$$('#qR button').forEach(b=>b.onclick=()=>{Q.race=+b.dataset.v;SFX.click();renderSheet()});
         $('#qGo').onclick=()=>{SFX.click();const lvl=DIFF[Q.d][1],oi=clamp(Math.round(lvl*23)+rnd(3)-1,0,23),o=OPPS[oi],cl=CLOTHS.find(c=>c.id===S.eq.cloth)||CLOTHS[0];
-          const cfg={mode:'quick',race:Q.race,guide:[3,2,1,0,0][Q.d],breaker:0,players:[{name:myName(),me:true,port:MEPORT},{name:o.n,ai:lvl,port:o}],theme:{felt:cl.c,rail:'#6b3a18',bg:'pub'}};closeSheet();newMatch(cfg);G.cfg=cfg}}};
+          const cfg={mode:'quick',race:Q.race,guide:[3,2,1,0,0][Q.d],breaker:0,players:[{name:myName(),me:true,port:MEPORT,cue:S.eq.cue},{name:o.n,ai:lvl,port:o,cue:CUES[oi%9].id}],theme:{felt:cl.c,rail:'#6b3a18',bg:'pub'}};closeSheet();newMatch(cfg);G.cfg=cfg}}};
   },
   multi(){
     const M=SHEETS._m||(SHEETS._m={race:1,p2:L('Player 2','Spiller 2')});
@@ -1561,7 +1570,7 @@ const SHEETS={
       after(){
         $$('#mR button').forEach(b=>b.onclick=()=>{M.race=+b.dataset.v;M.p2=$('#mp2').value;SFX.click();renderSheet()});
         $('#mLocal').onclick=()=>{const a=($('#mp1').value||'').trim()||L('Player 1','Spiller 1'),b=($('#mp2').value||'').trim()||L('Player 2','Spiller 2');M.p2=b;const cl=CLOTHS.find(c=>c.id===S.eq.cloth)||CLOTHS[0];
-          const cfg={mode:'local',race:M.race,guide:2,breaker:0,players:[{name:a,me:true,port:MEPORT},{name:b,me:true,port:FRIENDPORT}],theme:{felt:cl.c,rail:'#6b3a18',bg:'pub'}};closeSheet();newMatch(cfg);G.cfg=cfg};
+          const cfg={mode:'local',race:M.race,guide:2,breaker:0,players:[{name:a,me:true,port:MEPORT,cue:S.eq.cue},{name:b,me:true,port:FRIENDPORT,cue:'spud'}],theme:{felt:cl.c,rail:'#6b3a18',bg:'pub'}};closeSheet();newMatch(cfg);G.cfg=cfg};
         if(NET.role){if(NET.role==='host')drawHostLobby();else $('#onlineBox').innerHTML=`<p>✅ ${L('Connected! Waiting for the host to start…','Forbundet! Venter på at værten starter…')}</p><button class="btn red sm" onclick="leaveNet();renderSheet()">${L('Leave','Forlad')}</button>`;return}
         const nm=()=>{const v=($('#netName').value||'').trim();if(v&&v!==S.name){S.name=v.slice(0,14);save()}};
         $('#mHost').onclick=()=>{nm();SFX.click();hostGame()};
@@ -1592,7 +1601,7 @@ const SHEETS={
     return{title:L('Shop & Customise','Butik & udseende'),rt:`<span class="chip">🪙 ${S.coins.toLocaleString()}</span>`,
       html:`<div class="tabs">${[['cue',L('🎱 Cues','🎱 Køer')],['cloth',L('🟩 Cloth','🟩 Klæde')],['balls',L('⚪ Balls','⚪ Kugler')]].map(([k,l])=>`<button class="${tab===k?'on':''}" data-tab="${k}">${l}</button>`).join('')}</div>
       <div class="sgrid">${list.map(it=>{const own=S.own[tab].includes(it.id),eq=S.eq[tab]===it.id,lock=S.lvl<it.lvl;
-        return`<div class="item ${eq?'eq':''}"><canvas width="260" height="120" data-id="${it.id}"></canvas><b>${esc(LL(it.n))}</b>${eq?`<small style="color:var(--gold)">✓ ${L('Equipped','Valgt')}</small><button class="btn sm" disabled>${L('In use','I brug')}</button>`:own?`<small>${L('Owned','Ejet')}</small><button class="btn sm green" data-eq="${it.id}">${L('Equip','Vælg')}</button>`:lock?`<small>🔒 ${L('Level','Niveau')} ${it.lvl}</small><button class="btn sm" disabled>🪙 ${it.price}</button>`:`<small>${L('Level','Niveau')} ${it.lvl}+</small><button class="btn sm go" data-buy="${it.id}" ${S.coins<it.price?'disabled':''}>🪙 ${it.price}</button>`}</div>`}).join('')}</div>
+        return`<div class="item ${eq?'eq':''}"><canvas width="260" height="120" data-id="${it.id}"></canvas><b>${esc(LL(it.n))}</b>${tab==='cue'?`<small style="color:#9fe0b0">${perkTxt(it)}</small>`:''}${eq?`<small style="color:var(--gold)">✓ ${L('Equipped','Valgt')}</small><button class="btn sm" disabled>${L('In use','I brug')}</button>`:own?`<small>${L('Owned','Ejet')}</small><button class="btn sm green" data-eq="${it.id}">${L('Equip','Vælg')}</button>`:lock?`<small>🔒 ${L('Level','Niveau')} ${it.lvl}</small><button class="btn sm" disabled>🪙 ${it.price}</button>`:`<small>${L('Level','Niveau')} ${it.lvl}+</small><button class="btn sm go" data-buy="${it.id}" ${S.coins<it.price?'disabled':''}>🪙 ${it.price}</button>`}</div>`}).join('')}</div>
       <p class="muted" style="font-size:12.5px;text-align:center;margin-top:14px">${L('Your cloth is used in Quick Match and Multiplayer. Campaign venues have their own cloth.','Dit klæde bruges i Hurtig kamp og Multiplayer. Kampagnens steder har deres eget klæde.')}</p>`,
       after(){
         $$('.tabs [data-tab]').forEach(b=>b.onclick=()=>{SHEETS._tab=b.dataset.tab;SFX.click();renderSheet()});
@@ -1622,6 +1631,7 @@ const SHEETS={
   },
   help(){return{title:L('How to play','Sådan spiller du'),html:`<div class="card help">${helpHTML()}</div>`}},
 };
+function perkTxt(it){const p=it.perk;if(!p)return L('Cosmetic','Kun udseende');const a=[];if(p.aim)a.push(L(`+${p.aim} aim guide`,`+${p.aim} sigtelinje`));if(p.spin)a.push(L(`+${Math.round((p.spin-1)*100)}% spin`,`+${Math.round((p.spin-1)*100)}% effet`));return '✨ '+a.join(' · ')}
 function helpHTML(){return L(`<h3>🎯 Aiming & shooting</h3><ul><li><b>Drag anywhere</b> on the table to rotate your aim. <b>Tap</b> a spot to aim straight at it.</li><li>Use the <b>fine-tune wheel</b> for tiny adjustments (or the mouse wheel / arrow keys).</li><li><b>Pull the power bar</b> and release to shoot – or drag backwards from the cue ball.</li><li>Tap the <b>cue ball button</b> to add spin: top spin follows through, back spin draws back, side spin changes the cushion bounce.</li></ul>
 <h3>🎱 8-ball rules</h3><ul><li>Break from behind the line. The table is open until someone pots a ball after the break: that player gets that group – <b>solids (1–7)</b> or <b>stripes (9–15)</b>.</li><li>Pot one of your balls to keep shooting. When your group is cleared, pot the <b>8-ball</b> to win.</li><li>Potting the 8-ball early (or with a foul) loses the frame. Potting it on the break wins!</li><li><b>Fouls:</b> scratching the cue ball, hitting no ball, hitting the wrong ball first, or no ball touching a cushion after contact. Your opponent then gets <b>ball in hand</b> and can place the cue ball anywhere.</li></ul>
 <h3>🗺️ Campaign & rewards</h3><ul><li>Tour 8 potato cities. Each has a 3-round tournament; win the final to claim the city cup. Cities unlock with your level and the previous cup.</li><li>Collect flawless medals and special trophies for great feats. Earn XP and coins, complete daily and weekly quests and keep your daily streak going.</li><li>Spend coins on new cues, cloth colours and ball sets in the shop.</li></ul>
@@ -1698,8 +1708,8 @@ function hostMsg(c,m){
     if(NET.guest&&NET.guest.cid!==cid&&NET.conn&&NET.conn.open){try{c.send({t:'full'})}catch(e){}setTimeout(()=>c.close(),300);return}
     if(NET.started&&NET.guest&&NET.guest.cid!==cid){try{c.send({t:'full'})}catch(e){}setTimeout(()=>c.close(),300);return}
     NET.conn=c;clearTimeout(NET.discT);
-    if(NET.started&&G&&G.mode==='lan'){NET.guest.disc=false;c.send({t:'start',names:[G.players[0].name,G.players[1].name],race:G.race,theme:THEME,rejoin:1});netSync();toast(B(`📶 ${NET.guest.name} is back!`,`📶 ${NET.guest.name} er tilbage!`),2000,true);return}
-    NET.guest={cid,name:cleanName(m.name)};SFX.coin();drawHostLobby();return}
+    if(NET.started&&G&&G.mode==='lan'){NET.guest.disc=false;c.send({t:'start',names:[G.players[0].name,G.players[1].name],race:G.race,theme:THEME,cues:[G.players[0].cue,G.players[1].cue],balls:BSET.id,rejoin:1});netSync();toast(B(`📶 ${NET.guest.name} is back!`,`📶 ${NET.guest.name} er tilbage!`),2000,true);return}
+    NET.guest={cid,name:cleanName(m.name),cue:CUES.some(q=>q.id===m.cue)?m.cue:'spud'};SFX.coin();drawHostLobby();return}
   if(c!==NET.conn)return;
   if(m.t==='aim'){if(G&&G.cur===1)applyAim(m);return}
   if(m.t==='shoot'){
@@ -1710,10 +1720,10 @@ function hostMsg(c,m){
 function hostStart(){
   if(!NET.guest||!NET.conn||!NET.conn.open)return;NET.started=true;
   const cl=CLOTHS.find(c=>c.id===S.eq.cloth)||CLOTHS[0],theme={felt:cl.c,rail:'#6b3a18',bg:'pub'};
-  const names=[myName(),NET.guest.name];
-  netSend({t:'start',names,race:NET.race,theme});
+  const names=[myName(),NET.guest.name],cues=[S.eq.cue,NET.guest.cue],balls=S.eq.balls;
+  netSend({t:'start',names,race:NET.race,theme,cues,balls});
   closeModals();closeSheet();
-  const cfg={mode:'lan',net:'host',race:NET.race,guide:2,breaker:NET.breaker||0,players:[{name:names[0],me:true,port:MEPORT},{name:names[1],remote:true,port:FRIENDPORT}],theme};
+  const cfg={mode:'lan',net:'host',race:NET.race,guide:2,breaker:NET.breaker||0,balls,players:[{name:names[0],me:true,port:MEPORT,cue:cues[0]},{name:names[1],remote:true,port:FRIENDPORT,cue:cues[1]}],theme};
   NET.breaker=1-(NET.breaker||0);newMatch(cfg);G.cfg=cfg;
 }
 function hostLost(c,final){
@@ -1744,7 +1754,7 @@ function guestConnect(code,fail){
   const pr=NET.peer;if(!pr||pr.destroyed)return;
   const c=pr.connect(PEER_PREFIX+code,{reliable:true});
   const to=setTimeout(()=>{if(!c.open&&!NET.started&&fail)fail(L('Could not reach the host. Make sure both devices are on the same Wi-Fi.','Kunne ikke nå værten. Sørg for at begge enheder er på samme wifi.'))},20000);
-  c.on('open',()=>{clearTimeout(to);NET.conn=c;NET.lastHost=Date.now();c.send({t:'hello',cid:NET.cid,name:myName()});
+  c.on('open',()=>{clearTimeout(to);NET.conn=c;NET.lastHost=Date.now();c.send({t:'hello',cid:NET.cid,name:myName(),cue:S.eq.cue});
     if(!NET.started){const box=$('#onlineBox');if(box)box.innerHTML=`<p>✅ ${L('Connected! Waiting for the host to start…','Forbundet! Venter på at værten starter…')}</p><button class="btn red sm" onclick="leaveNet();renderSheet()">${L('Leave','Forlad')}</button>`}
     else{NET.reconn=false;$$('.ov.reconn').forEach(o=>o._close&&o._close('x'))}});
   c.on('data',m=>{if(c!==NET.conn)return;NET.lastHost=Date.now();if(m&&m.t==='ping'){try{c.send({t:'pong'})}catch(e){}return}try{guestMsg(m)}catch(e){console.error(e)}});
@@ -1765,7 +1775,7 @@ function guestMsg(m){
   if(m.t==='start'){NET.started=true;
     if(m.rejoin&&G&&G.mode==='lan')return;
     closeModals();closeSheet();const names=(m.names||[]).map(cleanName);
-    const cfg={mode:'lan',net:'guest',race:clamp(+m.race||1,1,5),guide:2,players:[{name:names[0],remote:true,port:FRIENDPORT},{name:names[1],me:true,port:MEPORT}],theme:m.theme};
+    const cq=(m.cues||[]).map(x=>CUES.some(q=>q.id===x)?x:'spud');const cfg={mode:'lan',net:'guest',race:clamp(+m.race||1,1,5),guide:2,balls:BALLSETS.some(q=>q.id===m.balls)?m.balls:null,players:[{name:names[0],remote:true,port:FRIENDPORT,cue:cq[0]||'spud'},{name:names[1],me:true,port:MEPORT,cue:cq[1]||S.eq.cue}],theme:m.theme};
     newMatch(cfg);G.cfg=cfg;return}
   if(!G||G.mode!=='lan')return;
   if(m.t==='st')applyState(m.s);
