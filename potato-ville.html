@@ -2790,9 +2790,7 @@ function renderTown(g,t){
 function drawLostThings(g,t,vis){for(const q of S.quests){if(q.type!=='fetch'||q.found)continue;
     if(vis(q.x)){const b=Math.sin(t/200)*5,p=(t/900)%1;g.globalAlpha=1-p;ell(g,q.x,q.y,20+p*50,(20+p*50)*.4,null,3);g.globalAlpha=1;ell(g,q.x,q.y,18,7,'rgba(0,0,0,.18)',0);
       box(g,q.x-24,q.y-58+b,48,46,14,'#fff',2.5);g.font='30px serif';g.fillStyle='#000';g.textAlign='center';g.textBaseline='middle';g.fillText(q.ic,q.x,q.y-35+b);star(g,q.x+22,q.y-60+b,8,3.5,'#ffd23f')}
-    // an arrow at the edge of the screen points the way while the thing is off screen
-    const Z=zoom(),VW=V.W/Z,sx=q.x-cam.x;if(sx<0||sx>VW){const d=sx<0?-1:1,ax=d<0?cam.x+56:cam.x+VW-56,ay=cam.y+V.H/Z*.55,m=Math.round(Math.abs(q.x-ME.x)/10);
-      box(g,ax-50,ay-26,100,52,14,'rgba(10,30,60,.82)',3);g.font='20px Lilita One,Nunito';g.fillStyle='#fff';g.textAlign='center';g.textBaseline='middle';g.fillText((d<0?'◀ ':'')+q.ic+' '+m+'m'+(d>0?' ▶':''),ax,ay)}}}
+    }}
 function seasonTown(g,t){const se=season(),x0=cam.x-200,x1=cam.x+V.W/zoom()+200;
   if(isSnow()){g.fillStyle='rgba(255,255,255,.42)';g.fillRect(cam.x,672,V.W/zoom(),MAP_H-672);g.fillRect(cam.x,170,V.W/zoom(),300)}
   for(const b of BLD){if(b.x+b.w<x0||b.x>x1||b.kind==='lot'||b.kind==='park')continue;const dx=b.door.x;
@@ -2997,7 +2995,8 @@ function showDlg(n,text,a){
   const q=questFor(n.id),B=$('#dlgB');B.innerHTML='';
   const btn=(l,cls,f)=>{const b=document.createElement('button');b.className='btn sm '+(cls||'');b.innerHTML=l;b.onclick=()=>{SFX.click();f()};B.appendChild(b)};
   btn(L('💬 Chat','💬 Snak'),'',()=>talkMore(n));
-  if(q){if(questReady(q))btn(L('✅ Here you go!','✅ Værsgo!'),'ok',()=>completeQuest(q));else{btn(L('📜 About the task…','📜 Om opgaven…'),'',()=>showDlg(n,questText(q,true),a));btn(L('✕ Give up task','✕ Opgiv opgaven'),'',()=>{S.quests=S.quests.filter(o=>o!==q);save();showDlg(n,L("That's alright! Maybe another time.",'Det er helt i orden! Måske en anden gang.'),a)})}}
+  if(q){if(questReady(q))btn(L('✅ Here you go!','✅ Værsgo!'),'ok',()=>completeQuest(q));else{btn(L('📜 About the task…','📜 Om opgaven…'),'',()=>showDlg(n,questText(q,true),a));btn(L('✕ Give up task','✕ Opgiv opgaven'),'',()=>{S.quests=S.quests.filter(o=>o!==q);npcState(q.npc).qcd=Date.now()+QUEST_CD;save();showDlg(n,L("That's alright! Maybe another time.",'Det er helt i orden! Måske en anden gang.'),a)})}}
+  else if(st.qcd&&Date.now()<st.qcd)btn(`⏳ ${L('New task in','Ny opgave om')} ${fmtDur(st.qcd-Date.now())}`,'',()=>showDlg(n,L(`I don't need help right now – come back in ${fmtDur(st.qcd-Date.now())}!`,`Jeg har ikke brug for hjælp lige nu – kom tilbage om ${fmtDur(st.qcd-Date.now())}!`),a));
   else if(qActiveCount()<3)btn(L('🙋 Need help?','🙋 Brug for hjælp?'),'go',()=>offerQuest(n,a));
   const gifts=Object.keys(S.sup).filter(k=>S.sup[k]>0&&SUP[k]&&SUP[k].type==='gift');
   if(gifts.length&&st.gift!==today())btn('🎁 '+L('Give a gift','Giv en gave'),'',()=>{const k=gifts.sort((a,b)=>SUP[b].price-SUP[a].price)[0],old=st.h,hh={gift_flowers:1,gift_choco:2,gift_teddy:3}[k]||1;S.sup[k]--;st.gift=today();st.h=Math.min(10,st.h+hh);SFX.buy();bump('gifts');addXP(10);
@@ -3025,7 +3024,8 @@ function offerQuest(n,a){
   S.quests.push(q);save();SFX.pop();showDlg(n,questText(q),a);
 }
 function foundThing(q){if(q.found)return;q.found=true;SFX.buy();toast(L(`✨ ${q.ic} Found it! Bring it back to ${NPC_BY[q.npc].name}.`,`✨ ${q.ic} Fundet! Giv det tilbage til ${NPC_BY[q.npc].name}.`));save()}
-function completeQuest(q){
+const QUEST_CD=30*60000; // a neighbour asks for help again 30 minutes after a task is done or given up
+function completeQuest(q){npcState(q.npc).qcd=Date.now()+QUEST_CD;
   if(q.type==='deliver'){S.food[q.food]--;if(!S.food[q.food])delete S.food[q.food]}
   S.quests=S.quests.filter(x=>x!==q);const st=npcState(q.npc),old=st.h;st.h=Math.min(10,st.h+2);
   addCoins(30+S.lvl*8);addXP(25+S.lvl*4);bump('quests');SFX.buy();
@@ -3617,7 +3617,7 @@ function openQuests(start){let tab=start||'active';
     $$('[data-a]',b).forEach(x=>x.onclick=()=>{if(qAccept(x.dataset.a)){toast('📜 '+L('Quest accepted!','Opgave taget!'));draw()}});
     $$('[data-c]',b).forEach(x=>x.onclick=()=>{qClaim(S.qa[+x.dataset.c]);draw()});
     $$('[data-x]',b).forEach(x=>x.onclick=()=>{S.qa.splice(+x.dataset.x,1);SFX.click();save();draw()});
-    $$('[data-xn]',b).forEach(x=>x.onclick=async()=>{const q=S.quests[+x.dataset.xn];if(!q)return;if(!await panel({title:L('Give up this task?','Opgiv opgaven?'),sm:true,html:`<p>${L(`${esc(NPC_BY[q.npc].name)} will understand – you can always ask for a new task.`,`${esc(NPC_BY[q.npc].name)} forstår det godt – du kan altid spørge efter en ny opgave.`)}</p>`,buttons:[{label:L('Keep it','Behold'),v:0},{label:L('Give up','Opgiv'),cls:'no',v:1}]}))return;S.quests=S.quests.filter(o=>o!==q);SFX.click();save();draw()})};draw()}})}
+    $$('[data-xn]',b).forEach(x=>x.onclick=async()=>{const q=S.quests[+x.dataset.xn];if(!q)return;if(!await panel({title:L('Give up this task?','Opgiv opgaven?'),sm:true,html:`<p>${L(`${esc(NPC_BY[q.npc].name)} will understand – you can always ask for a new task.`,`${esc(NPC_BY[q.npc].name)} forstår det godt – du kan altid spørge efter en ny opgave.`)}</p>`,buttons:[{label:L('Keep it','Behold'),v:0},{label:L('Give up','Opgiv'),cls:'no',v:1}]}))return;S.quests=S.quests.filter(o=>o!==q);npcState(q.npc).qcd=Date.now()+QUEST_CD;SFX.click();save();draw()})};draw()}})}
 
 /* =====================================================================
    BILLS – every 7 real days rent and electricity arrive in your mailbox.
