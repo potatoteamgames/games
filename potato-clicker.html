@@ -160,7 +160,11 @@ main{display:grid;grid-template-columns:minmax(0,1fr) 460px;min-height:0;min-wid
 .runner.ufo>span{animation:ufo 1.1s ease-in-out infinite}
 .runner.hit>span{animation:rhit .2s}
 .runner .rhp{position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:13px;background:var(--red);color:var(--cream);border:2px solid var(--ink);border-radius:999px;padding:1px 8px}
-@keyframes runL{from{transform:translateX(105vw)}to{transform:translateX(-40vw)}}
+@keyframes runL{from{transform:translateX(var(--rx0,105vw))}to{transform:translateX(var(--rx1,-40vw))}}
+/* events (trains, bandits, golden potatoes, potato rain) live in a layer that covers only the potato area, so they never cover the menus */
+#evLayer{position:fixed;overflow:hidden;pointer-events:none;z-index:42}
+#evLayer>*{pointer-events:auto}
+#evLayer>.golden,#evLayer>.drop,#evLayer>.runner{position:absolute}
 @keyframes ufo{50%{transform:translateY(-36px) rotate(-6deg)}}
 @keyframes rhit{50%{transform:scale(.8) rotate(-10deg)}}
 #chips{position:relative;display:flex;flex-wrap:wrap;gap:5px;justify-content:center;z-index:5;pointer-events:none;padding:0 8px}
@@ -286,7 +290,7 @@ h4{font-family:Rye,Georgia,serif;font-weight:400;margin:12px 0 6px;font-size:16p
 @keyframes gin{from{transform:scale(0)}}
 @keyframes gout{to{transform:scale(0) rotate(180deg);opacity:0}}
 .drop{position:fixed;top:-70px;font-size:46px;padding:6px;z-index:41;cursor:pointer;animation:fall linear forwards;filter:drop-shadow(0 0 8px #ffcf70);touch-action:manipulation;line-height:1}
-@keyframes fall{to{transform:translateY(calc(100vh + 140px)) rotate(540deg)}}
+@keyframes fall{85%{opacity:1}to{transform:translateY(var(--fd,calc(100vh + 140px))) rotate(540deg);opacity:0}}
 .modal{position:fixed;inset:0;background:rgba(20,10,3,.8);backdrop-filter:blur(6px);z-index:80;display:flex;align-items:center;justify-content:center;padding:14px}
 #daily{z-index:79}
 .hidden{display:none!important}
@@ -323,9 +327,9 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
   .hbtn{width:38px;height:38px;font-size:17px}
   .homebtn{height:38px;padding:0 9px;font-size:13px;gap:4px}
   .homebtn .hl1{display:none}.homebtn .hl2{display:inline}
-  main{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1.08fr) minmax(0,1fr)}
+  main{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1.2fr) minmax(0,1fr)}
   #left{padding:6px 8px 4px;gap:4px;justify-content:flex-start}
-  #potArea{flex:1 1 0;height:auto;min-height:calc(var(--ps)*1.02)}
+  #potArea{flex:1 1 0;height:auto;min-height:0}
   #count{font-size:clamp(28px,8vw,40px)}
   .lbl{font-size:12px}
   #pps{font-size:12px;padding:1px 10px;margin-top:2px}
@@ -810,6 +814,11 @@ function snd(k,x){
 const fx=$('#fx'),ctx=fx.getContext('2d');let P=[];
 function resize(){const r=Math.min(2,window.devicePixelRatio||1);fx.width=innerWidth*r;fx.height=innerHeight*r;fx.style.width=innerWidth+'px';fx.style.height=innerHeight+'px';ctx.setTransform(r,0,0,r,0,0)}
 addEventListener('resize',resize);resize();
+// the event layer sits exactly over the potato area; on phones the potato shrinks to fit the room left above the menu
+function evLayer(){let l=$('#evLayer');if(!l){l=document.createElement('div');l.id='evLayer';document.body.appendChild(l);fitPlay()}return l}
+function fitPlay(){const L0=$('#left'),r=L0.getBoundingClientRect(),l=$('#evLayer');if(l){l.style.left=r.left+'px';l.style.top=r.top+'px';l.style.width=r.width+'px';l.style.height=r.height+'px'}
+  if(matchMedia('(max-width:900px)').matches){const pa=$('#potArea'),ps=Math.max(90,Math.min(240,pa.clientHeight*.9,pa.clientWidth*.62));if(Math.abs((parseFloat(L0.style.getPropertyValue('--ps'))||0)-ps)>1)L0.style.setProperty('--ps',ps+'px')}else L0.style.removeProperty('--ps')}
+addEventListener('resize',fitPlay);setInterval(fitPlay,800);requestAnimationFrame(fitPlay);
 const COLS=['#ffd27a','#f0b84a','#e06d1f','#c8473a','#fff3d6','#7cc35a','#8b5a2b'];
 function burst(x,y,n,cols,spd){for(let i=0;i<n&&P.length<600;i++){const a=Math.random()*Math.PI*2,s=rand(2,7)*(spd||1);P.push({k:'c',x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-2,l:rand(.5,1),m:1,r:rand(3,7),c:pick(cols||COLS)})}}
 function emojis(x,y,n,e){for(let i=0;i<n&&P.length<600;i++){const a=rand(-Math.PI,0),s=rand(3,8);P.push({k:'e',x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:1.2,m:1.2,r:rand(16,30),t:e||'🥔',rot:rand(-3,3),a:0})}}
@@ -929,10 +938,10 @@ let goldT=rand(50,120);
 const GOLD_SVG=`<svg viewBox="0 0 300 300" width="100%" height="100%"><defs><radialGradient id="gg" cx="38%" cy="30%" r="78%"><stop offset="0%" stop-color="#fffbe0"/><stop offset="55%" stop-color="#ffcc00"/><stop offset="100%" stop-color="#b36b00"/></radialGradient></defs><path d="M150 18 C228 14 284 78 276 158 C268 238 210 286 142 282 C70 278 18 226 24 150 C30 74 78 22 150 18Z" fill="url(#gg)" stroke="#8a5200" stroke-width="8"/><ellipse cx="108" cy="66" rx="52" ry="20" fill="#fff" opacity=".6" transform="rotate(-24 108 66)"/><text x="150" y="190" font-size="110" text-anchor="middle">✨</text></svg>`;
 function spawnGolden(){
   const el=document.createElement('div');el.className='golden';el.innerHTML=GOLD_SVG;
-  el.style.left=rand(4,84)+'vw';el.style.top=rand(12,78)+'vh';
+  const lay=evLayer(),W=lay.clientWidth,H=lay.clientHeight,sz=W<500?64:80;el.style.left=rand(4,Math.max(5,W-sz-4))+'px';el.style.top=rand(H*.08,Math.max(H*.1,H-sz-6))+'px';
   let done=false;
   el.addEventListener('pointerdown',e=>{e.preventDefault();if(!e.isTrusted||done||vibe)return;done=true;clickGolden(e.clientX,e.clientY);el.classList.add('bye');setTimeout(()=>el.remove(),600)});
-  document.body.appendChild(el);
+  lay.appendChild(el);
   setTimeout(()=>{if(!done){done=true;el.classList.add('bye');setTimeout(()=>el.remove(),600)}},13000);
 }
 function clickGolden(x,y){
@@ -1317,11 +1326,11 @@ function potatoRain(){
 function spawnDrop(e){
   if(vibe)return;
   const el=document.createElement('div');el.className='drop';el.textContent=e||(Math.random()<.1?'🍟':'🥔');
-  el.style.left=rand(4,88)+'vw';el.style.animationDuration=rand(4,6.5)+'s';let done=false;
+  const lay=evLayer();el.style.left=rand(4,Math.max(5,lay.clientWidth-64))+'px';el.style.setProperty('--fd',(lay.clientHeight+60)+'px');el.style.animationDuration=rand(4,6.5)*Math.max(.6,Math.min(1,lay.clientHeight/700))+'s';let done=false;
   el.addEventListener('pointerdown',e=>{e.preventDefault();if(!e.isTrusted||done||vibe)return;done=true;S.drops++;
     const v=Math.max(10,D.base*10+clickBase()*5);gain(v);floatTxt(e.clientX,e.clientY,'+'+fmt(v),'#c8f5a8',30);
     burst(e.clientX,e.clientY,16);ring(e.clientX,e.clientY,'#7cc35a',70);snd('pop',30+(S.drops%15)*4);el.remove()});
-  el.addEventListener('animationend',()=>el.remove());document.body.appendChild(el);
+  el.addEventListener('animationend',()=>el.remove());lay.appendChild(el);
 }
 
 /* =============== WEATHER + RANDOM EVENTS =============== */
@@ -1371,7 +1380,8 @@ function runner(o){
   const el=document.createElement('div');el.className='runner'+(o.cls?' '+o.cls:'');
   const hp=o.hp||1;let left=hp,done=false;
   el.innerHTML=`<span>${o.e}</span>`+(hp>1?`<b class="rhp">${hp}</b>`:'');
-  el.style.top=(o.y!=null?o.y:rand(18,62))+'vh';el.style.fontSize=(o.size||52)+'px';el.style.animationDuration=(o.dur||7)+'s';
+  const lay=evLayer(),H=lay.clientHeight,sz=o.size||52;el.style.top=Math.max(4,Math.min(H-sz-30,H*(o.y!=null?o.y:rand(18,62))/100*1.1))+'px';el.style.fontSize=sz+'px';
+  el.style.setProperty('--rx0',lay.clientWidth+'px');el.style.setProperty('--rx1',-(sz*4)+'px');el.style.animationDuration=(o.dur||7)*Math.max(.7,Math.min(1,lay.clientWidth/900))+'s';
   el.addEventListener('pointerdown',ev=>{
     ev.preventDefault();if(!ev.isTrusted||done||vibe)return;left--;
     burst(ev.clientX,ev.clientY,12);ring(ev.clientX,ev.clientY,'#ffd27a',80);snd('pop',40+(hp-left)*12);
@@ -1381,7 +1391,7 @@ function runner(o){
     else floatTxt(ev.clientX,ev.clientY-20,left+' more!','#fff',22);
   });
   el.addEventListener('animationend',ev=>{if(ev.animationName!=='runL')return;if(!done){done=true;if(!vibe&&o.lose)o.lose()}el.remove()});
-  document.body.appendChild(el);
+  lay.appendChild(el);
 }
 const EVENTS=[
   {w:3,f:()=>{toast('🚂 TRAIN INCOMING!','Click the train to grab its cargo');snd('alert');
