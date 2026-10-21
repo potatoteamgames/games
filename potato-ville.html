@@ -2639,14 +2639,21 @@ function renderTown(g,t){
   for(const a of ACTORS)if(vis(a.x))sp.push({y:a.y,draw:()=>{drawPet(g,a.x,a.y,PET_TOWN,{look:a.npc.look,outfit:a.npc.outfit,t:a.t,walk:a.walk,dir:a.dir,talk:a.talking});nameTag(g,a.npc.name,a.x,a.y-104,true);if(a.say)bubble(g,a.x,a.y-118,a.say,.8);if(questFor(a.id))questMark(g,a.x,a.y-150,questFor(a.id))}});
   for(const ch of charsInScene())sp.push({y:ch.y,draw:()=>{const po=ch.me?pokeOffset():{x:0,y:0};drawPet(g,ch.x+po.x,ch.y+po.y*.45,PET_TOWN,{look:po.happy?{...ch.look,eyes:'happy'}:ch.look,outfit:ch.outfit,t:t/1000+(ch.me?0:1.3),walk:ch.walk,dir:ch.dir,mood:po.happy?'happy':ch.mood,talk:ch.talk||po.talk});nameTag(g,(ch.me?myFlag():ch.flag||'')+' '+ch.name,ch.x,ch.y-104,false,ch.me);if(ch.say)bubble(g,ch.x,ch.y-120,ch.say,.8)}});
   seasonSprites(sp,t);
-  for(const q of S.quests)if(q.type==='fetch'&&!q.found&&vis(q.x))sp.push({y:q.y,draw:()=>{const b=Math.sin(t/200)*4;ell(g,q.x,q.y,16,6,'rgba(0,0,0,.15)',0);g.font='30px serif';g.fillStyle='#000';g.textAlign='center';g.textBaseline='middle';g.fillText(q.ic,q.x,q.y-20+b);star(g,q.x+16,q.y-38+b,7,3,'#fff59d')}});
+  // lost things from neighbour quests are drawn after everything else, so trees and people can never hide them
   sp.sort((a,b)=>a.y-b.y).forEach(s=>s.draw());
+  drawLostThings(g,t,vis);
   seasonTown(g,t);
   if(NIGHT>.01)townNight(g,t);
   drawDelivery(g,t);
   if(ME.tx!=null){g.globalAlpha=.6;ell(g,ME.tx,ME.ty,14,6,null,3);g.globalAlpha=1}
   g.restore();
 }
+function drawLostThings(g,t,vis){for(const q of S.quests){if(q.type!=='fetch'||q.found)continue;
+    if(vis(q.x)){const b=Math.sin(t/200)*5,p=(t/900)%1;g.globalAlpha=1-p;ell(g,q.x,q.y,20+p*50,(20+p*50)*.4,null,3);g.globalAlpha=1;ell(g,q.x,q.y,18,7,'rgba(0,0,0,.18)',0);
+      box(g,q.x-24,q.y-58+b,48,46,14,'#fff',2.5);g.font='30px serif';g.fillStyle='#000';g.textAlign='center';g.textBaseline='middle';g.fillText(q.ic,q.x,q.y-35+b);star(g,q.x+22,q.y-60+b,8,3.5,'#ffd23f')}
+    // an arrow at the edge of the screen points the way while the thing is off screen
+    const Z=zoom(),VW=V.W/Z,sx=q.x-cam.x;if(sx<0||sx>VW){const d=sx<0?-1:1,ax=d<0?cam.x+56:cam.x+VW-56,ay=cam.y+V.H/Z*.55,m=Math.round(Math.abs(q.x-ME.x)/10);
+      box(g,ax-50,ay-26,100,52,14,'rgba(10,30,60,.82)',3);g.font='20px Lilita One,Nunito';g.fillStyle='#fff';g.textAlign='center';g.textBaseline='middle';g.fillText((d<0?'◀ ':'')+q.ic+' '+m+'m'+(d>0?' ▶':''),ax,ay)}}}
 function seasonTown(g,t){const se=season(),x0=cam.x-200,x1=cam.x+V.W/zoom()+200;
   if(isSnow()){g.fillStyle='rgba(255,255,255,.42)';g.fillRect(cam.x,672,V.W/zoom(),MAP_H-672);g.fillRect(cam.x,170,V.W/zoom(),300)}
   for(const b of BLD){if(b.x+b.w<x0||b.x>x1||b.kind==='lot'||b.kind==='park')continue;const dx=b.door.x;
@@ -2784,14 +2791,14 @@ function clickShop(w){
 function clickTown(w){
   for(const a of ACTORS)if(Math.abs(w.x-a.x)<42&&w.y>a.y-110&&w.y<a.y+10){walkTo(a.x+(ME.x<a.x?-70:70),a.y,()=>talkTo(a.id));return}
   for(const o of net.others())if(o.scene==='town'&&Math.abs(w.x-o.x)<42&&w.y>o.y-110&&w.y<o.y+10){walkTo(o.x+(ME.x<o.x?-70:70),o.y,()=>playerMenu(o));return}
-  for(const q of S.quests)if(q.type==='fetch'&&!q.found&&Math.hypot(w.x-q.x,w.y-q.y)<50){walkTo(q.x,q.y,()=>foundThing(q));return}
+  for(const q of S.quests)if(q.type==='fetch'&&!q.found&&Math.hypot(w.x-q.x,w.y-q.y+30)<65){walkTo(q.x,q.y,()=>foundThing(q));return}
   for(const b of BLD)if(w.x>b.x&&w.x<b.x+b.w&&w.y>b.y&&w.y<b.y+b.h+30){walkTo(b.door.x,b.door.y,()=>enterBuilding(b));return}
   for(const s of SPOTS){const inS=s.r?Math.hypot((w.x-s.x),(w.y-s.y)/.55)<s.r+10:(w.x>s.x-10&&w.x<s.x+s.w+10&&w.y>s.y-30&&w.y<s.y+s.h+10);
     if(inS){const tx=s.r?s.x:s.x+s.w/2,ty=s.r?s.y+s.r*.55+20:s.y+s.h+22;walkTo(tx,Math.min(TOWN_MAXY,ty),()=>useSpot(s));return}}
   walkTo(w.x,w.y);
 }
 // fetch quests are found just by walking over them
-function checkPickups(){if(SCENE.type!=='town')return;for(const q of S.quests)if(q.type==='fetch'&&!q.found&&Math.hypot(ME.x-q.x,ME.y-q.y)<40)foundThing(q)}
+function checkPickups(){if(SCENE.type!=='town')return;for(const q of S.quests)if(q.type==='fetch'&&!q.found&&Math.hypot(ME.x-q.x,ME.y-q.y)<60)foundThing(q)}
 function enterBuilding(b){
   if(b.kind==='house'){goHome(0);return}
   if(b.kind==='npchouse'){visitNPC(b.npc);return}
@@ -2868,7 +2875,7 @@ function nearPlace(x){let best=null,bd=1e9;for(const b of BLD){if(b.kind==='lot'
 function foodShop(id){for(const [k,sh] of Object.entries(SHOPDEF))if(sh.secs.some(s=>s.goods.some(g=>g.k==='food'&&g.id===id)))return BLD.find(b=>b.shop===k);return null}
 function offerQuest(n,a){
   let q;
-  if(Math.random()<.55){const th=pick(LOST_THINGS);let x,y,k=0;do{[x,y]=randomWalkable();k++}while(Math.hypot(x-(a.x||0),y-(a.y||0))<500&&k<30);q={type:'fetch',npc:n.id,thing:th[0],en:th[1],da:th[2],ic:th[3],x,y,found:false}}
+  if(Math.random()<.55){const th=pick(LOST_THINGS);let x,y,k=0;do{[x,y]=randomWalkable();k++}while((Math.hypot(x-(a.x||0),y-(a.y||0))<500||TREES.some(([tx,ty])=>Math.abs(tx-x)<80&&y<ty+10&&y>ty-170))&&k<60);q={type:'fetch',npc:n.id,thing:th[0],en:th[1],da:th[2],ic:th[3],x,y,found:false}}
   else{const opts=Object.values(FOOD).filter(f=>f.lvl<=S.lvl&&f.h>0&&foodShop(f.id)&&foodShop(f.id).shop!=='season');const f=pick(opts.length?opts:[FOOD.apple]);q={type:'deliver',npc:n.id,food:f.id}}
   S.quests.push(q);save();SFX.pop();showDlg(n,questText(q),a);
 }
