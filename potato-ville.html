@@ -3436,17 +3436,28 @@ function whereGet(k,id){const out=[];for(const [sk,sh] of Object.entries(SHOPDEF
   if(k==='furn'&&['teddy','teddy_big','toy_box','star_lamp','snow_globe','piggy_bank'].includes(id))out.push('🧸 '+L('Claw machine prize','Præmie i gribemaskinen'));
   if(k==='furn'&&FURN[id]&&!FURN[id].price)out.push('🏠 '+L('Your home has it','Dit hjem har den'));
   return out.length?out.join(' · '):L('Gifts and surprises','Gaver og overraskelser')}
+// rarity: 0 common · 1 uncommon · 2 rare · 3 epic · 4 legendary
+const RARITY=[['Common','Almindelig','#94a3b8'],['Uncommon','Ualmindelig','#22c55e'],['Rare','Sjælden','#3b82f6'],['Epic','Episk','#a855f7'],['Legendary','Legendarisk','#f59e0b']];
+function rarity(k,it){if(k==='pet')return it.rar<0?1:Math.min(4,it.rar+1);
+  if(k==='sup'&&['fish','junk'].includes(it.type)){const f=FISH.find(f=>f[0]===it.id),ch=f?f[2]:10;return ch>=8?0:ch>=4?1:ch>=1.5?2:ch>=.8?3:4}
+  if(it.lux)return it.price>=4000?4:3;let r=it.price<100?0:it.price<300?1:it.price<800?2:3;if(it.season||SEASON_CLOTH.includes(it.id)||(k==='food'&&['candy','candy_cane_food','gingerbread','choco_heart'].includes(it.id)))r=Math.max(r,2); // only in the shops part of the year
+  if(k==='food'&&RECIPES.some(x=>x[1]===it.id&&x[4]==='royal'))r=4;return r}
+const sellValue=(k,it)=>k==='pet'?it.sell:Math.max(1,Math.floor((it.price||0)/2));
+let WIKI_SORT='lvl';
 function openWiki(){let tab='furn',q='';
   const TABS=[['furn','🛋️',L('Furniture','Møbler')],['cloth','👕',L('Clothes','Tøj')],['food','🍎',L('Food','Mad')],['sup','🧰',L('Supplies','Forsyninger')],['fish','🎣',L('Fish & rubbish','Fisk & skrald')],['pet','🐾',L('Pets','Kæledyr')]];
   panel({title:'📖 '+L('Potato Ville Wiki','Potato Ville Wiki'),render:b=>{
-    b.innerHTML=`<div class="tabs" id="wkT"></div><input class="tx" id="wkQ" placeholder="🔍 ${L('Search…','Søg…')}" style="margin-bottom:8px"><p class="hint" id="wkN" style="margin:0 0 6px"></p><div class="ppl" id="wkL"></div>`;
+    const SORTS=[['lvl',L('⭐ Level','⭐ Niveau')],['sellD',L('🪙 Best to sell','🪙 Mest værd at sælge')],['sellA',L('🪙 Least worth selling','🪙 Mindst værd at sælge')],['priceD',L('💰 Most expensive','💰 Dyreste')],['priceA',L('💰 Cheapest','💰 Billigste')],['rareD',L('💎 Rarest first','💎 Sjældneste først')],['rareA',L('💎 Most common first','💎 Mest almindelige først')],['name',L('🔤 Name A–Z','🔤 Navn A–Å')]];
+    b.innerHTML=`<div class="tabs" id="wkT"></div><div class="row" style="gap:6px;margin-bottom:8px;flex-wrap:nowrap"><input class="tx" id="wkQ" placeholder="🔍 ${L('Search…','Søg…')}" style="flex:1;min-width:0"><select class="tx" id="wkS" style="width:auto;max-width:48%">${SORTS.map(([k,t])=>`<option value="${k}" ${k===WIKI_SORT?'selected':''}>${t}</option>`).join('')}</select></div><p class="hint" id="wkN" style="margin:0 0 6px"></p><div class="ppl" id="wkL"></div>`;
     const draw=()=>{$('#wkT',b).innerHTML=TABS.map(([k,i,t])=>`<button data-t="${k}" class="${k===tab?'on':''}">${i} ${t}</button>`).join('');$$('#wkT button',b).forEach(x=>x.onclick=()=>{tab=x.dataset.t;SFX.click();draw()});
       let list=tab==='furn'?Object.values(FURN).filter(f=>!f.fixed).map(it=>({k:'furn',it})):tab==='cloth'?Object.values(CLOTH).map(it=>({k:'cloth',it})):tab==='food'?Object.values(FOOD).map(it=>({k:'food',it})):tab==='pet'?Object.values(PET_T).map(it=>({k:'pet',it})):Object.values(SUP).filter(s=>(tab==='fish')===['fish','junk'].includes(s.type)).map(it=>({k:'sup',it}));
-      const qq=q.trim().toLowerCase();if(qq)list=list.filter(x=>(x.it.en+' '+x.it.da).toLowerCase().includes(qq));list.sort((a,b)=>(a.it.lvl||0)-(b.it.lvl||0)||(a.it.price||0)-(b.it.price||0));
+      const qq=q.trim().toLowerCase();if(qq)list=list.filter(x=>(x.it.en+' '+x.it.da).toLowerCase().includes(qq));const sv=x=>sellValue(x.k,x.it),pr=x=>x.k==='pet'?(x.it.price||x.it.sell*2):(x.it.price||0),ra=x=>rarity(x.k,x.it),lv=x=>x.it.lvl||0,nmc=(a,b)=>nm(a.it).localeCompare(nm(b.it),LANG);
+      const CMP={lvl:(a,b)=>lv(a)-lv(b)||pr(a)-pr(b),sellD:(a,b)=>sv(b)-sv(a)||nmc(a,b),sellA:(a,b)=>sv(a)-sv(b)||nmc(a,b),priceD:(a,b)=>pr(b)-pr(a)||nmc(a,b),priceA:(a,b)=>pr(a)-pr(b)||nmc(a,b),rareD:(a,b)=>ra(b)-ra(a)||pr(b)-pr(a),rareA:(a,b)=>ra(a)-ra(b)||pr(a)-pr(b),name:nmc};
+      list.sort(CMP[WIKI_SORT]||CMP.lvl);
       $('#wkN',b).textContent=L(`${list.length} things`,`${list.length} ting`);
-      $('#wkL',b).innerHTML=list.slice(0,400).map((x,i)=>{const it=x.it,price=it.price?`🪙 ${N(it.price)}`:L('Free','Gratis');return`<div class="pp" style="align-items:flex-start"><div class="wkc" data-i="${i}" style="width:66px;flex:none;text-align:center;font-size:34px">${x.k==='food'||x.k==='sup'?it.e:''}</div><div class="tx"><b>${esc(nm(it))}</b> <small class="hint">${price}${it.lvl>1?' · '+L('Level','Niveau')+' '+it.lvl:''}</small><br><small>${esc(itemDesc(x.k,it.id))}</small><br><small class="hint">📍 ${esc(whereGet(x.k,it.id))}</small></div></div>`}).join('')||`<p class="hint">${L('Nothing found.','Intet fundet.')}</p>`;
+      $('#wkL',b).innerHTML=list.slice(0,400).map((x,i)=>{const it=x.it,price=it.price?`🪙 ${N(it.price)}`:L('Free','Gratis');const R=RARITY[rarity(x.k,it)];return`<div class="pp" style="align-items:flex-start"><div class="wkc" data-i="${i}" style="width:66px;flex:none;text-align:center;font-size:34px">${x.k==='food'||x.k==='sup'?it.e:''}</div><div class="tx"><b>${esc(nm(it))}</b> <span style="display:inline-block;padding:0 7px;border-radius:99px;background:${R[2]};color:#fff;font-size:11px">${L(R[0],R[1])}</span> <small class="hint">${price} · ${L('sells for','sælges for')} ${N(sellValue(x.k,it))} 🪙${it.lvl>1?' · '+L('Level','Niveau')+' '+it.lvl:''}</small><br><small>${esc(itemDesc(x.k,it.id))}</small><br><small class="hint">📍 ${esc(whereGet(x.k,it.id))}</small></div></div>`}).join('')||`<p class="hint">${L('Nothing found.','Intet fundet.')}</p>`;
       $$('.wkc',b).forEach(d=>{const x=list[+d.dataset.i];if(x.k==='food'||x.k==='sup')return;const c=thumb(x.k,x.it.id,66,52);c.style.width='66px';c.style.height='52px';d.appendChild(c)})};
-    $('#wkQ',b).oninput=e=>{q=e.target.value;draw()};draw()}})}
+    $('#wkQ',b).oninput=e=>{q=e.target.value;draw()};$('#wkS',b).onchange=e=>{WIKI_SORT=e.target.value;$('#wkL',b).scrollTop=0;b.scrollTop=0;draw()};draw()}})}
 
 /* =====================================================================
    QUESTS – a board with 100+ quests: daily, weekly, monthly, special and seasonal.
