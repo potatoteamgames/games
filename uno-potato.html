@@ -768,7 +768,7 @@ function render(V,instant){
   }else if(V.phase==='over')msg=L('Round over!','Runden er slut!');
   st.textContent=msg;st.className=cls;
   const sty=LY.cy+CH*.78+16;st.style.left='';
-  if(LY.land){st.style.top=(30+18)+'px';st.style.left=(W*.76)+'px';st.style.maxWidth=(W*.4)+'px'}else{st.style.maxWidth='';st.style.top=(sty>LY.handTop-30?LY.cy+CH*.5+26:sty)+'px'}
+  if(LY.land){st.style.top=(30+18)+'px';st.style.left=(W*.73)+'px';st.style.maxWidth=(W*.36)+'px';st.style.fontSize='14px'}else{st.style.maxWidth='';st.style.fontSize='';st.style.top=(sty>LY.handTop-30?LY.cy+CH*.5+26:sty)+'px'}
   const dk=$('#deck');const canDraw=myTurn&&V.drawnId==null;
   const anyOk=myHand.some(c=>myTurn&&canPlayRaw(c,tp,V.color,V.pending,V.pendKind,V.drawnId));
   dk.classList.toggle('go',canDraw&&!anyOk);
@@ -780,7 +780,7 @@ function render(V,instant){
   bp.style.left=(W/2)+'px';bp.style.top=(hy)+'px';
   if(!bs.classList.contains('hide')&&W<520)bp.style.top=(hy-56)+'px';
   const be=$('#bEmo');const bS=LY.seats[0];
-  if(LY.land&&bS.y>LY.handTop){be.style.left=bS.x+'px';be.style.top=(bS.y-AVS-30)+'px';bs.style.left=Math.min(W-70,W/2+LY.halfW+70)+'px';bs.style.top=(LY.baseY)+'px';bp.style.top=(LY.handTop-30)+'px'}
+  if(LY.land&&bS.y>LY.handTop){be.style.left=Math.max(30,bS.x-AVS-14)+'px';be.style.top=(bS.y-6)+'px';bs.style.left=Math.min(W-70,W/2+LY.halfW+70)+'px';bs.style.top=(LY.baseY)+'px';bp.style.top=(LY.handTop-30)+'px'}
   else{be.style.left=(28+AVS+36)+'px';be.style.top=hy+'px'}
   $('#roundTag').textContent=L('Round ','Runde ')+V.round;
   const nt=$('#netTag');nt.classList.toggle('hide',!V.lan);if(V.lan)nt.textContent='📶 '+(V.code||NET.code||'');
