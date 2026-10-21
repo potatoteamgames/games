@@ -802,6 +802,7 @@ function drawPet(c,x,y,sc,p){
   // cape / backpack behind
   if(of.top==='top_hero'){poly(c,[-30,-58,30,-58,46,-4,-46,-4],'#ffc93c')}
   if(of.acc==='ac_backpack'){box(c,-52,-72,104,54,14,CLOTH.ac_backpack.col)}
+  if(lk.hair&&lk.hair.s&&lk.hair.s!=='none'&&!p.blank)drawHair(c,lk.hair,'back');
   drawEars(c,an,col,dk,lt,false,t);
   drawTail(c,an,col,dk,t);
   // feet
@@ -827,11 +828,13 @@ function drawPet(c,x,y,sc,p){
     c.restore()}
   // clothes clipped to body
   c.save();bodyPath(c);c.clip();drawBottom(c,of.bottom);drawTop(c,of.top,col);c.restore();
+  const hairFront=lk.hair&&lk.hair.s&&lk.hair.s!=='none'&&!p.blank;
   bodyPath(c);c.lineWidth=3.5;c.strokeStyle=OL;c.stroke();
   // skirts / dress flare outside body
   if(of.top==='top_dress')poly(c,[-40,-30,40,-30,52,-6,-52,-6],CLOTH.top_dress.col);
   if(of.bottom==='bot_skirt')poly(c,[-42,-26,42,-26,50,-8,-50,-8],CLOTH.bot_skirt.col);
   if(of.bottom==='bot_tutu'){for(let i=-3;i<=3;i++)ell(c,i*15,-14,14,9,CLOTH.bot_tutu.col,2)}
+  if(hairFront)drawHair(c,lk.hair,'front');
   drawEars(c,an,col,dk,lt,true,t);
   if(!p.blank)drawFace(c,lk,p);
   drawAcc(c,of.acc);
@@ -839,6 +842,37 @@ function drawPet(c,x,y,sc,p){
   if(of.hat)drawHat(c,of.hat,an);
   c.restore();
 }
+/* ---------------- hair (bought at the salon): style, colour, which side it falls to and how much volume ---------------- */
+// [id, en, da, price, level]
+const HAIRS=[['none','No hair','Intet hår',0,1],['buzz','Buzz Cut','Helt kort',40,1],['short','Short Crop','Kort klip',60,1],['bangs','Bangs','Pandehår',80,1],['bob','Bob','Page',120,2],['ponytail','Ponytail','Hestehale',120,2],
+ ['pigtails','Pigtails','Rottehaler',140,2],['bun','Top Bun','Knold',140,2],['spiky','Spiky','Pigget',160,3],['curly','Curly','Krøllet',180,3],['pixie','Pixie Cut','Pixie',180,4],['wavy','Wavy','Bølget',200,3],
+ ['long','Long Hair','Langt hår',220,4],['braids','Braids','Fletninger',260,5],['quiff','Quiff','Quiff',260,5],['afro','Afro','Afro',300,6],['mohawk','Mohawk','Hanekam',350,7]];
+const HAIR={};HAIRS.forEach(([id,en,da,price,lvl])=>HAIR[id]={id,en,da,price,lvl});
+const HAIR_COLS=['#3b2414','#7a4b22','#c98a4e','#f2d16b','#fff1b8','#e2683c','#1f1f1f','#9ca3af','#ffffff','#ff7eb6','#ef4444','#8b5cf6','#3fa0ff','#43c46b'];
+function hairCap(c,col,bottom,lw=2.5){c.beginPath();c.moveTo(-47,-90);c.bezierCurveTo(-48,-118,-26,-132,0,-132);c.bezierCurveTo(26,-132,48,-118,47,-90);if(bottom)bottom();else{c.quadraticCurveTo(24,-104,0,-104);c.quadraticCurveTo(-24,-104,-47,-90)}c.closePath();c.fillStyle=col;c.fill();c.lineWidth=lw;c.strokeStyle=OL;c.stroke()}
+function drawHair(c,h,layer){const col=h.c||'#7a4b22',dk=shade(col,-.25),lt=shade(col,.3),s=h.s;c.save();if(h.side<0)c.scale(-1,1);const v=h.vol||1;c.translate(0,-100);c.scale(v,v);c.translate(0,100);
+  const strand=(x0,y0,x1,y1)=>line(c,x0,y0,x1,y1,lt,2);
+  if(layer==='back'){
+    if(s==='bob'){box(c,-56,-124,112,64,24,col,2.5)}
+    if(s==='long'||s==='wavy'){const bot=s==='long'?-18:-46;c.beginPath();c.moveTo(-50,-118);c.lineTo(-60,bot);if(s==='wavy')for(let i=0;i<6;i++)c.quadraticCurveTo(-60+i*20+10,bot+10*(i%2?-1:1),-60+(i+1)*20,bot);else c.quadraticCurveTo(0,bot+18,60,bot);c.lineTo(50,-118);c.closePath();c.fillStyle=col;c.fill();c.lineWidth=2.5;c.strokeStyle=OL;c.stroke()}
+    if(s==='afro')for(let i=0;i<12;i++){const a=Math.PI*.9+i*(Math.PI*1.2/11);ell(c,Math.cos(a)*54,-98+Math.sin(a)*44,24,24,col,2.5)}
+    if(s==='ponytail'){c.save();c.translate(40,-112);c.rotate(.5);ell(c,14,34,15,40,col,2.5);c.restore();ell(c,42,-108,6,6,'#ef4444',2)}
+    if(s==='pigtails')[-1,1].forEach(k=>{c.save();c.translate(k*50,-100);c.rotate(k*.35);ell(c,k*8,28,14,32,col,2.5);c.restore();ell(c,k*52,-98,6,6,'#ff7eb6',2)});
+    c.restore();return}
+  if(s==='buzz'){c.globalAlpha=.9;hairCap(c,col,()=>{c.quadraticCurveTo(24,-112,0,-114);c.quadraticCurveTo(-24,-112,-47,-90)},2);c.globalAlpha=1}
+  else if(s==='short')hairCap(c,col,()=>{for(let i=0;i<=8;i++){const x=47-i*94/8;c.lineTo(x,i%2?-104:-96)}});
+  else if(s==='bangs')hairCap(c,col,()=>{c.lineTo(40,-94);c.lineTo(-40,-94)});
+  else if(s==='pixie')hairCap(c,col,()=>{c.quadraticCurveTo(20,-92,-10,-98);c.quadraticCurveTo(-30,-102,-47,-94)});
+  else if(s==='spiky'){for(let i=0;i<7;i++){const x=-36+i*12;poly(c,[x-9,-120,x+9,-120,x+(i-3)*3,-150-(i%2)*6],col,2.5)}hairCap(c,col,()=>{for(let i=0;i<=8;i++){const x=47-i*94/8;c.lineTo(x,i%2?-102:-95)}})}
+  else if(s==='curly'||s==='afro'){hairCap(c,col);for(let i=0;i<9;i++){const a=Math.PI*1.05+i*(Math.PI*.9/8);ell(c,Math.cos(a)*42,-100+Math.sin(a)*30,s==='afro'?14:11,s==='afro'?14:11,col,2)}}
+  else if(s==='mohawk'){for(let i=0;i<6;i++){const y=-118+i*-1;poly(c,[-8,-112-i*2,8,-112-i*2,0,-152+Math.abs(i-2.5)*4],i%2?col:dk,2)}ell(c,0,-120,9,10,col,2)}
+  else if(s==='quiff'){hairCap(c,col,()=>{c.quadraticCurveTo(26,-108,0,-108);c.quadraticCurveTo(-24,-108,-47,-90)});c.beginPath();c.moveTo(-32,-122);c.bezierCurveTo(-30,-160,30,-166,44,-128);c.quadraticCurveTo(10,-140,-32,-122);c.closePath();c.fillStyle=col;c.fill();c.lineWidth=2.5;c.strokeStyle=OL;c.stroke()}
+  else{// bob, long, wavy, ponytail, pigtails, bun, braids: a smooth cap with a parting
+    hairCap(c,col,()=>{c.quadraticCurveTo(30,-112,4,-118);c.quadraticCurveTo(-28,-112,-47,-90)});line(c,4,-130,4,-118,dk,2);
+    if(s==='bun'){ell(c,0,-138,17,15,col,2.5);line(c,-10,-140,8,-134,lt,2)}
+    if(s==='braids')[-1,1].forEach(k=>{for(let i=0;i<6;i++)ell(c,k*44,-88+i*11,7,7,i%2?col:dk,2);ell(c,k*44,-22,5,4,'#ff7eb6',1.5)})}
+  if(!['mohawk','buzz'].includes(s)){strand(-20,-126,-30,-110);strand(14,-128,22,-114)}
+  c.restore()}
 function drawEars(c,an,col,dk,lt,front,t){
   const inner='#ffb3c7';
   if(!front){
@@ -1816,7 +1850,7 @@ function itemRect(it){const f=FURN[it.id];if(!f)return{x:0,y:0,w:0,h:0};
   if(f.kind==='wall')return{x:it.x-f.w/2,y:it.y-f.h/2,w:f.w,h:f.h};return{x:it.x-f.w/2,y:it.y-(it.z||0)-f.h,w:f.w,h:f.h}}
 
 /* ---------------- town layout ---------------- */
-const MAP_W=9900,MAP_H=1100,TOWN_MINY=492,TOWN_MAXY=1072;
+const MAP_W=10500,MAP_H=1100,TOWN_MINY=492,TOWN_MAXY=1072;
 const BLD=[
  {id:'home',x:200,w:300,kind:'house',col:'#ff9a76',roof:'#a33b2b'},
  {id:'lot1',x:580,w:300,kind:'lot',lot:1},{id:'lot2',x:960,w:300,kind:'lot',lot:2},{id:'lot3',x:1340,w:300,kind:'lot',lot:3},
@@ -1836,6 +1870,7 @@ const BLD=[
  {id:'olive',x:7600,w:300,kind:'npchouse',npc:'olive',col:'#d9f99d',roof:'#4d7c0f'},
  {id:'rocky',x:7980,w:300,kind:'npchouse',npc:'rocky',col:'#bfdbfe',roof:'#1e40af'},
  {id:'luna',x:8360,w:300,kind:'npchouse',npc:'luna',col:'#f5d0fe',roof:'#86198f'},
+ {id:'salon',x:9820,w:360,kind:'shop',shop:'salon',col:'#fce7f3',aw:['#db2777','#fff'],en:'Curl Up & Dye Salon',da:'Krøl & Farve Frisør',ic:'💇'},
  {id:'season',x:9300,w:440,kind:'shop',shop:'season',col:'#fae8ff',aw:['#7c3aed','#f97316'],en:'Holly\'s Holiday Shop',da:'Hollys Højtidsbutik',ic:'🎁'},
  {id:'gardenc',x:8760,w:480,kind:'shop',shop:'gardenc',col:'#dcfce7',aw:['#16a34a','#fef3c7'],en:'Green Thumb Garden Center',da:'Den Grønne Tommelfinger Havecenter',ic:'🌻'}];
 BLD.forEach(b=>{b.y=150;b.h=320;b.door={x:b.x+b.w/2,y:500}});
@@ -2224,6 +2259,15 @@ function buildShops2(){
   for(let i=0;i<books.length;i+=6){const tx=800+(i/6)*520,rt=fxTable(tx,706,460,'#a0672e');lb.fix.push(rt);books.slice(i,i+6).forEach((id,j)=>lb.goods.push(G('sup',id,tx-190+j*76,rt.top,.85,rt,FLOOR_MAX)))}lb.w=Math.max(lb.w,800+Math.ceil(books.length/6)*520);
   wallSign(lb,1060,150,()=>'📖 '+L('Tap a bookshelf to read','Tryk på en reol for at læse'));
   SHOPDEF.library={secs:[lb]};
+  // ---------- Curl Up & Dye hair salon ----------
+  const hs=SEC('Hair Salon','Frisørsalon','wp_pink','fl_checker');shopDoor(hs,'salon');hs.w=1700;lamps(hs);
+  keeper(hs,420,590,{animal:'cat',color:'#ff8fb8',eyes:'lashes',mouth:'smile',hair:{s:'bob',c:'#8b5cf6',side:1,vol:1}},{top:'top_dress',bottom:'bot_skirt',shoes:'sh_sandal',acc:'ac_necklace'},'Coco Curls',()=>{keeperSay(L('Have a seat in a styling chair!','Sæt dig i en frisørstol!'));setTimeout(()=>openSalon(true),500)});
+  hs.fix.push(fxCounter(420,640,190,'#db2777','#fff'));
+  [760,1050,1340].forEach((x,i)=>{hs.deco.push(g=>{ell(g,x,250,70,95,'#e0a800',5);ell(g,x,250,58,82,lg(g,x-40,180,x+40,320,[[0,'#e0f2fe'],[.5,'#bae6fd'],[1,'#e0f2fe']]),2);line(g,x-24,200,x-4,184,'rgba(255,255,255,.9)',4)});busy(hs,x);
+    hs.fix.push({y:640,x,draw(g){ell(g,x,636,40,9,'#94a3b8');line(g,x,632,x,580,'#64748b',8);box(g,x-44,-0+530,88,46,14,'#db2777');box(g,x-38,450,76,88,18,'#be185d');box(g,x-54,520,16,30,6,'#9d174d',2);box(g,x+38,520,16,30,6,'#9d174d',2)}});
+    hs.spots.push({r:{x:x-60,y:440,w:120,h:200},wx:x+(i%2?60:-60),wy:FLOOR_MAX,act:()=>openSalon(true)})});
+  wallSign(hs,1050,110,()=>'💇 '+L('Tap a chair for a new hairdo!','Tryk på en stol for en ny frisure!'));
+  SHOPDEF.salon={secs:[hs]};
   // ---------- Green Thumb Garden Center: an indoor shop and an outdoor yard ----------
   const g1=SEC('Plants & Seeds','Planter & frø','wp_lime','fl_tiles');shopDoor(g1,'gardenc');lamps(g1);
   g1.fix.push(fxCounter(380,640,180,'#16a34a','#fef3c7'));keeper(g1,390,590,{animal:'frog',color:'#9be37a',eyes:'happy',mouth:'grin',pattern:'spots'},{hat:'hat_flower',top:'top_rain',bottom:'bot_jeans',shoes:'sh_boots'},'Fern Greenleaf',()=>keeperSay(L('Everything for your garden – inside and out back!','Alt til din have – herinde og udenfor!')));
@@ -2342,7 +2386,21 @@ function readBook(){const k='read';S.cd.reads=S.cd.reads&&S.cd.reads.d===today()
 function pizzaJobs(){panel({title:'🍕 Spudza Pizza',sm:true,html:`<p>${L('Tony needs help! Pick a job:','Tony har brug for hjælp! Vælg et job:')}</p>`,render:(b,close)=>{
   b.insertAdjacentHTML('beforeend',['pizza','delivery'].map(id=>{const j=JOBS[id];return`<div class="goal"><div class="ic">${j.ic}</div><div class="tx">${esc(L(j.en,j.da))}<small>${esc(L(j.den,j.dda))}</small></div><button class="btn sm go" data-j="${id}" ${S.energy<j.cost?'disabled':''}>⚡${j.cost}</button></div>`}).join(''));
   $$('[data-j]',b).forEach(x=>x.onclick=()=>{close();x.dataset.j==='delivery'?startDelivery():startMini('pizza')})}})}
-function openBus(s){const dest=[['home',L('🏠 Your house','🏠 Dit hus'),BLD[0].door.x],['fountain',L('⛲ Fountain & garden','⛲ Springvand & have'),1250],['shops',L('🛍️ Shopping street','🛍️ Butiksgaden'),3200],['pet',L('🐾 Pet shop & pizza','🐾 Dyrehandel & pizza'),4700],['casino',L('🎰 Casino & library','🎰 Casino & bibliotek'),6100],['park',L('⚽ Sports Park','⚽ Sportsparken'),7030],['pond',L('🎣 Fishing pond','🎣 Fiskesøen'),8000],['gardenc',L('🌻 Garden center & holiday shop','🌻 Havecenter & højtidsbutik'),9200]];
+function openSalon(atSalon){
+  const cur=S.look.hair||{s:'none',c:'#7a4b22',side:1,vol:1},d={...cur};S.hairs=S.hairs||['none'];
+  panel({title:'💇 '+L('Hair Salon','Frisør'),render:(b,close)=>{const draw=()=>{const own=S.hairs.includes(d.s),H=HAIR[d.s],lock=H.lvl>S.lvl;
+    b.innerHTML=`<div class="split"><div><div class="preview"><canvas id="slP" width="400" height="440" style="width:200px;height:220px"></canvas></div>
+      <div class="opt"><b>${L('Colour','Farve')}</b><div class="sw">${HAIR_COLS.map(c=>`<button data-c="${c}" class="${c===d.c?'on':''}" style="background:${c}"></button>`).join('')}</div></div>
+      <div class="opt"><b>${L('How it sits','Hvordan det sidder')}</b><div class="row" style="gap:5px"><button class="chip ${d.side<0?'on':''}" data-sd="-1">◀ ${L('Left','Venstre')}</button><button class="chip ${d.side>0?'on':''}" data-sd="1">${L('Right','Højre')} ▶</button></div>
+        <div class="row" style="gap:5px;margin-top:5px">${[[.9,L('Flat','Flad')],[1,L('Normal','Normal')],[1.12,L('Big','Stor')]].map(([v,t])=>`<button class="chip ${Math.abs((d.vol||1)-v)<.01?'on':''}" data-v="${v}">${t}</button>`).join('')}</div></div></div>
+      <div><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(96px,1fr))">${HAIRS.map(([id])=>{const h=HAIR[id],o=S.hairs.includes(id),lk=h.lvl>S.lvl;return`<div class="card ${id===d.s?'sel':''} ${lk?'lock':''}" data-lock="🔒 ${L('Level','Niveau')} ${h.lvl}" data-h="${id}"><canvas width="160" height="120" style="width:80px;height:60px"></canvas><div class="nm">${esc(nm(h))}</div><div class="hint">${o?'✓ '+L('Yours','Din'):N(h.price)+' 🪙'}</div></div>`}).join('')}</div></div></div>
+      <div class="row" style="justify-content:flex-end;margin-top:10px">${!own&&!atSalon?`<span class="hint">💇 ${L('New hairstyles are bought at the salon in town.','Nye frisurer købes hos frisøren i byen.')}</span>`:''}<button class="btn go" id="slGo" ${lock||(!own&&(!atSalon||S.coins<H.price))?'disabled':''}>${own?'✂️ '+L('Style it!','Sæt håret!'):`💇 ${L('Buy & style','Køb & sæt')} · ${N(H.price)} 🪙`}</button></div>`;
+    const pc=$('#slP',b).getContext('2d');pc.setTransform(2,0,0,2,0,0);drawPet(pc,100,212,1.12,{look:{...S.look,hair:d},outfit:S.outfit,t:0});
+    $$('[data-h]',b).forEach(cd=>{const g=$('canvas',cd).getContext('2d');g.setTransform(2,0,0,2,0,0);drawPet(g,40,108,.62,{look:{...S.look,hair:{...d,s:cd.dataset.h}},outfit:{},t:0});cd.onclick=()=>{d.s=cd.dataset.h;SFX.click();draw()}});
+    $$('[data-c]',b).forEach(x=>x.onclick=()=>{d.c=x.dataset.c;SFX.pop();draw()});$$('[data-sd]',b).forEach(x=>x.onclick=()=>{d.side=+x.dataset.sd;SFX.click();draw()});$$('[data-v]',b).forEach(x=>x.onclick=()=>{d.vol=+x.dataset.v;SFX.click();draw()});
+    $('#slGo',b).onclick=()=>{if(!S.hairs.includes(d.s)){if(S.coins<H.price||lock||!atSalon)return;S.coins-=H.price;S.hairs.push(d.s);addXP(Math.max(5,Math.round(H.price/20)));bump('bought')}
+      S.look={...S.look,hair:{...d}};bump('hairdo');THUMB_CLEAR();SFX.buy();hud();save();net.me();close();toast(L('💇 Looking fabulous!','💇 Du ser fantastisk ud!'))}};draw()}})}
+function openBus(s){const dest=[['home',L('🏠 Your house','🏠 Dit hus'),BLD[0].door.x],['fountain',L('⛲ Fountain & garden','⛲ Springvand & have'),1250],['shops',L('🛍️ Shopping street','🛍️ Butiksgaden'),3200],['pet',L('🐾 Pet shop & pizza','🐾 Dyrehandel & pizza'),4700],['casino',L('🎰 Casino & library','🎰 Casino & bibliotek'),6100],['park',L('⚽ Sports Park','⚽ Sportsparken'),7030],['pond',L('🎣 Fishing pond','🎣 Fiskesøen'),8000],['gardenc',L('🌻 Garden center & holiday shop','🌻 Havecenter & højtidsbutik'),9200],['salon',L('💇 Hair salon','💇 Frisør'),10000]];
   panel({title:'🚌 '+L('Bus stop','Busstoppested')+' '+s.n,sm:true,html:`<p>${L('Where to? The bus is free!','Hvor skal du hen? Bussen er gratis!')}</p>`,render:(b,close)=>{
     b.insertAdjacentHTML('beforeend',dest.map(d=>`<button class="btn" style="width:100%;margin:3px 0;text-align:left" data-x="${d[2]}">${d[1]}</button>`).join(''));
     $$('[data-x]',b).forEach(x=>x.onclick=()=>{close();const tx=+x.dataset.x;ME.x=tx;ME.y=660;ME.tx=null;let k=0;while(blocked(ME.x,ME.y)&&k++<40)ME.y+=10;SFX.tone(300,.15,'square',.05);SFX.tone(420,.2,'square',.05,.18);toast('🚌 '+L('Toot toot! Here we are.','Dyt dyt! Så er vi her.'));bump('bus');net.scene()})}})}
@@ -3197,14 +3255,14 @@ function openWardrobe(){
     const draw=()=>{
       const items=S.wardrobe.map(id=>CLOTH[id]).filter(c=>c&&c.slot===tab);
       b.innerHTML=`<div class="split"><div><div class="preview"><canvas id="wPrev" width="400" height="440" style="width:200px;height:220px"></canvas></div>
-        <div class="row" style="margin-top:8px;justify-content:center"><button class="btn sm" id="wMake">✂️ ${L('Makeover','Makeover')}</button></div></div>
+        <div class="row" style="margin-top:8px;justify-content:center"><button class="btn sm" id="wMake">✂️ ${L('Makeover','Makeover')}</button><button class="btn sm" id="wHair">💇 ${L('Hair','Hår')}</button></div></div>
         <div><div class="tabs">${SLOTS.map(s=>`<button data-t="${s[0]}" class="${s[0]===tab?'on':''}">${s[1]} ${L(s[2],s[3])}</button>`).join('')}</div>
         <div class="grid">${S.outfit[tab]&&!['top','bottom','shoes'].includes(tab)?`<div class="card" data-off="1"><div class="nm" style="min-height:86px;font-size:30px">🚫</div><div class="nm">${L('Nothing','Ingenting')}</div><button class="btn sm">${L('Take off','Tag af')}</button></div>`:''}
         ${items.map(it=>`<div class="card ${S.outfit[tab]===it.id?'sel':''}" data-id="${it.id}"><div class="cv"></div><div class="nm">${esc(nm(it))}</div><button class="btn sm ${S.outfit[tab]===it.id?'':'ok'}">${S.outfit[tab]===it.id?L('Wearing','Har på'):L('Wear','Tag på')}</button></div>`).join('')||`<p class="hint">${L('Nothing here yet – visit Peel & Co. in town!','Intet her endnu – besøg Peel & Co. i byen!')}</p>`}</div></div></div>`;
       $$('.card[data-id]',b).forEach(cd=>{$('.cv',cd).appendChild(thumb('cloth',cd.dataset.id));cd.onclick=()=>{S.outfit[tab]=cd.dataset.id;SFX.pop();save();net.me();goalsCheck();draw()}});
       const off=$('.card[data-off]',b);if(off)off.onclick=()=>{S.outfit[tab]=null;SFX.click();save();net.me();draw()};
       $$('.tabs button',b).forEach(x=>x.onclick=()=>{tab=x.dataset.t;SFX.click();draw()});
-      $('#wMake',b).onclick=()=>openCreator(true);
+      $('#wMake',b).onclick=()=>openCreator(true);$('#wHair',b).onclick=()=>openSalon(SCENE.type==='shop'&&SCENE.shop==='salon');
       const c=$('#wPrev',b).getContext('2d');c.setTransform(2,0,0,2,0,0);drawPet(c,100,212,1.12,{look:S.look,outfit:S.outfit,t:0});
     };draw();}});
 }
@@ -3583,6 +3641,7 @@ const Q_SPECIAL=[
  ['s_clothes20','👗','Own 20 pieces of clothing','Ej 20 stykker tøj',()=>[S.wardrobe.length,20],500,120,4],['s_dressup','🎩','Wear a hat, glasses and an extra at once','Bær hat, briller og tilbehør på én gang',()=>[(S.outfit.hat&&S.outfit.glasses&&S.outfit.acc)?1:0,1],150,40,2],
  ['s_books3','📚','Collect 3 cookbooks','Saml 3 kogebøger',()=>[(S.recipes||[]).length,3],300,80,2],['s_books11','📚','Collect all 11 cookbooks','Saml alle 11 kogebøger',()=>[(S.recipes||[]).length,11],1500,400,8],['s_dishes10','🍽️','Cook 10 different dishes','Lav 10 forskellige retter',()=>[(S.cookedIds||[]).length,10],600,150,3],['s_dishes30','👨‍🍳','Cook 30 different dishes','Lav 30 forskellige retter',()=>[(S.cookedIds||[]).length,30],2000,500,6],
  ['s_grow10','🌱','Grow 10 different crops','Dyrk 10 forskellige afgrøder',()=>[(S.grown||[]).length,10],500,120,2],['s_grow25','🌻','Grow 25 different crops','Dyrk 25 forskellige afgrøder',()=>[(S.grown||[]).length,25],2000,500,5],
+ ['s_hair','💇','Get a new hairstyle at the salon','Få en ny frisure hos frisøren',()=>[(S.hairs||[]).length>1?1:0,1],150,40,1],['s_hair5','💈','Own 5 hairstyles','Ej 5 frisurer',()=>[(S.hairs||[]).length-1,5],600,150,3],
  ['s_cook20','🍳','Cook 20 recipes in total','Lav 20 retter i alt',()=>[S.cnt.cooked||0,20],500,120,3],['s_friend','🤝','Hug or high-five a friend','Kram eller giv high five til en ven',()=>[S.cnt.hugs||0,1],150,40,1]];
 const Q_SEASON={halloween:[['e_hw_deco','🎃','Own 3 Halloween things','Ej 3 halloween-ting',()=>[ownAny(i=>FURN[i.id]&&FURN[i.id].cat==='halloween'),3],300,80],['e_hw_hat','🧙','Wear the Witch Hat','Bær heksehatten',()=>[S.outfit.hat==='hat_witch'?1:0,1],150,40]],
   xmas:[['e_x_tree','🎄','Put up a Christmas tree','Stil et juletræ op',()=>[ownAny(i=>i.id==='xmas_tree'),1],300,80],['e_x_hat','🎅','Wear the Santa Hat','Bær nissehuen',()=>[S.outfit.hat==='hat_santa'?1:0,1],150,40],['e_x_deco','❄️','Own 5 Christmas things','Ej 5 juleting',()=>[ownAny(i=>FURN[i.id]&&FURN[i.id].cat==='xmas'),5],500,120]],
