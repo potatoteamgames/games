@@ -658,9 +658,9 @@ function ballSprite(b,rpx){
     }else{
       if(stripe&&(l2>.52||l2<-.52)){R=wr;G=wg;Bc=wb}
       const al=l0<0?-l0:l0;
-      if(al>.8){R=wr;G=wg;Bc=wb;const u=(l0<0?-l1:l1)/.6,v=l2/.6,gx=((u+1)*.5*gw)|0,gy=((v+1)*.5*gw)|0;
+      if(al>.875){R=wr;G=wg;Bc=wb;const u=(l0<0?-l1:l1)/.48,v=l2/.48,gx=((u+1)*.5*gw)|0,gy=((v+1)*.5*gw)|0;
         if(gx>=0&&gy>=0&&gx<gw&&gy<gw){const a=gl.a[gy*gw+gx];if(a>0){R=lerp(R,20,a);G=lerp(G,18,a);Bc=lerp(Bc,16,a)}}}
-      else if(al>.78){const t=(al-.78)/.02;R=lerp(R,wr,t);G=lerp(G,wg,t);Bc=lerp(Bc,wb,t)}
+      else if(al>.855){const t=(al-.855)/.02;R=lerp(R,wr,t);G=lerp(G,wg,t);Bc=lerp(Bc,wb,t)}
     }
     const df=x*LX+y*LY+z*LZ,sh=.3+.8*(df>0?df:0)+.12*z;let hs=x*HX+y*HY+z*HZ;hs=hs>0?hs:0;
     const h2=hs*hs,h4=h2*h2,h8=h4*h4,h16=h8*h8,h32=h16*h16,spec=h32*h16*.55+h32*h32*h32*.9;
@@ -1827,7 +1827,8 @@ async function init(){
 document.addEventListener('pointerdown',()=>SFX.unlock(),{once:true});
 init();
 // debug hooks for automated tests
-Object.assign(DBG,{get G(){return G},get S(){return S},S_set(o){S=mergeDef(DEF(),o);save()},startCampaignMatch,openSheet,renderMenu,questsFresh,streakCheck,track,claimQuest,newMatch,
+Object.defineProperty(DBG,'G',{get(){return G}});Object.defineProperty(DBG,'S',{get(){return S}});
+Object.assign(DBG,{S_set(o){S=mergeDef(DEF(),o);save()},startCampaignMatch,openSheet,renderMenu,questsFresh,streakCheck,track,claimQuest,newMatch,
   shoot(a,p){if(G)takeShot(a==null?G.aim:a,p==null?.5:p,0,0)},layout});
 </script>
 </body>
