@@ -2336,6 +2336,12 @@ function updateNPCs(dt){
     else{stepToward(a,a.tx,a.ty,90*dt,true);if(a.tx==null)a.wait=rr(2,7)}
     if(a.sayT>0){a.sayT-=dt;if(a.sayT<=0)a.say=''}
   }
+  // neighbours gently step apart instead of standing inside each other
+  for(let i=0;i<ACTORS.length;i++)for(let j=i+1;j<ACTORS.length;j++){const a=ACTORS[i],b=ACTORS[j],dx=b.x-a.x,dy=(b.y-a.y)*1.6,d=Math.hypot(dx,dy);if(d>=70)continue;
+    const push=Math.min(70-d,90*dt),ux=d>.5?dx/d:(i%2?1:-1),uy=d>.5?dy/d/1.6:0;
+    for(const [o,sgn] of [[a,-1],[b,1]]){if(o.talking)continue;const nx=o.x+ux*push*sgn,ny=o.y+uy*push*sgn;if(!blocked(nx,ny)){o.x=nx;o.y=ny}else if(!blocked(nx,o.y))o.x=nx}
+    // two neighbours walking into each other: one of them waits a moment
+    if(a.tx!=null&&b.tx!=null&&d<40){b.tx=null;b.wait=rr(.6,1.5)}}
 }
 function stepToward(o,tx,ty,d,town){
   const dx=tx-o.x,dy=ty-o.y,dist=Math.hypot(dx,dy);
@@ -2789,7 +2795,9 @@ function clickShop(w){
   walkTo(w.x,Math.max(w.y,FLOOR_MIN+15));
 }
 function clickTown(w){
-  for(const a of ACTORS)if(Math.abs(w.x-a.x)<42&&w.y>a.y-110&&w.y<a.y+10){walkTo(a.x+(ME.x<a.x?-70:70),a.y,()=>talkTo(a.id));return}
+  // when neighbours stand close together, talk to the one nearest to where you tapped
+  const hits=ACTORS.filter(a=>Math.abs(w.x-a.x)<42&&w.y>a.y-110&&w.y<a.y+10).sort((a,b)=>Math.hypot(w.x-a.x,w.y-a.y+50)-Math.hypot(w.x-b.x,w.y-b.y+50));
+  if(hits.length){const a=hits[0];walkTo(a.x+(ME.x<a.x?-70:70),a.y,()=>talkTo(a.id));return}
   for(const o of net.others())if(o.scene==='town'&&Math.abs(w.x-o.x)<42&&w.y>o.y-110&&w.y<o.y+10){walkTo(o.x+(ME.x<o.x?-70:70),o.y,()=>playerMenu(o));return}
   for(const q of S.quests)if(q.type==='fetch'&&!q.found&&Math.hypot(w.x-q.x,w.y-q.y+30)<65){walkTo(q.x,q.y,()=>foundThing(q));return}
   for(const b of BLD)if(w.x>b.x&&w.x<b.x+b.w&&w.y>b.y&&w.y<b.y+b.h+30){walkTo(b.door.x,b.door.y,()=>enterBuilding(b));return}
