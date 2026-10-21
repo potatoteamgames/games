@@ -629,13 +629,15 @@ function layout(V){
   const baseY=H-CH*.5-24-SAFEB;
   const handTop=baseY-CH*.5-raise-(rows===2?CH*.45:0);
   const topY=14+40+(n===2||n===4?AVS*.5+AVS*.5+18:AVS+18);
-  const cy=Math.max(topY+CH*.55+(n===4?10:0),Math.min((topY+handTop-40)/2+(H>W?24:8),H*.52));
+  const cy=Math.max(topY+CH*.55+(n===4?10:0),Math.min((topY+handTop-40)/2+8,H*.52));
   const cx=W/2;
-  const sideY=n===4?cy-CH*.15:cy;
+  const land=W>H*1.3&&H<560;
+  const sideY=n===4?cy-CH*(land?.35:.15):cy;
+  const hm=Math.max(1,hand.length),hsp=Math.min(CW*.7,(W-pad*2-CW)/Math.max(1,(rows===2?Math.ceil(hm/2):hm)-1)),halfW=hsp*((rows===2?Math.ceil(hm/2):hm)-1)/2+CW/2;
   const avY=14+40+AVS*.55+6;
   const seats=kinds.map(k=>{
     switch(k){
-      case'B':return{k,x:28+AVS*.5,y:handTop-AVS*.5-18};
+      case'B':return land&&W/2-halfW-AVS*.9>36+AVS*.5?{k,x:W/2-halfW-AVS*.9,y:baseY+6}:{k,x:28+AVS*.5,y:handTop-AVS*.5-18};
       case'T':return{k,x:W/2,y:avY};
       case'TL':return{k,x:W*.28,y:avY};
       case'TR':return{k,x:W*.72,y:avY};
@@ -643,7 +645,7 @@ function layout(V){
       case'R':return{k,x:W-24-AVS*.55,y:sideY};
     }
   });
-  return{n,kinds,seats,cx,cy,deck:{x:cx-CW*.68,y:cy},pile:{x:cx+CW*.68,y:cy},baseY,handTop,rows,raise,pad};
+  return{land,halfW,n,kinds,seats,cx,cy,deck:{x:cx-CW*.68,y:cy},pile:{x:cx+CW*.68,y:cy},baseY,handTop,rows,raise,pad};
 }
 const slotOf=(V,seat)=>(seat-V.me+V.players.length)%V.players.length;
 const hash=n=>{let x=(n+1)*2654435761%4294967296;x^=x>>>13;return(x%1000)/1000};
@@ -765,7 +767,8 @@ function render(V,instant){
     else msg=cp.disc?L(`${cp.name} is reconnecting…`,`${cp.name} forbinder igen…`):L(`${cp.name} is thinking…`,`${cp.name} tænker…`);
   }else if(V.phase==='over')msg=L('Round over!','Runden er slut!');
   st.textContent=msg;st.className=cls;
-  const sty=LY.cy+CH*.78+16;st.style.top=(sty>LY.handTop-30?LY.cy+CH*.5+26:sty)+'px';
+  const sty=LY.cy+CH*.78+16;st.style.left='';
+  if(LY.land){st.style.top=(30+18)+'px';st.style.left=(W*.76)+'px';st.style.maxWidth=(W*.4)+'px'}else{st.style.maxWidth='';st.style.top=(sty>LY.handTop-30?LY.cy+CH*.5+26:sty)+'px'}
   const dk=$('#deck');const canDraw=myTurn&&V.drawnId==null;
   const anyOk=myHand.some(c=>myTurn&&canPlayRaw(c,tp,V.color,V.pending,V.pendKind,V.drawnId));
   dk.classList.toggle('go',canDraw&&!anyOk);
@@ -776,7 +779,9 @@ function render(V,instant){
   const bp=$('#bPass');bp.textContent=L('Keep & pass ⏭','Behold & giv videre ⏭');bp.classList.toggle('hide',!(myTurn&&V.drawnId!=null));
   bp.style.left=(W/2)+'px';bp.style.top=(hy)+'px';
   if(!bs.classList.contains('hide')&&W<520)bp.style.top=(hy-56)+'px';
-  const be=$('#bEmo');be.style.left=(28+AVS+36)+'px';be.style.top=hy+'px';
+  const be=$('#bEmo');const bS=LY.seats[0];
+  if(LY.land&&bS.y>LY.handTop){be.style.left=bS.x+'px';be.style.top=(bS.y-AVS-30)+'px';bs.style.left=Math.min(W-70,W/2+LY.halfW+70)+'px';bs.style.top=(LY.baseY)+'px';bp.style.top=(LY.handTop-30)+'px'}
+  else{be.style.left=(28+AVS+36)+'px';be.style.top=hy+'px'}
   $('#roundTag').textContent=L('Round ','Runde ')+V.round;
   const nt=$('#netTag');nt.classList.toggle('hide',!V.lan);if(V.lan)nt.textContent='📶 '+(V.code||NET.code||'');
   $('#bSnd').textContent=SFX.on?'🔊':'🔇';
