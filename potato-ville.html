@@ -2595,6 +2595,7 @@ const USE={
 const PUBLIC_USE=['sit','tv','music','read','play','fish','warm','toilet','wash'];
 function useItem(it){
   const f=FURN[it.id];if(!f||!f.use)return;const own=SCENE.owner==='me';
+  if(own&&it.off&&ALWAYS_ON[it.id]){it.off=false;BW={w:homeWatts(),t:Date.now()};hud();toast('⏻ '+esc(nm(f))+' '+L('switched on','er tændt'));save()}
   if(f.use==='exit'){leaveHouse();return}
   if(f.use==='yard'){goYard();return}
   if(f.use==='house'){leaveYard();return}
@@ -2751,6 +2752,7 @@ function c_arch(g,x){g.beginPath();g.moveTo(x-70,DOOR_Y+8);g.lineTo(x-70,DOOR_Y-
 function drawItemAt(g,it){
   const f=FURN[it.id];if(!f||!DRAW[it.id]||it.held)return;
   g.save();g.translate(it.x,it.y-(it.z||0));if(it.f)g.scale(-1,1);DRAW[it.id](g,it);g.restore();
+  if(it.off&&ALWAYS_ON[it.id]){const y=it.y-(it.z||0)-f.h*.55;ell(g,it.x,y,15,15,'rgba(30,41,59,.85)',2);g.font='bold 16px Nunito';g.fillStyle='#fff';g.textAlign='center';g.textBaseline='middle';g.fillText('⏻',it.x,y+1)}
 }
 function renderTown(g,t){
   const Z=zoom();g.scale(Z,Z);const VW=V.W/Z,VH=V.H/Z;
@@ -2790,9 +2792,7 @@ function renderTown(g,t){
 function drawLostThings(g,t,vis){for(const q of S.quests){if(q.type!=='fetch'||q.found)continue;
     if(vis(q.x)){const b=Math.sin(t/200)*5,p=(t/900)%1;g.globalAlpha=1-p;ell(g,q.x,q.y,20+p*50,(20+p*50)*.4,null,3);g.globalAlpha=1;ell(g,q.x,q.y,18,7,'rgba(0,0,0,.18)',0);
       box(g,q.x-24,q.y-58+b,48,46,14,'#fff',2.5);g.font='30px serif';g.fillStyle='#000';g.textAlign='center';g.textBaseline='middle';g.fillText(q.ic,q.x,q.y-35+b);star(g,q.x+22,q.y-60+b,8,3.5,'#ffd23f')}
-    // an arrow at the edge of the screen points the way while the thing is off screen
-    const Z=zoom(),VW=V.W/Z,sx=q.x-cam.x;if(sx<0||sx>VW){const d=sx<0?-1:1,ax=d<0?cam.x+56:cam.x+VW-56,ay=cam.y+V.H/Z*.55,m=Math.round(Math.abs(q.x-ME.x)/10);
-      box(g,ax-50,ay-26,100,52,14,'rgba(10,30,60,.82)',3);g.font='20px Lilita One,Nunito';g.fillStyle='#fff';g.textAlign='center';g.textBaseline='middle';g.fillText((d<0?'◀ ':'')+q.ic+' '+m+'m'+(d>0?' ▶':''),ax,ay)}}}
+    }}
 function seasonTown(g,t){const se=season(),x0=cam.x-200,x1=cam.x+V.W/zoom()+200;
   if(isSnow()){g.fillStyle='rgba(255,255,255,.42)';g.fillRect(cam.x,672,V.W/zoom(),MAP_H-672);g.fillRect(cam.x,170,V.W/zoom(),300)}
   for(const b of BLD){if(b.x+b.w<x0||b.x>x1||b.kind==='lot'||b.kind==='park')continue;const dx=b.door.x;
@@ -2997,7 +2997,8 @@ function showDlg(n,text,a){
   const q=questFor(n.id),B=$('#dlgB');B.innerHTML='';
   const btn=(l,cls,f)=>{const b=document.createElement('button');b.className='btn sm '+(cls||'');b.innerHTML=l;b.onclick=()=>{SFX.click();f()};B.appendChild(b)};
   btn(L('💬 Chat','💬 Snak'),'',()=>talkMore(n));
-  if(q){if(questReady(q))btn(L('✅ Here you go!','✅ Værsgo!'),'ok',()=>completeQuest(q));else{btn(L('📜 About the task…','📜 Om opgaven…'),'',()=>showDlg(n,questText(q,true),a));btn(L('✕ Give up task','✕ Opgiv opgaven'),'',()=>{S.quests=S.quests.filter(o=>o!==q);save();showDlg(n,L("That's alright! Maybe another time.",'Det er helt i orden! Måske en anden gang.'),a)})}}
+  if(q){if(questReady(q))btn(L('✅ Here you go!','✅ Værsgo!'),'ok',()=>completeQuest(q));else{btn(L('📜 About the task…','📜 Om opgaven…'),'',()=>showDlg(n,questText(q,true),a));btn(L('✕ Give up task','✕ Opgiv opgaven'),'',()=>{S.quests=S.quests.filter(o=>o!==q);npcState(q.npc).qcd=Date.now()+QUEST_CD;save();showDlg(n,L("That's alright! Maybe another time.",'Det er helt i orden! Måske en anden gang.'),a)})}}
+  else if(st.qcd&&Date.now()<st.qcd)btn(`⏳ ${L('New task in','Ny opgave om')} ${fmtDur(st.qcd-Date.now())}`,'',()=>showDlg(n,L(`I don't need help right now – come back in ${fmtDur(st.qcd-Date.now())}!`,`Jeg har ikke brug for hjælp lige nu – kom tilbage om ${fmtDur(st.qcd-Date.now())}!`),a));
   else if(qActiveCount()<3)btn(L('🙋 Need help?','🙋 Brug for hjælp?'),'go',()=>offerQuest(n,a));
   const gifts=Object.keys(S.sup).filter(k=>S.sup[k]>0&&SUP[k]&&SUP[k].type==='gift');
   if(gifts.length&&st.gift!==today())btn('🎁 '+L('Give a gift','Giv en gave'),'',()=>{const k=gifts.sort((a,b)=>SUP[b].price-SUP[a].price)[0],old=st.h,hh={gift_flowers:1,gift_choco:2,gift_teddy:3}[k]||1;S.sup[k]--;st.gift=today();st.h=Math.min(10,st.h+hh);SFX.buy();bump('gifts');addXP(10);
@@ -3025,7 +3026,8 @@ function offerQuest(n,a){
   S.quests.push(q);save();SFX.pop();showDlg(n,questText(q),a);
 }
 function foundThing(q){if(q.found)return;q.found=true;SFX.buy();toast(L(`✨ ${q.ic} Found it! Bring it back to ${NPC_BY[q.npc].name}.`,`✨ ${q.ic} Fundet! Giv det tilbage til ${NPC_BY[q.npc].name}.`));save()}
-function completeQuest(q){
+const QUEST_CD=30*60000; // a neighbour asks for help again 30 minutes after a task is done or given up
+function completeQuest(q){npcState(q.npc).qcd=Date.now()+QUEST_CD;
   if(q.type==='deliver'){S.food[q.food]--;if(!S.food[q.food])delete S.food[q.food]}
   S.quests=S.quests.filter(x=>x!==q);const st=npcState(q.npc),old=st.h;st.h=Math.min(10,st.h+2);
   addCoins(30+S.lvl*8);addXP(25+S.lvl*4);bump('quests');SFX.buy();
@@ -3617,7 +3619,7 @@ function openQuests(start){let tab=start||'active';
     $$('[data-a]',b).forEach(x=>x.onclick=()=>{if(qAccept(x.dataset.a)){toast('📜 '+L('Quest accepted!','Opgave taget!'));draw()}});
     $$('[data-c]',b).forEach(x=>x.onclick=()=>{qClaim(S.qa[+x.dataset.c]);draw()});
     $$('[data-x]',b).forEach(x=>x.onclick=()=>{S.qa.splice(+x.dataset.x,1);SFX.click();save();draw()});
-    $$('[data-xn]',b).forEach(x=>x.onclick=async()=>{const q=S.quests[+x.dataset.xn];if(!q)return;if(!await panel({title:L('Give up this task?','Opgiv opgaven?'),sm:true,html:`<p>${L(`${esc(NPC_BY[q.npc].name)} will understand – you can always ask for a new task.`,`${esc(NPC_BY[q.npc].name)} forstår det godt – du kan altid spørge efter en ny opgave.`)}</p>`,buttons:[{label:L('Keep it','Behold'),v:0},{label:L('Give up','Opgiv'),cls:'no',v:1}]}))return;S.quests=S.quests.filter(o=>o!==q);SFX.click();save();draw()})};draw()}})}
+    $$('[data-xn]',b).forEach(x=>x.onclick=async()=>{const q=S.quests[+x.dataset.xn];if(!q)return;if(!await panel({title:L('Give up this task?','Opgiv opgaven?'),sm:true,html:`<p>${L(`${esc(NPC_BY[q.npc].name)} will understand – you can always ask for a new task.`,`${esc(NPC_BY[q.npc].name)} forstår det godt – du kan altid spørge efter en ny opgave.`)}</p>`,buttons:[{label:L('Keep it','Behold'),v:0},{label:L('Give up','Opgiv'),cls:'no',v:1}]}))return;S.quests=S.quests.filter(o=>o!==q);npcState(q.npc).qcd=Date.now()+QUEST_CD;SFX.click();save();draw()})};draw()}})}
 
 /* =====================================================================
    BILLS – every 7 real days rent and electricity arrive in your mailbox.
@@ -3625,9 +3627,25 @@ function openQuests(start){let tab=start||'active';
    you get one final warning – if you still don't pay: GAME OVER.
    ===================================================================== */
 const BILL_EVERY=7*864e5,BILL_DUE=3*864e5,WH_PER_COIN=10;
-const ALWAYS_ON={fridge:30,aquarium:20,fishbowl:5,arcade:40,gaming_pc:80,jukebox:40,hot_tub:150,coffee_bar:20,tv_flat:8,wall_tv:8,home_cinema:15,incubator:25,pantry:0};
+// appliances use power all the time unless you switch them off in the 🔌 power overview
+const ALWAYS_ON={fridge:30,aquarium:20,fishbowl:5,arcade:40,gaming_pc:80,jukebox:40,hot_tub:150,coffee_bar:20,tv_flat:8,wall_tv:8,home_cinema:15,incubator:25,
+  tv_retro:8,computer:30,laptop:15,radio:5,record_player:5,microwave:5,coffee_machine:5,espresso_machine:8,stove:10,toaster:3,kettle:3,treadmill:10,exercise_bike:5};
 const LAMP_W={candle:0,candle_tall:0,tealights:0,candle_jar:0,candle_trio:0,candlestick:0,candle_table:0,lamp_oil:0,lamp_wall_candle:0,lamp_wall_torch:0,lamp_candelabra:0,lamp_ceil_fan:70,lamp_wall_led:10,lamp_bunny:5,lamp_moon_small:5,chandelier:120,crystal_chandelier:200,disco_ball:80,lights:20,xmas_lights:25,xmas_tree:30,neon_heart:30,star_lamp:10,fireplace:0};
-function homeWatts(){let w=0;for(const it of itemsAll()){const f=FURN[it.id];if(!f)continue;if(f.use==='lamp'&&lampOn(it))w+=LAMP_W[it.id]!=null?LAMP_W[it.id]:40;w+=ALWAYS_ON[it.id]||0}return w}
+const lampW=id=>LAMP_W[id]!=null?LAMP_W[id]:40;
+const itemWatts=it=>{const f=FURN[it.id];if(!f)return 0;if(f.use==='lamp')return lampOn(it)?lampW(it.id):0;return it.off?0:(ALWAYS_ON[it.id]||0)};
+const usesPower=it=>{const f=FURN[it.id];return!!f&&(f.use==='lamp'?lampW(it.id)>0:(ALWAYS_ON[it.id]||0)>0)};
+function homeWatts(){let w=0;for(const it of itemsAll())w+=itemWatts(it);return w}
+// 🔌 every lamp and appliance in your home with an on/off switch
+function openPower(){panel({title:'🔌 '+L('Power in your home','Strøm i dit hjem'),render:b=>{const draw=()=>{const rooms=[...S.rooms.map((r,i)=>[r,roomName(r)]),...(S.yard?[[S.yard,roomName({n:'yard'})]]:[])];const W=homeWatts();
+    b.innerHTML=`<div class="goal"><div class="ic">⚡</div><div class="tx">${L('Right now','Lige nu')}: <b>${N(W)} W</b><small>${L(`This period so far: ${(S.bill.wh/1000).toFixed(2)} kWh ≈ ${N(S.bill.wh/WH_PER_COIN)} 🪙 · next bill in ${fmtDur(Math.max(0,S.bill.next-Date.now()))}`,`Indtil nu i perioden: ${(S.bill.wh/1000).toFixed(2)} kWh ≈ ${N(S.bill.wh/WH_PER_COIN)} 🪙 · næste regning om ${fmtDur(Math.max(0,S.bill.next-Date.now()))}`)}</small></div><div style="display:flex;flex-direction:column;gap:4px"><button class="btn sm no" id="pwAll">⏻ ${L('All off','Sluk alt')}</button><button class="btn sm" id="pwBills">🧾 ${L('Bills','Regninger')}</button></div></div>`+
+      rooms.map(([r,name])=>{const list=r.items.filter(usesPower);if(!list.length)return'';return`<h3 style="margin:10px 0 4px">${esc(name)}</h3>`+list.map(it=>{const on=itemWatts(it)>0,f=FURN[it.id],w=f.use==='lamp'?lampW(it.id):ALWAYS_ON[it.id];
+        return`<div class="pp" style="${on?'':'opacity:.6'}"><div class="pwc" data-u="${it.u}" style="width:52px;flex:none"></div><div class="tx">${esc(nm(f))}<br><small class="hint">${on?`⚡ ${w} W`:L('Off – uses no power','Slukket – bruger ingen strøm')}</small></div><button class="btn sm ${on?'':'ok'}" data-t="${it.u}">${on?'⏻ '+L('Switch off','Sluk'):'⏻ '+L('Switch on','Tænd')}</button></div>`}).join('')}).join('')+
+      `<p class="hint">${L('Lamps and appliances that are switched on use power while you play. A fridge that is off still keeps your food – this is a game 😉. Using a switched-off appliance turns it back on.','Tændte lamper og apparater bruger strøm, mens du spiller. Et slukket køleskab holder stadig maden – det er et spil 😉. Bruger du et slukket apparat, tændes det igen.')}</p>`;
+    $$('.pwc',b).forEach(d=>{const it=itemsAll().find(i=>String(i.u)===d.dataset.u);if(it){const c=thumb('furn',it.id,52,40);c.style.width='52px';c.style.height='40px';d.appendChild(c)}});
+    const flip=it=>{if(FURN[it.id].use==='lamp')it.lit=!lampOn(it);else it.off=!it.off};
+    $$('[data-t]',b).forEach(x=>x.onclick=()=>{const it=itemsAll().find(i=>String(i.u)===x.dataset.t);if(!it)return;flip(it);SFX.tone(itemWatts(it)?900:500,.06,'square',.05);BW={w:homeWatts(),t:Date.now()};hud();save();net.houseChanged();draw()});
+    $('#pwAll',b).onclick=()=>{itemsAll().filter(usesPower).forEach(it=>{if(itemWatts(it)>0)flip(it)});SFX.click();BW={w:homeWatts(),t:Date.now()};hud();save();net.houseChanged();toast(L('⏻ Everything is switched off.','⏻ Alt er slukket.'));draw()};
+    $('#pwBills',b).onclick=()=>openBills()};draw()}})}
 const rentNow=()=>80+Math.max(0,S.rooms.length-3)*40+(S.yard?60:0);
 function initBills(){if(!S.bill)S.bill={next:Date.now()+BILL_EVERY,wh:0,list:[]};BW={w:homeWatts(),t:Date.now()}}
 let BW={w:0,t:0};
@@ -3651,9 +3669,9 @@ function openBills(){initBills();panel({title:'🧾 '+L('Bills','Regninger'),ren
     <small>🏠 ${L('Rent','Husleje')} ${N(bl.rent)} 🪙 · ⚡ ${L('Power','Strøm')} ${N(bl.power)} 🪙 (${bl.kwh} kWh)${bl.fee?` · ⚠️ ${L('Late fees','Gebyrer')} ${N(bl.fee)} 🪙`:''}</small>
     <small>${bl.rem?`<b style="color:#d0457e">${L(`Reminder ${bl.rem}/3`,`Rykker ${bl.rem}/3`)}</b> · `:''}${now<bl.due?L(`Pay within ${fmtDur(bl.due-now)}`,`Betal inden ${fmtDur(bl.due-now)}`):L('Overdue!','For sent!')}${bl.rem>=3?' · <b style="color:#d0457e">'+L('or GAME OVER','ellers GAME OVER')+'</b>':''}</small></div>
     <button class="btn sm go" data-p="${i}" ${S.coins<billTotal(bl)?'disabled':''}>${L('Pay','Betal')} ${N(billTotal(bl))} 🪙</button></div>`).join('')||`<p class="hint">✅ ${L('No bills to pay right now.','Ingen regninger at betale lige nu.')}</p>`)+
-    `<div class="goal"><div class="ic">⚡</div><div class="tx">${L('Power used so far this period','Strøm brugt indtil nu i perioden')}: <b>${(B.wh/1000).toFixed(2)} kWh ≈ ${N(B.wh/WH_PER_COIN)} 🪙</b><small>${L(`Right now your home uses ${homeWatts()} W. Lamps that are on (and fridges, TVs, aquariums…) cost power while you are online – switch off lamps you don't need!`,`Lige nu bruger dit hjem ${homeWatts()} W. Tændte lamper (og køleskabe, tv, akvarier…) koster strøm, mens du er online – sluk de lamper, du ikke bruger!`)}</small></div></div>
+    `<div class="goal"><div class="ic">⚡</div><div class="tx">${L('Power used so far this period','Strøm brugt indtil nu i perioden')}: <b>${(B.wh/1000).toFixed(2)} kWh ≈ ${N(B.wh/WH_PER_COIN)} 🪙</b><small><a href="#" id="toPower" style="color:#2f8fe0">🔌 ${L('Switch lamps & appliances off','Sluk lamper & apparater')}</a> · ${L(`Right now your home uses ${homeWatts()} W. Lamps that are on (and fridges, TVs, aquariums…) cost power while you are online – switch off lamps you don't need!`,`Lige nu bruger dit hjem ${homeWatts()} W. Tændte lamper (og køleskabe, tv, akvarier…) koster strøm, mens du er online – sluk de lamper, du ikke bruger!`)}</small></div></div>
     <div class="goal"><div class="ic">🏠</div><div class="tx">${L('Next bill','Næste regning')}: <b>${fmtDur(Math.max(0,B.next-now))}</b><small>${L(`Rent is ${rentNow()} 🪙 (more rooms and a garden cost more).`,`Huslejen er ${rentNow()} 🪙 (flere rum og en have koster mere).`)}</small></div></div>`;
-  $$('[data-p]',b).forEach(x=>x.onclick=()=>{if(payBill(open[+x.dataset.p]))draw()})};draw()}})}
+  $$('[data-p]',b).forEach(x=>x.onclick=()=>{if(payBill(open[+x.dataset.p]))draw()});const tp=$('#toPower',b);if(tp)tp.onclick=e=>{e.preventDefault();openPower()}};draw()}})}
 function billReminder(){initBills();const open=S.bill.list.filter(b=>!b.paid);if(!open.length)return;const now=Date.now(),tot=open.reduce((a,b)=>a+billTotal(b),0),worst=Math.max(...open.map(b=>b.rem));
   panel({title:'🧾 '+L('You have unpaid bills!','Du har ubetalte regninger!'),sm:true,html:`<div style="text-align:center"><div style="font-size:50px">📬🧾</div>
     <p style="font-size:17px">${L(`${open.length} bill${open.length>1?'s':''} waiting in your mailbox: <b>${N(tot)} 🪙</b>`,`${open.length} regning${open.length>1?'er':''} venter i din postkasse: <b>${N(tot)} 🪙</b>`)}</p>
@@ -4220,7 +4238,7 @@ $('#bSnd').textContent=SFX.on?'🔊':'🔇';
 $('#bMus').onclick=()=>{MUSIC.toggle();toast(MUSIC.on?'🎵 '+L('Music on','Musik til'):'🔕 '+L('Music off','Musik fra'))};
 $('#bMenu').onclick=()=>{SFX.click();openMenu()};
 $('#clk').onclick=()=>{SFX.click();openSettings()};
-$('#pwr').onclick=()=>{SFX.click();openBills()};
+$('#pwr').onclick=()=>{SFX.click();initBills();openPower()};
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&!RESETTING)saveNow();net.away(document.visibilityState==='hidden')});
 let BG_T=performance.now();setInterval(()=>{const now=performance.now(),dt=Math.min(5,(now-BG_T)/1000);BG_T=now;if(document.hidden&&started)net.tick(dt)},500);
 let RESETTING=false;
