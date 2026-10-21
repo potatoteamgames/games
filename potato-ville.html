@@ -408,7 +408,7 @@ const FURN_RAW=[
  ['book_stack','small','small','Book Stack','Bogstabel',25,1,50,40,'',1],
  ['mug','small','small','Cocoa Mug','Kakaokop',15,1,34,30,'',1],
  ['vase_small','small','small','Tulip Vase','Tulipanvase',35,1,36,64,'',1],
- ['candle','small','small','Candles','Stearinlys',30,1,46,48,'',1],
+ ['candle','small','small','Candles','Stearinlys',30,1,46,48,'lamp',1],
  ['fruit_bowl','small','small','Fruit Bowl','Frugtskål',35,1,64,38,'',1],
  ['cactus','small','small','Little Cactus','Lille kaktus',30,1,36,52,'',1],
  ['desk_lamp','lamp','small','Desk Lamp','Skrivebordslampe',45,1,52,72,'lamp',2],
@@ -585,6 +585,23 @@ const FURN_RAW=[
  ['dr_wood','dr','dr','Wooden Door','Trædør',0,1,0,0,'',0],['dr_blue','dr','dr','Blue Door','Blå dør',120,1,0,0,'',1],['dr_red','dr','dr','Red Door','Rød dør',120,1,0,0,'',1],
  ['dr_green','dr','dr','Green Door','Grøn dør',150,2,0,0,'',1],['dr_barn','dr','dr','Barn Door','Ladedør',280,3,0,0,'',2],['dr_glass','dr','dr','Glass Door','Glasdør',350,4,0,0,'',3],
  ['dr_arch','dr','dr','Round Arch Door','Buedør',450,5,0,0,'',3],['dr_french','dr','dr','French Doors','Fransk dør',700,7,0,0,'',4],['dr_castle','dr','dr','Castle Door','Slotsdør',2500,11,0,0,'',8,{lux:1}],['dr_gold','dr','dr','Golden Door','Gulddør',5000,14,0,0,'',12,{lux:1}],
+ // lots more lamps: ceiling, wall, floor, table – and real candles that flicker
+ ['lamp_ceil_bowl','lamp','wall','Bowl Ceiling Light','Loftskål',70,1,110,50,'lamp',2,{ceil:1}],['lamp_ceil_industrial','lamp','wall','Industrial Pendant','Industrilampe',110,2,90,80,'lamp',2,{ceil:1}],
+ ['lamp_ceil_rattan','lamp','wall','Rattan Pendant','Rattanlampe',120,2,110,90,'lamp',3,{ceil:1}],['lamp_ceil_star','lamp','wall','Star Lantern','Stjernelanterne',140,3,100,100,'lamp',3,{ceil:1}],
+ ['lamp_ceil_trio','lamp','wall','Trio Pendants','Tre pendler',180,3,200,90,'lamp',4,{ceil:1}],['lamp_ceil_bulbs','lamp','wall','Bulb Cluster','Pærebundt',220,4,150,110,'lamp',4,{ceil:1}],
+ ['lamp_ceil_fan','lamp','wall','Ceiling Fan Light','Loftventilator med lys',260,4,230,70,'lamp',4,{ceil:1}],['lamp_ceil_moon','lamp','wall','Moon Lamp','Månelampe',300,5,110,110,'lamp',5,{ceil:1}],
+ ['lamp_wall_candle','lamp','wall','Wall Candle Holder','Væglysestage',60,1,60,90,'lamp',2],['lamp_wall_swing','lamp','wall','Swing Arm Lamp','Væglampe med arm',95,2,110,80,'lamp',2],
+ ['lamp_wall_lantern','lamp','wall','Wall Lantern','Væglygte',110,2,60,100,'lamp',3],['lamp_wall_moon','lamp','wall','Crescent Light','Halvmånelampe',150,3,90,90,'lamp',3],
+ ['lamp_wall_led','lamp','wall','Colour LED Strip','Farve-LED-strip',130,3,300,24,'lamp',3],['lamp_wall_star','lamp','wall','Neon Star','Neonstjerne',180,4,100,100,'lamp',4],
+ ['lamp_wall_torch','lamp','wall','Castle Torch','Borgfakkel',200,5,50,110,'lamp',4],['lamp_wall_potato','lamp','wall','Neon Potato','Neonkartoffel',260,6,110,110,'lamp',5],
+ ['lamp_paper_floor','lamp','floor','Paper Floor Lamp','Rispapir-standerlampe',120,2,60,190,'lamp',2],['lamp_tripod','lamp','floor','Tripod Lamp','Trefodslampe',140,2,90,200,'lamp',3],
+ ['lamp_lantern_floor','lamp','floor','Big Lantern','Stor lanterne',160,3,80,120,'lamp',3],['lamp_tree','lamp','floor','Tree Lamp','Trælampe',220,3,110,210,'lamp',4],
+ ['lamp_neon_tube','lamp','floor','Neon Tube Lamp','Neonrør',240,5,40,200,'lamp',4],['lamp_candelabra','lamp','floor','Floor Candelabra','Gulvkandelaber',260,4,90,200,'lamp',4],
+ ['lamp_mushroom_big','lamp','floor','Giant Mushroom Lamp','Kæmpesvampelampe',300,4,120,170,'lamp',5],
+ ['candle_tall','lamp','small','Tall Candle','Højt stearinlys',20,1,22,66,'lamp',1],['tealights','lamp','small','Tea Lights','Fyrfadslys',15,1,64,22,'lamp',1],['candle_jar','lamp','small','Candle in a Jar','Lys i glas',25,1,36,42,'lamp',1],
+ ['candle_trio','lamp','small','Three Candles','Tre stearinlys',40,1,60,60,'lamp',2],['candlestick','lamp','small','Candlestick','Lysestage',45,2,36,82,'lamp',2],['candle_table','lamp','small','Table Candelabra','Bordkandelaber',120,3,74,86,'lamp',3],
+ ['lamp_oil','lamp','small','Oil Lamp','Olielampe',70,2,44,62,'lamp',2],['lamp_lantern','lamp','small','Little Lantern','Lille lanterne',55,2,40,64,'lamp',2],['lamp_salt','lamp','small','Salt Lamp','Saltlampe',65,2,44,52,'lamp',2],
+ ['lamp_bunny','lamp','small','Bunny Night Light','Kanin-natlampe',50,1,44,54,'lamp',2],['lamp_moon_small','lamp','small','Moon Night Light','Måne-natlampe',60,2,50,50,'lamp',2],['lamp_banker','lamp','small',"Banker's Lamp",'Bankerlampe',90,3,72,62,'lamp',3],
  ['door_exit','door','door','Front Door','Hoveddør',0,1,130,244,'exit',1,{fixed:1}],
  ['door_garden','door','door','Garden Door','Havedør',0,1,130,244,'yard',1,{fixed:1}],
  ['stairs_up','door','door','Stairs Up','Trappe op',0,1,240,330,'up',2,{fixed:1}],
@@ -1264,6 +1281,52 @@ Object.assign(DRAW,{
    box(c,-44,-56,10,30,4,'rgba(150,210,255,.85)',1.5);bowlS(c,-22,-24,10,'#ef4444');if(h&&h.fed===today())ell(c,-22,-31,6,2,'#d6a35c',0);
    if(h){const run=h.fed===today()&&h.water===today();const hx=run?22:-6,hy=run?-36:-30,b=run?Math.abs(Math.sin(t*14))*3:0;ell(c,hx,hy-b,14,10,'#f2c879',2);ell(c,hx+10,hy-6-b,4,4,'#f2c879',1.5);ell(c,hx-8,hy-8-b,4,4,'#f2c879',1.5);ell(c,hx+6,hy-2-b,1.6,1.6,OL,0);ell(c,hx-4,hy+3-b,6,4,'#fff',0)}}
 });
+/* ---------------- lamps & candles ---------------- */
+// a candle flame that sways and flickers; off = just the wick
+function flame(c,x,y,s,on,k=0){line(c,x,y,x,y-4*s,'#3b2414',1.5);if(!on)return;const t=Date.now()/1000,sw=Math.sin(t*7+k)*1.6*s+Math.sin(t*13+k*2)*.8*s,h=(11+Math.sin(t*11+k)*1.6)*s;
+  c.save();c.translate(x,y-3*s);c.beginPath();c.moveTo(-4*s,0);c.quadraticCurveTo(-5*s,-h*.55,sw,-h);c.quadraticCurveTo(5*s,-h*.55,4*s,0);c.closePath();c.fillStyle='#f97316';c.fill();
+  c.beginPath();c.moveTo(-2.4*s,-1);c.quadraticCurveTo(-3*s,-h*.45,sw*.6,-h*.72);c.quadraticCurveTo(3*s,-h*.45,2.4*s,-1);c.closePath();c.fillStyle='#fde047';c.fill();ell(c,0,-2*s,1.3*s,2*s,'#fff',0);c.restore()}
+function candleS(c,x,y,w,h,on,col='#fff7ed',k=0){box(c,x-w/2,y-h,w,h,3,col,2);c.fillStyle='rgba(255,255,255,.6)';c.fillRect(x-w/2+2,y-h+3,2,h-6);ell(c,x-w/4,y-h+1,2,4,col,1);flame(c,x,y-h,w/12,on,k+x)}
+function glowBall(c,x,y,r,col,on){if(on){c.save();c.globalAlpha=.35;ell(c,x,y,r*1.6,r*1.6,col,0);c.restore()}ell(c,x,y,r,r,on?col:'#9ca3af',2)}
+function hangCord(c,y){line(c,0,-1500,0,y,'#334155',2)}
+Object.assign(DRAW,{
+ candle(c,it){const on=lampOn(it);box(c,-20,-6,40,6,3,'#ffc93c',2);candleS(c,-10,-6,12,32,on,'#fff7ed',1);candleS(c,8,-6,12,24,on,'#fff7ed',2)},
+ lamp_ceil_bowl(c,it){const on=lampOn(it);hangCord(c,-8);c.beginPath();c.ellipse(0,0,55,24,0,0,Math.PI);c.closePath();c.fillStyle=on?'#fef9c3':'#e5e7eb';c.fill();c.lineWidth=3;c.strokeStyle=OL;c.stroke();box(c,-56,-8,112,10,4,'#cbd5e1',2)},
+ lamp_ceil_industrial(c,it){const on=lampOn(it);hangCord(c,-30);box(c,-6,-34,12,10,2,'#334155',2);poly(c,[-12,-24,12,-24,44,22,-44,22],'#1f2937');glowBall(c,0,24,12,'#fde68a',on)},
+ lamp_ceil_rattan(c,it){const on=lampOn(it);hangCord(c,-40);ell(c,0,0,50,40,on?'#f5d08a':'#c9a46a');c.strokeStyle='rgba(120,70,20,.55)';c.lineWidth=2;for(let i=-3;i<=3;i++){c.beginPath();c.ellipse(0,0,Math.abs(i)*14+4,40,0,0,7);c.stroke()}for(let y=-30;y<=30;y+=12){line(c,-Math.sqrt(Math.max(0,1-(y/40)**2))*50,y,Math.sqrt(Math.max(0,1-(y/40)**2))*50,y,'rgba(120,70,20,.4)',1.5)}},
+ lamp_ceil_star(c,it){const on=lampOn(it),t=Date.now()/2000;hangCord(c,-46);c.save();c.rotate(Math.sin(t)*.08);star(c,0,0,46,22,on?'#fbbf24':'#a8a29e');for(let i=0;i<5;i++){const a=-Math.PI/2+i*Math.PI*2/5;ell(c,Math.cos(a)*22,Math.sin(a)*22,3,3,on?'#fff7c0':'#d6d3d1',0)}c.restore()},
+ lamp_ceil_trio(c,it){const on=lampOn(it);line(c,-80,-1500,-80,-40,'#334155',2);box(c,-96,-1500,192,0,0,'#000',0);[-70,0,70].forEach((x,i)=>{line(c,x,-40-i%2*20,x,0+(i%2)*14,'#334155',2);poly(c,[x-14,(i%2)*14,x+14,(i%2)*14,x+24,30+(i%2)*14,x-24,30+(i%2)*14],['#ef4444','#3fa0ff','#43c46b'][i]);glowBall(c,x,34+(i%2)*14,7,'#fde68a',on)});box(c,-90,-44,180,8,3,'#334155',2)},
+ lamp_ceil_bulbs(c,it){const on=lampOn(it);ell(c,0,-50,22,8,'#1f2937');[[-60,10],[-34,34],[-10,0],[14,44],[38,16],[62,30]].forEach(([x,y],i)=>{line(c,0,-46,x,y-12,'#1f2937',1.5);box(c,x-4,y-14,8,8,2,'#a16207',1);glowBall(c,x,y,9,['#fde68a','#fed7aa','#fef3c7'][i%3],on)})},
+ lamp_ceil_fan(c,it){const on=lampOn(it),a=Date.now()/180;hangCord(c,-30);box(c,-10,-34,20,12,3,'#7a4b22',2);c.save();c.translate(0,-18);c.scale(1,.25);for(let i=0;i<4;i++){c.save();c.rotate(a+i*Math.PI/2);box(c,10,-14,100,28,12,'#a0672e',2);c.restore()}c.restore();ell(c,0,-14,16,8,'#7a4b22');c.beginPath();c.arc(0,-8,18,0,Math.PI);c.fillStyle=on?'#fef9c3':'#e5e7eb';c.fill();c.lineWidth=2;c.strokeStyle=OL;c.stroke()},
+ lamp_ceil_moon(c,it){const on=lampOn(it);hangCord(c,-50);ell(c,0,0,50,50,on?'#fefce8':'#d6d3d1');[[-16,-14,9],[14,10,7],[-6,22,5],[22,-20,4]].forEach(([x,y,r])=>ell(c,x,y,r,r,on?'#e7e5c8':'#bab6ae',1.5))},
+ lamp_wall_candle(c,it){const on=lampOn(it);box(c,-10,-10,20,40,6,'#a16207',2);line(c,0,10,0,32,'#a16207',4);ell(c,0,34,20,6,'#ca8a04');candleS(c,0,30,14,40,on,'#fff7ed',3)},
+ lamp_wall_swing(c,it){const on=lampOn(it);box(c,-50,-14,14,28,4,'#334155',2);line(c,-43,0,10,-14,'#334155',4);line(c,10,-14,30,6,'#334155',4);poly(c,[16,0,46,0,54,30,8,30],on?'#fde68a':'#9ca3af')},
+ lamp_wall_lantern(c,it){const on=lampOn(it);box(c,-6,-50,12,14,3,'#1f2937',2);poly(c,[-24,-36,24,-36,16,-46,-16,-46],'#1f2937');box(c,-22,-36,44,62,4,on?'rgba(253,230,138,.85)':'rgba(200,200,200,.6)',3);line(c,0,-36,0,26,'#1f2937',2);box(c,-26,26,52,8,3,'#1f2937',2);candleS(c,0,22,10,22,on,'#fff7ed',4)},
+ lamp_wall_moon(c,it){const on=lampOn(it);c.beginPath();c.arc(0,0,42,Math.PI*.35,Math.PI*1.65);c.arc(16,0,34,Math.PI*1.55,Math.PI*.45,true);c.closePath();c.fillStyle=on?'#fef9c3':'#d6d3d1';c.fill();c.lineWidth=3;c.strokeStyle=OL;c.stroke();if(on)star(c,30,-26,7,3,'#fde047')},
+ lamp_wall_led(c,it){const on=lampOn(it),t=Date.now()/400;box(c,-150,-8,300,16,8,'#1f2937',2);for(let i=0;i<20;i++)ell(c,-140+i*14.7,0,4,4,on?`hsl(${(t*40+i*18)%360},90%,62%)`:'#4b5563',0)},
+ lamp_wall_star(c,it){const on=lampOn(it);c.save();c.shadowColor=on?'#fde047':'transparent';c.shadowBlur=on?18:0;const p=[];for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,r=i%2?20:46;p.push(Math.cos(a)*r,Math.sin(a)*r)}c.beginPath();c.moveTo(p[0],p[1]);for(let i=2;i<p.length;i+=2)c.lineTo(p[i],p[i+1]);c.closePath();c.lineWidth=7;c.strokeStyle=on?'#fde047':'#9ca3af';c.stroke();c.restore()},
+ lamp_wall_torch(c,it){const on=lampOn(it);box(c,-14,10,28,10,3,'#475569',2);poly(c,[-8,10,8,10,5,50,-5,50],'#7a4b22');poly(c,[-14,-6,14,-6,10,10,-10,10],'#334155');if(on){c.save();c.translate(0,-6);c.scale(2.6,2.6);flame(c,0,0,1,true,7);c.restore()}},
+ lamp_wall_potato(c,it){const on=lampOn(it);c.save();c.shadowColor=on?'#fb923c':'transparent';c.shadowBlur=on?16:0;c.beginPath();c.ellipse(0,0,40,48,.2,0,7);c.lineWidth=7;c.strokeStyle=on?'#fb923c':'#9ca3af';c.stroke();[[-12,-8],[12,-12]].forEach(([x,y])=>ell(c,x,y,4,5,on?'#fde047':'#9ca3af',0));c.beginPath();c.arc(0,8,12,.3,Math.PI-.3);c.lineWidth=5;c.strokeStyle=on?'#fde047':'#9ca3af';c.stroke();c.restore()},
+ lamp_paper_floor(c,it){const on=lampOn(it);line(c,0,-4,0,-40,'#7a4b22',5);ell(c,0,-4,20,6,'#7a4b22');box(c,-26,-190,52,152,26,on?'#fffbeb':'#e7e5e4');for(let y=-176;y<-46;y+=14)line(c,-24,y,24,y,'rgba(150,120,80,.35)',1.5)},
+ lamp_tripod(c,it){const on=lampOn(it);line(c,0,-120,-40,0,'#a0672e',5);line(c,0,-120,40,0,'#a0672e',5);line(c,0,-120,0,0,'#a0672e',5);poly(c,[-32,-120,32,-120,24,-196,-24,-196],on?'#fde68a':'#e5e7eb')},
+ lamp_lantern_floor(c,it){const on=lampOn(it);poly(c,[-30,-100,30,-100,20,-118,-20,-118],'#1f2937');c.beginPath();c.arc(0,-124,8,Math.PI,0);c.lineWidth=3;c.strokeStyle='#1f2937';c.stroke();box(c,-30,-100,60,90,6,on?'rgba(253,230,138,.8)':'rgba(200,200,200,.6)',3);[-10,10].forEach(x=>line(c,x,-98,x,-12,'#1f2937',2));box(c,-34,-12,68,12,4,'#1f2937',2);candleS(c,-8,-14,12,36,on,'#fff7ed',5);candleS(c,10,-14,10,26,on,'#fff7ed',6)},
+ lamp_tree(c,it){const on=lampOn(it);ell(c,0,-4,30,8,'#7a4b22');line(c,0,-6,0,-150,'#7a4b22',8);[[-40,-190,-20,-130],[40,-180,18,-120],[-50,-140,-10,-100],[46,-136,10,-90],[0,-206,0,-150]].forEach(([x,y,x0,y0])=>{line(c,x0,y0,x,y,'#7a4b22',4);glowBall(c,x,y,10,'#fde68a',on)})},
+ lamp_neon_tube(c,it){const on=lampOn(it),t=Date.now()/600;box(c,-18,-10,36,10,3,'#1f2937',2);c.save();c.shadowColor=on?`hsl(${(t*40)%360},90%,60%)`:'transparent';c.shadowBlur=on?20:0;box(c,-8,-200,16,190,8,on?`hsl(${(t*40)%360},90%,65%)`:'#6b7280',2);c.restore()},
+ lamp_candelabra(c,it){const on=lampOn(it);ell(c,0,-4,26,7,'#ca8a04');line(c,0,-6,0,-140,'#ca8a04',6);c.beginPath();c.moveTo(-40,-150);c.quadraticCurveTo(0,-110,40,-150);c.lineWidth=5;c.strokeStyle='#ca8a04';c.stroke();[-40,0,40].forEach((x,i)=>{ell(c,x,-150-(i===1?14:0),10,4,'#ca8a04');candleS(c,x,-152-(i===1?14:0),10,34,on,'#fff7ed',i+8)})},
+ lamp_mushroom_big(c,it){const on=lampOn(it);box(c,-16,-110,32,108,12,'#f5f0e6');c.beginPath();c.ellipse(0,-110,60,50,0,Math.PI,0);c.closePath();c.fillStyle=on?'#fb7185':'#d6a5ab';c.fill();c.lineWidth=3;c.strokeStyle=OL;c.stroke();[[-30,-130,9],[10,-145,11],[34,-122,7],[-6,-122,6]].forEach(([x,y,r])=>ell(c,x,y,r,r*.8,'#fff',1.5))},
+ candle_tall(c,it){ell(c,0,-3,12,4,'#ca8a04');candleS(c,0,-4,14,58,lampOn(it),'#fef2f2',11)},
+ tealights(c,it){const on=lampOn(it);[-22,0,22].forEach((x,i)=>{box(c,x-9,-10,18,10,3,'#cbd5e1',1.5);ell(c,x,-10,8,2.5,'#fff7ed',1);flame(c,x,-10,.75,on,i*3)})},
+ candle_jar(c,it){const on=lampOn(it);box(c,-17,-40,34,38,8,'rgba(220,240,255,.6)');box(c,-13,-24,26,20,4,'#fecdd3',1.5);flame(c,0,-24,.9,on,12);line(c,-11,-34,-11,-8,'rgba(255,255,255,.7)',2)},
+ candle_trio(c,it){const on=lampOn(it);box(c,-30,-6,60,6,3,'#a16207',2);candleS(c,-18,-6,12,40,on,'#fde68a',13);candleS(c,0,-6,12,52,on,'#fef3c7',14);candleS(c,18,-6,12,30,on,'#fde68a',15)},
+ candlestick(c,it){ell(c,0,-4,16,5,'#ca8a04');line(c,0,-6,0,-40,'#ca8a04',5);ell(c,0,-42,9,4,'#ca8a04');candleS(c,0,-44,10,34,lampOn(it),'#fff7ed',16)},
+ candle_table(c,it){const on=lampOn(it);ell(c,0,-4,18,5,'#94a3b8');line(c,0,-6,0,-46,'#94a3b8',5);c.beginPath();c.moveTo(-30,-52);c.quadraticCurveTo(0,-30,30,-52);c.lineWidth=4;c.strokeStyle='#94a3b8';c.stroke();[-30,0,30].forEach((x,i)=>candleS(c,x,-52-(i===1?6:0),9,26,on,'#fff7ed',17+i))},
+ lamp_oil(c,it){const on=lampOn(it);ell(c,0,-14,20,12,'#b45309');box(c,-6,-28,12,8,2,'#92400e',1.5);box(c,-12,-58,24,32,10,on?'rgba(253,230,138,.75)':'rgba(220,220,220,.6)',2);flame(c,0,-28,1,on,20);c.beginPath();c.arc(22,-14,8,-1.5,1.5);c.lineWidth=3;c.strokeStyle=OL;c.stroke()},
+ lamp_lantern(c,it){const on=lampOn(it);c.beginPath();c.arc(0,-60,6,Math.PI,0);c.lineWidth=2.5;c.strokeStyle='#1f2937';c.stroke();poly(c,[-18,-50,18,-50,12,-58,-12,-58],'#1f2937');box(c,-16,-50,32,42,4,on?'rgba(253,230,138,.8)':'rgba(200,200,200,.6)',2.5);box(c,-19,-8,38,8,3,'#1f2937',2);candleS(c,0,-10,9,18,on,'#fff7ed',21)},
+ lamp_salt(c,it){const on=lampOn(it);box(c,-20,-8,40,8,3,'#7a4b22',2);poly(c,[-18,-8,18,-8,22,-26,10,-48,-12,-46,-20,-24],on?'#fb923c':'#d6a28a');line(c,-6,-40,-12,-18,'rgba(255,255,255,.5)',3)},
+ lamp_bunny(c,it){const on=lampOn(it),col=on?'#fff1f7':'#e5e7eb';[-10,10].forEach(x=>{ell(c,x,-44,6,14,col);ell(c,x,-44,3,9,'#fbcfe8',0)});ell(c,0,-20,20,18,col);ell(c,-6,-22,2,2.5,OL,0);ell(c,6,-22,2,2.5,OL,0);ell(c,0,-16,2.5,1.8,'#f472b6',0)},
+ lamp_moon_small(c,it){const on=lampOn(it);box(c,-16,-6,32,6,3,'#7a4b22',2);line(c,0,-6,0,-12,'#7a4b22',3);ell(c,0,-32,20,20,on?'#fefce8':'#d6d3d1');ell(c,-6,-36,4,4,on?'#e7e5c8':'#bab6ae',1);ell(c,6,-26,3,3,on?'#e7e5c8':'#bab6ae',1)},
+ lamp_banker(c,it){const on=lampOn(it);box(c,-30,-8,60,8,3,'#a16207',2);line(c,0,-8,0,-34,'#a16207',4);c.beginPath();c.ellipse(0,-40,34,14,0,Math.PI,0);c.closePath();c.fillStyle='#15803d';c.fill();c.lineWidth=2.5;c.strokeStyle=OL;c.stroke();if(on){c.fillStyle='rgba(255,240,170,.35)';c.beginPath();c.moveTo(-32,-40);c.lineTo(32,-40);c.lineTo(40,-8);c.lineTo(-40,-8);c.fill()}}
+});
 function legs(c,xs,y,col='#7a4b22'){xs.forEach(x=>box(c,x-5,y-16,10,16,3,col,2))}
 function sofa(c,col,w,tufted){const h=w/2;box(c,-h,-118,w,76,26,shade(col,-.05));box(c,-h-6,-70,w+12,52,18,col);box(c,-h-12,-92,34,80,16,shade(col,-.15));box(c,h-22,-92,34,80,16,shade(col,-.15));box(c,-h+26,-74,w/2-30,24,10,shade(col,.12),2);box(c,4,-74,w/2-30,24,10,shade(col,.12),2);if(tufted)for(let i=-2;i<=2;i++)ell(c,i*40,-96,3,3,shade(col,-.4),0);legs(c,[-h+12,h-12],0)}
 function bed(c,w,col,big){const h=w/2;box(c,-h,-150,26,146,10,'#a0672e');box(c,h-26,-110,26,106,10,'#a0672e');box(c,-h+18,-82,w-36,52,10,'#fff');box(c,-h+50,-84,w-70,56,12,col);c.strokeStyle=shade(col,.35);c.lineWidth=2;for(let x=-h+70;x<h-30;x+=24){c.beginPath();c.moveTo(x,-80);c.lineTo(x,-32);c.stroke()}box(c,-h+22,-104,big?70:56,30,14,'#fff');if(big)box(c,-h+22,-80,70,30,14,'#f1f5f9');legs(c,[-h+14,h-14],0)}
@@ -1295,8 +1358,16 @@ let NIGHT=0;
 const LIGHTS={lamp_floor:[0,-190,300],lava_lamp:[0,-60,170,'255,110,170'],desk_lamp:[16,-40,170],table_lamp:[0,-70,230],star_lamp:[0,-28,150,'255,235,120'],mushroom_lamp:[0,-40,170,'255,130,180'],arc_lamp:[60,-180,300],globe_lamp:[0,-142,260],
   wall_sconce:[0,-20,230],pendant_lamp:[0,34,380],paper_lantern:[0,0,320],disco_ball:[0,0,300,'200,150,255'],chandelier:[0,10,460],lights:[0,14,330],neon_heart:[0,0,220,'255,90,170'],garden_lamp:[0,-145,280],
   fireplace:[0,-60,330,'255,150,70'],lantern_post:[0,-178,280],jack_o_lantern:[0,-28,160,'255,160,40'],xmas_tree:[0,-120,280,'255,220,140'],xmas_lights:[0,14,320,'255,200,140'],heart_lamp:[0,-30,170,'255,100,170'],tv_retro:[-6,-95,140,'150,200,255'],tv_flat:[0,-105,170,'150,200,255'],wall_tv:[0,0,170,'150,200,255'],aquarium:[0,-115,150,'120,200,255'],arcade:[0,-165,150,'120,230,255'],laptop:[0,-30,90,'150,200,255']};
+Object.assign(LIGHTS,{lamp_ceil_bowl:[0,10,330],lamp_ceil_industrial:[0,30,330],lamp_ceil_rattan:[0,30,340,'255,200,130'],lamp_ceil_star:[0,0,300,'255,210,120'],lamp_ceil_trio:[0,40,400],lamp_ceil_bulbs:[0,30,380,'255,210,140'],lamp_ceil_fan:[0,20,360],lamp_ceil_moon:[0,0,320,'220,230,255'],
+  lamp_wall_candle:[0,-30,160,'255,170,70'],lamp_wall_swing:[30,10,220],lamp_wall_lantern:[0,0,200,'255,190,100'],lamp_wall_moon:[0,0,200,'230,235,255'],lamp_wall_led:[0,0,320,'200,120,255'],lamp_wall_star:[0,0,220,'255,230,90'],lamp_wall_torch:[0,-45,230,'255,140,40'],lamp_wall_potato:[0,0,220,'255,190,90'],
+  lamp_paper_floor:[0,-130,260],lamp_tripod:[0,-170,280],lamp_lantern_floor:[0,-60,220,'255,190,100'],lamp_tree:[0,-150,280,'255,220,150'],lamp_neon_tube:[0,-100,240,'255,80,200'],lamp_candelabra:[0,-190,220,'255,170,70'],lamp_mushroom_big:[0,-120,260,'255,140,200'],
+  candle:[0,-40,130,'255,170,70'],candle_tall:[0,-66,130,'255,170,70'],tealights:[0,-16,120,'255,170,70'],candle_jar:[0,-26,120,'255,170,70'],candle_trio:[0,-50,150,'255,170,70'],candlestick:[0,-82,130,'255,170,70'],candle_table:[0,-86,170,'255,170,70'],
+  lamp_oil:[0,-40,150,'255,180,80'],lamp_lantern:[0,-36,150,'255,190,100'],lamp_salt:[0,-24,140,'255,140,90'],lamp_bunny:[0,-28,130,'255,220,240'],lamp_moon_small:[0,-26,130,'230,235,255'],lamp_banker:[0,-40,170,'200,255,200']});
+// candles and flames flicker: their light grows and shrinks a little all the time
+const FLICKER=new Set(['candle','candle_tall','tealights','candle_jar','candle_trio','candlestick','candle_table','lamp_oil','lamp_wall_candle','lamp_wall_torch','lamp_candelabra','fireplace','jack_o_lantern','lamp_lantern','lamp_lantern_floor','lamp_wall_lantern']);
+const flick=(id,k)=>FLICKER.has(id)?1+Math.sin(Date.now()/90+k)*.05+Math.sin(Date.now()/37+k*2)*.04:1;
 const isLight=id=>!!LIGHTS[id];
-function itemLights(items,sc=1){const out=[];for(const it of items){const L0=LIGHTS[it.id];if(!L0)continue;if(FURN[it.id].use==='lamp'&&!lampOn(it))continue;out.push([it.x+(it.f?-L0[0]:L0[0])*sc,it.y-(it.z||0)+L0[1]*sc,L0[2]*sc,L0[3]])}return out}
+function itemLights(items,sc=1){const out=[];for(const it of items){const L0=LIGHTS[it.id];if(!L0)continue;if(FURN[it.id].use==='lamp'&&!lampOn(it))continue;out.push([it.x+(it.f?-L0[0]:L0[0])*sc,it.y-(it.z||0)+L0[1]*sc,L0[2]*sc*flick(it.id,it.x),L0[3]])}return out}
 let LC=null;
 // soft round light sprites, made once and reused (radial gradients every frame are slow on phones)
 const GLOWS={};function glowSpr(col,stops){const k=col+stops;if(GLOWS[k])return GLOWS[k];const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d'),gr=g.createRadialGradient(64,64,0,64,64,64);
@@ -1870,7 +1941,7 @@ function drawGood(g,gd,t){
   else if(gd.k==='pet')drawCompanion(g,0,0,1,gd.id,{t:t/1000+gd.x,dir:Math.sin(t/2500+gd.x)>0?1:-1,walk:false});
   else{g.font='44px serif';g.fillStyle='#000';g.textAlign='center';g.textBaseline='bottom';g.fillText((gd.k==='sup'?SUP:FOOD)[gd.id].e,0,4)}
   g.restore();
-  if(gState(gd)===1){g.fillStyle='rgba(255,255,255,.35)';const r=gd.r;g.fillRect(r.x,r.y+34,r.w,r.h-34)}}
+}
 const SEC=(en,da,wall,floor,o={})=>({name:[en,da],wall,floor,goods:[],fix:[],deco:[],spots:[],w:1280,...o});
 const listCat=(cat,kind,lux)=>Object.values(FURN).filter(f=>f.cat===cat&&f.price>0&&(!kind||f.kind===kind)&&(lux||!f.lux)).sort((a,b)=>a.lvl-b.lvl||a.price-b.price).map(f=>f.id);
 // furniture on the floor in a back row and a front row
@@ -1931,12 +2002,17 @@ function buildShops(){
   shv.w=Math.max(1280,sx+300);shv.fix.push(fxDeco('plant_big',shv.w-140,620));
   const smIds=listCat('small');for(let i=0,k=0;i<smIds.length;i+=4,k++){const back=k%2===0,tx=420+Math.floor(k/2)*440+(back?0:220),ty=back?596:706;const t=fxTable(tx,ty,360);sm.fix.push(t);smIds.slice(i,i+4).forEach((id,j)=>sm.goods.push(G('furn',id,tx-135+j*90,t.top,1.15,t,Math.min(FLOOR_MAX,ty+30))));sm.w=Math.max(sm.w,tx+340)}
   // a dim showroom so you can see the lamps glow
-  const lp=SEC('Lamps & Lights','Lamper & lys','wp_night','fl_dark',{dark:.5});
-  let lx=floorRows(lp,listCat('lamp','floor'),300,.95);const lsm=listCat('lamp','small');
-  const lt=fxTable(lx+200,640,340,'#334155');lp.fix.push(lt);lsm.forEach((id,j)=>lp.goods.push(G('furn',id,lx+60+j*(280/Math.max(1,lsm.length-1)),lt.top,1.15,lt,FLOOR_MAX)));lx+=420;
-  const lceil=listCat('lamp','wall').filter(id=>FURN[id].ceil),lwall=listCat('lamp','wall').filter(id=>!FURN[id].ceil);
-  lceil.forEach((id,j)=>lp.goods.push(G('furn',id,420+j*260,120,1)));lwall.forEach((id,j)=>lp.goods.push(G('furn',id,520+j*360,300,1)));
-  lp.w=Math.max(1280,lx+120,420+lceil.length*260,520+lwall.length*360);wallSign(lp,lp.w-260,190,()=>'💡 '+L('Tap a lamp to buy','Tryk på en lampe'));
+  // lamps: three dim showrooms so you can see them glow
+  const isCandle=id=>/candle|candela|tealight|torch|lamp_oil/.test(id),onTables=(s2,ids,x0,col)=>{let x=x0;for(let i=0;i<ids.length;i+=4){const t=fxTable(x+190,690,380,col);s2.fix.push(t);ids.slice(i,i+4).forEach((id,j)=>s2.goods.push(G('furn',id,x+50+j*94,t.top,1.15,t,FLOOR_MAX)));x+=460}return x+120};
+  const lpc=SEC('Ceiling & Wall Lights','Loft- & væglamper','wp_night','fl_dark',{dark:.5,noArt:1});let cx2=420;listCat('lamp','wall').filter(id=>FURN[id].ceil).forEach(id=>{const f=FURN[id];lpc.goods.push(G('furn',id,cx2+f.w/2,130,1));cx2+=f.w+160});
+  // wall lights in two rows; each thing has room for its price tag on the left
+  const wx3=[420,500];listCat('lamp','wall').filter(id=>!FURN[id].ceil&&!isCandle(id)).forEach((id,i)=>{const f=FURN[id],r=i%2;lpc.goods.push(G('furn',id,wx3[r]+f.w/2,r?395:275,1));wx3[r]+=f.w+170});
+  lpc.w=Math.max(1280,cx2+60,...wx3.map(x=>x+120));wallSign(lpc,lpc.w-230,560,()=>'💡 '+L('Tap a lamp to buy','Tryk på en lampe'));
+  const lp=SEC('Floor & Table Lamps','Gulv- & bordlamper','wp_night','fl_dark',{dark:.5,noArt:1});let lx=floorRows(lp,listCat('lamp','floor').filter(id=>!isCandle(id)),300,.95);
+  lx=onTables(lp,listCat('lamp','small').filter(id=>!isCandle(id)),lx+40,'#334155');lp.w=Math.max(1280,lx);wallSign(lp,640,150,()=>'🛋️ '+L('Floor & table lamps','Gulv- & bordlamper'));
+  const lcn=SEC('Candles','Stearinlys','wp_night','fl_dark',{dark:.62,noArt:1});const cids=[...listCat('lamp','small').filter(isCandle),'candle'];let ce=floorRows(lcn,listCat('lamp','floor').filter(isCandle),300,.95);
+  ce=onTables(lcn,cids,ce+40,'#7a4b22');listCat('lamp','wall').filter(isCandle).forEach((id,j)=>lcn.goods.push(G('furn',id,460+j*300,270,1.2)));lcn.w=Math.max(1280,ce);
+  wallSign(lcn,Math.max(900,lcn.w-360),150,()=>'🕯️ '+L('Real flickering candles','Ægte flakkende stearinlys'));
   const gd=SEC('Garden','Have','yard','grass');gd.w=Math.max(1280,floorRows(gd,listCat('garden'),300,.9)+160);
   [...furn,sm].forEach(s=>wallSign(s,Math.min(s.w/2,900),150,()=>L(s.name[0],s.name[1])));wallSign(shv,300,170,()=>L('🪵 Wall Shelves','🪵 Væghylder'));
   // tableware & coffee machines on tables
@@ -1954,7 +2030,7 @@ function buildShops(){
   let lw=420;LUX.filter(f=>f.kind==='wall').forEach(f=>{lx2.goods.push(G('furn',f.id,lw+f.w/2,f.ceil?120:250,f.ceil?1:.9));lw+=f.w+140});
   LUX.filter(f=>f.kind==='dr').forEach(f=>{lx2.goods.push(G('furn',f.id,le+90,700,.85));le+=190});lx2.w=Math.max(1280,le+120,lw+100);
   wallSign(lx2,lx2.w-330,150,()=>'💎 '+L('Luxury','Luksus'));
-  SHOPDEF.furn={secs:[...furn,sm,tw,shv,wd,lp,lx2]};
+  SHOPDEF.furn={secs:[...furn,sm,tw,shv,wd,lpc,lp,lcn,lx2]};
   // ---------- Mashterpiece Gallery ----------
   const art=listCat('wall').filter(id=>!/^window_/.test(id)),paint=art.filter(id=>/^(art_|poster|mirror)/.test(id)),wdeco=art.filter(id=>!paint.includes(id)&&!/^shelf_/.test(id));
   const hang=(s,ids,x0)=>{let x=x0,k=0;const cols=[];for(const id of ids){const f=FURN[id];if(k%2===0)cols.push({x,w:0});const c=cols[cols.length-1];c.w=Math.max(c.w,f.w);k++}
@@ -2580,7 +2656,7 @@ function renderInterior(g,t){
   }
   sp.sort((a,b)=>a.y-b.y).forEach(s=>s.draw());
   if(SCENE.type==='park')drawNight(g,NIGHT,[[400,300,700],[1100,300,700],[1800,300,700],[2400,300,700]],.5);
-  else if(SCENE.type==='shop'){if(room.dark)drawNight(g,1,room.goods.filter(gd=>gd.k==='furn'&&LIGHTS[gd.id]).map(gd=>{const L0=LIGHTS[gd.id];return[gd.x+L0[0]*gd.sc,gd.y+L0[1]*gd.sc,L0[2]*gd.sc,L0[3]]}),room.dark)}
+  else if(SCENE.type==='shop'){if(room.dark)drawNight(g,1,room.goods.filter(gd=>gd.k==='furn'&&LIGHTS[gd.id]).map(gd=>{const L0=LIGHTS[gd.id];return[gd.x+L0[0]*gd.sc,gd.y+L0[1]*gd.sc,L0[2]*gd.sc*flick(gd.id,gd.x),L0[3]]}),room.dark)}
   else drawNight(g,NIGHT,itemLights(room.items),SCENE.yard?.6:.64);
   g.textAlign='center';g.textBaseline='middle';
   FX.forEach(f=>{if(f.t<0)return;g.globalAlpha=Math.max(0,1-f.t/1.2);g.font='28px serif';g.fillStyle='#000';g.fillText(f.txt,f.x,f.y-f.t*60);g.globalAlpha=1});
@@ -3453,7 +3529,7 @@ function openQuests(start){let tab=start||'active';
    ===================================================================== */
 const BILL_EVERY=7*864e5,BILL_DUE=3*864e5,WH_PER_COIN=10;
 const ALWAYS_ON={fridge:30,aquarium:20,fishbowl:5,arcade:40,gaming_pc:80,jukebox:40,hot_tub:150,coffee_bar:20,tv_flat:8,wall_tv:8,home_cinema:15,incubator:25,pantry:0};
-const LAMP_W={chandelier:120,crystal_chandelier:200,disco_ball:80,lights:20,xmas_lights:25,xmas_tree:30,neon_heart:30,star_lamp:10,fireplace:0};
+const LAMP_W={candle:0,candle_tall:0,tealights:0,candle_jar:0,candle_trio:0,candlestick:0,candle_table:0,lamp_oil:0,lamp_wall_candle:0,lamp_wall_torch:0,lamp_candelabra:0,lamp_ceil_fan:70,lamp_wall_led:10,lamp_bunny:5,lamp_moon_small:5,chandelier:120,crystal_chandelier:200,disco_ball:80,lights:20,xmas_lights:25,xmas_tree:30,neon_heart:30,star_lamp:10,fireplace:0};
 function homeWatts(){let w=0;for(const it of itemsAll()){const f=FURN[it.id];if(!f)continue;if(f.use==='lamp'&&lampOn(it))w+=LAMP_W[it.id]!=null?LAMP_W[it.id]:40;w+=ALWAYS_ON[it.id]||0}return w}
 const rentNow=()=>80+Math.max(0,S.rooms.length-3)*40+(S.yard?60:0);
 function initBills(){if(!S.bill)S.bill={next:Date.now()+BILL_EVERY,wh:0,list:[]}}
