@@ -2433,7 +2433,7 @@ function stepToward(o,tx,ty,d,town){
 }
 
 /* ---------------- moving the player ---------------- */
-function walkTo(x,y,arrive){
+function walkTo(x,y,arrive){ME.stk=0;ME.lastD=null;
   if(SCENE.type==='town'){x=clamp(x,30,MAP_W-30);y=clamp(y,TOWN_MINY,TOWN_MAXY)}else{x=clamp(x,90,sceneW()-90);y=clamp(y,FLOOR_MIN+15,FLOOR_MAX)}
   ME.tx=x;ME.ty=y;ME.arrive=arrive||null;ME.act=null;
 }
@@ -2454,7 +2454,9 @@ function updateMe(dt){
   ME.t+=dt;
   if(ME.tx!=null){const sp=(SCENE.type==='town'?280:SCENE.type==='shop'?330:240)*dt*(KEYS.shift?1.85:1);ME.run=!!KEYS.shift;const was=Math.floor(ME.t*4);const done=stepToward(ME,ME.tx,ME.ty,sp,SCENE.type==='town');
     if(Math.floor(ME.t*6)!==Math.floor((ME.t-dt)*6))SFX.step();
-    if(done){const a=ME.arrive;ME.arrive=null;if(a)a()}}
+    // stuck against something (a bus shelter, a tree…)? then we have arrived as close as we can get
+    let stuck=false;if(!done){const dd=Math.hypot(ME.tx-ME.x,ME.ty-ME.y);if(ME.lastD!=null&&ME.lastD-dd<sp*.25)ME.stk=(ME.stk||0)+dt;else ME.stk=0;ME.lastD=dd;if(ME.stk>.35&&dd<260){stuck=true;ME.tx=null;ME.ty=null;ME.walk=false}}
+    if(done||stuck){ME.stk=0;ME.lastD=null;const a=ME.arrive;ME.arrive=null;if(a)a()}}
   else ME.walk=false;
   if(ME.sayT>0){ME.sayT-=dt;if(ME.sayT<=0)ME.say=''}
   if(ME.act)tickAction(dt);
@@ -2876,7 +2878,11 @@ function clickShop(w){
   for(const sp of sec.spots)if(inR(sp.r)){goSpot(sp);return}
   walkTo(w.x,Math.max(w.y,FLOOR_MIN+15));
 }
+// the whole bus shelter, its roof, pole and 🚌 sign can be tapped
+const busRect=s=>({x:s.x-16,y:s.y-112,w:s.w+48,h:132});
 function clickTown(w){
+  // bus stops come first, so a neighbour walking past can't get in the way
+  for(const s of SPOTS){if(s.kind!=='bus')continue;const r=busRect(s);if(w.x>=r.x&&w.x<=r.x+r.w&&w.y>=r.y&&w.y<=r.y+r.h){walkTo(s.x+s.w/2,Math.min(TOWN_MAXY,s.y+s.h+22),()=>useSpot(s));return}}
   // when neighbours stand close together, talk to the one nearest to where you tapped
   const hits=ACTORS.filter(a=>Math.abs(w.x-a.x)<42&&w.y>a.y-110&&w.y<a.y+10).sort((a,b)=>Math.hypot(w.x-a.x,w.y-a.y+50)-Math.hypot(w.x-b.x,w.y-b.y+50));
   if(hits.length){const a=hits[0];walkTo(a.x+(ME.x<a.x?-70:70),a.y,()=>talkTo(a.id));return}
