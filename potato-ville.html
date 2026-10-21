@@ -102,7 +102,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .arrow small:empty{display:none}
 #aL small{left:0;transform:none}#aR small{left:auto;right:0;transform:none}
 .roomban{position:fixed;left:50%;bottom:calc(26px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:4;display:none;align-items:center;gap:8px;background:linear-gradient(#5fb6ff,#2f7fd0);border:3px solid #fff;border-radius:16px;padding:4px 16px;color:#fff;font-family:'Lilita One',sans-serif;font-size:22px;text-shadow:2px 2px 0 var(--ink);box-shadow:0 4px 0 rgba(0,0,0,.3);pointer-events:none;white-space:nowrap}
-.roomban.on{display:flex}
+.roomban.on{display:flex;transition:opacity .6s}.roomban.gone{opacity:0;pointer-events:none}
 .roomban i{font-style:normal;display:flex;gap:4px}
 .roomban i b{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.45);border:1px solid var(--ink)}
 .roomban i b.on{background:#ffc93c}
@@ -2202,15 +2202,17 @@ function setPlace(){
 }
 function navList(){if(SCENE.type==='shop')return SHOPDEF[SCENE.shop].secs.map((_,i)=>i);if(SCENE.type!=='home'||SCENE.yard)return null;const st=curRoom().st||0;return curRooms().map((r,i)=>[r,i]).filter(([r])=>(r.st||0)===st).map(([,i])=>i)}
 function arrows(){const l=navList(),ban=$('#roomban');
-  if(!l){$('#aL').classList.remove('on');$('#aR').classList.remove('on');ban.classList.remove('on');return}const p=l.indexOf(SCENE.room);
+  if(!l){$('#aL').classList.remove('on');$('#aR').classList.remove('on');ban.classList.remove('on');arrows.k='';return}const p=l.indexOf(SCENE.room);
   const nmOf=i=>{const r=SCENE.type==='shop'?SHOPDEF[SCENE.shop].secs[i]:curRooms()[i];return SCENE.type==='shop'?L(r.name[0],r.name[1]):roomName(r)};
   // walking: the arrow only shows when you stand by that wall – walk into the wall to go through
   const near=walkNav()?edgeNear():[1,1];
   $('#aL').classList.toggle('on',p>0&&!!near[0]);$('#aR').classList.toggle('on',(p<l.length-1||(SCENE.type==='home'&&SCENE.owner==='me'&&!BUILD.on))&&!!near[1]);
   $('#aL small').textContent=p>0?nmOf(l[p-1]):'';$('#aR small').textContent=p<l.length-1?nmOf(l[p+1]):(SCENE.type==='home'&&SCENE.owner==='me'?'🏗️ '+L('Expand','Udvid'):'');
   // room name at the bottom of the screen with one dot per room
-  const show=l.length>1&&!BUILD.on;ban.classList.toggle('on',show);
-  if(show)ban.innerHTML=`${esc(nmOf(SCENE.room))}<i>${l.map((_,i)=>`<b class="${i===p?'on':''}"></b>`).join('')}</i>`}
+  // pops up when you enter a room, then fades away by itself
+  const show=l.length>1&&!BUILD.on,key=sceneKey();if(!show){ban.classList.remove('on');arrows.k='';return}if(key===arrows.k)return;arrows.k=key;
+  ban.classList.add('on');ban.classList.remove('gone');clearTimeout(arrows.t);arrows.t=setTimeout(()=>ban.classList.add('gone'),3000);
+  ban.innerHTML=`${esc(nmOf(SCENE.room))}<i>${l.map((_,i)=>`<b class="${i===p?'on':''}"></b>`).join('')}</i>`}
 const walkNav=()=>!BUILD.on&&(SCENE.type==='home'||SCENE.type==='shop')&&!!navList();
 const edgeNear=()=>[ME.x<300?1:0,ME.x>sceneW()-300?1:0];let EDGE='';
 function edgeTick(){if(!walkNav())return;const n=edgeNear(),k=n.join('');if(k!==EDGE){EDGE=k;arrows()}
