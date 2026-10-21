@@ -280,6 +280,7 @@ h1.logo{margin:0;font-weight:400}
     <button class="pill" id="clk" title="Time" style="cursor:pointer"><i id="clkI">☀️</i><span id="clkT">12:00</span></button>
     <div class="pill" title="Energy"><i>⚡</i><span id="enT">30/30</span><small id="enN"></small></div>
     <div class="pill" title="Coins"><i>🪙</i><span id="coT">0</span></div>
+    <button class="pill" id="pwr" title="Power" style="cursor:pointer"><i>🔌</i><span id="pwT">0 W</span><small id="pwC"></small></button>
     <div class="topbtns"><button class="rb" id="bLang" title="Language">🇩🇰</button><button class="rb" id="bMus" title="Music">🎵</button><button class="rb" id="bSnd" title="Sound">🔊</button><button class="rb" id="bMenu" title="Menu">☰</button></div>
   </div>
 </div>
@@ -1722,6 +1723,9 @@ function hud(){
   $('#lvN').textContent=S.lvl;const need=xpFor(S.lvl);$('#xpB').style.width=Math.min(100,S.xp/need*100)+'%';$('#xpT').textContent=N(S.xp)+' / '+N(need);
   $('#ttl').textContent=levelTitle(S.lvl);$('#clkT').textContent=clockText();const nf=nightF();$('#clkI').textContent=nf>.6?'🌙':nf>.05?'🌆':'☀️';$('#coT').textContent=N(S.coins);
   const me=maxEnergy();$('#enT').textContent=S.energy+'/'+me;
+  // power meter: what your home uses right now and what this bill period's electricity costs so far
+  if(S.bill){const c=Math.round(S.bill.wh/WH_PER_COIN);$('#pwT').textContent=N(BW.w)+' W';$('#pwC').textContent='≈'+N(c)+' 🪙';
+    $('#pwr').title=L(`Power: your home uses ${BW.w} W right now · ${(S.bill.wh/1000).toFixed(2)} kWh so far ≈ ${c} coins on the next bill (in ${fmtDur(Math.max(0,S.bill.next-Date.now()))})`,`Strøm: dit hjem bruger ${BW.w} W lige nu · ${(S.bill.wh/1000).toFixed(2)} kWh indtil nu ≈ ${c} mønter på næste regning (om ${fmtDur(Math.max(0,S.bill.next-Date.now()))})`)}
   if(S.energy<me){const left=Math.max(0,90-((Date.now()-S.enT)/1000|0));$('#enN').textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0')}else $('#enN').textContent='';
 }
 let toastT=0;function toast(t,ms=2600){const e=$('#toast');e.innerHTML=t;e.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('on'),ms)}
@@ -2548,7 +2552,7 @@ function useItem(it){
   if(f.use==='yard'){goYard();return}
   if(f.use==='house'){leaveYard();return}
   if(f.use==='up'||f.use==='down'){goStorey(f.use==='up'?1:0);return}
-  if(f.use==='lamp'){it.lit=!lampOn(it);SFX.tone(it.lit?900:500,.06,'square',.05);if(own){save();net.houseChanged()}return}
+  if(f.use==='lamp'){it.lit=!lampOn(it);SFX.tone(it.lit?900:500,.06,'square',.05);if(own){save();net.houseChanged();BW.t=0;if(S.bill){BW={w:homeWatts(),t:Date.now()};hud()}}return}
   if(!own&&['plant','bowlF','bowlW','egg','honey','hamster'].includes(f.use)){toast(L('That belongs to your host 🙂','Det tilhører værten 🙂'));return}
   if(f.use==='plant'){openPlanter(it);return}
   if(f.use==='honey'){harvestHoney(it);return}
@@ -3537,7 +3541,7 @@ const ALWAYS_ON={fridge:30,aquarium:20,fishbowl:5,arcade:40,gaming_pc:80,jukebox
 const LAMP_W={candle:0,candle_tall:0,tealights:0,candle_jar:0,candle_trio:0,candlestick:0,candle_table:0,lamp_oil:0,lamp_wall_candle:0,lamp_wall_torch:0,lamp_candelabra:0,lamp_ceil_fan:70,lamp_wall_led:10,lamp_bunny:5,lamp_moon_small:5,chandelier:120,crystal_chandelier:200,disco_ball:80,lights:20,xmas_lights:25,xmas_tree:30,neon_heart:30,star_lamp:10,fireplace:0};
 function homeWatts(){let w=0;for(const it of itemsAll()){const f=FURN[it.id];if(!f)continue;if(f.use==='lamp'&&lampOn(it))w+=LAMP_W[it.id]!=null?LAMP_W[it.id]:40;w+=ALWAYS_ON[it.id]||0}return w}
 const rentNow=()=>80+Math.max(0,S.rooms.length-3)*40+(S.yard?60:0);
-function initBills(){if(!S.bill)S.bill={next:Date.now()+BILL_EVERY,wh:0,list:[]}}
+function initBills(){if(!S.bill)S.bill={next:Date.now()+BILL_EVERY,wh:0,list:[]};BW={w:homeWatts(),t:Date.now()}}
 let BW={w:0,t:0};
 function billTick(dt){if(!S.created||!LIVE)return;initBills();const B=S.bill,now=Date.now();
   if(now-BW.t>5000){BW={w:homeWatts(),t:now}}B.wh+=BW.w*dt/3600;
@@ -4124,6 +4128,7 @@ $('#bSnd').textContent=SFX.on?'🔊':'🔇';
 $('#bMus').onclick=()=>{MUSIC.toggle();toast(MUSIC.on?'🎵 '+L('Music on','Musik til'):'🔕 '+L('Music off','Musik fra'))};
 $('#bMenu').onclick=()=>{SFX.click();openMenu()};
 $('#clk').onclick=()=>{SFX.click();openSettings()};
+$('#pwr').onclick=()=>{SFX.click();openBills()};
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&!RESETTING)saveNow();net.away(document.visibilityState==='hidden')});
 let BG_T=performance.now();setInterval(()=>{const now=performance.now(),dt=Math.min(5,(now-BG_T)/1000);BG_T=now;if(document.hidden&&started)net.tick(dt)},500);
 let RESETTING=false;
