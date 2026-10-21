@@ -101,6 +101,7 @@ h1,h2,h3,.lil{font-family:'Lilita One',Nunito,sans-serif;font-weight:400;letter-
 .logo h1{font-size:clamp(40px,8vw,72px);line-height:.95;color:#fff;text-shadow:0 5px 0 #000,0 0 30px #0008;-webkit-text-stroke:2px #000;paint-order:stroke fill}
 .logo h1 span{color:var(--gold)}
 .logo p{margin:0;color:var(--muted);font-size:14px}
+.ea{margin-top:6px;padding:4px 12px;border-radius:999px;border:2px solid #000;background:linear-gradient(#ffd96a,#f0a91c);color:#2a1606;font-size:12.5px;box-shadow:0 2px 0 #000;white-space:nowrap}
 .mbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:min(760px,100%)}
 .mbig{position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:2px;min-height:118px;padding:14px;border-radius:18px;border:3px solid #000;box-shadow:0 5px 0 #000,0 10px 24px #0007;text-align:left;overflow:hidden}
 .mbig:active{transform:translateY(3px);box-shadow:0 2px 0 #000}
@@ -1468,7 +1469,7 @@ function renderMenu(){
   $('#mCoins').textContent='🪙 '+S.coins.toLocaleString();$('#mStreak').textContent='🔥 '+S.streak.n;
   const cups=CITIES.filter((c,i)=>S.cups[i]).length,qr=questReady();
   const next=CITIES.findIndex((c,i)=>!S.cups[i]);
-  $('#mMain').innerHTML=`<div class="logo"><canvas id="logoC" width="240" height="240"></canvas><h1>POTATO <span>POOL</span></h1><p>${L('8-ball billiards with real physics','8-ball billard med ægte fysik')}</p></div>
+  $('#mMain').innerHTML=`<div class="logo"><canvas id="logoC" width="240" height="240"></canvas><h1>POTATO <span>POOL</span></h1><p>${L('8-ball billiards with real physics','8-ball billard med ægte fysik')}</p><span class="ea">🚧 ${L('Early Access – still in development','Early Access – stadig under udvikling')}</span></div>
   <div class="mbtns">
     <button class="mbig camp" data-go="campaign"><span class="ic">🗺️</span><b>${L('Campaign','Kampagne')}</b><small>${S.done?L('👑 Champion! All 8 cups won','👑 Mester! Alle 8 pokaler vundet'):`${L('Next:','Næste:')} ${esc(LL(CITIES[next<0?0:next].n))} · 🏆 ${cups}/8`}</small></button>
     <button class="mbig quick" data-go="quick"><span class="ic">⚡</span><b>${L('Quick Match','Hurtig kamp')}</b><small>${L('Play the computer','Spil mod computeren')}</small></button>
