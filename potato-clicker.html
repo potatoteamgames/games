@@ -357,6 +357,11 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
 @media (max-width:900px) and (max-height:620px){
   #goal{display:none}
 }
+.dcBtn{display:flex;align-items:center;justify-content:center;gap:10px;background:#5865f2;color:#fff!important;text-decoration:none!important;border-radius:14px;padding:9px 16px;font-family:inherit;font-weight:800;font-size:15px;line-height:1.15;text-align:left;box-shadow:0 4px 0 #3c45a5;transition:transform .12s}
+.dcBtn:hover{transform:translateY(-2px)}.dcBtn:active{transform:translateY(2px);box-shadow:none}
+.dcBtn svg{width:30px;height:24px;flex:none}.dcBtn small{display:block;font-size:11px;font-weight:700;opacity:.85}
+.dchb{display:flex;align-items:center;justify-content:center;background:linear-gradient(#6f7bff,#5865f2);color:#fff;text-decoration:none}
+.dchb svg{width:62%}
 </style>
 </head>
 <body>
@@ -369,6 +374,7 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
     <a class="homebtn" href="./" title="Back to Potato Team Games" aria-label="Back to Potato Team Games">⬅ <span class="hl1">All Games</span><span class="hl2">Home</span></a>
     <h1 class="logo" title="Potato Clicker">POTATO <small>CLICKER</small> <span>🥔</span></h1>
     <div class="ticker" aria-hidden="true"><div id="tick">Welcome to Potato Clicker 🥔 — the wildest potato game in the West.</div></div>
+    <a class="hbtn dchb" href="https://discord.gg/kZa6F4s5f9" target="_blank" rel="noopener" title="Join the Potato Team Games Discord" aria-label="Join the Potato Team Games Discord"><svg viewBox="0 0 127.14 96.36" aria-hidden="true"><path fill="currentColor" d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15ZM42.45 65.69C36.18 65.69 31 60 31 53s5-12.74 11.43-12.74S54 46 53.89 53s-5.05 12.69-11.44 12.69Zm42.24 0C78.41 65.69 73.25 60 73.25 53s5-12.74 11.44-12.74S96.23 46 96.12 53s-5.04 12.69-11.43 12.69Z"/></svg></a>
     <button class="hbtn" id="sndBtn" title="Sound on/off" aria-label="Sound on/off">🔊</button>
     <button class="hbtn" id="saveBtn" title="Save game" aria-label="Save game">💾</button>
   </header>
@@ -516,6 +522,7 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
           <h3>Is it free?</h3>
           <p>Yes. Potato Clicker is 100% free to play with no ads and no in-app purchases. Your progress is saved in your browser.</p>
           <p><a href="./" style="color:var(--brass)">🎮 More free games from Potato Team Games →</a></p>
+          <p><a class="dcBtn" href="https://discord.gg/kZa6F4s5f9" target="_blank" rel="noopener" style="display:inline-flex"><svg viewBox="0 0 127.14 96.36" aria-hidden="true"><path fill="currentColor" d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15ZM42.45 65.69C36.18 65.69 31 60 31 53s5-12.74 11.43-12.74S54 46 53.89 53s-5.05 12.69-11.44 12.69Zm42.24 0C78.41 65.69 73.25 60 73.25 53s5-12.74 11.44-12.74S96.23 46 96.12 53s-5.04 12.69-11.43 12.69Z"/></svg><span>Join our Discord<small>Chat with other players in the Potato Team Games community</small></span></a></p>
         </section>
       </div>
     </aside>
