@@ -238,6 +238,7 @@ h1.logo{margin:0;font-weight:400}
 .hud,.nav,.rbtns,.buildbar,.dlg,.chat,.toast,.arrow,.pn,.mgw,.roomban{zoom:var(--ui)}
 .bhint{position:fixed;left:50%;top:64px;transform:translateX(-50%);z-index:6;background:rgba(10,30,60,.7);color:#fff;border-radius:14px;padding:4px 12px;font-size:12px;display:none;pointer-events:none;max-width:90vw;text-align:center}
 .bhint.on{display:block}
+@media (max-width:420px){.nb{width:40px!important;height:40px!important;font-size:18px!important;border-radius:11px!important}.nb .dot{min-width:17px;height:17px;font-size:10px;top:-5px;right:-5px}}
 @media (max-width:640px){
   .pf.mclose{display:flex}
   .roomban{bottom:calc(64px + env(safe-area-inset-bottom));font-size:17px;padding:3px 12px}
@@ -247,6 +248,7 @@ h1.logo{margin:0;font-weight:400}
   .ph .x{width:42px;height:42px;font-size:20px}
   .split{grid-template-columns:1fr}
   .nb{width:46px;height:46px;font-size:21px;border-radius:13px}
+  .nav{gap:4px;max-width:calc(100vw - 66px)}
   .nav,.rbtns{bottom:calc(10px + env(safe-area-inset-bottom))}
   .nb small{display:none}
   .place{font-size:15px}
@@ -293,6 +295,7 @@ h1.logo{margin:0;font-weight:400}
   <button class="nb" id="nWard">👕<small>Wardrobe</small></button>
   <button class="nb" id="nBag">🎒<small>Bag</small></button>
   <button class="nb" id="nNet">📶<small>Friends</small><span class="dot" id="dNet"></span></button>
+  <button class="nb" id="nWiki">📖<small>Wiki</small></button>
 </div>
 <div class="rbtns"><button class="nb" id="nCan" style="display:none">🚿<small>Put down</small><span class="dot on" id="dCan"></span></button><button class="nb" id="nSell" style="display:none">🪙<small>Sell</small></button><button class="nb" id="nChat" style="display:none">💬<small>Chat</small></button><button class="nb" id="nBuild">🔨<small>Build</small></button></div>
 <button class="arrow" id="aL">‹<small></small></button><button class="arrow" id="aR">›<small></small></button>
@@ -3476,7 +3479,7 @@ function help(){panel({title:L('❓ How to play','❓ Sådan spiller du'),html:L
   <p>📶 <b>Venner:</b> host et spil og del koden – venner på <b>samme wifi</b> kan joine, gå rundt i byen med dig og besøge dit hjem.</p>`),buttons:[{label:L('Got it!','Forstået!'),cls:'go'}]})}
 function setLang(l){LANG=l;savePref();document.documentElement.lang=l;applyStatic();THUMB_CLEAR();setPlace();hud()}
 function applyStatic(){
-  const T=[['#nHome small','Home','Hjem'],['#nTown small','Town','By'],['#nGoals small','Goals','Mål'],['#nQuest small','Quests','Opgaver'],['#nWard small','Wardrobe','Tøj'],['#nBag small','Bag','Taske'],['#nNet small','Friends','Venner'],['#nBuild small','Build','Byg'],['#nCan small','Put down','Læg fra'],['#nSell small','Sell','Sælg'],['#nChat small','Chat','Chat']];
+  const T=[['#nHome small','Home','Hjem'],['#nTown small','Town','By'],['#nGoals small','Goals','Mål'],['#nQuest small','Quests','Opgaver'],['#nWard small','Wardrobe','Tøj'],['#nBag small','Bag','Taske'],['#nNet small','Friends','Venner'],['#nWiki small','Wiki','Wiki'],['#nBuild small','Build','Byg'],['#nCan small','Put down','Læg fra'],['#nSell small','Sell','Sælg'],['#nChat small','Chat','Chat']];
   T.forEach(([s,en,da])=>{const e=$(s);if(e)e.textContent=L(en,da)});$('#bLang').textContent=LANG==='da'?'🇬🇧':'🇩🇰';$('#chatIn').placeholder=L('Say something…','Sig noget…');
 }
 
@@ -4306,6 +4309,7 @@ $('#nSell').onclick=()=>{SFX.click();openSell()};
 $('#nWard').onclick=()=>{SFX.click();openWardrobe()};
 $('#nBag').onclick=()=>{SFX.click();openBag(false)};
 $('#nNet').onclick=()=>{SFX.click();openNet()};
+$('#nWiki').onclick=()=>{SFX.click();openWiki()};
 $('#nBuild').onclick=()=>{SFX.click();BUILD.on?endBuild():startBuild()};
 $('#nChat').onclick=()=>{SFX.click();$('#chat').classList.toggle('on');if($('#chat').classList.contains('on'))$('#chatIn').focus()};
 const sendChat=()=>{const v=$('#chatIn').value.trim();if(!v)return;net.chat(v.slice(0,60));$('#chatIn').value='';SFX.talk()};
