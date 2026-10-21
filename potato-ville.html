@@ -2843,7 +2843,7 @@ function drawBuildBar(){
     (SCENE.yard?`<button id="bHouse">🏠 ${L('House','Hus')}</button>`:(S.yard?`<button id="bYard">🌻 ${L('Garden','Have')}</button>`:'')+(hasUp?`<button id="bSt">${st?'⬇️ '+L('Downstairs','Nedenunder'):'⬆️ '+L('Upstairs','Ovenpå')}</button>`:''))+
     `<button class="ok" id="bDone">✅ ${L('Done','Færdig')}</button>`;
   $('#bFlip').onclick=()=>{sel.f=!sel.f;SFX.click();save();net.houseChanged()};
-  $('#bStore').onclick=()=>{room.items.splice(BUILD.sel,1);dropChildren(room,sel);S.inv[sel.id]=(S.inv[sel.id]||0)+1;delete sel.plant;BUILD.sel=-1;SFX.place();drawBuildBar();save();net.houseChanged()};
+  $('#bStore').onclick=()=>{room.items.splice(BUILD.sel,1);dropChildren(room,sel);S.inv[sel.id]=(S.inv[sel.id]||0)+1;const back=unpackItem(sel);BUILD.sel=-1;SFX.place();drawBuildBar();save();net.houseChanged();if(back.length)toast('🎒 '+L('Also in your bag:','Også i din taske:')+' '+back.join(', '),4000)};
   $('#bName').onclick=()=>{SFX.click();const v=prompt(L('What should this room be called?','Hvad skal rummet hedde?'),roomName(room));if(v===null)return;room.cn=v.trim().slice(0,24)||null;setPlace();arrows.k='';save();net.houseChanged();toast('✏️ '+esc(roomName(room)))};
   const by=$('#bYard');if(by)by.onclick=()=>{SFX.click();SCENE.yard=true;BUILD.sel=-1;BUILD.cx=600;setPlace();drawBuildBar()};
   const bh=$('#bHouse');if(bh)bh.onclick=()=>{SFX.click();SCENE.yard=false;SCENE.room=0;BUILD.sel=-1;BUILD.cx=640;setPlace();drawBuildBar()};
@@ -2858,6 +2858,14 @@ function drawBuildBar(){
     S.walls.forEach(id=>add(id,1,room.wall===id,()=>{room.wall=id;SFX.place();drawBuildBar();save();net.houseChanged()}));
     S.floors.forEach(id=>add(id,1,room.floor===id,()=>{room.floor=id;SFX.place();drawBuildBar();save();net.houseChanged()}))}
 }
+// putting furniture in your bag keeps what was inside it: eggs, hamsters, stored things and seeds go to your bag too
+function unpackItem(it){const out=[];
+  if(it.egg){S.eggs.push({r:it.egg.r,left:Math.max(0,it.egg.s+it.egg.d-Date.now())});out.push('🥚 '+nm(EGGS[it.egg.r]));delete it.egg}
+  if(it.ham){S.sup.hamster=(S.sup.hamster||0)+1;(S.hamBag=S.hamBag||[]).push(it.ham);out.push('🐹 '+it.ham.name);delete it.ham}
+  if(it.box){for(const k of ['food','sup','inv']){const bag=k==='food'?S.food:k==='sup'?S.sup:S.inv;for(const [id,n] of Object.entries(it.box[k]||{}))if(n>0){bag[id]=(bag[id]||0)+n;out.push(n+'× '+nm((k==='food'?FOOD:k==='sup'?SUP:FURN)[id]))}}delete it.box}
+  if(it.plant){const p=it.plant;if(plantStage(p)===3){const cf=CROP_FOOD[p.s];if(cf){S.food[cf]=(S.food[cf]||0)+3;out.push('3× '+nm(FOOD[cf]))}}else{S.sup[p.s]=(S.sup[p.s]||0)+1;out.push(nm(SUP[p.s]))}delete it.plant}
+  if(it.held&&ME.hold&&ME.hold.it===it){ME.hold=null;canBtn()}delete it.held;
+  return out}
 function placeFromBag(id){const f=FURN[id],room=curRoom();if(!S.inv[id])return;S.inv[id]--;if(!S.inv[id])delete S.inv[id];
   const it=mk(id,BUILD.cx,f.ceil?110:f.kind==='wall'?230:f.kind==='rug'?660:f.kind==='door'?DOOR_Y:f.kind==='small'?650:620);constrain(it);room.items.push(it);BUILD.sel=room.items.length-1;SFX.place();bump('placed');addXPFirstPlace(id);drawBuildBar();save();net.houseChanged()}
 function addXPFirstPlace(id){S.placedIds=S.placedIds||[];if(!S.placedIds.includes(id)){S.placedIds.push(id);addXP(3+Math.round(FURN[id].style))}}
@@ -2880,8 +2888,8 @@ function dragTo(w){const room=curRoom(),it=room.items[BUILD.sel];if(!it)return;c
 function drawBuildOverlay(g){const room=curRoom(),sel=room.items[BUILD.sel],dragSmall=BUILD.drag&&sel&&isSmall(FURN[sel.id]);
   g.setLineDash([8,6]);room.items.forEach((it,i)=>{const r=itemRect(it);g.lineWidth=i===BUILD.sel?4:2;g.strokeStyle=i===BUILD.sel?'#ffc93c':'rgba(255,255,255,.55)';g.strokeRect(r.x-4,r.y-4,r.w+8,r.h+8)});g.setLineDash([]);
   if(dragSmall)room.items.forEach(h=>{const hf=FURN[h.id];if(!hf||!hf.surf||h===sel)return;const y=hf.kind==='wall'?h.y-hf.surf:h.y-hf.surf;line(g,h.x-hf.w/2+6,y,h.x+hf.w/2-6,y,'#43c46b',5)})}
-function hitItem(wx,wy,room){ // topmost first
-  const order=room.items.map((it,i)=>({it,i,f:FURN[it.id]})).filter(o=>o.f&&!o.it.held);
+function hitItem(wx,wy,room,usable){ // topmost first (usable: skip plain decorations, so a plant in front of the stairs doesn't block them)
+  const order=room.items.map((it,i)=>({it,i,f:FURN[it.id]})).filter(o=>o.f&&!o.it.held&&(!usable||o.f.use));
   const rank=o=>{const k=effKind(o.it);return k==='floor'?3e4+o.it.y:k==='small'?(o.it.wl?1.5e4+o.it.y:3e4+o.it.y+.6):k==='door'?2e4:k==='wall'?1e4+o.it.y:o.it.y};
   order.sort((a,b)=>rank(b)-rank(a));
   for(const o of order){const r=itemRect(o.it);if(wx>=r.x&&wx<=r.x+r.w&&wy>=r.y&&wy<=r.y+r.h)return o}return null}
@@ -2897,7 +2905,11 @@ cv.addEventListener('pointermove',e=>{if(!BUILD.on||!PTR)return;BUILD.lx=e.clien
   if(BUILD.pan){BUILD.cx=BUILD.pan.cx-(e.clientX-BUILD.pan.x)/(V.s*zoom());return}
   if(BUILD.drag)dragTo(toWorld(e))});
 cv.addEventListener('pointerup',e=>{
-  if(BUILD.on){if(BUILD.drag&&BUILD.moved){SFX.place();bump('placed');save();net.houseChanged()}BUILD.drag=null;BUILD.pan=null;PTR=null;return}
+  if(BUILD.on){const tap=PTR&&Math.hypot(e.clientX-PTR.sx,e.clientY-PTR.sy)<10&&Date.now()-PTR.t<450,sel=curRoom().items[BUILD.sel];
+    if(BUILD.drag&&BUILD.moved&&!tap){SFX.place();bump('placed');save();net.houseChanged()}
+    else if(tap&&sel&&['up','down','yard','house'].includes(FURN[sel.id].use)){const u=FURN[sel.id].use;BUILD.drag=null;BUILD.pan=null;PTR=null;SFX.step();
+      if(u==='up'||u==='down')goStorey(u==='up'?1:0);else{SCENE.yard=u==='yard';if(!SCENE.yard)SCENE.room=Math.max(0,S.rooms.findIndex(r=>r.items.some(t=>t.id==='door_garden')));BUILD.sel=-1;BUILD.cx=SCENE.yard?600:640;setPlace();drawBuildBar()}return}
+    BUILD.drag=null;BUILD.pan=null;PTR=null;return}
   if(!PTR||anyPanel()){PTR=null;return}const w=toWorld(e);PTR=null;closeDlgSoft();
   const oth=hitOther(w);if(oth){FOLLOW=null;walkTo(oth.x+(ME.x<oth.x?-1:1)*(SCENE.type==='town'?70:130),oth.y,()=>playerMenu(oth));return}
   FOLLOW=null;if(hitMe(w)){pokeMe();return}
@@ -2907,7 +2919,7 @@ cv.addEventListener('pointercancel',()=>{BUILD.drag=null;BUILD.pan=null;PTR=null
 cv.addEventListener('wheel',e=>{if(!BUILD.on)return;e.preventDefault();BUILD.cx+=(Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY)/V.s},{passive:false});
 function clickHome(w){
   for(const c of petsHere()){const a=petActor(c.key);if(Math.abs(w.x-a.x)<60&&w.y>a.y-120&&w.y<a.y+15){walkTo(a.x+(ME.x<a.x?-95:95),a.y,()=>petPet(c,a));return}}
-  const room=curRoom(),h=hitItem(w.x,w.y,room);
+  const room=curRoom(),h=hitItem(w.x,w.y,room,true);
   if(h&&h.f.use){const it=h.it,f=h.f;
     if(f.kind==='door'){walkTo(it.x,FLOOR_MIN+28,()=>useItem(it));return}
     const ty=f.kind==='wall'||it.wl?FLOOR_MIN+40:Math.min(FLOOR_MAX,it.y+30);
@@ -3146,7 +3158,7 @@ function openIncubator(it){
   panel({title:L('🥚 Egg incubator','🥚 Rugemaskine'),sm:true,render:(b,close)=>{
     const draw=()=>{const e=it.egg;
       if(!e){b.innerHTML=`<p>${L('Put an egg in to keep it warm. When the time is up, it hatches into a special pet!','Læg et æg i for at holde det varmt. Når tiden er gået, klækker det til et særligt kæledyr!')}</p><div class="grid">${S.eggs.map((g,i)=>`<div class="card" data-e="${i}"><canvas width="120" height="110" style="width:60px;height:55px"></canvas><div class="nm">${esc(nm(EGGS[g.r]))}</div><div class="hint">⏱️ ${EGGS[g.r].h} ${L('hours','timer')}</div><button class="btn sm ok">${L('Incubate','Rug')}</button></div>`).join('')||`<p class="hint">${L('You have no eggs. You sometimes find one when you level up!','Du har ingen æg. Du finder nogle gange et, når du stiger i niveau!')}</p>`}</div>`;
-        $$('[data-e]',b).forEach(cd=>{drawEgg($('canvas',cd).getContext('2d'),60,104,S.eggs[+cd.dataset.e].r,1.4);cd.onclick=()=>{const g=S.eggs.splice(+cd.dataset.e,1)[0];it.egg={r:g.r,s:Date.now(),d:EGGS[g.r].h*3600000};SFX.pop();save();net.houseChanged();draw()}});return}
+        $$('[data-e]',b).forEach(cd=>{drawEgg($('canvas',cd).getContext('2d'),60,104,S.eggs[+cd.dataset.e].r,1.4);cd.onclick=()=>{const g=S.eggs.splice(+cd.dataset.e,1)[0];it.egg={r:g.r,s:Date.now(),d:g.left!=null?g.left:EGGS[g.r].h*3600000};SFX.pop();save();net.houseChanged();draw()}});return}
       const left=e.s+e.d-Date.now();
       b.innerHTML=`<div style="text-align:center"><canvas id="incE" width="160" height="150" style="width:80px;height:75px"></canvas><p><b>${esc(nm(EGGS[e.r]))}</b></p>
         <div class="prog" style="height:14px;margin:8px 0"><b style="width:${Math.min(100,(1-left/e.d)*100)}%"></b></div>
@@ -3444,7 +3456,7 @@ function openHamster(it){
   panel({title:'🐹 '+L('Hamster cage','Hamsterbur'),sm:true,render:(b,close)=>{const draw=()=>{const h=it.ham,td=today();
     if(!h){b.innerHTML=S.sup.hamster>0?`<p>${L('Your cage is empty. Put a hamster in and give it a name!','Dit bur er tomt. Sæt en hamster ind, og giv den et navn!')}</p><div class="opt"><b>${L('Name','Navn')}</b><input class="tx" id="hmN" maxlength="12" value="${L('Nibbles','Nusse')}"></div><div class="row" style="justify-content:flex-end"><button class="btn go" id="hmIn">🐹 ${L('Put it in','Sæt den ind')}</button></div>`
       :`<p>${L('The cage is empty. Buy a 🐹 hamster and 🌻 hamster food at Paws & Peels in town.','Buret er tomt. Køb en 🐹 hamster og 🌻 hamsterfoder hos Poter & Skræller i byen.')}</p>`;
-      const bi=$('#hmIn',b);if(bi)bi.onclick=()=>{S.sup.hamster--;if(!S.sup.hamster)delete S.sup.hamster;it.ham={name:($('#hmN',b).value||'Nibbles').trim().slice(0,12)||'Nibbles',fed:0,water:0,love:0,since:Date.now()};SFX.pop();save();net.houseChanged();draw()};return}
+      const bi=$('#hmIn',b);if(bi)bi.onclick=()=>{S.sup.hamster--;if(!S.sup.hamster)delete S.sup.hamster;const old=(S.hamBag||[]).shift();it.ham=old||{name:($('#hmN',b).value||'Nibbles').trim().slice(0,12)||'Nibbles',fed:0,water:0,love:0,since:Date.now()};SFX.pop();save();net.houseChanged();draw()};return}
     const days=h.fed?Math.round((new Date(Math.floor(td/1e4),Math.floor(td/100)%100-1,td%100)-new Date(Math.floor(h.fed/1e4),Math.floor(h.fed/100)%100-1,h.fed%100))/864e5):9;
     const mood=h.fed===td&&h.water===td?L('😊 Happy and running in the wheel!','😊 Glad og løber i hjulet!'):days>=3?L('😢 Very hungry and sad – please feed it!','😢 Meget sulten og ked af det – giv den mad!'):L('🥺 Waiting for food and water…','🥺 Venter på mad og vand…');
     b.innerHTML=`<div style="text-align:center"><div style="font-size:54px">🐹</div><b>${esc(h.name)}</b><p>${mood}</p><p>${'❤'.repeat(Math.min(10,h.love||0))}${'♡'.repeat(10-Math.min(10,h.love||0))}</p></div>
@@ -3456,7 +3468,7 @@ function openHamster(it){
     const f=$('#hmF',b);if(f)f.onclick=()=>{S.sup.ham_food--;if(!S.sup.ham_food)delete S.sup.ham_food;h.fed=td;SFX.eat();done()};
     const w=$('#hmW',b);if(w)w.onclick=()=>{h.water=td;SFX.splash();done()};
     $('#hmP',b).onclick=()=>{if(h.pd&&Date.now()<h.pd){toast(L('It wants to run a bit first 🐹','Den vil lige løbe lidt først 🐹'));return}h.pd=Date.now()+60000;addStat('fun',5);SFX.pop();for(let i=0;i<3;i++)FX.push({x:it.x+rr(-30,30),y:it.y-(it.z||0)-110,t:-i*.15,txt:'💗'});save();close()};
-    $('#hmO',b).onclick=()=>{if(bagFull())return;S.sup.hamster=(S.sup.hamster||0)+1;it.ham=null;SFX.click();save();net.houseChanged();draw()}};draw()}});
+    $('#hmO',b).onclick=()=>{if(bagFull())return;S.sup.hamster=(S.sup.hamster||0)+1;(S.hamBag=S.hamBag||[]).push(it.ham);it.ham=null;SFX.click();save();net.houseChanged();draw()}};draw()}});
 }
 function drinkCoffee(it){const k='use_coffee';if(S.cd[k]&&Date.now()<S.cd[k]){toast(L('☕ Let the machine warm up a minute…','☕ Lad maskinen varme op et øjeblik…'));return}
   S.cd[k]=Date.now()+90000;addStat('fun',6);addStat('hunger',2);if(S.energy<maxEnergy()){S.energy++;hud()}ME.say='☕ '+L('Ahh, coffee!','Ahh, kaffe!');ME.sayT=2.2;SFX.pop();bump('coffee');save()}
