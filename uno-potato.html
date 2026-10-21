@@ -787,6 +787,7 @@ function render(V,instant){
   newEvs.forEach(e=>fxEvent(V,e));
   if(V.phase==='play'&&V.turn===V.me&&lastTurn!==V.me&&!firstRender)setTimeout(()=>SFX.turn(),250);
   lastTurn=V.phase==='play'?V.turn:-2;
+  if(V.phase==='play')$$('.ov.res').forEach(o=>o._close('x'));
   if(V.phase==='over'&&V.result&&lastResult!==V.result.id){lastResult=V.result.id;setTimeout(()=>showResult(V),1100)}
 }
 const nextSeatV=(V,s)=>((s+V.dir)%V.players.length+V.players.length)%V.players.length;
@@ -865,7 +866,7 @@ function pickTarget2(V,title){return new Promise(res=>{
   .then(k=>res(k&&k[0]==='t'?+k.slice(1):null));
 })}
 function showResult(V){
-  const r=V.result;if(!r)return;$$('.ov.res').forEach(o=>o.remove());
+  const r=V.result;if(!r||!VIEW||VIEW.phase!=='over')return;$$('.ov.res').forEach(o=>o.remove());
   const iWon=r.winner===V.me;
   STATS.played++;if(iWon)STATS.won++;saveStats();
   if(iWon){SFX.win();confetti()}else SFX.lose();
@@ -881,6 +882,7 @@ function showResult(V){
   modal({title:iWon?'🎉 SPUDTASTIC!':'🥔 '+L('Round over','Runden er slut'),cls:'res',html,sticky:true,
     buttons:host?[{k:'menu',label:L('🏠 Menu','🏠 Menu')},{k:'next',label:r.match?L('🔁 New match','🔁 Ny kamp'):L('▶ Next round','▶ Næste runde'),cls:'go'}]:[{k:'menu',label:L('🚪 Leave','🚪 Forlad')},{k:'wait',label:L('⏳ Waiting for host…','⏳ Venter på hosten…')}]
   }).then(k=>{
+    if(k==='x')return;
     if(k==='next')doMy({k:'next'});
     else if(k==='menu')leaveToMenu();
   });

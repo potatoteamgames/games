@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <title>Potato Ville – Free Virtual Pet Game | Raise, Dress &amp; Decorate | No Download</title>
-<meta name="description" content="Play Potato Ville free in your browser! Create your own potato pet, dress it up, decorate your home, work fun jobs for coins, shop in town, chat with neighbours and visit friends on the same Wi-Fi. No download.">
-<meta name="keywords" content="potato ville, virtual pet game, pet game, dress up game, decorate house game, cozy game, free browser game, potato game, kæledyrsspil">
+<meta name="description" content="Play Potato Ville free in your browser – a cozy virtual pet game inspired by PetVille! Create your own potato pet, dress it up, decorate your home, work fun jobs, shop in town and visit friends on the same Wi-Fi. No download.">
+<meta name="keywords" content="potato ville, petville, game like petville, petville alternative, virtual pet game, pet game, dress up game, decorate house game, cozy game, free browser game, potato game, kæledyrsspil">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#5bb8ff">
 <meta name="application-name" content="Potato Ville">
@@ -35,7 +35,7 @@
   "url": "https://potatoteamgames.github.io/games/potato-ville.html",
   "image": "https://potatoteamgames.github.io/games/images/og-potato-ville.jpg",
   "author": {"@type": "Organization", "name": "Potato Team Games", "url": "https://potatoteamgames.github.io/games/"},
-  "description": "A free virtual pet game in your browser. Create a potato pet, dress it up, decorate your home in build mode, work mini-game jobs for coins, shop in town, befriend neighbours and visit friends on the same Wi-Fi.",
+  "description": "A free virtual pet game in your browser, inspired by the classic PetVille. Create a potato pet, dress it up, decorate your home in build mode, work mini-game jobs for coins, shop in town, befriend neighbours and visit friends on the same Wi-Fi.",
   "genre": ["Virtual pet game", "Life simulation", "Casual game"],
   "gamePlatform": ["Web browser", "Mobile browser"],
   "applicationCategory": "Game",
@@ -201,6 +201,7 @@ input.tx,select.tx{width:100%;padding:10px 12px;border-radius:12px;border:3px so
 .mgc{display:block;width:100%;touch-action:none;background:#fff}
 .creator{position:fixed;inset:0;z-index:18;display:flex;align-items:center;justify-content:center;padding:12px;background:radial-gradient(circle at 50% 30%,#bfe6ff,#4aa3f0 70%,#2a6fb3)}
 .creator .pn{width:min(820px,100%)}
+h1.logo{margin:0;font-weight:400}
 .logo{font-family:'Lilita One',sans-serif;font-size:clamp(34px,7vw,56px);color:#ff9a2e;text-shadow:3px 3px 0 #fff,-2px -2px 0 #fff,2px -2px 0 #fff,-2px 2px 0 #fff,0 6px 0 rgba(0,0,0,.25);line-height:1;text-align:center;letter-spacing:.02em}
 .logo b{color:#3fa0ff;font-weight:400}
 .hint{font-size:12px;color:#5b6b80}
@@ -260,8 +261,9 @@ input.tx,select.tx{width:100%;padding:10px 12px;border-radius:12px;border:3px so
 </style>
 </head>
 <body>
+<noscript><div style="padding:24px;background:#fffaf0;color:#16304d;font-family:sans-serif"><h1>Potato Ville – free virtual pet game</h1><p>Potato Ville is a cozy virtual pet game inspired by the classic PetVille. Create your own potato pet, dress it up, decorate your home, work mini-game jobs, shop in town, adopt pets, grow a garden and visit friends on the same Wi-Fi. Free in your browser on PC and mobile, in English and Danish.</p><p>Please turn on JavaScript to play. <a href="./">More free games from Potato Team Games</a></p></div></noscript>
 <canvas id="cv"></canvas>
-<div id="loading"><div class="logo">Potato <b>Ville</b></div><div class="ldPot">🥔</div><div class="ldBarW"><b id="ldBar"></b></div><p id="ldTxt">Loading…</p><p id="ldTip" class="hint"></p></div>
+<div id="loading"><h1 class="logo">Potato <b>Ville</b></h1><div class="ldPot">🥔</div><div class="ldBarW"><b id="ldBar"></b></div><p id="ldTxt">Loading…</p><p id="ldTip" class="hint"></p></div>
 
 <div class="hud" id="hud">
   <div class="hl">
