@@ -3220,7 +3220,7 @@ function help(){panel({title:L('❓ How to play','❓ Sådan spiller du'),html:L
   <p>🍳 <b>At home:</b> cook recipes on the stove with ingredients from the market or your garden, shop online on a laptop or computer, work out on an exercise bike and play music on a piano, drum kit or guitar.</p>
   <p>🌻 <b>Green Thumb Garden Center</b> sells everything for outside – birdhouses, fountains, a greenhouse (crops grow 50% faster), swings, a treehouse and much more. 🎁 <b>Holly's Holiday Shop</b> sells Halloween, Christmas and Valentine's things. In December it snows all month!</p>
   <p>📜 <b>Quests:</b> tap 📜 Quests to take up to 3 quests at a time – daily, weekly, monthly, special and seasonal ones (over 140!). Neighbour tasks count too.</p>
-  <p>🧾 <b>Bills:</b> every 3 days rent and electricity arrive in your 📬 mailbox. Lamps that are on cost power while you play. Pay within a day – after 3 reminders and a final warning it's game over!</p>
+  <p>🧾 <b>Bills:</b> every 7 days rent and electricity arrive in your 📬 mailbox. Lamps that are on cost power while you play. You have 3 days to pay – after 3 reminders and a final warning it's game over!</p>
   <p>🐝 <b>Beehives</b> make honey every 2 hours, 🐹 <b>hamsters</b> need food and water every day, and 🎣 <b>fishing</b> brings up fish to sell – and lots of rubbish. 📖 The <b>Wiki</b> in ☰ Menu tells you what every item does and where to get it.</p>
   <p>🪙 <b>Sell:</b> in any shop, tap the 🪙 SELL sign next to the shopkeeper to sell things from your bag for half price (put furniture in your bag in Build mode first). 💾 Back up or restore your game in ⚙️ Settings. You can have 3 characters – switch in ☰ Menu → Main menu.</p>
   <p>🎒 <b>Bag &amp; storage:</b> your bag holds a limited number of things – upgrade it in the 🎒 bag, and keep extra things in cabinets, cupboards and chests at home (tap them). 🎁 Tap a friend anywhere – in town, homes, shops or the park – to wave, hug, high-five, dance, follow them, give them something or challenge them.</p>
@@ -3239,7 +3239,7 @@ function help(){panel({title:L('❓ How to play','❓ Sådan spiller du'),html:L
   <p>🍳 <b>Derhjemme:</b> lav mad på komfuret med ingredienser fra markedet eller din have, køb ind online på en bærbar eller computer, træn på en motionscykel og spil musik på klaver, trommer eller guitar.</p>
   <p>🌻 <b>Den Grønne Tommelfinger Havecenter</b> sælger alt til udenfor – fuglehuse, springvand, drivhus (afgrøder gror 50% hurtigere), gynger, træhus og meget mere. 🎁 <b>Hollys Højtidsbutik</b> sælger halloween-, jule- og valentinsting. I december sner det hele måneden!</p>
   <p>📜 <b>Opgaver:</b> tryk på 📜 Opgaver for at tage op til 3 opgaver ad gangen – daglige, ugentlige, månedlige, særlige og sæsonopgaver (over 140!). Naboopgaver tæller med.</p>
-  <p>🧾 <b>Regninger:</b> hver 3. dag kommer husleje og strøm i din 📬 postkasse. Tændte lamper bruger strøm, mens du spiller. Betal inden en dag – efter 3 rykkere og en sidste advarsel er det game over!</p>
+  <p>🧾 <b>Regninger:</b> hver 7. dag kommer husleje og strøm i din 📬 postkasse. Tændte lamper bruger strøm, mens du spiller. Du har 3 dage til at betale – efter 3 rykkere og en sidste advarsel er det game over!</p>
   <p>🐝 <b>Bistader</b> laver honning hver 2. time, 🐹 <b>hamstere</b> skal have mad og vand hver dag, og 🎣 <b>fiskeri</b> giver fisk, du kan sælge – og masser af skrald. 📖 <b>Wikien</b> i ☰ Menu fortæller, hvad alle ting kan, og hvor du får dem.</p>
   <p>🪙 <b>Sælg:</b> i alle butikker trykker du på 🪙 SÆLG-skiltet ved ekspedienten for at sælge ting fra din taske til halv pris (læg møbler i tasken i byggetilstand først). 💾 Tag backup eller gendan dit spil i ⚙️ Indstillinger. Du kan have 3 karakterer – skift i ☰ Menu → Hovedmenu.</p>
   <p>🎒 <b>Taske &amp; opbevaring:</b> din taske kan kun rumme et vist antal ting – opgradér den i 🎒 tasken, og gem ekstra ting i skabe og kister derhjemme (tryk på dem). 🎁 Tryk på en ven hvor som helst – i byen, hjemme, i butikker eller parken – for at vinke, kramme, give high five, danse, følge efter, give dem noget eller udfordre dem.</p>
@@ -3432,11 +3432,11 @@ function openQuests(start){let tab=start||'active';
     $$('[data-x]',b).forEach(x=>x.onclick=()=>{S.qa.splice(+x.dataset.x,1);SFX.click();save();draw()})};draw()}})}
 
 /* =====================================================================
-   BILLS – every 3 real days rent and electricity arrive in your mailbox.
-   Pay within a day, or a reminder (with a late fee) comes. After 3 reminders
+   BILLS – every 7 real days rent and electricity arrive in your mailbox.
+   Pay within 3 days, or a reminder (with a late fee) comes. After 3 reminders
    you get one final warning – if you still don't pay: GAME OVER.
    ===================================================================== */
-const BILL_EVERY=3*864e5,BILL_DUE=864e5,WH_PER_COIN=10;
+const BILL_EVERY=7*864e5,BILL_DUE=3*864e5,WH_PER_COIN=10;
 const ALWAYS_ON={fridge:30,aquarium:20,fishbowl:5,arcade:40,gaming_pc:80,jukebox:40,hot_tub:150,coffee_bar:20,tv_flat:8,wall_tv:8,home_cinema:15,incubator:25,pantry:0};
 const LAMP_W={chandelier:120,crystal_chandelier:200,disco_ball:80,lights:20,xmas_lights:25,xmas_tree:30,neon_heart:30,star_lamp:10,fireplace:0};
 function homeWatts(){let w=0;for(const it of itemsAll()){const f=FURN[it.id];if(!f)continue;if(f.use==='lamp'&&lampOn(it))w+=LAMP_W[it.id]!=null?LAMP_W[it.id]:40;w+=ALWAYS_ON[it.id]||0}return w}
@@ -3446,10 +3446,10 @@ let BW={w:0,t:0};
 function billTick(dt){if(!S.created||!LIVE)return;initBills();const B=S.bill,now=Date.now();
   if(now-BW.t>5000){BW={w:homeWatts(),t:now}}B.wh+=BW.w*dt/3600;
   if(now>=B.next){const power=Math.round(B.wh/WH_PER_COIN),rent=rentNow();B.list.push({id:now,rent,power,kwh:Math.round(B.wh)/1000,fee:0,at:now,due:now+BILL_DUE,rem:0,paid:false});B.wh=0;B.next=now+BILL_EVERY;
-    SFX.talk();notify('🧾',L('You have a bill in your mailbox!','Du har en regning i postkassen!'),L(`Rent ${rent} 🪙 + power ${power} 🪙 – pay within 1 day`,`Husleje ${rent} 🪙 + strøm ${power} 🪙 – betal inden 1 dag`),openBills);save()}
+    SFX.talk();notify('🧾',L('You have a bill in your mailbox!','Du har en regning i postkassen!'),L(`Rent ${rent} 🪙 + power ${power} 🪙 – pay within 3 days`,`Husleje ${rent} 🪙 + strøm ${power} 🪙 – betal inden 3 dage`),openBills);save()}
   for(const bl of B.list){if(bl.paid||now<bl.due)continue;
     if(bl.rem<3){bl.rem++;bl.fee+=25+Math.round((bl.rent+bl.power)*.1);bl.due=now+BILL_DUE;if(bl.rem===3)bl.final=0;SFX.bad();
-      notify('⚠️',L(`Reminder ${bl.rem} of 3!`,`Rykker ${bl.rem} af 3!`),bl.rem<3?L(`Pay your bill (+${bl.fee} 🪙 late fee) within 1 day`,`Betal din regning (+${bl.fee} 🪙 rykkergebyr) inden 1 dag`):L('Last chance – tap to see','Sidste chance – tryk og se'),openBills);
+      notify('⚠️',L(`Reminder ${bl.rem} of 3!`,`Rykker ${bl.rem} af 3!`),bl.rem<3?L(`Pay your bill (+${bl.fee} 🪙 late fee) within 3 days`,`Betal din regning (+${bl.fee} 🪙 rykkergebyr) inden 3 dage`):L('Last chance – tap to see','Sidste chance – tryk og se'),openBills);
       if(bl.rem===3)setTimeout(finalWarning,800);save()}
     else if(bl.final&&now>bl.due){gameOver();return}
     else if(!bl.final)finalWarning()}}
@@ -3466,6 +3466,12 @@ function openBills(){initBills();panel({title:'🧾 '+L('Bills','Regninger'),ren
     `<div class="goal"><div class="ic">⚡</div><div class="tx">${L('Power used so far this period','Strøm brugt indtil nu i perioden')}: <b>${(B.wh/1000).toFixed(2)} kWh ≈ ${N(B.wh/WH_PER_COIN)} 🪙</b><small>${L(`Right now your home uses ${homeWatts()} W. Lamps that are on (and fridges, TVs, aquariums…) cost power while you are online – switch off lamps you don't need!`,`Lige nu bruger dit hjem ${homeWatts()} W. Tændte lamper (og køleskabe, tv, akvarier…) koster strøm, mens du er online – sluk de lamper, du ikke bruger!`)}</small></div></div>
     <div class="goal"><div class="ic">🏠</div><div class="tx">${L('Next bill','Næste regning')}: <b>${fmtDur(Math.max(0,B.next-now))}</b><small>${L(`Rent is ${rentNow()} 🪙 (more rooms and a garden cost more).`,`Huslejen er ${rentNow()} 🪙 (flere rum og en have koster mere).`)}</small></div></div>`;
   $$('[data-p]',b).forEach(x=>x.onclick=()=>{if(payBill(open[+x.dataset.p]))draw()})};draw()}})}
+function billReminder(){initBills();const open=S.bill.list.filter(b=>!b.paid);if(!open.length)return;const now=Date.now(),tot=open.reduce((a,b)=>a+billTotal(b),0),worst=Math.max(...open.map(b=>b.rem));
+  panel({title:'🧾 '+L('You have unpaid bills!','Du har ubetalte regninger!'),sm:true,html:`<div style="text-align:center"><div style="font-size:50px">📬🧾</div>
+    <p style="font-size:17px">${L(`${open.length} bill${open.length>1?'s':''} waiting in your mailbox: <b>${N(tot)} 🪙</b>`,`${open.length} regning${open.length>1?'er':''} venter i din postkasse: <b>${N(tot)} 🪙</b>`)}</p>
+    ${open.map(b=>`<p class="hint" style="margin:2px 0">${b.rem?`<b style="color:#d0457e">${L(`Reminder ${b.rem}/3`,`Rykker ${b.rem}/3`)}</b> · `:''}${now<b.due?L(`pay within ${fmtDur(b.due-now)}`,`betal inden ${fmtDur(b.due-now)}`):L('overdue!','for sent!')}</p>`).join('')}
+    ${worst>=3?`<p style="color:#d0457e"><b>${L('Last chance – or it is GAME OVER!','Sidste chance – ellers er det GAME OVER!')}</b></p>`:''}</div>`,
+    buttons:[{label:L('Later','Senere'),v:0},{label:'🧾 '+L('Pay now','Betal nu'),cls:'go',v:1}]}).then(v=>{if(v)openBills()})}
 function gameOver(){if(gameOver.on)return;gameOver.on=true;$$('.ov').forEach(o=>o._close&&o._close());net.leave();
   const wrap=document.createElement('div');wrap.className='creator';wrap.innerHTML=`<div class="pn sm"><div class="ph" style="background:linear-gradient(#ff8a80,#e0453c)"><h2>💀 GAME OVER</h2></div><div class="pb" style="text-align:center"><div style="font-size:64px">🧾📦🚚</div>
     <p style="font-size:17px">${L(`${esc(S.name)} didn't pay the bills after 3 reminders and the final warning, and had to move out of Potato Ville.`,`${esc(S.name)} betalte ikke regningerne efter 3 rykkere og den sidste advarsel og måtte flytte fra Potato Ville.`)}</p><p class="hint">${L('Tip: pay your bills from the 📬 mailbox, and switch off lamps to save power.','Tip: betal dine regninger fra 📬 postkassen, og sluk lamper for at spare strøm.')}</p></div>
@@ -3987,6 +3993,7 @@ function frame(now){
 function startGame(first){
   started=true;$('#hud').style.display='';$('#nav').style.display='';$('.rbtns').style.display='';
   ensureDaily();initBills();goHome(0);hud();goalsCheck();qTick();applyStatic();
+  if(!first)setTimeout(billReminder,1300);
   if(first){setTimeout(()=>panel({title:L(`👋 Welcome to Potato Ville, ${esc(S.name)}!`,`👋 Velkommen til Potato Ville, ${esc(S.name)}!`),sm:true,html:`<p>${L('This is your new home! A few tips to get started:','Dette er dit nye hjem! Et par tips til at komme i gang:')}</p>
     <div class="goal"><div class="ic">🧊</div><div class="tx">${L('Tap the fridge to eat a snack.','Tryk på køleskabet for at få en snack.')}</div></div>
     <div class="goal"><div class="ic">🗺️</div><div class="tx">${L('Go to town to meet neighbours, shop and work jobs.','Gå til byen for at møde naboer, shoppe og tage jobs.')}</div></div>
