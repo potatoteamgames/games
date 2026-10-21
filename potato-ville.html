@@ -3491,14 +3491,21 @@ function gameOver(){if(gameOver.on)return;gameOver.on=true;$$('.ov').forEach(o=>
 const P_ACTS={wave:['👋','waves at you','vinker til dig'],hug:['🤗','gives you a big hug','giver dig et stort kram'],high5:['✋','gives you a high five','giver dig en high five'],dance:['💃','dances with you','danser med dig'],
   heart:['💖','sends you a heart','sender dig et hjerte'],joke:['😂','tells you a potato joke','fortæller dig en kartoffeljoke'],compliment:['🌟','says you look amazing','siger, at du ser fantastisk ud'],flower:['🌷','gives you a flower','giver dig en blomst']};
 let FOLLOW=null;
+const JOKES=[['Why did the potato cross the road? It saw a fork up ahead!','Hvorfor gik kartoflen over vejen? Den så en gaffel længere fremme!'],['What do you call a sleeping potato? A couch potato!','Hvad kalder man en sovende kartoffel? En sofakartoffel!'],['Potatoes never fight – they just mash it out!','Kartofler skændes aldrig – de moser det bare ud!'],
+  ['What do you call a potato that is always late? A tater-tot-ally late spud!','Hvad kalder man en kartoffel, der altid kommer for sent? En sen-knold!'],['Why was the potato so good at school? It was a smart chip!','Hvorfor var kartoflen så god i skolen? Den var en klog chip!'],['What did the baby potato call its dad? Pop-tato!','Hvad kalder babykartoflen sin far? Far-toffel!'],
+  ['Why do potatoes make great detectives? They keep their eyes peeled!','Hvorfor er kartofler gode detektiver? De holder øjnene skrællede!'],['What is a potato’s favourite dance? The mash potato!','Hvad er kartoflens yndlingsdans? Kartoffelmos-dansen!']];
 function hitOther(w){const town=SCENE.type==='town',k=sceneKey();for(const o of net.others()){if(o.scene!==k)continue;const hw=town?42:62,hh=town?110:235;if(Math.abs(w.x-o.x)<hw&&w.y>o.y-hh&&w.y<o.y+12)return o}return null}
 function doAct(kind,o){const A=P_ACTS[kind];ME.say=A[0];ME.sayT=2.5;ME.dir=o.x<ME.x?-1:1;for(let i=0;i<4;i++)FX.push({x:(ME.x+o.x)/2+rr(-40,40),y:ME.y-(SCENE.type==='town'?100:200)-i*10,t:-i*.15,txt:A[0]});
   if(kind==='dance'){POKE.kind='jump';POKE.t=0}if(kind==='hug'||kind==='high5')bump('hugs');addStat('fun',3);SFX.pop();
-  net.duel({t:'act',to:o.id,from:net.myId(),name:S.name,kind});net.chat(A[0])}
+  const m={t:'act',to:o.id,from:net.myId(),name:S.name,kind};
+  // the joke is picked here and sent along, so both of you see the same one
+  if(kind==='joke')m.j=rnd(JOKES.length);
+  net.duel(m);net.chat(A[0]);
+  if(kind==='joke'){const jk=JOKES[m.j];toast(`😂 ${L('You tell','Du fortæller')} ${esc(o.name)}: <i>${esc(L(jk[0],jk[1]))}</i>`,5000);ME.say=L(jk[0],jk[1]);ME.sayT=5}}
 function recvAct(m){const A=P_ACTS[m.kind];if(!A)return;toast(`${A[0]} <b>${esc(m.name)}</b> ${L(A[1],A[2])}!`,3000);SFX.talk();addStat('fun',3);
   const o=net.others().find(p=>p.id===m.from);for(let i=0;i<5;i++)FX.push({x:ME.x+rr(-50,50),y:ME.y-(SCENE.type==='town'?100:200)-i*12,t:-i*.15,txt:A[0]});
   if(m.kind==='dance'){POKE.kind='jump';POKE.t=0}if(m.kind==='hug'||m.kind==='high5')bump('hugs');if(o)ME.dir=o.x<ME.x?-1:1;
-  if(m.kind==='joke')setTimeout(()=>toast('🥔 '+pick([L('Why did the potato cross the road? It saw a fork up ahead!','Hvorfor gik kartoflen over vejen? Den så en gaffel længere fremme!'),L('What do you call a sleeping potato? A couch potato!','Hvad kalder man en sovende kartoffel? En sofakartoffel!'),L('Potatoes never fight – they just mash it out!','Kartofler skændes aldrig – de moser det bare ud!')]),4200),1200)}
+  if(m.kind==='joke'){const jk=JOKES[m.j]||pick(JOKES);setTimeout(()=>toast('🥔 '+esc(L(jk[0],jk[1])),5000),1200)}}
 function followTick(){if(!FOLLOW)return;const o=net.others().find(p=>p.id===FOLLOW);if(!o||o.scene!==sceneKey()){FOLLOW=null;toast(L('👣 Stopped following.','👣 Stoppede med at følge.'));return}
   if(Math.hypot(o.x-ME.x,o.y-ME.y)>(SCENE.type==='town'?90:170)){const keep=FOLLOW;walkTo(o.x-(o.dir||1)*(SCENE.type==='town'?60:120),o.y);FOLLOW=keep}}
 function playerMenu(o){
