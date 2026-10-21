@@ -3388,7 +3388,7 @@ function help(){panel({title:L('❓ How to play','❓ Sådan spiller du'),html:L
   <p>🍳 <b>At home:</b> cook recipes on the stove with ingredients from the market or your garden, shop online on a laptop or computer, work out on an exercise bike and play music on a piano, drum kit or guitar.</p>
   <p>🌻 <b>Green Thumb Garden Center</b> sells everything for outside – birdhouses, fountains, a greenhouse (crops grow 50% faster), swings, a treehouse and much more. 🎁 <b>Holly's Holiday Shop</b> sells Halloween, Christmas and Valentine's things. In December it snows all month!</p>
   <p>📜 <b>Quests:</b> tap 📜 Quests to take up to 3 quests at a time – daily, weekly, monthly, special and seasonal ones (over 140!). Neighbour tasks count too.</p>
-  <p>🧾 <b>Bills:</b> every 7 days rent and electricity arrive in your 📬 mailbox. Lamps that are on cost power while you play. You have 3 days to pay – after 3 reminders and a final warning it's game over!</p>
+  <p>🧾 <b>Bills:</b> every 7 days rent and electricity arrive in your 📬 mailbox. Lamps that are on cost power while you play. You have 3 days you play to pay – after 3 reminders and a final warning it's game over. Days you are away don't count!</p>
   <p>🐝 <b>Beehives</b> make honey every 2 hours, 🐹 <b>hamsters</b> need food and water every day, and 🎣 <b>fishing</b> brings up fish to sell – and lots of rubbish. 📖 The <b>Wiki</b> in ☰ Menu tells you what every item does and where to get it.</p>
   <p>🪙 <b>Sell:</b> in any shop, tap the 🪙 SELL sign next to the shopkeeper to sell things from your bag for half price (put furniture in your bag in Build mode first). 💾 Back up or restore your game in ⚙️ Settings. You can have 3 characters – switch in ☰ Menu → Main menu.</p>
   <p>🎒 <b>Bag &amp; storage:</b> your bag holds a limited number of things – upgrade it in the 🎒 bag, and keep extra things in cabinets, cupboards and chests at home (tap them). 🎁 Tap a friend anywhere – in town, homes, shops or the park – to wave, hug, high-five, dance, follow them, give them something or challenge them.</p>
@@ -3407,7 +3407,7 @@ function help(){panel({title:L('❓ How to play','❓ Sådan spiller du'),html:L
   <p>🍳 <b>Derhjemme:</b> lav mad på komfuret med ingredienser fra markedet eller din have, køb ind online på en bærbar eller computer, træn på en motionscykel og spil musik på klaver, trommer eller guitar.</p>
   <p>🌻 <b>Den Grønne Tommelfinger Havecenter</b> sælger alt til udenfor – fuglehuse, springvand, drivhus (afgrøder gror 50% hurtigere), gynger, træhus og meget mere. 🎁 <b>Hollys Højtidsbutik</b> sælger halloween-, jule- og valentinsting. I december sner det hele måneden!</p>
   <p>📜 <b>Opgaver:</b> tryk på 📜 Opgaver for at tage op til 3 opgaver ad gangen – daglige, ugentlige, månedlige, særlige og sæsonopgaver (over 140!). Naboopgaver tæller med.</p>
-  <p>🧾 <b>Regninger:</b> hver 7. dag kommer husleje og strøm i din 📬 postkasse. Tændte lamper bruger strøm, mens du spiller. Du har 3 dage til at betale – efter 3 rykkere og en sidste advarsel er det game over!</p>
+  <p>🧾 <b>Regninger:</b> hver 7. dag kommer husleje og strøm i din 📬 postkasse. Tændte lamper bruger strøm, mens du spiller. Du har 3 dage, du spiller, til at betale – efter 3 rykkere og en sidste advarsel er det game over. Dage, hvor du er væk, tæller ikke!</p>
   <p>🐝 <b>Bistader</b> laver honning hver 2. time, 🐹 <b>hamstere</b> skal have mad og vand hver dag, og 🎣 <b>fiskeri</b> giver fisk, du kan sælge – og masser af skrald. 📖 <b>Wikien</b> i ☰ Menu fortæller, hvad alle ting kan, og hvor du får dem.</p>
   <p>🪙 <b>Sælg:</b> i alle butikker trykker du på 🪙 SÆLG-skiltet ved ekspedienten for at sælge ting fra din taske til halv pris (læg møbler i tasken i byggetilstand først). 💾 Tag backup eller gendan dit spil i ⚙️ Indstillinger. Du kan have 3 karakterer – skift i ☰ Menu → Hovedmenu.</p>
   <p>🎒 <b>Taske &amp; opbevaring:</b> din taske kan kun rumme et vist antal ting – opgradér den i 🎒 tasken, og gem ekstra ting i skabe og kister derhjemme (tryk på dem). 🎁 Tryk på en ven hvor som helst – i byen, hjemme, i butikker eller parken – for at vinke, kramme, give high five, danse, følge efter, give dem noget eller udfordre dem.</p>
@@ -3661,33 +3661,41 @@ function openPower(){panel({title:'🔌 '+L('Power in your home','Strøm i dit h
 const rentNow=()=>80+Math.max(0,S.rooms.length-3)*40+(S.yard?60:0);
 function initBills(){if(!S.bill)S.bill={next:Date.now()+BILL_EVERY,wh:0,list:[]};BW={w:homeWatts(),t:Date.now()}}
 let BW={w:0,t:0};
+// deadlines count days you actually play, never days you are away – nobody loses their game by taking a break.
+// (a long break gives at most one new bill when you come back)
+const PAY_DAYS=3;
+const daysTxt=n=>L(`${n} day${n===1?'':'s'} you play`,`${n} ${n===1?'dag':'dage'}, du spiller`);
 function billTick(dt){if(!S.created||!LIVE)return;initBills();const B=S.bill,now=Date.now();
   if(now-BW.t>5000){BW={w:homeWatts(),t:now}}B.wh+=BW.w*dt/3600;
-  if(now>=B.next){const power=Math.round(B.wh/WH_PER_COIN),rent=rentNow();B.list.push({id:now,rent,power,kwh:Math.round(B.wh)/1000,fee:0,at:now,due:now+BILL_DUE,rem:0,paid:false});B.wh=0;B.next=now+BILL_EVERY;
-    SFX.talk();notify('🧾',L('You have a bill in your mailbox!','Du har en regning i postkassen!'),L(`Rent ${rent} 🪙 + power ${power} 🪙 – pay within 3 days`,`Husleje ${rent} 🪙 + strøm ${power} 🪙 – betal inden 3 dage`),openBills);save()}
-  for(const bl of B.list){if(bl.paid||now<bl.due)continue;
-    if(bl.rem<3){bl.rem++;bl.fee+=25+Math.round((bl.rent+bl.power)*.1);bl.due=now+BILL_DUE;if(bl.rem===3)bl.final=0;SFX.bad();
-      notify('⚠️',L(`Reminder ${bl.rem} of 3!`,`Rykker ${bl.rem} af 3!`),bl.rem<3?L(`Pay your bill (+${bl.fee} 🪙 late fee) within 3 days`,`Betal din regning (+${bl.fee} 🪙 rykkergebyr) inden 3 dage`):L('Last chance – tap to see','Sidste chance – tryk og se'),openBills);
-      if(bl.rem===3)setTimeout(finalWarning,800);save()}
-    else if(bl.final&&now>bl.due){gameOver();return}
-    else if(!bl.final)finalWarning()}}
+  B.list.forEach(bl=>{if(bl.days==null)bl.days=Math.max(1,Math.min(PAY_DAYS,Math.ceil((bl.due-now)/864e5)))}); // bills from before this change
+  if(now>=B.next){const power=Math.round(B.wh/WH_PER_COIN),rent=rentNow();B.list.push({id:now,rent,power,kwh:Math.round(B.wh)/1000,fee:0,at:now,days:PAY_DAYS,rem:0,paid:false,day:today()});B.wh=0;B.next=now+BILL_EVERY;
+    SFX.talk();notify('🧾',L('You have a bill in your mailbox!','Du har en regning i postkassen!'),L(`Rent ${rent} 🪙 + power ${power} 🪙 – pay within ${daysTxt(PAY_DAYS)}`,`Husleje ${rent} 🪙 + strøm ${power} 🪙 – betal inden ${daysTxt(PAY_DAYS)}`),openBills);save()}
+  // a new day you play: every open bill gets one day closer to its deadline
+  if(B.lastDay==null)B.lastDay=today();
+  if(B.lastDay!==today()){B.lastDay=today();for(const bl of B.list){if(bl.paid||bl.day===today())continue;bl.days--;
+    if(bl.days>0)continue;
+    if(bl.rem<3){bl.rem++;bl.fee+=25+Math.round((bl.rent+bl.power)*.1);bl.days=PAY_DAYS;SFX.bad();
+      notify('⚠️',L(`Reminder ${bl.rem} of 3!`,`Rykker ${bl.rem} af 3!`),bl.rem<3?L(`Pay your bill (+${bl.fee} 🪙 late fee) within ${daysTxt(PAY_DAYS)}`,`Betal din regning (+${bl.fee} 🪙 rykkergebyr) inden ${daysTxt(PAY_DAYS)}`):L('Last chance – tap to see','Sidste chance – tryk og se'),openBills);
+      if(bl.rem===3)setTimeout(finalWarning,800)}
+    else{gameOver();return}}save()}
+  const last=B.list.find(b=>!b.paid&&b.rem>=3);if(last&&!last.final)finalWarning()}
 const billTotal=bl=>bl.rent+bl.power+bl.fee;
-function finalWarning(){const bl=(S.bill.list||[]).find(b=>!b.paid&&b.rem>=3);if(!bl||$('#fwarn'))return;if(!bl.final){bl.final=1;bl.due=Date.now()+BILL_DUE;save()}
-  panel({title:'🚨 '+L('Final warning!','Sidste advarsel!'),sm:true,html:`<div id="fwarn" style="text-align:center"><div style="font-size:54px">🧾</div><p style="font-size:17px">${L(`You have had 3 reminders. Pay <b>${N(billTotal(bl))} 🪙</b> within <b>${fmtDur(bl.due-Date.now())}</b> –`,`Du har fået 3 rykkere. Betal <b>${N(billTotal(bl))} 🪙</b> inden <b>${fmtDur(bl.due-Date.now())}</b> –`)}</p><p style="font-size:20px;color:#d0457e"><b>${L('or it is GAME OVER!','ellers er det GAME OVER!')}</b></p></div>`,buttons:[{label:L('Later','Senere'),v:0},{label:'🧾 '+L('Pay now','Betal nu'),cls:'go',v:1}]}).then(v=>{if(v)openBills()})}
+function finalWarning(){const bl=(S.bill.list||[]).find(b=>!b.paid&&b.rem>=3);if(!bl||$('#fwarn'))return;if(!bl.final){bl.final=1;save()}
+  panel({title:'🚨 '+L('Final warning!','Sidste advarsel!'),sm:true,html:`<div id="fwarn" style="text-align:center"><div style="font-size:54px">🧾</div><p style="font-size:17px">${L(`You have had 3 reminders. Pay <b>${N(billTotal(bl))} 🪙</b> within <b>${daysTxt(bl.days)}</b> –`,`Du har fået 3 rykkere. Betal <b>${N(billTotal(bl))} 🪙</b> inden <b>${daysTxt(bl.days)}</b> –`)}</p><p style="font-size:20px;color:#d0457e"><b>${L('or it is GAME OVER!','ellers er det GAME OVER!')}</b></p></div>`,buttons:[{label:L('Later','Senere'),v:0},{label:'🧾 '+L('Pay now','Betal nu'),cls:'go',v:1}]}).then(v=>{if(v)openBills()})}
 function payBill(bl){const t=billTotal(bl);if(S.coins<t){toast(L(`Not enough coins – you need ${N(t)} 🪙. Work a job!`,`Ikke nok mønter – du skal bruge ${N(t)} 🪙. Tag et job!`),3200);SFX.bad();return false}
   S.coins-=t;bl.paid=true;if(!bl.rem)bump('billsOnTime');bump('bills');SFX.buy();hud();S.bill.list=S.bill.list.filter(b=>!b.paid).concat([bl]).slice(-8);toast(L('✅ Bill paid – thank you!','✅ Regningen er betalt – tak!'));save();return true}
 function openBills(){initBills();panel({title:'🧾 '+L('Bills','Regninger'),render:b=>{const draw=()=>{const B=S.bill,open=B.list.filter(x=>!x.paid),now=Date.now();
   b.innerHTML=(open.map((bl,i)=>`<div class="goal ${bl.rem?'rdy':''}" style="${bl.rem>=3?'border-color:#ef4444;background:#fee2e2':''}"><div class="ic">${bl.rem?'⚠️':'🧾'}</div><div class="tx">${L('Bill from','Regning fra')} ${new Date(bl.at).toLocaleDateString(LANG==='da'?'da-DK':'en-GB')}
     <small>🏠 ${L('Rent','Husleje')} ${N(bl.rent)} 🪙 · ⚡ ${L('Power','Strøm')} ${N(bl.power)} 🪙 (${bl.kwh} kWh)${bl.fee?` · ⚠️ ${L('Late fees','Gebyrer')} ${N(bl.fee)} 🪙`:''}</small>
-    <small>${bl.rem?`<b style="color:#d0457e">${L(`Reminder ${bl.rem}/3`,`Rykker ${bl.rem}/3`)}</b> · `:''}${now<bl.due?L(`Pay within ${fmtDur(bl.due-now)}`,`Betal inden ${fmtDur(bl.due-now)}`):L('Overdue!','For sent!')}${bl.rem>=3?' · <b style="color:#d0457e">'+L('or GAME OVER','ellers GAME OVER')+'</b>':''}</small></div>
+    <small>${bl.rem?`<b style="color:#d0457e">${L(`Reminder ${bl.rem}/3`,`Rykker ${bl.rem}/3`)}</b> · `:''}${L(`Pay within ${daysTxt(bl.days)}`,`Betal inden ${daysTxt(bl.days)}`)}${bl.rem>=3?' · <b style="color:#d0457e">'+L('or GAME OVER','ellers GAME OVER')+'</b>':''}</small></div>
     <button class="btn sm go" data-p="${i}" ${S.coins<billTotal(bl)?'disabled':''}>${L('Pay','Betal')} ${N(billTotal(bl))} 🪙</button></div>`).join('')||`<p class="hint">✅ ${L('No bills to pay right now.','Ingen regninger at betale lige nu.')}</p>`)+
     `<div class="goal"><div class="ic">⚡</div><div class="tx">${L('Power used so far this period','Strøm brugt indtil nu i perioden')}: <b>${(B.wh/1000).toFixed(2)} kWh ≈ ${N(B.wh/WH_PER_COIN)} 🪙</b><small><a href="#" id="toPower" style="color:#2f8fe0">🔌 ${L('Switch lamps & appliances off','Sluk lamper & apparater')}</a> · ${L(`Right now your home uses ${homeWatts()} W. Lamps that are on (and fridges, TVs, aquariums…) cost power while you are online – switch off lamps you don't need!`,`Lige nu bruger dit hjem ${homeWatts()} W. Tændte lamper (og køleskabe, tv, akvarier…) koster strøm, mens du er online – sluk de lamper, du ikke bruger!`)}</small></div></div>
-    <div class="goal"><div class="ic">🏠</div><div class="tx">${L('Next bill','Næste regning')}: <b>${fmtDur(Math.max(0,B.next-now))}</b><small>${L(`Rent is ${rentNow()} 🪙 (more rooms and a garden cost more).`,`Huslejen er ${rentNow()} 🪙 (flere rum og en have koster mere).`)}</small></div></div>`;
+    <div class="goal"><div class="ic">🏠</div><div class="tx">${L('Next bill','Næste regning')}: <b>${fmtDur(Math.max(0,B.next-now))}</b><small>${L(`Rent is ${rentNow()} 🪙 (more rooms and a garden cost more).`,`Huslejen er ${rentNow()} 🪙 (flere rum og en have koster mere).`)}</small><small>🏖️ ${L('Deadlines only count days you play – nothing happens while you are away.','Fristerne tæller kun dage, du spiller – der sker intet, mens du er væk.')}</small></div></div>`;
   $$('[data-p]',b).forEach(x=>x.onclick=()=>{if(payBill(open[+x.dataset.p]))draw()});const tp=$('#toPower',b);if(tp)tp.onclick=e=>{e.preventDefault();openPower()}};draw()}})}
 function billReminder(){initBills();const open=S.bill.list.filter(b=>!b.paid);if(!open.length)return;const now=Date.now(),tot=open.reduce((a,b)=>a+billTotal(b),0),worst=Math.max(...open.map(b=>b.rem));
   panel({title:'🧾 '+L('You have unpaid bills!','Du har ubetalte regninger!'),sm:true,html:`<div style="text-align:center"><div style="font-size:50px">📬🧾</div>
     <p style="font-size:17px">${L(`${open.length} bill${open.length>1?'s':''} waiting in your mailbox: <b>${N(tot)} 🪙</b>`,`${open.length} regning${open.length>1?'er':''} venter i din postkasse: <b>${N(tot)} 🪙</b>`)}</p>
-    ${open.map(b=>`<p class="hint" style="margin:2px 0">${b.rem?`<b style="color:#d0457e">${L(`Reminder ${b.rem}/3`,`Rykker ${b.rem}/3`)}</b> · `:''}${now<b.due?L(`pay within ${fmtDur(b.due-now)}`,`betal inden ${fmtDur(b.due-now)}`):L('overdue!','for sent!')}</p>`).join('')}
+    ${open.map(b=>`<p class="hint" style="margin:2px 0">${b.rem?`<b style="color:#d0457e">${L(`Reminder ${b.rem}/3`,`Rykker ${b.rem}/3`)}</b> · `:''}${L(`pay within ${daysTxt(b.days)}`,`betal inden ${daysTxt(b.days)}`)}</p>`).join('')}
     ${worst>=3?`<p style="color:#d0457e"><b>${L('Last chance – or it is GAME OVER!','Sidste chance – ellers er det GAME OVER!')}</b></p>`:''}</div>`,
     buttons:[{label:L('Later','Senere'),v:0},{label:'🧾 '+L('Pay now','Betal nu'),cls:'go',v:1}]}).then(v=>{if(v)openBills()})}
 function gameOver(){if(gameOver.on)return;gameOver.on=true;$$('.ov').forEach(o=>o._close&&o._close());net.leave();
