@@ -637,6 +637,8 @@ const FURN={};FURN_RAW.forEach(([id,cat,kind,en,da,price,lvl,w,h,use,style,ex])=
 Object.entries({side_table:70,coffee_table:52,desk:80,dining_table:82,dresser:100,counter:114,bookshelf:200,piano:188,fireplace:208,toy_box:80,stove:110,closet:210,fridge:210,pantry:220,tv_retro:150,aquarium:172,stool:84}).forEach(([k,v])=>FURN[k].surf=v);
 // smaller floor things (plants, radios, statues, toys…) may also stand on tables, shelves and counters
 Object.values(FURN).forEach(f=>{if(f.kind==='floor'&&!f.surf&&f.w<=115&&f.h<=135&&!['sit','wash','toilet','cook','egg','bowlF','bowlW','bed','bath','shower'].includes(f.use)&&!['beehive','bbq','stool','beanbag','side_table'].includes(f.id))f.top=1});
+// TVs and aquariums are big, but they belong on tables, TV benches, sideboards and counters too
+['tv_retro','tv_flat','aquarium'].forEach(id=>FURN[id].top=1);
 const isSmall=f=>f&&(f.kind==='small'||f.top),effKind=it=>{const f=FURN[it.id];return f&&(f.top&&it.on?'small':f.kind)};
 const FCATS=[['seat','🛋️','Seating','Siddepladser'],['table','🪑','Tables','Borde'],['bed','🛏️','Beds','Senge'],['store','📚','Storage','Opbevaring'],['kitchen','🍳','Kitchen','Køkken'],['bath','🛁','Bathroom','Badeværelse'],['tech','📺','Electronics','Elektronik'],['decor','🪴','Decor','Pynt'],['rug','🟫','Rugs','Tæpper'],['wall','🖼️','Wall','Væg'],['wp','🎨','Wallpaper','Tapet'],['fl','🪵','Floors','Gulve'],['small','🧸','Little things','Småting'],['lamp','💡','Lamps','Lamper'],['garden','🌻','Garden','Have'],['pet','🐾','Pet supplies','Dyreting'],['dish','🍽️','Tableware','Service'],['dr','🚪','Doors','Døre']];
 
@@ -3720,7 +3722,8 @@ const BILL_EVERY=7*864e5,BILL_DUE=3*864e5,WH_PER_COIN=10;
 // appliances use power all the time unless you switch them off in the 🔌 power overview
 const ALWAYS_ON={fridge:30,aquarium:20,fishbowl:5,arcade:40,gaming_pc:80,jukebox:40,hot_tub:150,coffee_bar:20,tv_flat:8,wall_tv:8,home_cinema:15,incubator:25,
   tv_retro:8,computer:30,laptop:15,radio:5,record_player:5,microwave:5,coffee_machine:5,espresso_machine:8,stove:10,toaster:3,kettle:3,treadmill:10,exercise_bike:5};
-const LAMP_W={candle:0,candle_tall:0,tealights:0,candle_jar:0,candle_trio:0,candlestick:0,candle_table:0,lamp_oil:0,lamp_wall_candle:0,lamp_wall_torch:0,lamp_candelabra:0,lamp_ceil_fan:70,lamp_wall_led:10,lamp_bunny:5,lamp_moon_small:5,chandelier:120,crystal_chandelier:200,disco_ball:80,lights:20,xmas_lights:25,xmas_tree:30,neon_heart:30,star_lamp:10,fireplace:0};
+// anything lit by a real flame (candles, oil, lanterns with candles inside, the jack-o'-lantern) uses no electricity
+const LAMP_W={jack_o_lantern:0,lamp_lantern:0,lamp_lantern_floor:0,lamp_wall_lantern:0,candle:0,candle_tall:0,tealights:0,candle_jar:0,candle_trio:0,candlestick:0,candle_table:0,lamp_oil:0,lamp_wall_candle:0,lamp_wall_torch:0,lamp_candelabra:0,lamp_ceil_fan:70,lamp_wall_led:10,lamp_bunny:5,lamp_moon_small:5,chandelier:120,crystal_chandelier:200,disco_ball:80,lights:20,xmas_lights:25,xmas_tree:30,neon_heart:30,star_lamp:10,fireplace:0};
 const lampW=id=>LAMP_W[id]!=null?LAMP_W[id]:40;
 const itemWatts=it=>{const f=FURN[it.id];if(!f)return 0;if(f.use==='lamp')return lampOn(it)?lampW(it.id):0;return it.off?0:(ALWAYS_ON[it.id]||0)};
 const usesPower=it=>{const f=FURN[it.id];return!!f&&(f.use==='lamp'?lampW(it.id)>0:(ALWAYS_ON[it.id]||0)>0)};
