@@ -643,17 +643,37 @@ const FOOD_RAW=[
  ['potato','Potato','Kartoffel',4,1,8,0,0,'🥔'],['egg','Egg','Æg',5,1,8,0,0,'🥚'],['tomato','Tomato','Tomat',6,1,10,0,0,'🍅'],['lettuce','Lettuce','Salat',5,1,8,0,0,'🥬'],['corn','Corn','Majs',6,2,10,0,0,'🌽'],['strawberry','Strawberries','Jordbær',7,2,10,0,3,'🍓'],
  ['salad','Salad','Salat-skål',30,3,45,0,4,'🥗'],['popcorn','Popcorn','Popcorn',20,2,25,0,10,'🍿'],['pizza','Pizza','Pizza',40,2,55,0,8,'🍕'],['pasta','Pasta','Pasta',35,2,50,0,4,'🍝'],['garlic_bread','Garlic Bread','Hvidløgsbrød',18,1,28,0,2,'🥖'],['lemonade','Lemonade','Lemonade',12,1,8,0,8,'🍋'],
  ['coffee','Coffee','Kaffe',12,1,4,0,8,'☕'],['honey','Honey','Honning',30,1,12,0,6,'🍯'],['honey_toast','Honey Toast','Honningtoast',22,2,30,0,6,'🥯'],
+ ['flour','Flour','Mel',6,1,2,0,0,'🌾'],['rice','Rice','Ris',8,1,6,0,0,'🍚'],['butter','Butter','Smør',9,1,4,0,0,'🧈'],['onion','Onion','Løg',4,1,3,0,0,'🧅'],['mushroom','Mushrooms','Svampe',7,2,6,0,0,'🍄'],['bacon','Bacon','Bacon',14,2,12,0,2,'🥓'],['chicken','Chicken','Kylling',22,2,20,0,2,'🍗'],
+ ['omelette','Omelette','Omelet',30,1,40,0,4,'🍳'],['waffles','Waffles','Vafler',30,1,35,0,10,'🧇'],['croissant','Croissant','Croissant',22,1,28,0,6,'🥐'],['mashed','Mashed Potatoes','Kartoffelmos',25,1,42,0,5,'🥣'],['baked_potato','Baked Potato','Bagt kartoffel',22,1,40,0,4,'🍠'],['chicken_stew','Chicken Stew','Kyllingegryde',45,2,60,0,6,'🥘'],
+ ['burger','Burger','Burger',45,2,60,0,10,'🍔'],['hotdog','Hot Dog','Hotdog',30,2,45,0,8,'🌭'],['fondue','Cheese Fondue','Ostefondue',50,3,55,0,14,'🫕'],['taco','Taco','Taco',40,3,50,0,10,'🌮'],['burrito','Burrito','Burrito',45,3,60,0,8,'🌯'],['curry','Curry','Karry',50,3,62,0,8,'🍛'],['dumplings','Dumplings','Dumplings',45,3,52,0,10,'🥟'],['ramen','Ramen','Ramen',50,3,60,0,10,'🍜'],
+ ['sushi','Sushi','Sushi',60,3,50,0,14,'🍣'],['onigiri','Rice Ball','Risbolle',25,2,35,0,6,'🍙'],['fish_fry','Fried Fish','Stegt fisk',45,2,55,0,8,'🍤'],['crab_cakes','Crab Cakes','Krabbekager',70,3,60,0,12,'🍘'],['lobster_dinner','Lobster Dinner','Hummermiddag',180,5,80,0,25,'🍽️'],
+ ['cupcake','Cupcake','Cupcake',25,2,25,0,14,'🧁'],['pie','Apple Pie','Æbletærte',50,2,55,0,14,'🥧'],['pretzel','Pretzel','Kringle',18,1,25,0,6,'🥨'],['fruit_salad','Fruit Salad','Frugtsalat',30,1,35,0,10,'🍇'],['smoothie','Smoothie','Smoothie',28,1,20,0,14,'🥤'],['birthday_cake','Birthday Cake','Fødselsdagskage',120,4,70,0,30,'🎂'],['royal_feast','Royal Feast','Kongeligt festmåltid',500,8,100,0,50,'👑'],
  ['candy','Halloween Candy','Halloweenslik',10,1,6,0,10,'🍬'],['candy_cane_food','Candy Cane','Slikstok',10,1,6,0,10,'🍭'],['gingerbread','Gingerbread','Honningkage',14,1,14,0,8,'🎄'],['choco_heart','Chocolate Heart','Chokoladehjerte',14,1,10,0,12,'💝']];
 // recipes you can cook on the stove: [id, dish, ingredients, xp, book needed]
 const RECIPES=[['fries','fries',{potato:2},6],['soup','soup',{potato:1,carrot:1,milk:1},8],['pancakes','pancakes',{egg:1,milk:1},7],['sandwich','sandwich',{bread:1,cheese:1,lettuce:1},8],
- ['salad','salad',{lettuce:1,tomato:1,carrot:1},10,1],['cake','cake',{egg:1,milk:1,strawberry:2},14,1],['popcorn','popcorn',{corn:2},8,1],['pizza','pizza',{bread:1,cheese:1,tomato:2},15,1]];
+ ['salad','salad',{lettuce:1,tomato:1,carrot:1},10,'salad'],['fruit_salad','fruit_salad',{apple:1,banana:1,strawberry:1},9,'salad'],['smoothie','smoothie',{banana:1,strawberry:1,milk:1},9,'salad'],
+ ['cake','cake',{egg:1,milk:1,strawberry:2},14,'cake'],['cupcake','cupcake',{flour:1,egg:1,butter:1,strawberry:1},12,'cake'],['pie','pie',{flour:1,butter:1,apple:2},14,'cake'],['cookie','cookie',{flour:1,butter:1,honey:1},8,'cake'],['bread','bread',{flour:2},5,'cake'],
+ ['popcorn','popcorn',{corn:2},8,'popcorn'],['pretzel','pretzel',{flour:1,butter:1},7,'popcorn'],['honey_toast','honey_toast',{bread:1,honey:1},7,'popcorn'],
+ ['pizza','pizza',{bread:1,cheese:1,tomato:2},15,'pizza'],['garlic_bread','garlic_bread',{bread:1,butter:1,onion:1},8,'pizza'],['pasta','pasta',{flour:1,egg:1,tomato:1},12,'pizza'],
+ ['omelette','omelette',{egg:2,cheese:1,mushroom:1},10,'break'],['waffles','waffles',{flour:1,egg:1,milk:1},10,'break'],['croissant','croissant',{flour:1,butter:2},9,'break'],['juice','juice',{apple:2},5,'break'],
+ ['mashed','mashed',{potato:3,butter:1,milk:1},10,'potato'],['baked_potato','baked_potato',{potato:1,cheese:1,butter:1},9,'potato'],['chicken_stew','chicken_stew',{chicken:1,potato:1,carrot:1,onion:1},16,'potato'],
+ ['burger','burger',{bread:1,bacon:1,cheese:1,lettuce:1},15,'diner'],['hotdog','hotdog',{bread:1,bacon:1,onion:1},11,'diner'],['fondue','fondue',{cheese:2,bread:1,butter:1},14,'diner'],
+ ['icecream','icecream',{milk:2,strawberry:1,honey:1},10,'sweet'],['donut','donut',{flour:1,egg:1,butter:1,honey:1},10,'sweet'],
+ ['onigiri','onigiri',{rice:2,j_weed:1},8,'sea'],['sushi','sushi',{rice:1,f_small:1,j_weed:1},16,'sea'],['fish_fry','fish_fry',{f_small:1,potato:1,flour:1},14,'sea'],['crab_cakes','crab_cakes',{f_crab:1,flour:1,egg:1},18,'sea'],['lobster_dinner','lobster_dinner',{f_lobster:1,butter:1,potato:2},30,'sea'],
+ ['taco','taco',{corn:1,chicken:1,tomato:1,lettuce:1},16,'world'],['burrito','burrito',{corn:1,rice:1,chicken:1},16,'world'],['curry','curry',{rice:1,chicken:1,onion:1,carrot:1},18,'world'],['dumplings','dumplings',{flour:1,chicken:1,onion:1},15,'world'],['ramen','ramen',{flour:1,egg:1,chicken:1,onion:1},18,'world'],
+ ['birthday_cake','birthday_cake',{flour:2,egg:2,butter:1,strawberry:2,milk:1},30,'royal'],['royal_feast','royal_feast',{f_gold:1,chicken:1,potato:2,butter:1,mushroom:1},60,'royal']];
+// ingredients can come from the food bag or the supplies bag (fish and seaweed from the pond)
+const ingHave=i=>(S.food[i]||0)+(SUP[i]?S.sup[i]||0:0),ingEmoji=i=>(FOOD[i]||SUP[i]||{e:'?'}).e;
+function ingUse(i,n){const bag=FOOD[i]?S.food:S.sup;bag[i]-=n;if(bag[i]<=0)delete bag[i]}
+const bookDishes=k=>RECIPES.filter(r=>r[4]===k).map(r=>FOOD[r[1]]);
 const CROP_FOOD={s_lettuce:'lettuce',s_carrot:'carrot',s_straw:'strawberry',s_potato:'potato',s_tomato:'tomato',s_corn:'corn'};
 const CAFE_ONLY=['coffee','honey_toast','candy','candy_cane_food','gingerbread','choco_heart','cookie','cocoa','pancakes','donut','salad','popcorn','pizza','pasta','garlic_bread','lemonade'];
 // supplies (seeds, pet food, fertilizer): [id,en,da,price,lvl,emoji,type]
 const SUP_RAW=[['kibble','Pet Food','Dyrefoder',8,1,'🦴','pet'],['treat','Pet Treat','Godbid',12,1,'🍖','treat'],['fert','Fertilizer','Gødning',20,2,'🧪','fert'],
  ['s_lettuce','Lettuce Seeds','Salatfrø',5,1,'🥬','seed'],['s_carrot','Carrot Seeds','Gulerodsfrø',10,1,'🥕','seed'],['s_straw','Strawberry Seeds','Jordbærfrø',18,2,'🍓','seed'],['s_potato','Seed Potatoes','Læggekartofler',25,2,'🥔','seed'],
  ['gift_flowers','Bouquet','Buket',20,1,'💐','gift'],['gift_choco','Chocolates','Chokolade',35,2,'🍫','gift'],['gift_teddy','Gift Teddy','Gavebamse',80,3,'🧸','gift'],
- ['r_salad','Salad Cookbook','Salatkogebog',60,2,'📗','recipe'],['r_cake','Baking Cookbook','Bagebog',90,3,'📕','recipe'],['r_popcorn','Snack Cookbook','Snackbog',50,2,'📘','recipe'],['r_pizza','Pizza Cookbook','Pizzakogebog',120,4,'📙','recipe'],
+ ['r_salad','Salad Cookbook','Salatkogebog',60,2,'📗','recipe'],['r_cake','Baking Cookbook','Bagebog',90,3,'📕','recipe'],['r_popcorn','Snack Cookbook','Snackbog',50,2,'📘','recipe'],['r_potato','Potato Bible','Kartoffelbiblen',45,1,'📔','recipe'],['r_break','Breakfast Cookbook','Morgenmadsbog',70,2,'📒','recipe'],['r_diner','Diner Classics','Diner-klassikere',90,3,'📓','recipe'],['r_sweet','Dessert Book','Dessertbog',110,3,'📑','recipe'],['r_sea','Seafood & Sushi','Fisk & sushi',150,4,'📖','recipe'],['r_world','World Kitchen','Verdens køkken',180,5,'📚','recipe'],['r_royal',"Royal Chef's Secrets",'Kongekokkens hemmeligheder',400,8,'📜','recipe'],
+ ['r_pizza','Pizza Cookbook','Pizzakogebog',120,4,'📙','recipe'],
  ['hamster','Hamster','Hamster',150,1,'🐹','hamster'],['ham_food','Hamster Food','Hamsterfoder',10,1,'🌻','hfood'],
  ['f_small','Small Fish','Lille fisk',16,1,'🐟','fish'],['f_trop','Tropical Fish','Tropisk fisk',30,1,'🐠','fish'],['f_crab','Crab','Krabbe',40,1,'🦀','fish'],['f_puffer','Pufferfish','Kuglefisk',50,1,'🐡','fish'],['f_squid','Squid','Blæksprutte',70,1,'🦑','fish'],['f_lobster','Lobster','Hummer',110,1,'🦞','fish'],['f_gold','Golden Fish','Guldfisk',300,1,'🎏','fish'],
  ['j_boot','Old Boot','Gammel støvle',2,1,'👢','junk'],['j_can','Tin Can','Rusten dåse',2,1,'🥫','junk'],['j_bag','Plastic Bag','Plastikpose',2,1,'🛍️','junk'],['j_bottle','Old Bottle','Gammel flaske',2,1,'🍾','junk'],['j_sock','Wet Sock','Våd sok',2,1,'🧦','junk'],['j_weed','Seaweed','Tang',2,1,'🌿','junk'],['j_tire','Old Tire','Gammelt dæk',4,1,'🛞','junk'],
@@ -1970,7 +1990,7 @@ function buildShops(){
   addKeeper(m1,'food',660,600);m1.fix.push(fxCounter(660,640,170,'#16a34a','#e5e7eb'));
   ['apple','banana','carrot','bread','potato','egg','tomato','lettuce','corn','strawberry'].forEach((id,i)=>{const c=fxCrate(880+i*170,(i%2)?706:610);m1.fix.push(c);[-40,0,40].forEach((dx,j)=>{if(j===1)m1.goods.push(G('food',id,c.x+dx,c.top-4,1,c,Math.min(FLOOR_MAX,c.y+30)));else{const ox=c.x+dx;c.draw=((d)=>g=>{d(g);g.font='38px serif';g.fillStyle='#000';g.textAlign='center';g.textBaseline='bottom';g.fillText(FOOD[id].e,ox,c.top+2)})(c.draw)}})});
   m1.w=2700;lamps(m1);wallSign(m1,1150,250,()=>'🍎 '+L('Fresh every day!','Friskt hver dag!'));
-  const m2=SEC('Groceries','Dagligvarer','wp_lime','fl_tiles');let e=shelfFood(m2,'food',['sandwich','soup','fries','cake','cheese','cookie'].filter(id=>!CAFE_ONLY.includes(id)),280);e=shelfFood(m2,'food',['juice','milk','icecream'],e,3,fxFridge);m2.w=Math.max(1280,e+120);lamps(m2);wallSign(m2,m2.w/2,200,()=>'🥪 '+L('Groceries','Dagligvarer'));
+  const m2=SEC('Groceries','Dagligvarer','wp_lime','fl_tiles');let e=shelfFood(m2,'food',['sandwich','soup','fries','cake','cheese','cookie'].filter(id=>!CAFE_ONLY.includes(id)),280);e=shelfFood(m2,'food',['flour','rice','butter','onion','mushroom','bacon','chicken'],e,3);e=shelfFood(m2,'food',['juice','milk','icecream'],e,3,fxFridge);m2.w=Math.max(1280,e+120);lamps(m2);wallSign(m2,m2.w/2,200,()=>'🥪 '+L('Groceries','Dagligvarer'));
   const m3=SEC('Care & Toys','Pleje & legetøj','wp_sky','fl_tiles');m3.w=Math.max(1280,shelfFood(m3,'food',['soap','bubbles','shampoo'],280,3)+40);m3.w=Math.max(1280,shelfFood(m3,'food',['ball','kite','yoyo'],m3.w,3)+120);lamps(m3);wallSign(m3,m3.w/2,200,()=>'🧼 '+L('Care & Toys','Pleje & legetøj'));
   const m4=SEC('Garden Center','Havecenter','yard','grass');m4.w=Math.max(1280,shelfFood(m4,'sup',Object.values(SUP).filter(s=>s.type==='seed'||s.type==='fert').sort((a,b)=>a.lvl-b.lvl).map(s=>s.id),280,3)+260);
   m4.fix.push(fxDeco('planter',m4.w-200,700,.9));wallSign(m4,m4.w/2,120,()=>'🌱 '+L('Seeds & Fertilizer','Frø & gødning'));m4.fix.push(fxDeco('scarecrow',m4.w-150,600,.8));
@@ -2077,7 +2097,8 @@ function buildShops2(){
   const lb=SEC('Spudville Library','Biblioteket','wp_cream','fl_wood');shopDoor(lb,'library');lb.w=1700;lamps(lb);
   [700,880,1060,1240,1420].forEach(x=>{lb.fix.push(fxDeco('bookshelf',x,585));lb.spots.push({r:{x:x-70,y:385,w:140,h:200},wx:x,wy:640,act:()=>readBook()})});
   lb.fix.push(fxCounter(380,640,200,'#7a4b22','#fef3c7'));keeper(lb,400,590,{animal:'elephant',color:'#d9d9e3',eyes:'lashes',mouth:'smile'},{top:'top_sweater',bottom:'bot_skirt',shoes:'sh_slip',glasses:'gl_round'},'Mrs. Pages',()=>jobPrompt('library'));
-  const rt=fxTable(900,706,420,'#a0672e');lb.fix.push(rt);['r_salad','r_popcorn','r_cake','r_pizza'].forEach((id,j)=>lb.goods.push(G('sup',id,735+j*110,rt.top,.85,rt,FLOOR_MAX)));
+  const books=Object.values(SUP).filter(x=>x.type==='recipe').sort((a,b)=>a.lvl-b.lvl||a.price-b.price).map(x=>x.id);
+  for(let i=0;i<books.length;i+=6){const tx=800+(i/6)*520,rt=fxTable(tx,706,460,'#a0672e');lb.fix.push(rt);books.slice(i,i+6).forEach((id,j)=>lb.goods.push(G('sup',id,tx-190+j*76,rt.top,.85,rt,FLOOR_MAX)))}lb.w=Math.max(lb.w,800+Math.ceil(books.length/6)*520);
   wallSign(lb,1060,150,()=>'📖 '+L('Tap a bookshelf to read','Tryk på en reol for at læse'));
   SHOPDEF.library={secs:[lb]};
   // ---------- Green Thumb Garden Center: an indoor shop and an outdoor yard ----------
@@ -2211,14 +2232,16 @@ function openMailbox(){
   txt=pick([L('Thanks for being such a great neighbour!','Tak fordi du er så god en nabo!'),L('I saw this and thought of you.','Jeg så det her og tænkte på dig.'),L('Have a lovely day in Potato Ville!','Hav en dejlig dag i Potato Ville!')]);
   SFX.buy();bump('mail');save();
   panel({title:'📬 '+L('You have mail!','Du har post!'),sm:true,html:`<div class="goal" style="background:#fffdf3"><div class="ic">💌</div><div class="tx"><i>"${esc(txt)}"</i><small>– ${esc(n.name)}</small></div></div><p style="text-align:center">🎁 ${L('Inside:','Indeni:')} <b>${esc(gift)}</b></p>`,buttons:[{label:L('Thanks!','Tak!'),cls:'go'}]})}
-function openCook(it){
-  const known=RECIPES.filter(r=>!r[4]||(S.recipes||[]).includes(r[0]));
-  panel({title:'🍳 '+L('Cooking','Madlavning'),render:(b,close)=>{const draw=()=>{
-    b.innerHTML=`<div class="grid">${RECIPES.map(r=>{const f=FOOD[r[1]],k=known.includes(r),has=Object.entries(r[2]).every(([i,n])=>(S.food[i]||0)>=n);
-      return`<div class="card ${k?'':'lock'}" data-lock="📕 ${L('Cookbook','Kogebog')}"><div style="font-size:42px">${f.e}</div><div class="nm">${esc(nm(f))}</div><div class="hint">${Object.entries(r[2]).map(([i,n])=>`<span style="${(S.food[i]||0)>=n?'':'color:#d0457e'}">${n}×${FOOD[i].e}</span>`).join(' ')}</div><button class="btn sm ok" data-r="${r[0]}" ${k&&has?'':'disabled'}>${L('Cook','Lav')} +${r[3]}XP</button></div>`}).join('')}</div>
-      <p class="hint">${L('Ingredients come from Tater Market or your garden. Cookbooks with more recipes are sold at the Library.','Ingredienser får du i Kartoffelmarkedet eller fra din have. Kogebøger med flere opskrifter sælges på biblioteket.')}</p>
+function openCook(it){let only=false;
+  panel({title:'🍳 '+L('Cooking','Madlavning'),render:(b,close)=>{const draw=()=>{const R=RECIPES.map(r=>({r,k:!r[4]||(S.recipes||[]).includes(r[4]),has:Object.entries(r[2]).every(([i,n])=>ingHave(i)>=n)})).sort((a,b)=>(b.k&&b.has)-(a.k&&a.has)||b.k-a.k).filter(x=>!only||(x.k&&x.has));
+    const nKnown=RECIPES.filter(r=>!r[4]||(S.recipes||[]).includes(r[4])).length;
+    b.innerHTML=`<div class="row" style="justify-content:space-between;margin-bottom:8px"><b>📖 ${L(`You know ${nKnown} of ${RECIPES.length} recipes`,`Du kan ${nKnown} af ${RECIPES.length} opskrifter`)}</b><button class="chip ${only?'on':''}" id="ckOnly">✅ ${L('Ready to cook','Klar til at lave')}</button></div>
+      <div class="grid">${R.map(({r,k,has})=>{const f=FOOD[r[1]],bk=r[4]&&SUP['r_'+r[4]];
+      return`<div class="card ${k?'':'lock'}" data-lock="${bk?bk.e+' '+esc(nm(bk)):''}"><div style="font-size:42px">${f.e}</div><div class="nm">${esc(nm(f))}</div><div class="hint">${Object.entries(r[2]).map(([i,n])=>`<span style="${ingHave(i)>=n?'':'color:#d0457e'}" title="${esc(nm(FOOD[i]||SUP[i]))}">${n}×${ingEmoji(i)}</span>`).join(' ')}</div><button class="btn sm ok" data-r="${r[0]}" ${k&&has?'':'disabled'}>${k?L('Cook','Lav')+' +'+r[3]+'XP':'🔒'}</button></div>`}).join('')||`<p class="hint">${L('Nothing you can cook right now – buy ingredients at Tater Market.','Intet du kan lave lige nu – køb ingredienser i Kartoffelmarkedet.')}</p>`}</div>
+      <p class="hint">${L('Ingredients come from Tater Market, your garden, your beehive and the fishing pond. Locked recipes show which cookbook teaches them – cookbooks are sold at the 📚 Library.','Ingredienser får du i Kartoffelmarkedet, fra din have, dit bistade og fiskesøen. Låste opskrifter viser, hvilken kogebog der lærer dem – kogebøger sælges på 📚 biblioteket.')}</p>
       <div class="row" style="justify-content:flex-end"><button class="btn" id="ckQ">⚡2 · ${L('Quick snack','Hurtig snack')}</button></div>`;
-    $$('[data-r]',b).forEach(x=>x.onclick=()=>{const r=RECIPES.find(r=>r[0]===x.dataset.r);Object.entries(r[2]).forEach(([i,n])=>{S.food[i]-=n;if(!S.food[i])delete S.food[i]});S.food[r[1]]=(S.food[r[1]]||0)+1;addXP(r[3]);bump('cooked');SFX.eat();for(let i=0;i<3;i++)FX.push({x:it.x+rr(-40,40),y:it.y-120,t:-i*.15,txt:FOOD[r[1]].e});toast(L(`🍳 You made ${FOOD[r[1]].en}! It is in your bag.`,`🍳 Du lavede ${FOOD[r[1]].da}! Den ligger i din taske.`));save();draw()});
+    $('#ckOnly',b).onclick=()=>{only=!only;SFX.click();draw()};
+    $$('[data-r]',b).forEach(x=>x.onclick=()=>{const r=RECIPES.find(r=>r[0]===x.dataset.r);if(!Object.entries(r[2]).every(([i,n])=>ingHave(i)>=n))return;Object.entries(r[2]).forEach(([i,n])=>ingUse(i,n));S.food[r[1]]=(S.food[r[1]]||0)+1;S.cookedIds=S.cookedIds||[];if(!S.cookedIds.includes(r[1]))S.cookedIds.push(r[1]);addXP(r[3]);bump('cooked');SFX.eat();for(let i=0;i<3;i++)FX.push({x:it.x+rr(-40,40),y:it.y-120,t:-i*.15,txt:FOOD[r[1]].e});toast(L(`🍳 You made ${FOOD[r[1]].en}! It is in your bag.`,`🍳 Du lavede ${FOOD[r[1]].da}! Den ligger i din taske.`));save();draw()});
     $('#ckQ',b).onclick=()=>{close();const u=USE.cook;const k='use_cook';if(S.cd[k]&&Date.now()<S.cd[k]){toast(L('Give it a minute…','Vent lige lidt…'));return}if(!useEnergy(2))return;S.cd[k]=Date.now()+45000;ME.act={type:'cook',u,item:it,t:0,tick:0};ME.say=L(u.en,u.da);ME.sayT=2.2}};draw()}});
 }
 function openPC(){
@@ -2867,7 +2890,7 @@ function checkHeartGift(id,old){const st=npcState(id);for(const m of [3,6,10]){i
    ===================================================================== */
 function gThumb(k,id,w=110,h=86){return thumb(k==='furn'?'furn':k==='cloth'?'cloth':k==='food'?'food':k==='sup'?'sup':'pet',id,w,h)}
 function openBuy(gd){
-  const k=gd.k,id=gd.id,it=gCat(gd),many=k==='food'||k==='sup';
+  const k=gd.k,id=gd.id,it=gCat(gd),many=k==='food'||(k==='sup'&&it.type!=='recipe');
   panel({title:esc(nm(it)),sm:true,render:(b,close)=>{
     const draw=()=>{const st=gState(gd),own=k==='food'?S.food[id]||0:k==='sup'?S.sup[id]||0:k==='furn'&&!['wp','fl','dr'].includes(it.kind)?ownedCount(id):k==='pet'?S.pets.filter(p=>p.type===id).length:0;
       let info='';
@@ -2886,12 +2909,13 @@ function openBuy(gd){
 }
 const fmtDur=ms=>{const m=Math.ceil(ms/60000);return m<60?m+' min':m<1440?Math.floor(m/60)+L(' h',' t')+(m%60?' '+m%60+' min':''):Math.floor(m/1440)+L(' d',' d')+(Math.floor(m%1440/60)?' '+Math.floor(m%1440/60)+L(' h',' t'):'')};
 function buy(kind,id){
-  const it=kind==='cloth'?CLOTH[id]:kind==='food'?FOOD[id]:kind==='sup'?SUP[id]:kind==='pet'?PET_T[id]:FURN[id];if(!it||S.coins<it.price||it.lvl>S.lvl)return false;
+  const it=kind==='cloth'?CLOTH[id]:kind==='food'?FOOD[id]:kind==='sup'?SUP[id]:kind==='pet'?PET_T[id]:FURN[id];if(!it||S.coins<it.price||it.lvl>S.lvl)return false;if(kind==='sup'&&it.type==='recipe'&&(S.recipes||[]).includes(id.slice(2)))return false;
   const takesSpace=kind==='food'||(kind==='sup'&&it.type!=='recipe')||(kind==='furn'&&!['wp','fl','dr'].includes(it.kind));if(takesSpace&&bagFull())return false;
   S.coins-=it.price;SFX.buy();
   if(kind==='cloth'){S.wardrobe.push(id);bump('clothes');toast(L(`👕 ${it.en} is in your wardrobe! Tap 👕 to wear it.`,`👕 ${it.da} ligger i dit klædeskab! Tryk 👕 for at tage det på.`))}
   else if(kind==='food'){S.food[id]=(S.food[id]||0)+1;toast(L(`${it.e} ${it.en} added to your bag 🎒`,`${it.e} ${it.da} lagt i din taske 🎒`))}
-  else if(kind==='sup'&&it.type==='recipe'){S.recipes=S.recipes||[];const r=id.slice(2);if(!S.recipes.includes(r))S.recipes.push(r);toast(L(`📖 New recipe learned! Cook it on your stove.`,`📖 Ny opskrift lært! Lav den på dit komfur.`))}
+  else if(kind==='sup'&&it.type==='recipe'){S.recipes=S.recipes||[];const r=id.slice(2);if(!S.recipes.includes(r))S.recipes.push(r);const ds=bookDishes(r);
+    toast(L(`📖 You learned ${ds.length} recipes: ${ds.map(f=>f.e+' '+f.en).join(', ')}! Cook them on your stove at home.`,`📖 Du lærte ${ds.length} opskrifter: ${ds.map(f=>f.e+' '+f.da).join(', ')}! Lav dem på dit komfur derhjemme.`),5000)}
   else if(kind==='sup'){S.sup[id]=(S.sup[id]||0)+1;toast(L(`${it.e} ${it.en} added to your bag 🎒`,`${it.e} ${it.da} lagt i din taske 🎒`))}
   else if(kind==='pet'){addPet(id,nm(it));toast(L(`🐾 Your new ${it.en} is waiting for you at home! Give it a name in your 🎒 bag.`,`🐾 Din nye ${it.da.toLowerCase()} venter på dig derhjemme! Giv den et navn i din 🎒 taske.`),4000)}
   else if(it.kind==='wp'){S.walls.push(id);toast(L('🎨 New wallpaper! Use Build mode at home to apply it.','🎨 Nyt tapet! Brug byggetilstand derhjemme for at sætte det op.'))}
@@ -3293,7 +3317,7 @@ function itemDesc(k,id){const o=[];
     o.push(best+' – '+[f.h&&'🍎+'+f.h,f.c&&'🧼+'+f.c,f.f&&'🎈+'+f.f].filter(Boolean).join(' '));if(RECIPES.some(r=>Object.keys(r[2]).includes(id)))o.push(L('An ingredient for cooking.','En ingrediens til madlavning.'));if(RECIPES.some(r=>r[1]===id))o.push(L('You can also cook it yourself.','Du kan også lave den selv.'))}
   else if(k==='sup'){const s=SUP[id];if(!s)return'';const T={seed:()=>{const sd=SEEDS[id];return L(`Plant in a planting bed. Grows in ${fmtDur(sd[0]*60000)}, harvest +${sd[1]} 🪙.`,`Plant i et plantebed. Gror på ${fmtDur(sd[0]*60000)}, høst +${sd[1]} 🪙.`)},
       pet:()=>L('Fills a food bowl for one day.','Fylder en madskål for én dag.'),treat:()=>L('Give it to a pet for +3 ❤.','Giv det til et kæledyr for +3 ❤.'),fert:()=>L('Makes a crop grow twice as fast.','Får en afgrøde til at gro dobbelt så hurtigt.'),
-      gift:()=>L('Give it to a neighbour to make friends ❤.','Giv den til en nabo for at blive venner ❤.'),recipe:()=>L('Teaches you a new recipe for your stove.','Lærer dig en ny opskrift til dit komfur.'),
+      gift:()=>L('Give it to a neighbour to make friends ❤.','Giv den til en nabo for at blive venner ❤.'),recipe:()=>{const ds=bookDishes(id.slice(2));return L(`Cookbook – teaches ${ds.length} recipes: ${ds.map(f=>f.e+' '+f.en).join(', ')}.`,`Kogebog – lærer dig ${ds.length} opskrifter: ${ds.map(f=>f.e+' '+f.da).join(', ')}.`)},
       hamster:()=>L('A little pet – put it in a 🐹 hamster cage at home.','Et lille kæledyr – sæt den i et 🐹 hamsterbur derhjemme.'),hfood:()=>L('Food for your hamster – one a day.','Mad til din hamster – én om dagen.'),
       fish:()=>L(`A fish from the pond – sell it in any shop for ${Math.floor(s.price/2)} 🪙.`,`En fisk fra søen – sælg den i alle butikker for ${Math.floor(s.price/2)} 🪙.`),junk:()=>L('Rubbish from the pond. Worth almost nothing… sell it to clean your bag.','Skrald fra søen. Næsten intet værd… sælg det for at rydde tasken.')};o.push((T[s.type]||(()=>''))())}
   else if(k==='cloth'){const c=CLOTH[id];if(!c)return'';o.push(L('Clothes – wear them from your 👕 wardrobe.','Tøj – tag det på fra dit 👕 klædeskab.'))}
@@ -3360,6 +3384,7 @@ const Q_SPECIAL=[
  ['s_save5k','🏦','Save up 5,000 coins','Spar 5.000 mønter op',()=>[S.coins,5000],300,80,3],['s_save25k','🏦','Save up 25,000 coins','Spar 25.000 mønter op',()=>[S.coins,25000],1500,300,8],
  ['s_bill','🧾','Pay a bill on time','Betal en regning til tiden',()=>[S.cnt.billsOnTime||0,1],200,60,1],['s_bill5','🧾','Pay 5 bills on time','Betal 5 regninger til tiden',()=>[S.cnt.billsOnTime||0,5],800,200,1],
  ['s_clothes20','👗','Own 20 pieces of clothing','Ej 20 stykker tøj',()=>[S.wardrobe.length,20],500,120,4],['s_dressup','🎩','Wear a hat, glasses and an extra at once','Bær hat, briller og tilbehør på én gang',()=>[(S.outfit.hat&&S.outfit.glasses&&S.outfit.acc)?1:0,1],150,40,2],
+ ['s_books3','📚','Collect 3 cookbooks','Saml 3 kogebøger',()=>[(S.recipes||[]).length,3],300,80,2],['s_books11','📚','Collect all 11 cookbooks','Saml alle 11 kogebøger',()=>[(S.recipes||[]).length,11],1500,400,8],['s_dishes10','🍽️','Cook 10 different dishes','Lav 10 forskellige retter',()=>[(S.cookedIds||[]).length,10],600,150,3],['s_dishes30','👨‍🍳','Cook 30 different dishes','Lav 30 forskellige retter',()=>[(S.cookedIds||[]).length,30],2000,500,6],
  ['s_cook20','🍳','Cook 20 recipes in total','Lav 20 retter i alt',()=>[S.cnt.cooked||0,20],500,120,3],['s_friend','🤝','Hug or high-five a friend','Kram eller giv high five til en ven',()=>[S.cnt.hugs||0,1],150,40,1]];
 const Q_SEASON={halloween:[['e_hw_deco','🎃','Own 3 Halloween things','Ej 3 halloween-ting',()=>[ownAny(i=>FURN[i.id]&&FURN[i.id].cat==='halloween'),3],300,80],['e_hw_hat','🧙','Wear the Witch Hat','Bær heksehatten',()=>[S.outfit.hat==='hat_witch'?1:0,1],150,40]],
   xmas:[['e_x_tree','🎄','Put up a Christmas tree','Stil et juletræ op',()=>[ownAny(i=>i.id==='xmas_tree'),1],300,80],['e_x_hat','🎅','Wear the Santa Hat','Bær nissehuen',()=>[S.outfit.hat==='hat_santa'?1:0,1],150,40],['e_x_deco','❄️','Own 5 Christmas things','Ej 5 juleting',()=>[ownAny(i=>FURN[i.id]&&FURN[i.id].cat==='xmas'),5],500,120]],
