@@ -272,6 +272,9 @@ h1,h2,h3,.lil{font-family:'Lilita One',Nunito,sans-serif;font-weight:400;letter-
 @media (max-width:520px){.shHead h2{font-size:20px}.opp canvas{width:52px;height:52px}.city{width:88%}.tgrid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}.tro canvas{width:80px;height:94px}.sgrid{grid-template-columns:1fr 1fr}.item canvas{width:100%;height:auto;aspect-ratio:13/6}}
 @media (max-width:480px){#hud{gap:4px}.pc{gap:5px;padding:3px 4px 3px 3px}.pc.r{padding:3px 3px 3px 4px}.pc canvas{width:34px;height:34px}.pc .nm{font-size:12.5px}.pc .nm small{display:block;margin:0}#mid b{font-size:15px}.tray i{width:11px;height:11px}.tray{gap:1px}}
 @media (max-height:460px){#hud{height:calc(46px + var(--sat))}.pc canvas{width:32px;height:32px}.pc .nm{font-size:12px}#mid b{font-size:15px}.tray i{width:12px;height:12px}}
+.dcBtn{display:flex;align-items:center;justify-content:center;gap:10px;background:#5865f2;color:#fff!important;text-decoration:none!important;border-radius:14px;padding:9px 16px;font-family:inherit;font-weight:800;font-size:15px;line-height:1.15;text-align:left;box-shadow:0 4px 0 #3c45a5;transition:transform .12s}
+.dcBtn:hover{transform:translateY(-2px)}.dcBtn:active{transform:translateY(2px);box-shadow:none}
+.dcBtn svg{width:30px;height:24px;flex:none}.dcBtn small{display:block;font-size:11px;font-weight:700;opacity:.85}
 </style>
 </head>
 <body>
@@ -1491,6 +1494,7 @@ function renderMenu(){
       <button data-go="settings"><span>⚙️</span>${L('Settings','Indstillinger')}</button>
       <button data-go="help"><span>❓</span>${L('How to play','Sådan spiller du')}</button>
     </div>
+    <a class="dcBtn" href="https://discord.gg/kZa6F4s5f9" target="_blank" rel="noopener" style="grid-column:1/-1;justify-self:center;width:min(340px,100%)"><svg viewBox="0 0 127.14 96.36" aria-hidden="true"><path fill="currentColor" d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15ZM42.45 65.69C36.18 65.69 31 60 31 53s5-12.74 11.43-12.74S54 46 53.89 53s-5.05 12.69-11.44 12.69Zm42.24 0C78.41 65.69 73.25 60 73.25 53s5-12.74 11.44-12.74S96.23 46 96.12 53s-5.04 12.69-11.43 12.69Z"/></svg><span>${L('Join our Discord','Bliv en del af vores Discord')}<small>${L('Potato Team Games community','Potato Team Games-fællesskabet')}</small></span></a>
   </div>
   <div class="mfoot">Potato Team Games · ${L('Free · No download','Gratis · Ingen download')}</div>`;
   drawLogo($('#logoC'));
