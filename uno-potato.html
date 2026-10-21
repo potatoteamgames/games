@@ -157,7 +157,6 @@ button:disabled{cursor:not-allowed;opacity:.45}
 
 /* game hud */
 #hud{position:absolute;inset:0;pointer-events:none;z-index:30}
-#hud.hide~*{}
 #hud>*{pointer-events:auto}
 .tbtn{position:absolute;top:calc(14px + var(--st));width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.45);border:2px solid rgba(255,255,255,.2);font-size:18px;display:grid;place-items:center}
 #bMenu{left:16px}#bSnd{right:16px}
@@ -273,7 +272,7 @@ table.sc tr.win td{background:#fff1b8}
 </style>
 </head>
 <body>
-<div id="room">
+<div id="room" class="idle">
   <div id="felt"><div class="logoFelt lil">UNO Potato</div></div>
   <div id="ring"><svg viewBox="0 0 200 120" preserveAspectRatio="none"><g class="rot"></g></svg></div>
   <div id="colorDot"></div>
@@ -422,7 +421,8 @@ function canPlayRaw(card,tp,color,pending,pendKind,drawnId){
   return card.c===color||card.v===tp.v;
 }
 const canPlay=(seat,card)=>G.phase==='play'&&G.turn===seat&&canPlayRaw(card,topC(),G.color,G.pending,G.pendKind,G.drawnId);
-function ev(k,o={}){G.evSeq=(G.evSeq||0)+1;G.evs.push({s:G.evSeq,k,...o});if(G.evs.length>24)G.evs.shift()}
+const EVC=window.__evc={};
+function ev(k,o={}){EVC[k]=(EVC[k]||0)+1;G.evSeq=(G.evSeq||0)+1;G.evs.push({s:G.evSeq,k,...o});if(G.evs.length>24)G.evs.shift()}
 function newMatch(players,rules){
   G={players:players.map((p,i)=>({name:p.name,av:p.av!=null?p.av:i,ai:p.ai||null,ctl:p.ctl||'local',cid:p.cid||null,hand:[],spud:false,score:0,disc:false})),
     rules:{...rules},round:0,dealer:rnd(players.length),evs:[],evSeq:0,ver:0,me:0,phase:'idle'};
@@ -625,7 +625,7 @@ function layout(V){
   // my hand (fan, 1 or 2 rows)
   const maxW=W-pad*2,raise=CH*.16;
   let rows=1;const sp1=(maxW-CW)/Math.max(1,hand.length-1);
-  if(hand.length>9&&sp1<CW*.3)rows=2;
+  if(hand.length>8&&sp1<CW*.42)rows=2;
   const baseY=H-CH*.5-24-SAFEB;
   const handTop=baseY-CH*.5-raise-(rows===2?CH*.45:0);
   const topY=14+40+(n===2||n===4?AVS*.5+AVS*.5+18:AVS+18);
@@ -660,7 +660,7 @@ function handPositions(LY,hand){
   return out;
 }
 function backPositions(kind,sx,sy,n){
-  const m=Math.min(n,12),out=[],s=.42,step=Math.min(CW*.2,90/Math.max(m,1));
+  const m=Math.min(n,12),out=[],s=CW>=84?.5:.42,step=Math.min(CW*.24,(CW>=84?130:96)/Math.max(m,1));
   for(let i=0;i<m;i++){const o=i-(m-1)/2;
     if(kind==='L')out.push({x:sx+CH*s*.25,y:sy+o*step,r:90+o*3,s});
     else if(kind==='R')out.push({x:sx-CH*s*.25,y:sy+o*step,r:-90-o*3,s});
@@ -684,8 +684,8 @@ function render(V,instant){
 
   // ---- piles & ring
   setBox($('#deck'),LY.deck.x,LY.deck.y);
-  $('#deck .dn').textContent=V.deckN+' '+L('cards','kort');
-  const ringW=CW*3.6,ringH=CH*1.55,ring=$('#ring');
+  $('#deck .dn').textContent=V.deckN;$('#deck .dn').title=V.deckN+' '+L('cards left','kort tilbage');
+  const ringW=Math.min(CW*3.6,W-2*(40+AVS)),ringH=CH*1.55,ring=$('#ring');
   ring.style.cssText=`left:${LY.cx-ringW/2}px;top:${LY.cy-ringH/2}px;width:${ringW}px;height:${ringH}px;color:${V.color<4?COLORS[V.color].hex:'#fff'}`;
   ring.classList.toggle('ccw',V.dir<0);
   if(!ring._built){ring.querySelector('.rot').innerHTML=`<ellipse class="el" cx="100" cy="60" rx="96" ry="56" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="18 12" opacity=".8" vector-effect="non-scaling-stroke"/><g class="arw">`+[[100,4,0],[196,60,90],[100,116,180],[4,60,270]].map(([x,y,r])=>`<path transform="translate(${x} ${y}) rotate(${r})" d="M-8 -6 L8 0 L-8 6 Z" fill="currentColor" stroke="#1b120b" stroke-width="1.5"/>`).join('')+'</g>';ring._built=1}
@@ -765,8 +765,7 @@ function render(V,instant){
     else msg=cp.disc?L(`${cp.name} is reconnecting…`,`${cp.name} forbinder igen…`):L(`${cp.name} is thinking…`,`${cp.name} tænker…`);
   }else if(V.phase==='over')msg=L('Round over!','Runden er slut!');
   st.textContent=msg;st.className=cls;
-  st.style.top=(LY.cy+CH*.5+30)+'px';
-  if(LY.cy+CH*.5+30>LY.handTop-50)st.style.top=(LY.cy-CH*.5-24)+'px';
+  const sty=LY.cy+CH*.78+16;st.style.top=(sty>LY.handTop-30?LY.cy+CH*.5+26:sty)+'px';
   const dk=$('#deck');const canDraw=myTurn&&V.drawnId==null;
   const anyOk=myHand.some(c=>myTurn&&canPlayRaw(c,tp,V.color,V.pending,V.pendKind,V.drawnId));
   dk.classList.toggle('go',canDraw&&!anyOk);
@@ -933,7 +932,7 @@ function drawMenu(){
   $('#mHow').onclick=()=>{SFX.click();howTo()};
   $('#mSet').onclick=()=>{SFX.click();settings()};
 }
-function showMenu(){$('#menu').classList.remove('hide');drawMenu()}
+function showMenu(){$('#room').classList.add('idle');$('#menu').classList.remove('hide');drawMenu()}
 function segHTML(id,vals,cur,labels){return`<div class="seg" id="${id}">${vals.map((v,i)=>`<button data-v="${v}" class="${v==cur?'on':''}">${labels?labels[i]:v}</button>`).join('')}</div>`}
 function wireSeg(root,id,fn){root.querySelectorAll('#'+id+' button').forEach(b=>b.onclick=()=>{SFX.click();root.querySelectorAll('#'+id+' button').forEach(x=>x.classList.toggle('on',x===b));fn(b.dataset.v)})}
 const DIFFL=()=>[L('Easy','Let'),L('Normal','Normal'),L('Hard','Svær')];
@@ -956,7 +955,7 @@ function startLocal(cfg){
   for(let i=0;i<cfg.opp;i++)players.push({name:names[i],av:avs[i],ai:cfg.diff,ctl:'ai'});
   NET.role=null;newMatch(players,RULES);G.me=0;enterGame();commit();
 }
-function enterGame(){$('#menu').classList.add('hide');$$('.ov').forEach(o=>o.remove());$('#hud').classList.remove('hide');clearTableCards();measure()}
+function enterGame(){$('#room').classList.remove('idle');$('#menu').classList.add('hide');$$('.ov').forEach(o=>o.remove());$('#hud').classList.remove('hide');clearTableCards();measure()}
 function clearTableCards(){for(const k in EL){EL[k].remove();delete EL[k]}lastEv=-1;lastTurn=-2;lastResult=null}
 function rulesSheet(){
   const R={...RULES};
