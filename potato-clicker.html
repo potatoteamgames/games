@@ -676,7 +676,7 @@ body.chaos .toast b{color:#4dfcff}
         <div id="statList"></div>
         <div class="box">
           <h3>🪙 Soul Shop</h3>
-          <div class="note" style="margin:0">Every rebirth also gives Soul Coins 🪙 (1 per soul). Spend them on permanent perks.</div>
+          <div class="note" style="margin:0">Every rebirth also gives Soul Coins 🪙 (1 for every 10 souls, at least 1). Spend them on permanent perks.</div>
           <div class="tokens" id="tokTxt"></div>
           <div id="perkList"></div>
         </div>
@@ -1033,6 +1033,12 @@ const r=canExtract();$('#worldTag').classList.toggle('ready',r);$('#exTabBtn').c
 /* =============== CHANGELOG =============== */
 // newest first – add a new entry at the top every time the game is updated
 const CHANGELOG=[
+  {v:'1.8',date:'24 Oct 2026',t:'Rebirth balance',items:[
+    '⚖️ Souls now grow much slower: 1 soul at 10 B, 36 at 1 Qa, 81 at 1 Qi and about 1,100 at the very top. Rebirth can no longer give billions of percent.',
+    '⚖️ A Rebirth must be worth it: you need at least +10% more souls than you already have.',
+    '🪙 Soul Coins: you now get 1 for every 10 souls (at least 1 per Rebirth) instead of 1 per soul.',
+    '📚 Buying lots of machines at once gives at most 10% of a level in XP, so you no longer fly up in level.',
+    '🔧 Players who already have souls keep them until their next Rebirth. That Rebirth resets old souls and Soul Coins and gives you souls from the new formula. Perks you already bought stay.']},
   {v:'1.7.1',date:'24 Oct 2026',t:'Fix',items:[
     '🐛 Opening and closing Extract & Rebirth no longer hides the menu you were on.']},
   {v:'1.7',date:'24 Oct 2026',t:'Easier to find Extract',items:[
@@ -1094,7 +1100,7 @@ function defState(){return{
   aura:0,level:1,souls:0,rebirths:0,goldens:0,crits:0,vibes:0,boostsUsed:0,maxCombo:0,
   playTime:0,nextVibe:vibeGap(),vibePending:false,sound:true,buyAmt:1,started:Date.now(),
   bought:0,missions:[],missionsDone:0,lastDay:'',streak:0,dailyPending:false,nextSpin:60,spins:0,
-  world:0,medals:0,tokens:0,perks:{},shopHeat:{},shopStock:null,shopNext:0,bonus:0,chaosN:0,slotN:0,slotUntil:0,slotWins:0,shopT:0,autoBuy:true,drops:0,bestPow:0,nextRain:rand(150,300),nextWater:7200,v:3,
+  world:0,medals:0,tokens:0,perks:{},shopHeat:{},shopStock:null,shopNext:0,bonus:0,chaosN:0,slotN:0,slotUntil:0,slotWins:0,shopT:0,autoBuy:true,drops:0,bestPow:0,nextRain:rand(150,300),nextWater:7200,v:4,
   weather:null,nextEvent:rand(70,130),weathers:0,bandits:0,trains:0
 }}
 let S=defState(),D={};
@@ -1108,6 +1114,8 @@ function importObj(o){
   if(!S.shopHeat||typeof S.shopHeat!=='object')S.shopHeat={};
   if(o.tokens===undefined)S.tokens=S.souls||0;
   if(!o.v||o.v<3){S.nextVibe=Math.min(S.nextVibe,S.playTime+vibeGap());S.v=3}
+  // v4: the old soul formula ran away
+  if(S.v<4){if((S.souls||0)>0||(S.tokens||0)>0)S.soulReset=1;S.v=4} // old souls stay until the next Rebirth, which resets them to the new curve
 }
 function save(loud){try{localStorage.setItem(KEY,JSON.stringify(S));if(loud)toast('💾 Saved!','Your progress is safe')}catch(e){if(loud)toast('😬 Could not save','Your browser is blocking storage')}}
 
@@ -1406,7 +1414,7 @@ function fxAt(el,n){const r=el.getBoundingClientRect();burst(r.left+r.width/2,r.
 function buyMachine(i,el){
   if(vibe)return;const a=amtFor(i),c=machCost(i,a);
   if(S.potatoes<c){snd('no');return}
-  S.potatoes-=c;S.machines[i]+=a;S.bought+=a;addXP(2*a);recalc();snd('buy');fxAt(el);ensureMachines();renderHideout();updMachines();
+  S.potatoes-=c;S.machines[i]+=a;S.bought+=a;addXP(Math.min(2*a,need(S.level)*.1));recalc();snd('buy');fxAt(el);ensureMachines();renderHideout();updMachines();
 }
 function buyUpg(u,el){
   if(vibe||S.upgrades[u.id])return;if(S.potatoes<u.c){snd('no');return}
@@ -1603,7 +1611,13 @@ function checkAch(){
 }
 
 /* =============== STATS =============== */
-const soulsPending=()=>Math.max(0,Math.floor(Math.cbrt(S.allEarned/1e10))-S.souls);
+// souls grow slowly with all-time potatoes (1 at 10 B, 36 at 1 Qa, 81 at 1 Qi, ~1100 at TDc) so Rebirth can never run away
+const soulsFor=e=>e<1e10?0:Math.floor(Math.pow(Math.log10(e)-9,2));
+const soulsPending=()=>S.soulReset?soulsFor(S.allEarned):Math.max(0,soulsFor(S.allEarned)-S.souls);
+// a Rebirth must be worth it: at least +10% more souls than you have
+const soulsNeeded=()=>S.soulReset?1:Math.max(1,Math.ceil(S.souls*.1));
+// Soul Coins: 1 for every 10 souls (at least 1 per Rebirth)
+const coinsFor=p=>p>0?Math.max(1,Math.floor(p/10)):0;
 function updStats(){
   const st=[
     ['🥔 Potatoes (this run)',fmt(S.runEarned)],['🌍 Potatoes (all time)',fmt(S.allEarned)],
@@ -1619,8 +1633,9 @@ function updStats(){
   ];
   $('#statList').innerHTML=st.map(([a,b])=>`<div class="stat"><span>${a}</span><b>${b}</b></div>`).join('');
   const p=soulsPending();
-  $('#rebInfo').innerHTML=p>0?`You get <b style="color:var(--brass)">+${p} 👻 souls</b> (+${p*5}% forever) and +${p} 🪙`:`Earn more potatoes in total to get souls (first soul at ${fmt(1e10)} all time)`;
-  $('#rebBtn').disabled=p<1;
+  const pn=soulsNeeded(),ok=p>=pn;
+  $('#rebInfo').innerHTML=(S.soulReset?`<div style="color:var(--red);margin-bottom:4px">⚖️ Rebalance: at your next Rebirth your old ${fmt(S.souls)} souls and ${fmt(S.tokens)} 🪙 are reset. You start again with the souls from the new, fair formula.</div>`:'')+(ok?`You get <b style="color:var(--brass)">+${p} 👻 souls</b> (+${p*5}% forever) and +${coinsFor(p)} 🪙`:S.allEarned<1e10?`Earn more potatoes in total to get souls (first soul at ${fmt(1e10)} all time)`:`Souls ready: <b>${p}</b> / ${pn} needed (at least +10% of your ${S.souls} souls). Keep earning!`);
+  $('#rebBtn').disabled=!ok;
   const mx=isMax();
   $('#worldPick').style.display=mx?'':'none';
   if(mx){
@@ -2010,12 +2025,13 @@ function frame(t){
 
 /* =============== REBIRTH / SETTINGS =============== */
 $('#rebBtn').addEventListener('click',()=>{
-  const p=soulsPending(),mx=isMax(),to=mx?pickWorld:S.world,move=mx&&to!==S.world;if((p<1&&!move)||vibe)return;
+  let p=soulsPending();const mx=isMax(),to=mx?pickWorld:S.world,move=mx&&to!==S.world;if(p<soulsNeeded()){if(!move)return;p=0}if(vibe)return;const cn=coinsFor(p);
   const w=WORLDS[to];
-  if(!confirm(`✨ REBIRTH${mx?' to '+w.e+' '+w.n:''}\n\nYou lose: potatoes, level, machines, upgrades and active boosts.\nYou keep: style, trophies, bag and medals.\nYou get: +${p} Potato Souls (+${p*5}% forever) and +${p} 🪙 Soul Coins.${mx?'\nYou travel to '+w.e+' '+w.n+' (no new medal).':''}\n\nRebirth now?`))return;
+  if(!confirm(`✨ REBIRTH${mx?' to '+w.e+' '+w.n:''}\n\nYou lose: potatoes, level, machines, upgrades and active boosts.\nYou keep: style, trophies, bag and medals.\n${S.soulReset?'⚖️ Your old souls and Soul Coins are reset (rebalance).\n':''}You get: +${p} Potato Souls (+${p*5}% forever) and +${cn} 🪙 Soul Coins.${mx?'\nYou travel to '+w.e+' '+w.n+' (no new medal).':''}\n\nRebirth now?`))return;
   worldWarp({head:'✨ REBIRTH…',w,sub:(p?`+${p} 👻 souls · +${p*5}% forever`:'A fresh start')+(move?' · new world!':'')},()=>{
     if(mx){S.world=to;applyLook()}
-    S.souls+=p;S.tokens+=p;S.rebirths++;S.level=1;S.aura=0;S.exPopup=0;S.potatoes=PK('start')?Math.pow(10,2+PK('start')):0;S.runEarned=0;S.machines=MACHINES.map(()=>0);S.upgrades={};S.active={};disp=0;
+    if(S.soulReset){S.souls=0;S.tokens=0;S.soulReset=0}
+    S.souls+=p;S.tokens+=cn;S.rebirths++;S.level=1;S.aura=0;S.exPopup=0;S.potatoes=PK('start')?Math.pow(10,2+PK('start')):0;S.runEarned=0;S.machines=MACHINES.map(()=>0);S.upgrades={};S.active={};disp=0;
     recalc();renderHideout();upgKey='';save();
   },()=>toast('✨ REBORN!',(p?'+'+p+' souls. ':'')+(mx?'Welcome to '+WORLDS[S.world].e+' '+WORLDS[S.world].n+'!':'Start over — but stronger 💪')));
 });
