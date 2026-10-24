@@ -387,6 +387,15 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
 #clClose{align-self:center}
 @media (max-width:420px){.logo{font-size:16px!important;letter-spacing:0!important}#banner{gap:6px}}
 @media (max-width:760px){.clbtn{height:38px;padding:0 9px;font-size:17px}.clbtn .cll{display:none}}
+/* compact bars: label · bar · value on one line */
+.levelbox,#goal,#bonusBox{display:grid;grid-template-columns:auto minmax(40px,1fr) auto;align-items:center;column-gap:8px;padding:2px 9px;border-width:2px;border-radius:8px;font-size:12px;line-height:1.25;box-shadow:0 2px 0 rgba(0,0,0,.3)}
+.levelbox .lvl,#goal .gt,#bonusBox .gt{display:contents}
+#lvlNum,#goal .gt span,#bonusBox .gt span{order:1;white-space:nowrap}
+.levelbox .bar,#goal .bar,#bonusBox .bar{order:2;height:7px;margin:0;border-width:1px}
+#lvlTitle,#goal .gt b,#bonusBox .gt b{order:3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw;text-align:right}
+#goal .gt b{max-width:min(240px,40vw)}
+.levelbox .sub{display:none}
+@media (max-width:900px){.levelbox,#goal,#bonusBox{font-size:11px;padding:1px 8px}.levelbox .bar,#goal .bar,#bonusBox .bar{height:6px}}
 </style>
 </head>
 <body>
@@ -806,6 +815,7 @@ const CHANGELOG=[
     'The Headset now sits properly on the potato – band over the head, ear cups on the sides and a little microphone.',
     'New 📜 Update changelog button so you can always see what is new.',
     'New 🌀 Bonus Level bar! It fills slowly while you click, catch golden potatoes, pass sheriff checks and finish missions. At 100% BONUS CHAOS starts for 1 minute: x10 production, x10 clicks and golden potatoes everywhere. It is rare – about once an hour if you play actively.',
+    'The Level, Next goal and Bonus Level bars are slimmer, so the potato gets more room.',
     'Notifications have a new see-through look and never cover golden potatoes or other things you can catch.']},
   {v:'1.2',date:'21 Oct 2026',t:'Discord & phones',items:[
     'Join the Potato Team Games Discord with the new button at the top.',
@@ -1615,7 +1625,7 @@ function updLeft(){
   const lv=need(S.level);
   $('#lvlNum').textContent='Level '+S.level;$('#lvlTitle').textContent=title(S.level);
   $('#xpBar').style.width=(S.aura/lv*100)+'%';
-  $('#xpTxt').textContent=`📚 XP ${fmt(S.aura)} / ${fmt(lv)} · clicks, purchases and missions give XP${xpMult()>1?' (x3!)':''}`;
+  $('.levelbox').title=`📚 XP ${fmt(S.aura)} / ${fmt(lv)} · clicks, purchases and missions give XP${xpMult()>1?' (x3!)':''}`;
   $('#pps').textContent=`${fmt(cps(),1)} per second${prodBoost()!==1?(prodBoost()>1?' 🔥 x':' 🌪️ x')+fmt(prodBoost(),1):''}`;
   $('#chips').innerHTML=(S.weather?`<div class="chip wchip">${wx().e} ${wx().n} · ${Math.ceil(S.weather.t)}s</div>`:'')+Object.entries(S.active).map(([k,t])=>`<div class="chip">${ACTIVE_LBL[k]||k} · ${Math.ceil(t)}s</div>`).join('');
   $('#clickInfo').textContent=`👆 ${fmt(clickBase()*comboMult(),1)} per click · 💥 ${Math.round(critChance()*100)}% critical`;
