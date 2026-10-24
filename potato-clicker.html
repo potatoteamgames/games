@@ -274,6 +274,15 @@ h4{font-family:Rye,Georgia,serif;font-weight:400;margin:12px 0 6px;font-size:16p
 .streak{font-size:13px;color:#f0dcb4;margin-bottom:8px}
 .streak b{color:var(--brass)}
 .wheelbox{text-align:center}
+.slotbox{text-align:center}
+.slotm{display:flex;justify-content:center;gap:8px;margin:8px auto 8px;padding:10px;width:max-content;background:linear-gradient(#c8473a,#8e2a22);border:4px solid var(--ink);border-radius:14px;box-shadow:0 0 0 3px var(--brass),0 6px 14px #000a}
+.reel{width:64px;height:72px;display:flex;align-items:center;justify-content:center;font-size:40px;background:linear-gradient(#fff,var(--paper) 40%,var(--paper2));border:3px solid var(--ink);border-radius:8px;box-shadow:inset 0 6px 8px rgba(0,0,0,.25),inset 0 -6px 8px rgba(0,0,0,.25)}
+.reel.spin{animation:reelBlur .12s linear infinite}
+.reel.win{animation:reelWin .5s ease-in-out 3;box-shadow:0 0 0 3px #ffd84a,0 0 18px #ffd84a}
+@keyframes reelBlur{0%{transform:translateY(-3px);filter:blur(1px)}50%{transform:translateY(3px);filter:blur(1.5px)}100%{transform:translateY(-3px);filter:blur(1px)}}
+@keyframes reelWin{50%{transform:scale(1.12)}}
+.slotpay{font-size:11px;color:#f0dcb4;margin-bottom:8px;line-height:1.5}
+.slotleft{font-size:12px;color:#f0dcb4;margin-top:6px}
 .wheelWrap{position:relative;width:220px;height:220px;margin:8px auto 12px}
 #wheel{position:absolute;inset:0;border-radius:50%;border:7px solid var(--ink);box-shadow:0 0 0 4px var(--brass),0 6px 14px #000a;
   background:conic-gradient(#c8473a 0 45deg,#f3e2bd 45deg 90deg,#4f8a3a 90deg 135deg,#f0b84a 135deg 180deg,#8b5a2b 180deg 225deg,#f3e2bd 225deg 270deg,#2e6c8a 270deg 315deg,#f0b84a 315deg 360deg);
@@ -520,6 +529,14 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
           <div class="note">Free spin every 20 minutes of play</div>
           <div class="wheelWrap"><div id="wheelPtr">▼</div><div id="wheel"></div><div id="wheelHub">🥔</div></div>
           <button class="sbtn big" id="spinBtn">SPIN</button>
+        </div>
+        <div class="box slotbox">
+          <h3>🎰 Potato Slots</h3>
+          <div class="note">Free to play! Small wins often, big wins rarely. 50 spins, then the machine cools down for 60 minutes.</div>
+          <div class="slotm"><div class="reel" id="reel0">🥔</div><div class="reel" id="reel1">🌽</div><div class="reel" id="reel2">🤠</div></div>
+          <div class="slotpay">🥔🥔 any pair · 🥔🥔🥔 · 🌽🌽🌽 · 🤠🤠🤠 · ⭐⭐⭐ · 🍀🍀🍀 · 💎💎💎 JACKPOT</div>
+          <button class="sbtn big" id="slotBtn">🎰 SPIN</button>
+          <div class="slotleft" id="slotLeft"></div>
         </div>
       </div>
       <div class="tabc" id="t-look">
@@ -815,6 +832,7 @@ const CHANGELOG=[
     'The Headset now sits properly on the potato – band over the head, ear cups on the sides and a little microphone.',
     'New 📜 Update changelog button so you can always see what is new.',
     'New 🌀 Bonus Level bar! It fills slowly while you click, catch golden potatoes, pass sheriff checks and finish missions. At 100% BONUS CHAOS starts for 1 minute: x10 production, x10 clicks and golden potatoes everywhere. It is rare – about once an hour if you play actively.',
+    'New 🎰 Potato Slots in 📜 Missions, next to the Lucky Wheel! Free to play – small wins often, big wins rarely, and a 💎💎💎 JACKPOT. 50 spins, then the machine cools down for 60 minutes.',
     'The Level, Next goal and Bonus Level bars are slimmer, so the potato gets more room.',
     'Notifications have a new see-through look and never cover golden potatoes or other things you can catch.']},
   {v:'1.2',date:'21 Oct 2026',t:'Discord & phones',items:[
@@ -843,7 +861,7 @@ function defState(){return{
   aura:0,level:1,souls:0,rebirths:0,goldens:0,crits:0,vibes:0,boostsUsed:0,maxCombo:0,
   playTime:0,nextVibe:vibeGap(),vibePending:false,sound:true,buyAmt:1,started:Date.now(),
   bought:0,missions:[],missionsDone:0,lastDay:'',streak:0,dailyPending:false,nextSpin:60,spins:0,
-  tokens:0,perks:{},shopHeat:{},bonus:0,chaosN:0,shopT:0,autoBuy:true,drops:0,bestPow:0,nextRain:rand(150,300),nextWater:7200,v:3,
+  tokens:0,perks:{},shopHeat:{},bonus:0,chaosN:0,slotN:0,slotUntil:0,slotWins:0,shopT:0,autoBuy:true,drops:0,bestPow:0,nextRain:rand(150,300),nextWater:7200,v:3,
   weather:null,nextEvent:rand(70,130),weathers:0,bandits:0,trains:0
 }}
 let S=defState(),D={};
@@ -1441,6 +1459,60 @@ function updSpin(){
   else{b.textContent='⏳ Next spin in '+fmtTime(S.nextSpin-S.playTime);b.disabled=true}
 }
 
+/* =============== POTATO SLOTS =============== */
+// free slot machine: 50 spins, then a 60 minute cooldown (real time, also while away). Payouts are seconds of production.
+const SLOT_MAX=50,SLOT_CD=3600000,SLOT_SYM=['🥔','🌽','🤠','⭐','🍀','💎'];
+const prodWin=(sec,min)=>{const v=Math.max(min,D.base*sec);gain(v);return '+'+fmt(v)+' 🥔'};
+const SLOT_WIN=[
+  {w:55,lose:1},
+  {w:25,pair:1,n:'Pair',f:()=>prodWin(15,10)},
+  {w:10,s:'🥔',n:'Three potatoes',f:()=>prodWin(60,40)},
+  {w:5,s:'🌽',n:'Three corn',f:()=>prodWin(180,120)},
+  {w:3,s:'🤠',n:'Three cowboys',f:()=>prodWin(240,200)+' + 👆 Click Power',bag:'clickrizz'},
+  {w:1.5,s:'⭐',n:'Three stars',f:()=>{for(let i=0;i<3;i++)setTimeout(spawnGolden,i*450);return '3 golden potatoes – catch them!'}},
+  {w:.4,s:'🍀',n:'Three clovers',f:()=>prodWin(1200,2000)+' + 🔥 Production Party',bag:'frenzy',big:1},
+  {w:.1,s:'💎',n:'JACKPOT',f:()=>{addBonus(25);return 'JACKPOT! '+prodWin(3600,25000)+' + 25% Bonus Level'},big:1},
+];
+let slotSpinning=false;
+const slotCooling=()=>S.slotUntil&&Date.now()<S.slotUntil;
+function slotPlay(){
+  if(slotSpinning||vibe)return;
+  if(S.slotUntil&&Date.now()>=S.slotUntil){S.slotUntil=0;S.slotN=0}
+  if(slotCooling()){snd('no');return}
+  slotSpinning=true;S.slotN++;
+  if(S.slotN>=SLOT_MAX){S.slotUntil=Date.now()+SLOT_CD}
+  let r=Math.random()*SLOT_WIN.reduce((a,x)=>a+x.w,0),i=0;while((r-=SLOT_WIN[i].w)>0)i++;const res=SLOT_WIN[i];
+  // pick the three symbols that show this result
+  let face;
+  if(res.s)face=[res.s,res.s,res.s];
+  else if(res.pair){const a=pick(SLOT_SYM),b=pick(SLOT_SYM.filter(x=>x!==a)),k=Math.floor(Math.random()*3);face=[a,a,a];face[k]=b}
+  else{do{face=[pick(SLOT_SYM),pick(SLOT_SYM),pick(SLOT_SYM)]}while(face[0]===face[1]||face[1]===face[2]||face[0]===face[2])}
+  const reels=[0,1,2].map(k=>$('#reel'+k));reels.forEach(e=>{e.classList.remove('win');e.classList.add('spin')});
+  const iv=setInterval(()=>{reels.forEach(e=>{if(e.classList.contains('spin'))e.textContent=pick(SLOT_SYM)});snd('tick')},70);
+  [550,850,1150].forEach((t,k)=>setTimeout(()=>{reels[k].classList.remove('spin');reels[k].textContent=face[k];snd('pop',k*20)},t));
+  setTimeout(()=>{
+    clearInterval(iv);slotSpinning=false;
+    if(res.lose){toast('🎰 No luck','Try again!');updSlot();return}
+    if(res.bag){S.bag[res.bag]=(S.bag[res.bag]||0)+1;renderBag()}
+    const txt=res.f();S.slotWins++;
+    reels.forEach((e,k)=>{if(!res.pair||face[k]===face[(k+1)%3]||face[k]===face[(k+2)%3])e.classList.add('win')});
+    const rr=$('.slotm').getBoundingClientRect(),cx=rr.left+rr.width/2,cy=rr.top+rr.height/2;
+    burst(cx,cy,res.big?80:25);floatTxt(cx,cy-30,txt,'#ffd27a',res.big?30:22);
+    if(res.big){confetti(res.s==='💎'?260:120);snd('lvl')}else snd(res.pair?'buy':'ach');
+    toast('🎰 '+res.n+'!',txt);updSlot();
+  },1250);
+  updSlot();
+}
+$('#slotBtn').addEventListener('click',slotPlay);
+function updSlot(){
+  const b=$('#slotBtn'),l=$('#slotLeft');
+  if(S.slotUntil&&Date.now()>=S.slotUntil){S.slotUntil=0;S.slotN=0;toast('🎰 Potato Slots are ready!','50 new free spins in 📜 Missions');snd('ready')}
+  if(slotSpinning){b.textContent='🎰 Spinning...';b.disabled=true}
+  else if(slotCooling()){b.textContent='⏳ Cooling down '+fmtTime((S.slotUntil-Date.now())/1000);b.disabled=true}
+  else{b.textContent='🎰 SPIN';b.disabled=false}
+  l.textContent=slotCooling()?'The machine is cooling down – 50 new spins soon':`Spins left: ${SLOT_MAX-S.slotN}/${SLOT_MAX}`;
+}
+
 /* =============== DAILY CHEST =============== */
 const dayStr=d=>d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
 function checkDaily(){
@@ -1702,7 +1774,7 @@ function nextTicker(){
 /* =============== START =============== */
 load();buildShop();fullRefresh();clampActive();if(S.weather&&!WEATHER[S.weather.id])S.weather=null;if(S.weather)setWeatherFx();checkDaily();showDaily();
 setInterval(logic,50);
-setInterval(()=>{updBonus();updLeft();updMachines();updUpgrades();updShop();updLooks();updMissions();updSpin();updGoal();checkMilestone()},200);
+setInterval(()=>{updBonus();updSlot();updLeft();updMachines();updUpgrades();updShop();updLooks();updMissions();updSpin();updGoal();checkMilestone()},200);
 setInterval(()=>{checkAch();updStats();renderPerks();autoBuy()},1000);
 setInterval(checkDaily,60000);
 setInterval(()=>save(false),15000);
