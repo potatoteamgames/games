@@ -115,6 +115,15 @@ main{display:grid;grid-template-columns:minmax(0,1fr) 460px;min-height:0;min-wid
 #goal .gt b{color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #goal .bar{height:8px}
 #goalBar{background:linear-gradient(90deg,var(--green),var(--greenL))!important}
+#bonusBox{width:min(440px,94%);background:rgba(40,18,58,.85);border:3px solid var(--ink);border-radius:10px;padding:4px 10px;z-index:2;box-shadow:0 3px 0 rgba(0,0,0,.3);font-size:12px;color:#e2c8ff}
+#bonusBox .gt{display:flex;justify-content:space-between;gap:8px}#bonusBox .gt b{color:#fff;white-space:nowrap}
+#bonusBox .bar{height:8px}
+#bonusBar{background:linear-gradient(90deg,#8a2be2,#ff4fd8,#ffd84a)!important}
+#bonusBox.full{animation:chaosHue 1.2s linear infinite;border-color:#fff;color:#fff}
+#bonusBox.full #bonusBar{background:linear-gradient(90deg,#ff4d4d,#ffd84a,#5cff7a,#4dc3ff,#c84dff,#ff4d4d)!important;background-size:200% 100%!important;animation:chaosSlide .8s linear infinite}
+@keyframes chaosHue{to{filter:hue-rotate(360deg)}}
+@keyframes chaosSlide{to{background-position:200% 0}}
+#left.chaos #rays,#left.chaos #glow{animation:chaosHue 1.5s linear infinite}
 #potArea{position:relative;flex:0 0 auto;height:calc(var(--ps)*1.14);width:100%;display:flex;align-items:center;justify-content:center;z-index:2}
 #rays{position:absolute;width:calc(var(--ps)*1.5);height:calc(var(--ps)*1.5);border-radius:50%;
   background:repeating-conic-gradient(from 0deg,rgba(255,240,200,.28) 0 9deg,transparent 9deg 18deg);
@@ -265,6 +274,15 @@ h4{font-family:Rye,Georgia,serif;font-weight:400;margin:12px 0 6px;font-size:16p
 .streak{font-size:13px;color:#f0dcb4;margin-bottom:8px}
 .streak b{color:var(--brass)}
 .wheelbox{text-align:center}
+.slotbox{text-align:center}
+.slotm{display:flex;justify-content:center;gap:8px;margin:8px auto 8px;padding:10px;width:max-content;background:linear-gradient(#c8473a,#8e2a22);border:4px solid var(--ink);border-radius:14px;box-shadow:0 0 0 3px var(--brass),0 6px 14px #000a}
+.reel{width:64px;height:72px;display:flex;align-items:center;justify-content:center;font-size:40px;background:linear-gradient(#fff,var(--paper) 40%,var(--paper2));border:3px solid var(--ink);border-radius:8px;box-shadow:inset 0 6px 8px rgba(0,0,0,.25),inset 0 -6px 8px rgba(0,0,0,.25)}
+.reel.spin{animation:reelBlur .12s linear infinite}
+.reel.win{animation:reelWin .5s ease-in-out 3;box-shadow:0 0 0 3px #ffd84a,0 0 18px #ffd84a}
+@keyframes reelBlur{0%{transform:translateY(-3px);filter:blur(1px)}50%{transform:translateY(3px);filter:blur(1.5px)}100%{transform:translateY(-3px);filter:blur(1px)}}
+@keyframes reelWin{50%{transform:scale(1.12)}}
+.slotpay{font-size:11px;color:#f0dcb4;margin-bottom:8px;line-height:1.5}
+.slotleft{font-size:12px;color:#f0dcb4;margin-top:6px}
 .wheelWrap{position:relative;width:220px;height:220px;margin:8px auto 12px}
 #wheel{position:absolute;inset:0;border-radius:50%;border:7px solid var(--ink);box-shadow:0 0 0 4px var(--brass),0 6px 14px #000a;
   background:conic-gradient(#c8473a 0 45deg,#f3e2bd 45deg 90deg,#4f8a3a 90deg 135deg,#f0b84a 135deg 180deg,#8b5a2b 180deg 225deg,#f3e2bd 225deg 270deg,#2e6c8a 270deg 315deg,#f0b84a 315deg 360deg);
@@ -277,10 +295,11 @@ h4{font-family:Rye,Georgia,serif;font-weight:400;margin:12px 0 6px;font-size:16p
 
 /* ===== OVERLAYS ===== */
 #fx{position:fixed;inset:0;pointer-events:none;z-index:50}
-#toasts{position:fixed;left:14px;bottom:14px;display:flex;flex-direction:column-reverse;gap:8px;z-index:60;pointer-events:none;max-width:330px}
-.toast{background:linear-gradient(135deg,var(--paper),var(--paper2));color:var(--ink);border:3px solid var(--ink);border-radius:10px;padding:8px 12px;animation:tin .4s cubic-bezier(.2,1.6,.4,1);box-shadow:0 4px 0 #2a1708,0 10px 24px #0008}
-.toast b{display:block;font-size:15px;color:var(--red)}
-.toast small{font-size:12px;color:var(--ink2);font-weight:700}
+/* notifications sit under golden potatoes, drops and runners (z 40-42) so they never hide something you can catch */
+#toasts{position:fixed;left:14px;bottom:14px;display:flex;flex-direction:column-reverse;gap:6px;z-index:35;pointer-events:none;max-width:300px}
+.toast{background:rgba(28,14,5,.55);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);color:#fff3d6;border:1px solid rgba(255,210,122,.35);border-left:4px solid var(--brass);border-radius:8px 12px 12px 8px;padding:6px 12px;animation:tin .4s cubic-bezier(.2,1.6,.4,1);box-shadow:0 6px 18px rgba(0,0,0,.35);opacity:.92}
+.toast b{display:block;font-size:14px;color:#ffd27a;text-shadow:1px 1px 0 #0008}
+.toast small{font-size:12px;color:#f3e2bd;font-weight:700;opacity:.9}
 .toast.out{animation:tout .3s forwards}
 @keyframes tin{from{transform:translateX(-120%) scale(.6)}}
 @keyframes tout{to{transform:translateX(-120%);opacity:0}}
@@ -338,6 +357,7 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
   .bar{height:9px}
   .sub{display:none}
   #goal{padding:2px 8px;font-size:11px}
+  #bonusBox{padding:2px 8px;font-size:11px}
   #clickInfo{display:none}
   .cactus{font-size:30px}.cactus.c2{font-size:24px}
   #right{border-left:none;border-top:6px solid #2a1708}
@@ -348,7 +368,7 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
   .row .ri{font-size:24px;width:32px}
   .row .rn{font-size:14px}
   #toasts{left:50%;transform:translateX(-50%);top:4px;bottom:auto;width:min(92vw,360px);flex-direction:column;max-width:none}
-  .toast{padding:4px 10px;width:100%;opacity:.96}
+  .toast{padding:4px 10px;width:100%}
   .toast b{font-size:12px}.toast small{display:none}
   .golden{width:64px;height:64px}
   .vtitle{font-size:26px}
@@ -362,6 +382,63 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
 .dcBtn svg{width:30px;height:24px;flex:none}.dcBtn small{display:block;font-size:11px;font-weight:700;opacity:.85}
 .dchb{display:flex;align-items:center;justify-content:center;background:linear-gradient(#6f7bff,#5865f2);color:#fff;text-decoration:none}
 .dchb svg{width:62%}
+.clbtn{position:relative;flex-shrink:0;height:44px;padding:0 12px;font-family:inherit;font-weight:900;font-size:14px;white-space:nowrap;color:var(--ink);background:linear-gradient(var(--paper),var(--paper2));border:3px solid var(--ink);border-radius:10px;box-shadow:0 3px 0 #2a1708;transition:transform .12s;cursor:pointer}
+.clbtn:hover{transform:translateY(-2px)}.clbtn:active{transform:translateY(2px);box-shadow:none}
+.cldot{display:none;position:absolute;top:-6px;right:-6px;width:14px;height:14px;border-radius:50%;background:var(--red);border:2px solid var(--ink)}
+.clbtn.new .cldot{display:block}
+.clbox{text-align:left;max-height:86vh;display:flex;flex-direction:column}
+.clbox .vtitle{text-align:center;font-size:28px}
+#clList{overflow-y:auto;margin:10px 0 12px;padding-right:4px}
+.clv{border-top:2px dashed var(--ink2);padding:8px 0}.clv:first-child{border-top:0}
+.clv h4{margin:0 0 4px;font-size:16px}.clv h4 small{font-weight:700;opacity:.7;font-size:12px;margin-left:6px}
+.clv ul{margin:0;padding-left:20px;font-size:14px;line-height:1.4}
+.clv .cln{display:inline-block;background:var(--red);color:#fff;font-size:11px;padding:1px 7px;border-radius:999px;margin-left:6px;vertical-align:2px}
+#clClose{align-self:center}
+@media (max-width:420px){.logo{font-size:16px!important;letter-spacing:0!important}#banner{gap:6px}}
+@media (max-width:760px){.clbtn{height:38px;padding:0 9px;font-size:17px}.clbtn .cll{display:none}}
+/* compact bars: label · bar · value on one line */
+.levelbox,#goal,#bonusBox{display:grid;grid-template-columns:auto minmax(40px,1fr) auto;align-items:center;column-gap:8px;padding:2px 9px;border-width:2px;border-radius:8px;font-size:12px;line-height:1.25;box-shadow:0 2px 0 rgba(0,0,0,.3)}
+.levelbox .lvl,#goal .gt,#bonusBox .gt{display:contents}
+#lvlNum,#goal .gt span,#bonusBox .gt span{order:1;white-space:nowrap}
+.levelbox .bar,#goal .bar,#bonusBox .bar{order:2;height:7px;margin:0;border-width:1px}
+#lvlTitle,#goal .gt b,#bonusBox .gt b{order:3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw;text-align:right}
+#goal .gt b{max-width:min(240px,40vw)}
+.levelbox .sub{display:none}
+@media (max-width:900px){.levelbox,#goal,#bonusBox{font-size:11px;padding:1px 8px}.levelbox .bar,#goal .bar,#bonusBox .bar{height:6px}}
+/* ===== BONUS CHAOS THEME: the whole game turns into a neon space disco while chaos runs ===== */
+body.chaos{--ink:#ff4fd8;--ink2:#c9a5ff;--paper:#3a1670;--paper2:#1e0844;--wood:#1a0a3a;--woodD:#0b0320;--woodL:#3a1a7a;--brass:#4dfcff;--brassD:#1f9fc4;--cream:#fff;--red:#ff3d9a;--green:#22c47a;--greenL:#5cff9d;
+  --planks:radial-gradient(circle at 20% 30%,rgba(255,79,216,.18),transparent 40%),radial-gradient(circle at 80% 70%,rgba(77,252,255,.15),transparent 40%),linear-gradient(180deg,#14063a,#0b0320);background:#0b0320}
+body.chaos::before{content:'';position:fixed;inset:0;z-index:30;pointer-events:none;border:4px solid #ff4fd8;box-shadow:inset 0 0 40px rgba(255,79,216,.55),inset 0 0 90px rgba(77,252,255,.25);animation:chaosHue 2s linear infinite}
+body.chaos #banner{background:linear-gradient(90deg,#2a0a5e,#4a0f7a,#2a0a5e);border-bottom:4px solid #4dfcff;box-shadow:0 0 24px rgba(77,252,255,.6)}
+body.chaos #banner::before,body.chaos #banner::after{background:radial-gradient(circle,#fff,#ff4fd8)}
+body.chaos .logo{color:#fff;text-shadow:0 0 8px #ff4fd8,0 0 18px #ff4fd8,0 0 30px #4dfcff;animation:chaosHue 3s linear infinite}
+body.chaos .ticker{background:#14063a;color:#4dfcff;border-color:#ff4fd8;box-shadow:0 0 12px rgba(255,79,216,.6) inset}
+body.chaos .hbtn,body.chaos .homebtn,body.chaos .clbtn{background:linear-gradient(#5a1fa0,#2a0a5e);color:#fff;border-color:#4dfcff;box-shadow:0 0 12px rgba(77,252,255,.7)}
+body.chaos #left{background:radial-gradient(1.5px 1.5px at 12% 18%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 72% 12%,#fff 50%,transparent 51%),radial-gradient(2px 2px at 38% 40%,#ffd6fa 50%,transparent 51%),radial-gradient(1.5px 1.5px at 88% 46%,#fff 50%,transparent 51%),radial-gradient(2px 2px at 22% 62%,#c9fbff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 60% 70%,#fff 50%,transparent 51%),
+  radial-gradient(ellipse at 50% 110%,rgba(255,79,216,.55),transparent 60%),linear-gradient(180deg,#0b0320,#2a0a5e 55%,#5a0f6e);background-size:220px 220px,260px 260px,300px 300px,240px 240px,280px 280px,200px 200px,100% 100%,100% 100%;animation:chaosStars 6s linear infinite}
+body.chaos #left::after{height:22%;background:linear-gradient(transparent,rgba(255,79,216,.25)),repeating-linear-gradient(90deg,rgba(77,252,255,.75) 0 2px,transparent 2px 46px),repeating-linear-gradient(180deg,rgba(255,79,216,.8) 0 2px,transparent 2px 22px);transform:perspective(160px) rotateX(48deg);transform-origin:bottom;animation:chaosGrid .6s linear infinite}
+body.chaos .cactus,body.chaos .tumble{filter:hue-rotate(250deg) saturate(2) drop-shadow(0 0 8px #4dfcff)}
+body.chaos #count{color:#fff;text-shadow:0 0 10px #ff4fd8,0 0 24px #4dfcff}
+body.chaos .lbl{color:#4dfcff;text-shadow:0 0 8px #4dfcff}
+body.chaos #pps{background:#14063a;color:#fff;border-color:#4dfcff;box-shadow:0 0 10px #4dfcff}
+body.chaos .levelbox,body.chaos #goal{background:rgba(20,6,58,.85);border-color:#ff4fd8;box-shadow:0 0 10px rgba(255,79,216,.6)}
+body.chaos #potWrap svg{animation:hue 1.6s linear infinite}
+body.chaos #glow{background:radial-gradient(circle,rgba(255,79,216,.8),rgba(77,252,255,.35) 45%,transparent 70%)!important}
+body.chaos #right{border-left-color:#ff4fd8;box-shadow:inset 8px 0 24px rgba(255,79,216,.35)}
+body.chaos .tabs{background:rgba(11,3,32,.7);border-bottom-color:#4dfcff}
+body.chaos .tabs button{background:linear-gradient(#3a1670,#1e0844);border-color:#ff4fd8;box-shadow:0 0 8px rgba(255,79,216,.5);text-shadow:none}
+body.chaos .tabs button.on{background:linear-gradient(#4dfcff,#ff4fd8);color:#14063a}
+body.chaos h2,body.chaos h3{color:#fff;text-shadow:0 0 8px #ff4fd8,0 0 16px #4dfcff}
+body.chaos .box{background:rgba(11,3,32,.55);border-color:#4dfcff;box-shadow:0 0 12px rgba(77,252,255,.35) inset}
+body.chaos .row,body.chaos .card,body.chaos .mis{color:#fff;box-shadow:0 0 10px rgba(255,79,216,.45)}
+body.chaos .row .rc,body.chaos .row .rd{color:#e9d6ff}
+body.chaos .note{color:#e9d6ff}
+body.chaos .sbtn{background:linear-gradient(#ff4fd8,#8a2be2);border-color:#4dfcff;color:#fff}
+body.chaos .ubtn{background:linear-gradient(#5cff9d,#22c47a);color:#0b0320;text-shadow:none}
+body.chaos .toast{background:rgba(20,6,58,.6);border-color:rgba(77,252,255,.5);border-left-color:#ff4fd8}
+body.chaos .toast b{color:#4dfcff}
+@keyframes chaosStars{to{background-position:0 220px,0 260px,0 300px,0 240px,0 280px,0 200px,0 0,0 0}}
+@keyframes chaosGrid{to{background-position:0 0,0 0,0 22px}}
 </style>
 </head>
 <body>
@@ -374,6 +451,7 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
     <a class="homebtn" href="./" title="Back to Potato Team Games" aria-label="Back to Potato Team Games">⬅ <span class="hl1">All Games</span><span class="hl2">Home</span></a>
     <h1 class="logo" title="Potato Clicker">POTATO <small>CLICKER</small> <span>🥔</span></h1>
     <div class="ticker" aria-hidden="true"><div id="tick">Welcome to Potato Clicker 🥔 — the wildest potato game in the West.</div></div>
+    <button class="clbtn" id="clBtn" title="Update changelog" aria-label="Update changelog">📜<span class="cll"> Update changelog</span><i class="cldot" id="clDot"></i></button>
     <a class="hbtn dchb" href="https://discord.gg/kZa6F4s5f9" target="_blank" rel="noopener" title="Join the Potato Team Games Discord" aria-label="Join the Potato Team Games Discord"><svg viewBox="0 0 127.14 96.36" aria-hidden="true"><path fill="currentColor" d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15ZM42.45 65.69C36.18 65.69 31 60 31 53s5-12.74 11.43-12.74S54 46 53.89 53s-5.05 12.69-11.44 12.69Zm42.24 0C78.41 65.69 73.25 60 73.25 53s5-12.74 11.44-12.74S96.23 46 96.12 53s-5.04 12.69-11.43 12.69Z"/></svg></a>
     <button class="hbtn" id="sndBtn" title="Sound on/off" aria-label="Sound on/off">🔊</button>
     <button class="hbtn" id="saveBtn" title="Save game" aria-label="Save game">💾</button>
@@ -394,6 +472,7 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
         <div class="sub" id="xpTxt"></div>
       </div>
       <div id="goal"><div class="gt"><span>🎯 Next goal</span><b id="goalTxt"></b></div><div class="bar"><div id="goalBar"></div></div></div>
+      <div id="bonusBox" title="Bonus Level: fills slowly while you play. At 100% BONUS CHAOS starts for 1 minute!"><div class="gt"><span>🌀 Bonus Level</span><b id="bonusTxt">0%</b></div><div class="bar"><div id="bonusBar"></div></div></div>
       <div id="chips"></div>
       <div id="potArea">
         <div id="glow"></div>
@@ -430,6 +509,19 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
               <path d="M210 110 H156 Q152 110 153 116 L158 140 Q162 156 182 156 Q204 156 209 140 L214 116 Q214 110 210 110Z" fill="url(#lens)" stroke="#1a0d05" stroke-width="5" stroke-linejoin="round"/>
               <path d="M96 118 L112 118 L100 140Z M162 118 L178 118 L166 140Z" fill="#fff" opacity=".28"/>
             </g>
+            <g id="headset" style="display:none">
+              <defs><linearGradient id="cup" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4a4f5c"/><stop offset="100%" stop-color="#14161c"/></linearGradient></defs>
+              <path d="M32 140 C26 52 84 8 150 8 C216 8 274 52 268 140" stroke="#1a0d05" stroke-width="18" fill="none" stroke-linecap="round"/>
+              <path d="M32 140 C26 52 84 8 150 8 C216 8 274 52 268 140" stroke="#3b3f4a" stroke-width="10" fill="none" stroke-linecap="round"/>
+              <path d="M70 52 C96 26 124 18 150 18" stroke="#fff" stroke-width="3" opacity=".35" fill="none" stroke-linecap="round"/>
+              <path d="M30 168 Q50 214 112 214" stroke="#1a0d05" stroke-width="7" fill="none" stroke-linecap="round"/>
+              <circle cx="116" cy="214" r="9" fill="#2a2d36" stroke="#1a0d05" stroke-width="4"/>
+              <rect x="4" y="112" width="44" height="76" rx="20" fill="url(#cup)" stroke="#1a0d05" stroke-width="5"/>
+              <rect x="252" y="112" width="44" height="76" rx="20" fill="url(#cup)" stroke="#1a0d05" stroke-width="5"/>
+              <rect x="34" y="122" width="16" height="56" rx="8" fill="#ff4d6d" stroke="#1a0d05" stroke-width="3"/>
+              <rect x="250" y="122" width="16" height="56" rx="8" fill="#ff4d6d" stroke="#1a0d05" stroke-width="3"/>
+              <path d="M14 128 Q12 150 16 170 M286 128 Q288 150 284 170" stroke="#fff" stroke-width="3" opacity=".3" fill="none" stroke-linecap="round"/>
+            </g>
             <path id="mouth" d="M122 186 Q150 214 178 186" stroke="#3a1d08" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           <div id="acc"></div>
@@ -460,7 +552,7 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
         <div id="machList"></div>
       </div>
       <div class="tabc" id="t-upg"><h2>⬆️ Upgrades</h2><div class="note">Machines make potatoes. Upgrades make the things you already have <b>stronger</b>. Each upgrade is bought once. The colored tag tells you what it upgrades:</div><div class="uhelp"><span><b>🏭 MACHINE</b> = one machine type makes x2</span><span><b>🌍 ALL MACHINES</b> = every machine +25%</span><span><b>👆 CLICK</b> = more potatoes per click</span><span><b>💥 🔥 🌟 📚 ⏱️</b> = crits, combo, golden, XP, boosts</span></div><div class="note" id="upgNote"></div><div id="upgList"></div></div>
-      <div class="tabc" id="t-shop"><h2>🛒 Shop</h2><div class="note">Buy boosts now and save them in your bag for later. Prices follow your production — buy cheap now, use them when you're rich.</div><div id="shopList"></div></div>
+      <div class="tabc" id="t-shop"><h2>🛒 Shop</h2><div class="note">Buy boosts now and save them in your bag for later. Prices follow your production — buy cheap now, use them when you're rich. Every boost you buy makes the next one of that kind more expensive; prices drop back one step every 10 minutes. You can keep up to 10 of each boost from the shop.</div><div id="shopList"></div></div>
       <div class="tabc" id="t-bag"><h2>🎒 Your Bag</h2><div class="note">Your saved boosts. Tap USE whenever you want.</div><div id="bagList"></div></div>
       <div class="tabc" id="t-mis">
         <h2>📜 Missions</h2>
@@ -471,6 +563,14 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
           <div class="note">Free spin every 20 minutes of play</div>
           <div class="wheelWrap"><div id="wheelPtr">▼</div><div id="wheel"></div><div id="wheelHub">🥔</div></div>
           <button class="sbtn big" id="spinBtn">SPIN</button>
+        </div>
+        <div class="box slotbox">
+          <h3>🎰 Potato Slots</h3>
+          <div class="note">Free to play! Small wins often, big wins rarely. 50 spins, then the machine cools down for 60 minutes.</div>
+          <div class="slotm"><div class="reel" id="reel0">🥔</div><div class="reel" id="reel1">🌽</div><div class="reel" id="reel2">🤠</div></div>
+          <div class="slotpay">🥔🥔 any pair · 🥔🥔🥔 · 🌽🌽🌽 · 🤠🤠🤠 · ⭐⭐⭐ · 🍀🍀🍀 · 💎💎💎 JACKPOT</div>
+          <button class="sbtn big" id="slotBtn">🎰 SPIN</button>
+          <div class="slotleft" id="slotLeft"></div>
         </div>
       </div>
       <div class="tabc" id="t-look">
@@ -538,6 +638,13 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
     <div id="vq"></div>
     <div id="varea"></div>
     <div id="vmsg"></div>
+  </div>
+</div>
+<div id="clog" class="modal hidden">
+  <div class="mbox clbox">
+    <div class="vtitle">📜 UPDATE CHANGELOG</div>
+    <div id="clList"></div>
+    <button class="sbtn big" id="clClose">GOT IT 🤠</button>
   </div>
 </div>
 <div id="daily" class="modal hidden">
@@ -611,16 +718,19 @@ ROMAN.forEach((r,t)=>UPG.push({id:'xp'+t,n:'Smarter Potato '+r,e:'📚',d:'+1 XP
 ROMAN.slice(0,5).forEach((r,t)=>UPG.push({id:'bd'+t,n:'Long Party '+r,e:'⏱️',d:'All boosts last 20% longer',c:1e4*Math.pow(1000,t),t:'bdur',req:()=>S.boostsUsed>=1}));
 
 const BOOSTS=[
-  {id:'frenzy',e:'🔥',n:'Production Party',d:'x7 production for 60 sec',k:180,min:500,use:()=>addActive('frenzy',60)},
-  {id:'clickrizz',e:'👆',n:'Click Power',d:'x15 potatoes per click for 30 sec',k:120,min:300,use:()=>addActive('clickrizz',30)},
-  {id:'mewing',e:'🎯',n:'Sharpshooter',d:'50% critical click chance for 30 sec',k:120,min:600,use:()=>addActive('mewing',30)},
-  {id:'turbo',e:'🤖',n:'Robot Hand',d:'20 free clicks per second for 30 sec — the only legal auto clicker',k:150,min:800,use:()=>addActive('turbo',30)},
-  {id:'fanum',e:'⏩',n:'Time Skip',d:'Get 30 minutes of production instantly',k:900,min:1000,use:()=>{const v=Math.max(1000,D.base*1800);gain(v);bigFloat('⏩ +'+fmt(v),'#ffe08a')}},
-  {id:'goldrain',e:'🌟',n:'Gold Rain',d:'5 golden potatoes appear',k:600,min:5000,use:()=>{for(let i=0;i<5;i++)setTimeout(spawnGolden,i*450)}},
-  {id:'aura',e:'🧃',n:'XP Juice',d:'x3 XP for 5 minutes',k:300,min:2000,use:()=>addActive('aura',300)},
-  {id:'mystery',e:'🎁',n:'Mystery Box',d:'2-4 random boosts straight to your bag',k:400,min:1500,use:()=>{const n=2+Math.floor(Math.random()*3),got=[];for(let i=0;i<n;i++){const b=pick(BOOSTS.filter(x=>x.id!=='mystery'));S.bag[b.id]=(S.bag[b.id]||0)+1;got.push(b.e)}toast('🎁 Mystery Box!','You got: '+got.join(' '));renderBag()}},
+  {id:'frenzy',e:'🔥',n:'Production Party',d:'x7 production for 60 sec',k:240,min:500,g:.25,use:()=>addActive('frenzy',60)},
+  {id:'clickrizz',e:'👆',n:'Click Power',d:'x15 potatoes per click for 30 sec',k:150,min:300,g:.25,use:()=>addActive('clickrizz',30)},
+  {id:'mewing',e:'🎯',n:'Sharpshooter',d:'50% critical click chance for 30 sec',k:150,min:600,g:.25,use:()=>addActive('mewing',30)},
+  {id:'turbo',e:'🤖',n:'Robot Hand',d:'20 free clicks per second for 30 sec — the only legal auto clicker',k:200,min:800,g:.25,use:()=>addActive('turbo',30)},
+  {id:'fanum',e:'⏩',n:'Time Skip',d:'Get 30 minutes of production instantly',k:2700,min:5000,g:.6,use:()=>{const v=Math.max(1000,D.base*1800);gain(v);bigFloat('⏩ +'+fmt(v),'#ffe08a')}},
+  {id:'goldrain',e:'🌟',n:'Gold Rain',d:'5 golden potatoes appear',k:1200,min:5000,g:.4,use:()=>{for(let i=0;i<5;i++)setTimeout(spawnGolden,i*450)}},
+  {id:'aura',e:'🧃',n:'XP Juice',d:'x3 XP for 5 minutes',k:600,min:2000,g:.4,use:()=>addActive('aura',300)},
+  {id:'mystery',e:'🎁',n:'Mystery Box',d:'1-3 random boosts straight to your bag (Time Skip and Gold Rain are rare)',k:1000,min:3000,g:.6,use:()=>{const n=1+Math.floor(Math.random()*3),got=[];for(let i=0;i<n;i++){const b=boxPick();S.bag[b.id]=(S.bag[b.id]||0)+1;got.push(b.e)}toast('🎁 Mystery Box!','You got: '+got.join(' '));renderBag()}},
 ];
-const ACTIVE_LBL={frenzy:'🔥 x7 production',gfrenzy:'🌟 GOLD PARTY x7',clickrizz:'👆 x15 click',gclick:'⚡ CLICK FRENZY x77',mewing:'🎯 50% crit',turbo:'🤖 Robot Hand',aura:'🧃 x3 XP',sale:'🛒 Shop -50%'};
+// what a Mystery Box can give: small boosts often, the big ones rarely, never another box
+const BOX_W={frenzy:20,clickrizz:20,mewing:18,turbo:16,aura:12,goldrain:6,fanum:3};
+function boxPick(){let r=Math.random()*Object.values(BOX_W).reduce((a,b)=>a+b,0);for(const id in BOX_W){r-=BOX_W[id];if(r<0)return BOOSTS.find(b=>b.id===id)}return BOOSTS[0]}
+const ACTIVE_LBL={chaos:'🌀 BONUS CHAOS x10',frenzy:'🔥 x7 production',gfrenzy:'🌟 GOLD PARTY x7',clickrizz:'👆 x15 click',gclick:'⚡ CLICK FRENZY x77',mewing:'🎯 50% crit',turbo:'🤖 Robot Hand',aura:'🧃 x3 XP',sale:'🛒 Shop -50%'};
 
 const SKINS=[
   {id:'classic',t:'pot',n:'Classic',c:0,col:['#ffe0a3','#d99a4e','#8a5524'],g:'#ffb347'},
@@ -640,7 +750,7 @@ const SKINS=[
   {id:'bow',t:'acc',n:'Bow',c:2e6,e:'🎀',pos:[76,12,28]},
   {id:'crown',t:'acc',n:'Crown',c:2e8,e:'👑',pos:[50,2,40]},
   {id:'tophat',t:'acc',n:'Top Hat',c:2e10,e:'🎩',pos:[50,-4,46]},
-  {id:'headset',t:'acc',n:'Headset',c:2e12,e:'🎧',pos:[50,36,96]},
+  {id:'headset',t:'acc',n:'Headset',c:2e12,e:'🎧'},
   {id:'bg0',t:'bg',n:'Prairie',c:0,col:['#f0b46a','#c9733a','#7a3f1d']},
   {id:'bg1',t:'bg',n:'Sunset',c:1e4,col:['#ff8a5c','#c73866','#3d1e4a']},
   {id:'bg2',t:'bg',n:'Desert Night',c:1e6,col:['#2a3060','#1b1f3a','#0b0d1e']},
@@ -714,6 +824,70 @@ const TICK=[
 const CRITW=['CRITICAL!','BOOM!','WOW!','MEGA!','SUPER!','PERFECT!','HUGE!','YEEHAW!','BULLSEYE!'];
 const HYPE=['What a harvest! 🌾','Your potato is proud 🥹','New record! 🏆','The sheriff tips his hat 🤠','Yeehaw! 🐎','The Potato King is impressed 👑'];
 
+/* =============== BONUS LEVEL =============== */
+// a rare second bar: it fills slowly while you play (about once an hour for an active player) and at 100% starts BONUS CHAOS for 1 minute
+const BONUS={click:.003,auto:.001,idle:.006,golden:1.5,vibe:3,mission:1};
+let chaosGold=0,chaosRain=0;
+function addBonus(x){
+  if(S.active.chaos||vibe)return;
+  S.bonus=Math.min(100,(S.bonus||0)+x);
+  if(S.bonus>=100)startChaos();
+}
+function startChaos(){
+  S.bonus=0;S.chaosN=(S.chaosN||0)+1;S.active.chaos=60*(D.bd||1);chaosGold=1;chaosRain=0;
+  snd('lvl');snd('boost');confetti(200);
+  const m=$('#left');m.classList.remove('shake');void m.offsetWidth;m.classList.add('shake');
+  bigBanner('🌀 BONUS CHAOS!','x10 production · x10 clicks · golden potatoes everywhere · 1 minute!');
+  toast('🌀 BONUS CHAOS!','x10 production and clicks for 1 minute – click like crazy!');
+}
+function chaosTick(dt){
+  $('#left').classList.toggle('chaos',!!S.active.chaos);document.body.classList.toggle('chaos',!!S.active.chaos);
+  if(!S.active.chaos)return;
+  chaosGold-=dt;if(chaosGold<=0){chaosGold=rand(3,5);spawnGolden()}
+  chaosRain-=dt;while(chaosRain<=0&&P.length<500){chaosRain+=.12;P.push({k:'e',x:rand(0,innerWidth),y:-30,vx:rand(-1.5,1.5),vy:rand(1,4),l:2.6,m:2.6,r:rand(18,34),t:pick(['🥔','🥔','🌀','⭐','💥','🤠','✨']),rot:rand(-4,4),a:0})}
+}
+function updBonus(){
+  const box=$('#bonusBox'),on=!!S.active.chaos;
+  box.classList.toggle('full',on);
+  $('#bonusBar').style.width=(on?100:S.bonus||0)+'%';
+  $('#bonusTxt').textContent=on?'CHAOS! '+Math.ceil(S.active.chaos)+'s':(S.bonus||0).toFixed(1)+'%';
+}
+
+/* =============== CHANGELOG =============== */
+// newest first – add a new entry at the top every time the game is updated
+const CHANGELOG=[
+  {v:'1.3',date:'24 Oct 2026',t:'Bonus Level, Potato Slots & shop update',items:[
+    '🌀 New Bonus Level bar! It fills slowly while you click, catch golden potatoes, pass sheriff checks and finish missions.',
+    '🌀 At 100% BONUS CHAOS starts for 1 minute: x10 production, x10 clicks and golden potatoes everywhere. It is rare – about once an hour if you play actively.',
+    '🌀 During BONUS CHAOS the whole game changes into a neon space disco – stars, a glowing grid, neon menus and a rainbow potato.',
+    '🎰 New Potato Slots in 📜 Missions, next to the Lucky Wheel. Free to play – small wins often, big wins rarely, and a 💎💎💎 JACKPOT.',
+    '🎰 50 spins, then the slot machine cools down for 60 minutes.',
+    '🛒 Every boost you buy makes the next one of that kind more expensive. Prices drop back one step every 10 minutes – also while you are away.',
+    '🛒 The shop shows how much more expensive a boost has become and when it gets cheaper.',
+    '🛒 You can keep up to 10 of each boost from the shop in your bag. Free boosts do not count.',
+    '🛒 All boosts have new, higher prices. Time Skip can no longer be used to earn endless potatoes.',
+    '🎁 Mystery Box now gives 1-3 boosts instead of 2-4. Gold Rain and Time Skip are rare, and a box never gives another box.',
+    '🎧 The Headset now sits properly on the potato – band over the head, ear cups on the sides and a little microphone.',
+    '📏 The Level, Next goal and Bonus Level bars are slimmer, so the potato gets more room.',
+    '🔔 Notifications have a new see-through look and never cover golden potatoes or other things you can catch.',
+    '📜 New Update changelog button so you can always see what is new.']},
+  {v:'1.2',date:'21 Oct 2026',t:'Discord & phones',items:[
+    'Join the Potato Team Games Discord with the new button at the top.',
+    'Trains, bandits, golden potatoes and potato rain stay in the potato area and never cover the menus.',
+    'The potato fits above the menu on phones.']},
+  {v:'1.1',date:'19 Oct 2026',t:'Event chips',items:[
+    'Active events are shown as chips above the potato, so the helping hands never cover them.']},
+];
+const CL_KEY='potato_clicker_changelog_seen';
+function clSeen(){try{return localStorage.getItem(CL_KEY)}catch(e){return null}}
+function updClDot(){$('#clBtn').classList.toggle('new',clSeen()!==CHANGELOG[0].v)}
+function openChangelog(){
+  $('#clList').innerHTML=CHANGELOG.map((c,i)=>`<div class="clv"><h4>v${c.v} – ${c.t}<small>${c.date}</small>${i===0?'<span class="cln">NEW</span>':''}</h4><ul>${c.items.map(x=>`<li>${x}</li>`).join('')}</ul></div>`).join('');
+  $('#clog').classList.remove('hidden');
+  try{localStorage.setItem(CL_KEY,CHANGELOG[0].v)}catch(e){}
+  updClDot();
+}
+
 /* =============== STATE =============== */
 const vibeGap=()=>rand(540,660); // about every 10 minutes
 function defState(){return{
@@ -723,7 +897,7 @@ function defState(){return{
   aura:0,level:1,souls:0,rebirths:0,goldens:0,crits:0,vibes:0,boostsUsed:0,maxCombo:0,
   playTime:0,nextVibe:vibeGap(),vibePending:false,sound:true,buyAmt:1,started:Date.now(),
   bought:0,missions:[],missionsDone:0,lastDay:'',streak:0,dailyPending:false,nextSpin:60,spins:0,
-  tokens:0,perks:{},autoBuy:true,drops:0,bestPow:0,nextRain:rand(150,300),nextWater:7200,v:3,
+  tokens:0,perks:{},shopHeat:{},bonus:0,chaosN:0,slotN:0,slotUntil:0,slotWins:0,shopT:0,autoBuy:true,drops:0,bestPow:0,nextRain:rand(150,300),nextWater:7200,v:3,
   weather:null,nextEvent:rand(70,130),weathers:0,bandits:0,trains:0
 }}
 let S=defState(),D={};
@@ -734,6 +908,7 @@ function importObj(o){
   while(MACHINES.length<S.machines.length)addMachine();
   while(S.machines.length<MACHINES.length)S.machines.push(0);
   if(!S.active||typeof S.active!=='object')S.active={};
+  if(!S.shopHeat||typeof S.shopHeat!=='object')S.shopHeat={};
   if(o.tokens===undefined)S.tokens=S.souls||0;
   if(!o.v||o.v<3){S.nextVibe=Math.min(S.nextVibe,S.playTime+vibeGap());S.v=3}
 }
@@ -766,9 +941,9 @@ function recalc(){
   D={mm,glob:g*bonus,cm,cp,cc,cx,gf,cmax,flat,xpc,bd,base:base*g*bonus,bonus,achN,skinN,bAch,bLvl,bSoul,bSkin,g};
 }
 const wx=()=>(S.weather&&WEATHER[S.weather.id])||{};
-const prodBoost=()=>(S.active.frenzy?7:1)*(S.active.gfrenzy?7:1)*(wx().prod||1);
+const prodBoost=()=>(S.active.chaos?10:1)*(S.active.frenzy?7:1)*(S.active.gfrenzy?7:1)*(wx().prod||1);
 const cps=()=>D.base*prodBoost();
-const clickBoost=()=>(S.active.clickrizz?15:1)*(S.active.gclick?77:1)*(wx().click||1);
+const clickBoost=()=>(S.active.chaos?10:1)*(S.active.clickrizz?15:1)*(S.active.gclick?77:1)*(wx().click||1);
 const critChance=()=>S.active.mewing?0.5:Math.min(.9,D.cc+(wx().crit||0));
 const xpMult=()=>S.active.aura?3:1;
 const comboMult=()=>1+Math.floor(combo)*0.02;
@@ -782,7 +957,7 @@ function addXP(x){
   if(up)levelUp();
 }
 // boosts stack, but never past 2x their normal length
-const BDUR={frenzy:60,clickrizz:30,mewing:30,turbo:30,aura:300,gfrenzy:77,gclick:13,sale:60};
+const BDUR={chaos:60,frenzy:60,clickrizz:30,mewing:30,turbo:30,aura:300,gfrenzy:77,gclick:13,sale:60};
 const activeCap=id=>2*(BDUR[id]||60)*(D.bd||1);
 function addActive(id,t){S.active[id]=Math.min(activeCap(id),(S.active[id]||0)+t*(D.bd||1))}
 function clampActive(){for(const k in S.active)S.active[k]=Math.min(S.active[k],activeCap(k))}
@@ -889,7 +1064,7 @@ function doClick(x,y,auto){
   if(crit){v*=D.cx;S.crits++}
   v=Math.max(1,v);
   if(!auto&&S.weather&&S.weather.id==='dust')S.weather.t-=.4;
-  gain(v);S.clicks++;S.clickEarned+=v;
+  gain(v);S.clicks++;S.clickEarned+=v;addBonus(auto?BONUS.auto:BONUS.click);
   addXP(D.xpc*(crit?3:1));
   squish=1;tilt=rand(-1,1)*(crit?9:4);mouthOpen=1;
   if(auto){
@@ -952,7 +1127,7 @@ function spawnGolden(){
   setTimeout(()=>{if(!done){done=true;el.classList.add('bye');setTimeout(()=>el.remove(),600)}},13000);
 }
 function clickGolden(x,y){
-  S.goldens++;snd('gold');burst(x,y,40,['#ffd700','#fff3a0','#ffae00','#fff'],1.6);ring(x,y,'#ffd700',220);emojis(x,y,6,'✨');
+  S.goldens++;addBonus(BONUS.golden);snd('gold');burst(x,y,40,['#ffd700','#fff3a0','#ffae00','#fff'],1.6);ring(x,y,'#ffd700',220);emojis(x,y,6,'✨');
   let r=Math.random(),t,s;
   // no stacking parties: if it's already running you get lucky potatoes instead
   if((r>=.45&&r<.75&&S.active.gfrenzy)||(r>=.75&&r<.88&&S.active.gclick))r=0;
@@ -1005,7 +1180,7 @@ function buildChallenge(){
 }
 function failVibe(){snd('no');$('#vmsg').textContent=pick(['Wrong — try again','Oops! One more try','Almost! Try again']);const bx=$('#vbox');bx.classList.remove('shake');void bx.offsetWidth;bx.classList.add('shake');setTimeout(buildChallenge,350)}
 function passVibe(){
-  vibe=null;S.vibePending=false;S.vibes++;S.nextVibe=S.playTime+vibeGap();
+  vibe=null;S.vibePending=false;S.vibes++;addBonus(BONUS.vibe);S.nextVibe=S.playTime+vibeGap();
   $('#vibe').classList.add('hidden');clearInterval(titleFlash);
   const v=Math.max(100,D.base*120);gain(v);addXP(100);
   snd('ach');confetti(80);toast('✅ Approved by the sheriff','Thanks for being here! Bonus: +'+fmt(v)+' potatoes and +100 XP');
@@ -1039,10 +1214,21 @@ function buyUpg(u,el){
   if(vibe||S.upgrades[u.id])return;if(S.potatoes<u.c){snd('no');return}
   S.potatoes-=u.c;S.upgrades[u.id]=1;addXP(10);recalc();snd('buy');fxAt(el,30);toast('⬆️ '+u.n,u.d);upgKey='';
 }
-const boostCost=b=>Math.max(b.min,D.base*b.k)*(1-.1*PK('boost'))*(S.active.sale?.5:1);
+// every boost you buy makes the next one of that kind dearer; the price cools back down by one step every 10 minutes (also while away)
+const HEAT_MS=600000,SHOP_CAP=10;
+const heatMult=b=>Math.pow(1+b.g,S.shopHeat[b.id]||0);
+const boostCost=b=>Math.max(b.min,D.base*b.k)*heatMult(b)*(1-.1*PK('boost'))*(S.active.sale?.5:1);
+function coolShop(){
+  const now=Date.now();if(!S.shopT||S.shopT>now){S.shopT=now;return}
+  const n=Math.floor((now-S.shopT)/HEAT_MS);if(n<1)return;S.shopT+=n*HEAT_MS;
+  for(const k in S.shopHeat){S.shopHeat[k]-=n;if(S.shopHeat[k]<=0)delete S.shopHeat[k]}
+  if(!Object.keys(S.shopHeat).length)S.shopT=now;
+}
 function buyBoost(b,el){
   if(vibe)return;const c=boostCost(b);if(S.potatoes<c){snd('no');return}
-  S.potatoes-=c;S.bag[b.id]=(S.bag[b.id]||0)+1;snd('buy');fxAt(el);const r=el.getBoundingClientRect();floatTxt(r.left+r.width/2,r.top+10,'+1 '+b.e+' in bag','#ffd27a',20);renderBag();
+  if((S.bag[b.id]||0)>=SHOP_CAP){snd('no');toast('🎒 Bag full','You can keep '+SHOP_CAP+' '+b.e+' '+b.n+' at a time — use some first');return}
+  coolShop();if(!S.shopHeat[b.id]&&!Object.keys(S.shopHeat).length)S.shopT=Date.now();
+  S.potatoes-=c;S.shopHeat[b.id]=(S.shopHeat[b.id]||0)+1;S.bag[b.id]=(S.bag[b.id]||0)+1;snd('buy');fxAt(el);const r=el.getBoundingClientRect();floatTxt(r.left+r.width/2,r.top+10,'+1 '+b.e+' in bag','#ffd27a',20);renderBag();
 }
 function useBoost(id){
   if(vibe||!S.bag[id])return;const b=BOOSTS.find(x=>x.id===id);
@@ -1065,6 +1251,7 @@ function applyLook(){
   r.setProperty('--b1',b.col[0]);r.setProperty('--b2',b.col[1]);r.setProperty('--b3',b.col[2]);
   const a=SKINS.find(s=>s.id===S.acc),ac=$('#acc');
   $('#shades').style.display=S.acc==='shades'?'':'none';
+  $('#headset').style.display=S.acc==='headset'?'':'none';
   if(a&&a.pos){ac.textContent=a.e;ac.style.left=a.pos[0]+'%';ac.style.top=a.pos[1]+'%';ac.style.fontSize=`calc(var(--ps)*${a.pos[2]/100})`}else ac.textContent='';
 }
 
@@ -1148,7 +1335,12 @@ function buildShop(){
     el.addEventListener('click',()=>buyBoost(b,el));$('#shopList').appendChild(el);
     shopEls.push({b,el,c:el.querySelector('.rc'),o:el.querySelector('.ro')})});
 }
-function updShop(){shopEls.forEach(s=>{const c=boostCost(s.b);s.c.textContent='🥔 '+fmt(c);s.o.textContent=S.bag[s.b.id]?'🎒'+S.bag[s.b.id]:'';s.el.classList.toggle('can',S.potatoes>=c)})}
+function updShop(){
+  coolShop();const left=Math.max(0,HEAT_MS-(Date.now()-S.shopT)),mm=Math.floor(left/60000),ss=String(Math.floor(left/1000)%60).padStart(2,'0');
+  shopEls.forEach(s=>{const c=boostCost(s.b),h=S.shopHeat[s.b.id]||0,full=(S.bag[s.b.id]||0)>=SHOP_CAP;
+    const t='🥔 '+fmt(c)+(h?` · 📈 x${heatMult(s.b).toFixed(1)} (cheaper in ${mm}:${ss})`:` · +${Math.round(s.b.g*100)}% per buy`);
+    if(s.c.textContent!==t)s.c.textContent=t;
+    s.o.textContent=S.bag[s.b.id]?'🎒'+S.bag[s.b.id]+(full?' MAX':''):'';s.el.classList.toggle('can',S.potatoes>=c&&!full)})}
 let lookKey='',lookEls=[];
 function updLooks(){
   const key=JSON.stringify(S.skins)+S.skin+S.acc+S.bg;
@@ -1265,7 +1457,7 @@ function claimMission(m,el){
   const v=(m.t==='earn'?m.x*.05:Math.max(100,D.base*rand(20,45)))*mult;
   gain(v);addXP(need(S.level)*.12*(1+.5*PK('mission'))/xpMult());
   let extra='';if(Math.random()<.08+Math.min(.12,S.missionsDone/1000)){const b=pick(BOOSTS);S.bag[b.id]=(S.bag[b.id]||0)+1;extra=' + '+b.e+' boost';renderBag()}
-  S.missionsDone++;S.missions.splice(k,1);fillMissions();
+  S.missionsDone++;addBonus(BONUS.mission);S.missions.splice(k,1);fillMissions();
   snd('ach');fxAt(el,40);confetti(35);toast('📜 Mission complete!','+'+fmt(v)+' 🥔 + XP'+extra);updMissions();
 }
 
@@ -1303,6 +1495,60 @@ function updSpin(){
   else{b.textContent='⏳ Next spin in '+fmtTime(S.nextSpin-S.playTime);b.disabled=true}
 }
 
+/* =============== POTATO SLOTS =============== */
+// free slot machine: 50 spins, then a 60 minute cooldown (real time, also while away). Payouts are seconds of production.
+const SLOT_MAX=50,SLOT_CD=3600000,SLOT_SYM=['🥔','🌽','🤠','⭐','🍀','💎'];
+const prodWin=(sec,min)=>{const v=Math.max(min,D.base*sec);gain(v);return '+'+fmt(v)+' 🥔'};
+const SLOT_WIN=[
+  {w:55,lose:1},
+  {w:25,pair:1,n:'Pair',f:()=>prodWin(15,10)},
+  {w:10,s:'🥔',n:'Three potatoes',f:()=>prodWin(60,40)},
+  {w:5,s:'🌽',n:'Three corn',f:()=>prodWin(180,120)},
+  {w:3,s:'🤠',n:'Three cowboys',f:()=>prodWin(240,200)+' + 👆 Click Power',bag:'clickrizz'},
+  {w:1.5,s:'⭐',n:'Three stars',f:()=>{for(let i=0;i<3;i++)setTimeout(spawnGolden,i*450);return '3 golden potatoes – catch them!'}},
+  {w:.4,s:'🍀',n:'Three clovers',f:()=>prodWin(1200,2000)+' + 🔥 Production Party',bag:'frenzy',big:1},
+  {w:.1,s:'💎',n:'JACKPOT',f:()=>{addBonus(25);return 'JACKPOT! '+prodWin(3600,25000)+' + 25% Bonus Level'},big:1},
+];
+let slotSpinning=false;
+const slotCooling=()=>S.slotUntil&&Date.now()<S.slotUntil;
+function slotPlay(){
+  if(slotSpinning||vibe)return;
+  if(S.slotUntil&&Date.now()>=S.slotUntil){S.slotUntil=0;S.slotN=0}
+  if(slotCooling()){snd('no');return}
+  slotSpinning=true;S.slotN++;
+  if(S.slotN>=SLOT_MAX){S.slotUntil=Date.now()+SLOT_CD}
+  let r=Math.random()*SLOT_WIN.reduce((a,x)=>a+x.w,0),i=0;while((r-=SLOT_WIN[i].w)>0)i++;const res=SLOT_WIN[i];
+  // pick the three symbols that show this result
+  let face;
+  if(res.s)face=[res.s,res.s,res.s];
+  else if(res.pair){const a=pick(SLOT_SYM),b=pick(SLOT_SYM.filter(x=>x!==a)),k=Math.floor(Math.random()*3);face=[a,a,a];face[k]=b}
+  else{do{face=[pick(SLOT_SYM),pick(SLOT_SYM),pick(SLOT_SYM)]}while(face[0]===face[1]||face[1]===face[2]||face[0]===face[2])}
+  const reels=[0,1,2].map(k=>$('#reel'+k));reels.forEach(e=>{e.classList.remove('win');e.classList.add('spin')});
+  const iv=setInterval(()=>{reels.forEach(e=>{if(e.classList.contains('spin'))e.textContent=pick(SLOT_SYM)});snd('tick')},70);
+  [550,850,1150].forEach((t,k)=>setTimeout(()=>{reels[k].classList.remove('spin');reels[k].textContent=face[k];snd('pop',k*20)},t));
+  setTimeout(()=>{
+    clearInterval(iv);slotSpinning=false;
+    if(res.lose){toast('🎰 No luck','Try again!');updSlot();return}
+    if(res.bag){S.bag[res.bag]=(S.bag[res.bag]||0)+1;renderBag()}
+    const txt=res.f();S.slotWins++;
+    reels.forEach((e,k)=>{if(!res.pair||face[k]===face[(k+1)%3]||face[k]===face[(k+2)%3])e.classList.add('win')});
+    const rr=$('.slotm').getBoundingClientRect(),cx=rr.left+rr.width/2,cy=rr.top+rr.height/2;
+    burst(cx,cy,res.big?80:25);floatTxt(cx,cy-30,txt,'#ffd27a',res.big?30:22);
+    if(res.big){confetti(res.s==='💎'?260:120);snd('lvl')}else snd(res.pair?'buy':'ach');
+    toast('🎰 '+res.n+'!',txt);updSlot();
+  },1250);
+  updSlot();
+}
+$('#slotBtn').addEventListener('click',slotPlay);
+function updSlot(){
+  const b=$('#slotBtn'),l=$('#slotLeft');
+  if(S.slotUntil&&Date.now()>=S.slotUntil){S.slotUntil=0;S.slotN=0;toast('🎰 Potato Slots are ready!','50 new free spins in 📜 Missions');snd('ready')}
+  if(slotSpinning){b.textContent='🎰 Spinning...';b.disabled=true}
+  else if(slotCooling()){b.textContent='⏳ Cooling down '+fmtTime((S.slotUntil-Date.now())/1000);b.disabled=true}
+  else{b.textContent='🎰 SPIN';b.disabled=false}
+  l.textContent=slotCooling()?'The machine is cooling down – 50 new spins soon':`Spins left: ${SLOT_MAX-S.slotN}/${SLOT_MAX}`;
+}
+
 /* =============== DAILY CHEST =============== */
 const dayStr=d=>d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
 function checkDaily(){
@@ -1317,6 +1563,10 @@ function showDaily(){
   $('#dDays').innerHTML=[1,2,3,4,5,6,7].map(d=>`<div class="day ${d<c?'past':d===c?'now':''}"><i>${d===7?'💎':d<c?'✅':'🎁'}</i>Day ${d}</div>`).join('');
   $('#daily').classList.remove('hidden');
 }
+$('#clBtn').addEventListener('click',()=>{snd('tick');openChangelog()});
+$('#clClose').addEventListener('click',()=>{snd('tick');$('#clog').classList.add('hidden')});
+$('#clog').addEventListener('click',e=>{if(e.target.id==='clog')$('#clog').classList.add('hidden')});
+updClDot();
 $('#dOpen').addEventListener('click',e=>{
   if(!e.isTrusted||!S.dailyPending)return;
   const c=(S.streak-1)%7+1,n=c===7?5:1+Math.floor(c/2),v=Math.max(1000*S.streak,D.base*300*c),got=[];
@@ -1483,7 +1733,7 @@ function updLeft(){
   const lv=need(S.level);
   $('#lvlNum').textContent='Level '+S.level;$('#lvlTitle').textContent=title(S.level);
   $('#xpBar').style.width=(S.aura/lv*100)+'%';
-  $('#xpTxt').textContent=`📚 XP ${fmt(S.aura)} / ${fmt(lv)} · clicks, purchases and missions give XP${xpMult()>1?' (x3!)':''}`;
+  $('.levelbox').title=`📚 XP ${fmt(S.aura)} / ${fmt(lv)} · clicks, purchases and missions give XP${xpMult()>1?' (x3!)':''}`;
   $('#pps').textContent=`${fmt(cps(),1)} per second${prodBoost()!==1?(prodBoost()>1?' 🔥 x':' 🌪️ x')+fmt(prodBoost(),1):''}`;
   $('#chips').innerHTML=(S.weather?`<div class="chip wchip">${wx().e} ${wx().n} · ${Math.ceil(S.weather.t)}s</div>`:'')+Object.entries(S.active).map(([k,t])=>`<div class="chip">${ACTIVE_LBL[k]||k} · ${Math.ceil(t)}s</div>`).join('');
   $('#clickInfo').textContent=`👆 ${fmt(clickBase()*comboMult(),1)} per click · 💥 ${Math.round(critChance()*100)}% critical`;
@@ -1497,6 +1747,7 @@ function logic(){
   if(vibe)return;
   S.playTime+=dt;
   for(const k in S.active){S.active[k]-=dt;if(S.active[k]<=0){delete S.active[k];toast('⌛ Boost ended',(ACTIVE_LBL[k]||k)+' has run out')}}
+  addBonus(BONUS.idle*dt);chaosTick(dt);
   gain(cps()*dt); // no passive XP — level only goes up when you do something
   if(S.active.turbo){turboAcc+=dt*20;const r=pot.getBoundingClientRect();while(turboAcc>=1){turboAcc--;doClick(r.left+r.width*rand(.25,.75),r.top+r.height*rand(.25,.75),true)}}else turboAcc=0;
   goldT-=dt*(S.weather&&S.weather.id==='rainbow'?3:1);if(goldT<=0){goldT=rand(60,180)*D.gf;spawnGolden()}
@@ -1559,7 +1810,7 @@ function nextTicker(){
 /* =============== START =============== */
 load();buildShop();fullRefresh();clampActive();if(S.weather&&!WEATHER[S.weather.id])S.weather=null;if(S.weather)setWeatherFx();checkDaily();showDaily();
 setInterval(logic,50);
-setInterval(()=>{updLeft();updMachines();updUpgrades();updShop();updLooks();updMissions();updSpin();updGoal();checkMilestone()},200);
+setInterval(()=>{updBonus();updSlot();updLeft();updMachines();updUpgrades();updShop();updLooks();updMissions();updSpin();updGoal();checkMilestone()},200);
 setInterval(()=>{checkAch();updStats();renderPerks();autoBuy()},1000);
 setInterval(checkDaily,60000);
 setInterval(()=>save(false),15000);
