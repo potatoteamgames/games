@@ -460,7 +460,7 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
         <div id="machList"></div>
       </div>
       <div class="tabc" id="t-upg"><h2>⬆️ Upgrades</h2><div class="note">Machines make potatoes. Upgrades make the things you already have <b>stronger</b>. Each upgrade is bought once. The colored tag tells you what it upgrades:</div><div class="uhelp"><span><b>🏭 MACHINE</b> = one machine type makes x2</span><span><b>🌍 ALL MACHINES</b> = every machine +25%</span><span><b>👆 CLICK</b> = more potatoes per click</span><span><b>💥 🔥 🌟 📚 ⏱️</b> = crits, combo, golden, XP, boosts</span></div><div class="note" id="upgNote"></div><div id="upgList"></div></div>
-      <div class="tabc" id="t-shop"><h2>🛒 Shop</h2><div class="note">Buy boosts now and save them in your bag for later. Prices follow your production — buy cheap now, use them when you're rich.</div><div id="shopList"></div></div>
+      <div class="tabc" id="t-shop"><h2>🛒 Shop</h2><div class="note">Buy boosts now and save them in your bag for later. Prices follow your production — buy cheap now, use them when you're rich. Every boost you buy makes the next one of that kind more expensive; prices drop back one step every 10 minutes. You can keep up to 10 of each boost from the shop.</div><div id="shopList"></div></div>
       <div class="tabc" id="t-bag"><h2>🎒 Your Bag</h2><div class="note">Your saved boosts. Tap USE whenever you want.</div><div id="bagList"></div></div>
       <div class="tabc" id="t-mis">
         <h2>📜 Missions</h2>
@@ -611,15 +611,18 @@ ROMAN.forEach((r,t)=>UPG.push({id:'xp'+t,n:'Smarter Potato '+r,e:'📚',d:'+1 XP
 ROMAN.slice(0,5).forEach((r,t)=>UPG.push({id:'bd'+t,n:'Long Party '+r,e:'⏱️',d:'All boosts last 20% longer',c:1e4*Math.pow(1000,t),t:'bdur',req:()=>S.boostsUsed>=1}));
 
 const BOOSTS=[
-  {id:'frenzy',e:'🔥',n:'Production Party',d:'x7 production for 60 sec',k:180,min:500,use:()=>addActive('frenzy',60)},
-  {id:'clickrizz',e:'👆',n:'Click Power',d:'x15 potatoes per click for 30 sec',k:120,min:300,use:()=>addActive('clickrizz',30)},
-  {id:'mewing',e:'🎯',n:'Sharpshooter',d:'50% critical click chance for 30 sec',k:120,min:600,use:()=>addActive('mewing',30)},
-  {id:'turbo',e:'🤖',n:'Robot Hand',d:'20 free clicks per second for 30 sec — the only legal auto clicker',k:150,min:800,use:()=>addActive('turbo',30)},
-  {id:'fanum',e:'⏩',n:'Time Skip',d:'Get 30 minutes of production instantly',k:900,min:1000,use:()=>{const v=Math.max(1000,D.base*1800);gain(v);bigFloat('⏩ +'+fmt(v),'#ffe08a')}},
-  {id:'goldrain',e:'🌟',n:'Gold Rain',d:'5 golden potatoes appear',k:600,min:5000,use:()=>{for(let i=0;i<5;i++)setTimeout(spawnGolden,i*450)}},
-  {id:'aura',e:'🧃',n:'XP Juice',d:'x3 XP for 5 minutes',k:300,min:2000,use:()=>addActive('aura',300)},
-  {id:'mystery',e:'🎁',n:'Mystery Box',d:'2-4 random boosts straight to your bag',k:400,min:1500,use:()=>{const n=2+Math.floor(Math.random()*3),got=[];for(let i=0;i<n;i++){const b=pick(BOOSTS.filter(x=>x.id!=='mystery'));S.bag[b.id]=(S.bag[b.id]||0)+1;got.push(b.e)}toast('🎁 Mystery Box!','You got: '+got.join(' '));renderBag()}},
+  {id:'frenzy',e:'🔥',n:'Production Party',d:'x7 production for 60 sec',k:240,min:500,g:.25,use:()=>addActive('frenzy',60)},
+  {id:'clickrizz',e:'👆',n:'Click Power',d:'x15 potatoes per click for 30 sec',k:150,min:300,g:.25,use:()=>addActive('clickrizz',30)},
+  {id:'mewing',e:'🎯',n:'Sharpshooter',d:'50% critical click chance for 30 sec',k:150,min:600,g:.25,use:()=>addActive('mewing',30)},
+  {id:'turbo',e:'🤖',n:'Robot Hand',d:'20 free clicks per second for 30 sec — the only legal auto clicker',k:200,min:800,g:.25,use:()=>addActive('turbo',30)},
+  {id:'fanum',e:'⏩',n:'Time Skip',d:'Get 30 minutes of production instantly',k:2700,min:5000,g:.6,use:()=>{const v=Math.max(1000,D.base*1800);gain(v);bigFloat('⏩ +'+fmt(v),'#ffe08a')}},
+  {id:'goldrain',e:'🌟',n:'Gold Rain',d:'5 golden potatoes appear',k:1200,min:5000,g:.4,use:()=>{for(let i=0;i<5;i++)setTimeout(spawnGolden,i*450)}},
+  {id:'aura',e:'🧃',n:'XP Juice',d:'x3 XP for 5 minutes',k:600,min:2000,g:.4,use:()=>addActive('aura',300)},
+  {id:'mystery',e:'🎁',n:'Mystery Box',d:'1-3 random boosts straight to your bag (Time Skip and Gold Rain are rare)',k:1000,min:3000,g:.6,use:()=>{const n=1+Math.floor(Math.random()*3),got=[];for(let i=0;i<n;i++){const b=boxPick();S.bag[b.id]=(S.bag[b.id]||0)+1;got.push(b.e)}toast('🎁 Mystery Box!','You got: '+got.join(' '));renderBag()}},
 ];
+// what a Mystery Box can give: small boosts often, the big ones rarely, never another box
+const BOX_W={frenzy:20,clickrizz:20,mewing:18,turbo:16,aura:12,goldrain:6,fanum:3};
+function boxPick(){let r=Math.random()*Object.values(BOX_W).reduce((a,b)=>a+b,0);for(const id in BOX_W){r-=BOX_W[id];if(r<0)return BOOSTS.find(b=>b.id===id)}return BOOSTS[0]}
 const ACTIVE_LBL={frenzy:'🔥 x7 production',gfrenzy:'🌟 GOLD PARTY x7',clickrizz:'👆 x15 click',gclick:'⚡ CLICK FRENZY x77',mewing:'🎯 50% crit',turbo:'🤖 Robot Hand',aura:'🧃 x3 XP',sale:'🛒 Shop -50%'};
 
 const SKINS=[
@@ -723,7 +726,7 @@ function defState(){return{
   aura:0,level:1,souls:0,rebirths:0,goldens:0,crits:0,vibes:0,boostsUsed:0,maxCombo:0,
   playTime:0,nextVibe:vibeGap(),vibePending:false,sound:true,buyAmt:1,started:Date.now(),
   bought:0,missions:[],missionsDone:0,lastDay:'',streak:0,dailyPending:false,nextSpin:60,spins:0,
-  tokens:0,perks:{},autoBuy:true,drops:0,bestPow:0,nextRain:rand(150,300),nextWater:7200,v:3,
+  tokens:0,perks:{},shopHeat:{},shopT:0,autoBuy:true,drops:0,bestPow:0,nextRain:rand(150,300),nextWater:7200,v:3,
   weather:null,nextEvent:rand(70,130),weathers:0,bandits:0,trains:0
 }}
 let S=defState(),D={};
@@ -734,6 +737,7 @@ function importObj(o){
   while(MACHINES.length<S.machines.length)addMachine();
   while(S.machines.length<MACHINES.length)S.machines.push(0);
   if(!S.active||typeof S.active!=='object')S.active={};
+  if(!S.shopHeat||typeof S.shopHeat!=='object')S.shopHeat={};
   if(o.tokens===undefined)S.tokens=S.souls||0;
   if(!o.v||o.v<3){S.nextVibe=Math.min(S.nextVibe,S.playTime+vibeGap());S.v=3}
 }
@@ -1039,10 +1043,21 @@ function buyUpg(u,el){
   if(vibe||S.upgrades[u.id])return;if(S.potatoes<u.c){snd('no');return}
   S.potatoes-=u.c;S.upgrades[u.id]=1;addXP(10);recalc();snd('buy');fxAt(el,30);toast('⬆️ '+u.n,u.d);upgKey='';
 }
-const boostCost=b=>Math.max(b.min,D.base*b.k)*(1-.1*PK('boost'))*(S.active.sale?.5:1);
+// every boost you buy makes the next one of that kind dearer; the price cools back down by one step every 10 minutes (also while away)
+const HEAT_MS=600000,SHOP_CAP=10;
+const heatMult=b=>Math.pow(1+b.g,S.shopHeat[b.id]||0);
+const boostCost=b=>Math.max(b.min,D.base*b.k)*heatMult(b)*(1-.1*PK('boost'))*(S.active.sale?.5:1);
+function coolShop(){
+  const now=Date.now();if(!S.shopT||S.shopT>now){S.shopT=now;return}
+  const n=Math.floor((now-S.shopT)/HEAT_MS);if(n<1)return;S.shopT+=n*HEAT_MS;
+  for(const k in S.shopHeat){S.shopHeat[k]-=n;if(S.shopHeat[k]<=0)delete S.shopHeat[k]}
+  if(!Object.keys(S.shopHeat).length)S.shopT=now;
+}
 function buyBoost(b,el){
   if(vibe)return;const c=boostCost(b);if(S.potatoes<c){snd('no');return}
-  S.potatoes-=c;S.bag[b.id]=(S.bag[b.id]||0)+1;snd('buy');fxAt(el);const r=el.getBoundingClientRect();floatTxt(r.left+r.width/2,r.top+10,'+1 '+b.e+' in bag','#ffd27a',20);renderBag();
+  if((S.bag[b.id]||0)>=SHOP_CAP){snd('no');toast('🎒 Bag full','You can keep '+SHOP_CAP+' '+b.e+' '+b.n+' at a time — use some first');return}
+  coolShop();if(!S.shopHeat[b.id]&&!Object.keys(S.shopHeat).length)S.shopT=Date.now();
+  S.potatoes-=c;S.shopHeat[b.id]=(S.shopHeat[b.id]||0)+1;S.bag[b.id]=(S.bag[b.id]||0)+1;snd('buy');fxAt(el);const r=el.getBoundingClientRect();floatTxt(r.left+r.width/2,r.top+10,'+1 '+b.e+' in bag','#ffd27a',20);renderBag();
 }
 function useBoost(id){
   if(vibe||!S.bag[id])return;const b=BOOSTS.find(x=>x.id===id);
@@ -1148,7 +1163,12 @@ function buildShop(){
     el.addEventListener('click',()=>buyBoost(b,el));$('#shopList').appendChild(el);
     shopEls.push({b,el,c:el.querySelector('.rc'),o:el.querySelector('.ro')})});
 }
-function updShop(){shopEls.forEach(s=>{const c=boostCost(s.b);s.c.textContent='🥔 '+fmt(c);s.o.textContent=S.bag[s.b.id]?'🎒'+S.bag[s.b.id]:'';s.el.classList.toggle('can',S.potatoes>=c)})}
+function updShop(){
+  coolShop();const left=Math.max(0,HEAT_MS-(Date.now()-S.shopT)),mm=Math.floor(left/60000),ss=String(Math.floor(left/1000)%60).padStart(2,'0');
+  shopEls.forEach(s=>{const c=boostCost(s.b),h=S.shopHeat[s.b.id]||0,full=(S.bag[s.b.id]||0)>=SHOP_CAP;
+    const t='🥔 '+fmt(c)+(h?` · 📈 x${heatMult(s.b).toFixed(1)} (cheaper in ${mm}:${ss})`:` · +${Math.round(s.b.g*100)}% per buy`);
+    if(s.c.textContent!==t)s.c.textContent=t;
+    s.o.textContent=S.bag[s.b.id]?'🎒'+S.bag[s.b.id]+(full?' MAX':''):'';s.el.classList.toggle('can',S.potatoes>=c&&!full)})}
 let lookKey='',lookEls=[];
 function updLooks(){
   const key=JSON.stringify(S.skins)+S.skin+S.acc+S.bg;
