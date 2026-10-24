@@ -520,6 +520,10 @@ body.chaos .toast b{color:#4dfcff}
 .wflash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:3}
 #warp.flash .wflash{animation:wFlash .7s ease-out}
 @keyframes wFlash{0%{opacity:0}35%{opacity:1}100%{opacity:0}}
+.tabs .exTab{grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px;padding:7px 6px;letter-spacing:.5px;background:linear-gradient(#7df9ff,#2f8fd0);color:#0b1a33;text-shadow:none;border-color:#0b1a33}
+.tabs .exTab small{font-size:11px;font-weight:800;opacity:.85}
+.tabs .exTab.ready{animation:pulse 1.2s infinite;box-shadow:0 0 0 3px #ffd84a,0 0 18px #ffd84a}
+@media (max-width:900px){.tabs .exTab{font-size:12px;padding:4px}.tabs .exTab small{font-size:10px}}
 </style>
 </head>
 <body>
@@ -623,6 +627,7 @@ body.chaos .toast b{color:#4dfcff}
         <button data-t="look"><span class="tb">🎨</span>Style</button>
         <button data-t="ach"><span class="tb">🏆</span>Trophies</button>
         <button data-t="stats"><span class="tb">📊</span>Stats</button>
+        <button id="exTabBtn" class="exTab">🧭 EXTRACT &amp; ✨ REBIRTH <small id="exTabSub"></small></button>
       </nav>
 
       <div class="tabc on" id="t-mach">
@@ -969,7 +974,7 @@ function applyWorld(){
   const w=WORLDS[S.world]||WORLDS[0];
   if(S.world)document.body.dataset.world=S.world;else delete document.body.dataset.world;
   const c=$$('.cactus');if(c[0])c[0].textContent=w.deco[0];if(c[1])c[1].textContent=w.deco[1];const t=$('.tumble');if(t)t.textContent=w.deco[2];
-  $('#worldTag').innerHTML=w.e+' '+w.n+(S.medals?' '+MEDALS.slice(0,S.medals).map(m=>m.e).join(''):'')+' · <span class="wtap">👆 Extract & Rebirth</span>';
+  $('#worldTag').innerHTML=w.e+' '+w.n+(S.medals?' '+MEDALS.slice(0,S.medals).map(m=>m.e).join(''):'')+'';
 }
 function updExtract(){
   $('#medalRow').innerHTML=MEDALS.map((m,i)=>`<div class="medal ${i<(S.medals||0)?'got':''}" title="${m.n} medal">${m.e}</div>`).join('');
@@ -1008,21 +1013,24 @@ function worldWarp(o,apply,done){
 $('#extractBtn').addEventListener('click',doExtract);
 function openExtract(first){$('.exbox').classList.toggle('first',!!first);updStats();const w=WORLDS[S.world]||WORLDS[0];$('#exWorld').innerHTML=`You are in <b>${w.e} ${w.n}</b> · world ${(S.world||0)+1} of ${WORLDS.length}`;updExtract();$('#exm').classList.remove('hidden')}
 $('#worldTag').addEventListener('click',()=>{snd('tick');openExtract()});
+$('#exTabBtn').addEventListener('click',()=>{snd('tick');openExtract()});
 $('#exClose').addEventListener('click',()=>$('#exm').classList.add('hidden'));
 $('#exm').addEventListener('click',e=>{if(e.target.id==='exm')$('#exm').classList.add('hidden')});
 let exReadyNote=false;
 function updExtractTag(){
   if(warping)return;
   if(S.level>=EXTRACT_LVL&&!S.exPopup&&(S.medals||0)<MEDALS.length&&!vibe&&$('#daily').classList.contains('hidden')&&$('#clog').classList.contains('hidden')){S.exPopup=1;save();snd('lvl');confetti(120);openExtract(true)}
-const r=canExtract();$('#worldTag').classList.toggle('ready',r);if(r&&!exReadyNote){exReadyNote=true;toast('🧭 You can Extract!','Tap your world name above the potato count');snd('ready')}if(!r)exReadyNote=false;if(!$('#exm').classList.contains('hidden'))updExtract()}
+const r=canExtract();$('#worldTag').classList.toggle('ready',r);$('#exTabBtn').classList.toggle('ready',r);$('#exTabSub').textContent=isMax()?'· 🏆 MAX':r?'· READY!':S.level<EXTRACT_LVL?`· level ${S.level}/${EXTRACT_LVL}`:'· need more 🥔';if(r&&!exReadyNote){exReadyNote=true;toast('🧭 You can Extract!','Tap the 🧭 EXTRACT & ✨ REBIRTH button under the menu');snd('ready')}if(!r)exReadyNote=false;if(!$('#exm').classList.contains('hidden'))updExtract()}
 
 /* =============== CHANGELOG =============== */
 // newest first – add a new entry at the top every time the game is updated
 const CHANGELOG=[
+  {v:'1.7',date:'24 Oct 2026',t:'Easier to find Extract',items:[
+    '🧭 Extract and Rebirth now have their own big button under Missions, Style, Trophies and Stats. It shows your progress to level 200 and glows when you can Extract.']},
   {v:'1.6',date:'24 Oct 2026',t:'Warp to new worlds',items:[
     '🌀 Extract and Rebirth now have a big warp animation: the game spins away into a neon tunnel, your new world and medal are revealed, and then you zoom into the new world.']},
   {v:'1.5',date:'24 Oct 2026',t:'Extract & new worlds',items:[
-    '🧭 New Extract: reach level 200 and pay a big pile of potatoes to Extract. Tap your world name above the potato count to see Extract, Rebirth and your medals.',
+    '🧭 New Extract: reach level 200 and pay a big pile of potatoes to Extract. Tap the big 🧭 EXTRACT & ✨ REBIRTH button under the menu to see Extract, Rebirth and your medals.',
     '🎉 When you reach level 200 a popup tells you that you can Extract.',
     '✨ Rebirth has moved from 📊 Stats to the Extract window. The 🪙 Soul Shop stays in Stats.',
     '✨ Rebirth now also resets your level to 1.',
