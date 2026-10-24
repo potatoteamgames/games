@@ -115,6 +115,15 @@ main{display:grid;grid-template-columns:minmax(0,1fr) 460px;min-height:0;min-wid
 #goal .gt b{color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #goal .bar{height:8px}
 #goalBar{background:linear-gradient(90deg,var(--green),var(--greenL))!important}
+#bonusBox{width:min(440px,94%);background:rgba(40,18,58,.85);border:3px solid var(--ink);border-radius:10px;padding:4px 10px;z-index:2;box-shadow:0 3px 0 rgba(0,0,0,.3);font-size:12px;color:#e2c8ff}
+#bonusBox .gt{display:flex;justify-content:space-between;gap:8px}#bonusBox .gt b{color:#fff;white-space:nowrap}
+#bonusBox .bar{height:8px}
+#bonusBar{background:linear-gradient(90deg,#8a2be2,#ff4fd8,#ffd84a)!important}
+#bonusBox.full{animation:chaosHue 1.2s linear infinite;border-color:#fff;color:#fff}
+#bonusBox.full #bonusBar{background:linear-gradient(90deg,#ff4d4d,#ffd84a,#5cff7a,#4dc3ff,#c84dff,#ff4d4d)!important;background-size:200% 100%!important;animation:chaosSlide .8s linear infinite}
+@keyframes chaosHue{to{filter:hue-rotate(360deg)}}
+@keyframes chaosSlide{to{background-position:200% 0}}
+#left.chaos #rays,#left.chaos #glow{animation:chaosHue 1.5s linear infinite}
 #potArea{position:relative;flex:0 0 auto;height:calc(var(--ps)*1.14);width:100%;display:flex;align-items:center;justify-content:center;z-index:2}
 #rays{position:absolute;width:calc(var(--ps)*1.5);height:calc(var(--ps)*1.5);border-radius:50%;
   background:repeating-conic-gradient(from 0deg,rgba(255,240,200,.28) 0 9deg,transparent 9deg 18deg);
@@ -277,10 +286,11 @@ h4{font-family:Rye,Georgia,serif;font-weight:400;margin:12px 0 6px;font-size:16p
 
 /* ===== OVERLAYS ===== */
 #fx{position:fixed;inset:0;pointer-events:none;z-index:50}
-#toasts{position:fixed;left:14px;bottom:14px;display:flex;flex-direction:column-reverse;gap:8px;z-index:60;pointer-events:none;max-width:330px}
-.toast{background:linear-gradient(135deg,var(--paper),var(--paper2));color:var(--ink);border:3px solid var(--ink);border-radius:10px;padding:8px 12px;animation:tin .4s cubic-bezier(.2,1.6,.4,1);box-shadow:0 4px 0 #2a1708,0 10px 24px #0008}
-.toast b{display:block;font-size:15px;color:var(--red)}
-.toast small{font-size:12px;color:var(--ink2);font-weight:700}
+/* notifications sit under golden potatoes, drops and runners (z 40-42) so they never hide something you can catch */
+#toasts{position:fixed;left:14px;bottom:14px;display:flex;flex-direction:column-reverse;gap:6px;z-index:35;pointer-events:none;max-width:300px}
+.toast{background:rgba(28,14,5,.55);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);color:#fff3d6;border:1px solid rgba(255,210,122,.35);border-left:4px solid var(--brass);border-radius:8px 12px 12px 8px;padding:6px 12px;animation:tin .4s cubic-bezier(.2,1.6,.4,1);box-shadow:0 6px 18px rgba(0,0,0,.35);opacity:.92}
+.toast b{display:block;font-size:14px;color:#ffd27a;text-shadow:1px 1px 0 #0008}
+.toast small{font-size:12px;color:#f3e2bd;font-weight:700;opacity:.9}
 .toast.out{animation:tout .3s forwards}
 @keyframes tin{from{transform:translateX(-120%) scale(.6)}}
 @keyframes tout{to{transform:translateX(-120%);opacity:0}}
@@ -338,6 +348,7 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
   .bar{height:9px}
   .sub{display:none}
   #goal{padding:2px 8px;font-size:11px}
+  #bonusBox{padding:2px 8px;font-size:11px}
   #clickInfo{display:none}
   .cactus{font-size:30px}.cactus.c2{font-size:24px}
   #right{border-left:none;border-top:6px solid #2a1708}
@@ -348,7 +359,7 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
   .row .ri{font-size:24px;width:32px}
   .row .rn{font-size:14px}
   #toasts{left:50%;transform:translateX(-50%);top:4px;bottom:auto;width:min(92vw,360px);flex-direction:column;max-width:none}
-  .toast{padding:4px 10px;width:100%;opacity:.96}
+  .toast{padding:4px 10px;width:100%}
   .toast b{font-size:12px}.toast small{display:none}
   .golden{width:64px;height:64px}
   .vtitle{font-size:26px}
@@ -409,6 +420,7 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
         <div class="sub" id="xpTxt"></div>
       </div>
       <div id="goal"><div class="gt"><span>🎯 Next goal</span><b id="goalTxt"></b></div><div class="bar"><div id="goalBar"></div></div></div>
+      <div id="bonusBox" title="Bonus Level: fills slowly while you play. At 100% BONUS CHAOS starts for 1 minute!"><div class="gt"><span>🌀 Bonus Level</span><b id="bonusTxt">0%</b></div><div class="bar"><div id="bonusBar"></div></div></div>
       <div id="chips"></div>
       <div id="potArea">
         <div id="glow"></div>
@@ -658,7 +670,7 @@ const BOOSTS=[
 // what a Mystery Box can give: small boosts often, the big ones rarely, never another box
 const BOX_W={frenzy:20,clickrizz:20,mewing:18,turbo:16,aura:12,goldrain:6,fanum:3};
 function boxPick(){let r=Math.random()*Object.values(BOX_W).reduce((a,b)=>a+b,0);for(const id in BOX_W){r-=BOX_W[id];if(r<0)return BOOSTS.find(b=>b.id===id)}return BOOSTS[0]}
-const ACTIVE_LBL={frenzy:'🔥 x7 production',gfrenzy:'🌟 GOLD PARTY x7',clickrizz:'👆 x15 click',gclick:'⚡ CLICK FRENZY x77',mewing:'🎯 50% crit',turbo:'🤖 Robot Hand',aura:'🧃 x3 XP',sale:'🛒 Shop -50%'};
+const ACTIVE_LBL={chaos:'🌀 BONUS CHAOS x10',frenzy:'🔥 x7 production',gfrenzy:'🌟 GOLD PARTY x7',clickrizz:'👆 x15 click',gclick:'⚡ CLICK FRENZY x77',mewing:'🎯 50% crit',turbo:'🤖 Robot Hand',aura:'🧃 x3 XP',sale:'🛒 Shop -50%'};
 
 const SKINS=[
   {id:'classic',t:'pot',n:'Classic',c:0,col:['#ffe0a3','#d99a4e','#8a5524'],g:'#ffb347'},
@@ -752,6 +764,35 @@ const TICK=[
 const CRITW=['CRITICAL!','BOOM!','WOW!','MEGA!','SUPER!','PERFECT!','HUGE!','YEEHAW!','BULLSEYE!'];
 const HYPE=['What a harvest! 🌾','Your potato is proud 🥹','New record! 🏆','The sheriff tips his hat 🤠','Yeehaw! 🐎','The Potato King is impressed 👑'];
 
+/* =============== BONUS LEVEL =============== */
+// a rare second bar: it fills slowly while you play (about once an hour for an active player) and at 100% starts BONUS CHAOS for 1 minute
+const BONUS={click:.003,auto:.001,idle:.006,golden:1.5,vibe:3,mission:1};
+let chaosGold=0,chaosRain=0;
+function addBonus(x){
+  if(S.active.chaos||vibe)return;
+  S.bonus=Math.min(100,(S.bonus||0)+x);
+  if(S.bonus>=100)startChaos();
+}
+function startChaos(){
+  S.bonus=0;S.chaosN=(S.chaosN||0)+1;S.active.chaos=60*(D.bd||1);chaosGold=1;chaosRain=0;
+  snd('lvl');snd('boost');confetti(200);
+  const m=$('#left');m.classList.remove('shake');void m.offsetWidth;m.classList.add('shake');
+  bigBanner('🌀 BONUS CHAOS!','x10 production · x10 clicks · golden potatoes everywhere · 1 minute!');
+  toast('🌀 BONUS CHAOS!','x10 production and clicks for 1 minute – click like crazy!');
+}
+function chaosTick(dt){
+  $('#left').classList.toggle('chaos',!!S.active.chaos);
+  if(!S.active.chaos)return;
+  chaosGold-=dt;if(chaosGold<=0){chaosGold=rand(3,5);spawnGolden()}
+  chaosRain-=dt;while(chaosRain<=0&&P.length<500){chaosRain+=.12;P.push({k:'e',x:rand(0,innerWidth),y:-30,vx:rand(-1.5,1.5),vy:rand(1,4),l:2.6,m:2.6,r:rand(18,34),t:pick(['🥔','🥔','🌀','⭐','💥','🤠','✨']),rot:rand(-4,4),a:0})}
+}
+function updBonus(){
+  const box=$('#bonusBox'),on=!!S.active.chaos;
+  box.classList.toggle('full',on);
+  $('#bonusBar').style.width=(on?100:S.bonus||0)+'%';
+  $('#bonusTxt').textContent=on?'CHAOS! '+Math.ceil(S.active.chaos)+'s':(S.bonus||0).toFixed(1)+'%';
+}
+
 /* =============== CHANGELOG =============== */
 // newest first – add a new entry at the top every time the game is updated
 const CHANGELOG=[
@@ -763,7 +804,9 @@ const CHANGELOG=[
     'All boosts have new, higher prices. Time Skip can no longer be used to earn endless potatoes.',
     'Mystery Box now gives 1-3 boosts instead of 2-4. Gold Rain and Time Skip are rare, and a box never gives another box.',
     'The Headset now sits properly on the potato – band over the head, ear cups on the sides and a little microphone.',
-    'New 📜 Update changelog button so you can always see what is new.']},
+    'New 📜 Update changelog button so you can always see what is new.',
+    'New 🌀 Bonus Level bar! It fills slowly while you click, catch golden potatoes, pass sheriff checks and finish missions. At 100% BONUS CHAOS starts for 1 minute: x10 production, x10 clicks and golden potatoes everywhere. It is rare – about once an hour if you play actively.',
+    'Notifications have a new see-through look and never cover golden potatoes or other things you can catch.']},
   {v:'1.2',date:'21 Oct 2026',t:'Discord & phones',items:[
     'Join the Potato Team Games Discord with the new button at the top.',
     'Trains, bandits, golden potatoes and potato rain stay in the potato area and never cover the menus.',
@@ -790,7 +833,7 @@ function defState(){return{
   aura:0,level:1,souls:0,rebirths:0,goldens:0,crits:0,vibes:0,boostsUsed:0,maxCombo:0,
   playTime:0,nextVibe:vibeGap(),vibePending:false,sound:true,buyAmt:1,started:Date.now(),
   bought:0,missions:[],missionsDone:0,lastDay:'',streak:0,dailyPending:false,nextSpin:60,spins:0,
-  tokens:0,perks:{},shopHeat:{},shopT:0,autoBuy:true,drops:0,bestPow:0,nextRain:rand(150,300),nextWater:7200,v:3,
+  tokens:0,perks:{},shopHeat:{},bonus:0,chaosN:0,shopT:0,autoBuy:true,drops:0,bestPow:0,nextRain:rand(150,300),nextWater:7200,v:3,
   weather:null,nextEvent:rand(70,130),weathers:0,bandits:0,trains:0
 }}
 let S=defState(),D={};
@@ -834,9 +877,9 @@ function recalc(){
   D={mm,glob:g*bonus,cm,cp,cc,cx,gf,cmax,flat,xpc,bd,base:base*g*bonus,bonus,achN,skinN,bAch,bLvl,bSoul,bSkin,g};
 }
 const wx=()=>(S.weather&&WEATHER[S.weather.id])||{};
-const prodBoost=()=>(S.active.frenzy?7:1)*(S.active.gfrenzy?7:1)*(wx().prod||1);
+const prodBoost=()=>(S.active.chaos?10:1)*(S.active.frenzy?7:1)*(S.active.gfrenzy?7:1)*(wx().prod||1);
 const cps=()=>D.base*prodBoost();
-const clickBoost=()=>(S.active.clickrizz?15:1)*(S.active.gclick?77:1)*(wx().click||1);
+const clickBoost=()=>(S.active.chaos?10:1)*(S.active.clickrizz?15:1)*(S.active.gclick?77:1)*(wx().click||1);
 const critChance=()=>S.active.mewing?0.5:Math.min(.9,D.cc+(wx().crit||0));
 const xpMult=()=>S.active.aura?3:1;
 const comboMult=()=>1+Math.floor(combo)*0.02;
@@ -850,7 +893,7 @@ function addXP(x){
   if(up)levelUp();
 }
 // boosts stack, but never past 2x their normal length
-const BDUR={frenzy:60,clickrizz:30,mewing:30,turbo:30,aura:300,gfrenzy:77,gclick:13,sale:60};
+const BDUR={chaos:60,frenzy:60,clickrizz:30,mewing:30,turbo:30,aura:300,gfrenzy:77,gclick:13,sale:60};
 const activeCap=id=>2*(BDUR[id]||60)*(D.bd||1);
 function addActive(id,t){S.active[id]=Math.min(activeCap(id),(S.active[id]||0)+t*(D.bd||1))}
 function clampActive(){for(const k in S.active)S.active[k]=Math.min(S.active[k],activeCap(k))}
@@ -957,7 +1000,7 @@ function doClick(x,y,auto){
   if(crit){v*=D.cx;S.crits++}
   v=Math.max(1,v);
   if(!auto&&S.weather&&S.weather.id==='dust')S.weather.t-=.4;
-  gain(v);S.clicks++;S.clickEarned+=v;
+  gain(v);S.clicks++;S.clickEarned+=v;addBonus(auto?BONUS.auto:BONUS.click);
   addXP(D.xpc*(crit?3:1));
   squish=1;tilt=rand(-1,1)*(crit?9:4);mouthOpen=1;
   if(auto){
@@ -1020,7 +1063,7 @@ function spawnGolden(){
   setTimeout(()=>{if(!done){done=true;el.classList.add('bye');setTimeout(()=>el.remove(),600)}},13000);
 }
 function clickGolden(x,y){
-  S.goldens++;snd('gold');burst(x,y,40,['#ffd700','#fff3a0','#ffae00','#fff'],1.6);ring(x,y,'#ffd700',220);emojis(x,y,6,'✨');
+  S.goldens++;addBonus(BONUS.golden);snd('gold');burst(x,y,40,['#ffd700','#fff3a0','#ffae00','#fff'],1.6);ring(x,y,'#ffd700',220);emojis(x,y,6,'✨');
   let r=Math.random(),t,s;
   // no stacking parties: if it's already running you get lucky potatoes instead
   if((r>=.45&&r<.75&&S.active.gfrenzy)||(r>=.75&&r<.88&&S.active.gclick))r=0;
@@ -1073,7 +1116,7 @@ function buildChallenge(){
 }
 function failVibe(){snd('no');$('#vmsg').textContent=pick(['Wrong — try again','Oops! One more try','Almost! Try again']);const bx=$('#vbox');bx.classList.remove('shake');void bx.offsetWidth;bx.classList.add('shake');setTimeout(buildChallenge,350)}
 function passVibe(){
-  vibe=null;S.vibePending=false;S.vibes++;S.nextVibe=S.playTime+vibeGap();
+  vibe=null;S.vibePending=false;S.vibes++;addBonus(BONUS.vibe);S.nextVibe=S.playTime+vibeGap();
   $('#vibe').classList.add('hidden');clearInterval(titleFlash);
   const v=Math.max(100,D.base*120);gain(v);addXP(100);
   snd('ach');confetti(80);toast('✅ Approved by the sheriff','Thanks for being here! Bonus: +'+fmt(v)+' potatoes and +100 XP');
@@ -1350,7 +1393,7 @@ function claimMission(m,el){
   const v=(m.t==='earn'?m.x*.05:Math.max(100,D.base*rand(20,45)))*mult;
   gain(v);addXP(need(S.level)*.12*(1+.5*PK('mission'))/xpMult());
   let extra='';if(Math.random()<.08+Math.min(.12,S.missionsDone/1000)){const b=pick(BOOSTS);S.bag[b.id]=(S.bag[b.id]||0)+1;extra=' + '+b.e+' boost';renderBag()}
-  S.missionsDone++;S.missions.splice(k,1);fillMissions();
+  S.missionsDone++;addBonus(BONUS.mission);S.missions.splice(k,1);fillMissions();
   snd('ach');fxAt(el,40);confetti(35);toast('📜 Mission complete!','+'+fmt(v)+' 🥔 + XP'+extra);updMissions();
 }
 
@@ -1586,6 +1629,7 @@ function logic(){
   if(vibe)return;
   S.playTime+=dt;
   for(const k in S.active){S.active[k]-=dt;if(S.active[k]<=0){delete S.active[k];toast('⌛ Boost ended',(ACTIVE_LBL[k]||k)+' has run out')}}
+  addBonus(BONUS.idle*dt);chaosTick(dt);
   gain(cps()*dt); // no passive XP — level only goes up when you do something
   if(S.active.turbo){turboAcc+=dt*20;const r=pot.getBoundingClientRect();while(turboAcc>=1){turboAcc--;doClick(r.left+r.width*rand(.25,.75),r.top+r.height*rand(.25,.75),true)}}else turboAcc=0;
   goldT-=dt*(S.weather&&S.weather.id==='rainbow'?3:1);if(goldT<=0){goldT=rand(60,180)*D.gf;spawnGolden()}
@@ -1648,7 +1692,7 @@ function nextTicker(){
 /* =============== START =============== */
 load();buildShop();fullRefresh();clampActive();if(S.weather&&!WEATHER[S.weather.id])S.weather=null;if(S.weather)setWeatherFx();checkDaily();showDaily();
 setInterval(logic,50);
-setInterval(()=>{updLeft();updMachines();updUpgrades();updShop();updLooks();updMissions();updSpin();updGoal();checkMilestone()},200);
+setInterval(()=>{updBonus();updLeft();updMachines();updUpgrades();updShop();updLooks();updMissions();updSpin();updGoal();checkMilestone()},200);
 setInterval(()=>{checkAch();updStats();renderPerks();autoBuy()},1000);
 setInterval(checkDaily,60000);
 setInterval(()=>save(false),15000);
