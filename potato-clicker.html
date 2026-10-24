@@ -362,6 +362,20 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
 .dcBtn svg{width:30px;height:24px;flex:none}.dcBtn small{display:block;font-size:11px;font-weight:700;opacity:.85}
 .dchb{display:flex;align-items:center;justify-content:center;background:linear-gradient(#6f7bff,#5865f2);color:#fff;text-decoration:none}
 .dchb svg{width:62%}
+.clbtn{position:relative;flex-shrink:0;height:44px;padding:0 12px;font-family:inherit;font-weight:900;font-size:14px;white-space:nowrap;color:var(--ink);background:linear-gradient(var(--paper),var(--paper2));border:3px solid var(--ink);border-radius:10px;box-shadow:0 3px 0 #2a1708;transition:transform .12s;cursor:pointer}
+.clbtn:hover{transform:translateY(-2px)}.clbtn:active{transform:translateY(2px);box-shadow:none}
+.cldot{display:none;position:absolute;top:-6px;right:-6px;width:14px;height:14px;border-radius:50%;background:var(--red);border:2px solid var(--ink)}
+.clbtn.new .cldot{display:block}
+.clbox{text-align:left;max-height:86vh;display:flex;flex-direction:column}
+.clbox .vtitle{text-align:center;font-size:28px}
+#clList{overflow-y:auto;margin:10px 0 12px;padding-right:4px}
+.clv{border-top:2px dashed var(--ink2);padding:8px 0}.clv:first-child{border-top:0}
+.clv h4{margin:0 0 4px;font-size:16px}.clv h4 small{font-weight:700;opacity:.7;font-size:12px;margin-left:6px}
+.clv ul{margin:0;padding-left:20px;font-size:14px;line-height:1.4}
+.clv .cln{display:inline-block;background:var(--red);color:#fff;font-size:11px;padding:1px 7px;border-radius:999px;margin-left:6px;vertical-align:2px}
+#clClose{align-self:center}
+@media (max-width:420px){.logo{font-size:16px!important;letter-spacing:0!important}#banner{gap:6px}}
+@media (max-width:760px){.clbtn{height:38px;padding:0 9px;font-size:17px}.clbtn .cll{display:none}}
 </style>
 </head>
 <body>
@@ -374,6 +388,7 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
     <a class="homebtn" href="./" title="Back to Potato Team Games" aria-label="Back to Potato Team Games">⬅ <span class="hl1">All Games</span><span class="hl2">Home</span></a>
     <h1 class="logo" title="Potato Clicker">POTATO <small>CLICKER</small> <span>🥔</span></h1>
     <div class="ticker" aria-hidden="true"><div id="tick">Welcome to Potato Clicker 🥔 — the wildest potato game in the West.</div></div>
+    <button class="clbtn" id="clBtn" title="Update changelog" aria-label="Update changelog">📜<span class="cll"> Update changelog</span><i class="cldot" id="clDot"></i></button>
     <a class="hbtn dchb" href="https://discord.gg/kZa6F4s5f9" target="_blank" rel="noopener" title="Join the Potato Team Games Discord" aria-label="Join the Potato Team Games Discord"><svg viewBox="0 0 127.14 96.36" aria-hidden="true"><path fill="currentColor" d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15ZM42.45 65.69C36.18 65.69 31 60 31 53s5-12.74 11.43-12.74S54 46 53.89 53s-5.05 12.69-11.44 12.69Zm42.24 0C78.41 65.69 73.25 60 73.25 53s5-12.74 11.44-12.74S96.23 46 96.12 53s-5.04 12.69-11.43 12.69Z"/></svg></a>
     <button class="hbtn" id="sndBtn" title="Sound on/off" aria-label="Sound on/off">🔊</button>
     <button class="hbtn" id="saveBtn" title="Save game" aria-label="Save game">💾</button>
@@ -538,6 +553,13 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
     <div id="vq"></div>
     <div id="varea"></div>
     <div id="vmsg"></div>
+  </div>
+</div>
+<div id="clog" class="modal hidden">
+  <div class="mbox clbox">
+    <div class="vtitle">📜 UPDATE CHANGELOG</div>
+    <div id="clList"></div>
+    <button class="sbtn big" id="clClose">GOT IT 🤠</button>
   </div>
 </div>
 <div id="daily" class="modal hidden">
@@ -716,6 +738,34 @@ const TICK=[
 ];
 const CRITW=['CRITICAL!','BOOM!','WOW!','MEGA!','SUPER!','PERFECT!','HUGE!','YEEHAW!','BULLSEYE!'];
 const HYPE=['What a harvest! 🌾','Your potato is proud 🥹','New record! 🏆','The sheriff tips his hat 🤠','Yeehaw! 🐎','The Potato King is impressed 👑'];
+
+/* =============== CHANGELOG =============== */
+// newest first – add a new entry at the top every time the game is updated
+const CHANGELOG=[
+  {v:'1.3',date:'24 Oct 2026',t:'Shop update',items:[
+    'Every boost you buy makes the next one of that kind more expensive.',
+    'Prices drop back one step every 10 minutes – also while you are away.',
+    'The shop shows how much more expensive a boost has become and when it gets cheaper.',
+    'You can keep up to 10 of each boost from the shop in your bag. Free boosts do not count.',
+    'All boosts have new, higher prices. Time Skip can no longer be used to earn endless potatoes.',
+    'Mystery Box now gives 1-3 boosts instead of 2-4. Gold Rain and Time Skip are rare, and a box never gives another box.',
+    'New 📜 Update changelog button so you can always see what is new.']},
+  {v:'1.2',date:'21 Oct 2026',t:'Discord & phones',items:[
+    'Join the Potato Team Games Discord with the new button at the top.',
+    'Trains, bandits, golden potatoes and potato rain stay in the potato area and never cover the menus.',
+    'The potato fits above the menu on phones.']},
+  {v:'1.1',date:'19 Oct 2026',t:'Event chips',items:[
+    'Active events are shown as chips above the potato, so the helping hands never cover them.']},
+];
+const CL_KEY='potato_clicker_changelog_seen';
+function clSeen(){try{return localStorage.getItem(CL_KEY)}catch(e){return null}}
+function updClDot(){$('#clBtn').classList.toggle('new',clSeen()!==CHANGELOG[0].v)}
+function openChangelog(){
+  $('#clList').innerHTML=CHANGELOG.map((c,i)=>`<div class="clv"><h4>v${c.v} – ${c.t}<small>${c.date}</small>${i===0?'<span class="cln">NEW</span>':''}</h4><ul>${c.items.map(x=>`<li>${x}</li>`).join('')}</ul></div>`).join('');
+  $('#clog').classList.remove('hidden');
+  try{localStorage.setItem(CL_KEY,CHANGELOG[0].v)}catch(e){}
+  updClDot();
+}
 
 /* =============== STATE =============== */
 const vibeGap=()=>rand(540,660); // about every 10 minutes
@@ -1337,6 +1387,10 @@ function showDaily(){
   $('#dDays').innerHTML=[1,2,3,4,5,6,7].map(d=>`<div class="day ${d<c?'past':d===c?'now':''}"><i>${d===7?'💎':d<c?'✅':'🎁'}</i>Day ${d}</div>`).join('');
   $('#daily').classList.remove('hidden');
 }
+$('#clBtn').addEventListener('click',()=>{snd('tick');openChangelog()});
+$('#clClose').addEventListener('click',()=>{snd('tick');$('#clog').classList.add('hidden')});
+$('#clog').addEventListener('click',e=>{if(e.target.id==='clog')$('#clog').classList.add('hidden')});
+updClDot();
 $('#dOpen').addEventListener('click',e=>{
   if(!e.isTrusted||!S.dailyPending)return;
   const c=(S.streak-1)%7+1,n=c===7?5:1+Math.floor(c/2),v=Math.max(1000*S.streak,D.base*300*c),got=[];
