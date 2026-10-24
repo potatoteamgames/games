@@ -405,6 +405,54 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
 #goal .gt b{max-width:min(240px,40vw)}
 .levelbox .sub{display:none}
 @media (max-width:900px){.levelbox,#goal,#bonusBox{font-size:11px;padding:1px 8px}.levelbox .bar,#goal .bar,#bonusBox .bar{height:6px}}
+/* ===== WORLDS: after each Extract the game moves to a new world with its own look ===== */
+body[data-world="1"]{--ink:#173048;--ink2:#3d5e80;--paper:#eef9ff;--paper2:#c4e3f7;--wood:#3a5f82;--woodD:#1f3a55;--woodL:#5d8db5;--brass:#8fe3ff;--brassD:#3a9fd0;--cream:#f2fbff;
+  --planks:repeating-linear-gradient(180deg,#3a5f82 0 44px,#2a4a68 44px 47px),repeating-linear-gradient(90deg,rgba(255,255,255,.08) 0 2px,transparent 2px 11px);background:#1f3a55}
+body[data-world="2"]{--ink:#2b1a0a;--ink2:#6b4a2b;--paper:#f8ebc8;--paper2:#e8cf96;--wood:#1d5466;--woodD:#103747;--woodL:#2f7a8f;--brass:#ffcc4d;--brassD:#c48a12;--cream:#fff6e0;
+  --planks:repeating-linear-gradient(180deg,#1d5466 0 44px,#123c4a 44px 47px),repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 2px,transparent 2px 11px);background:#103747}
+body[data-world="3"]{--ink:#5a1440;--ink2:#8a3a6a;--paper:#fff2f9;--paper2:#ffd3ea;--wood:#c2588f;--woodD:#8a2f66;--woodL:#e889b9;--brass:#ffe066;--brassD:#e0a812;--cream:#fff;
+  --planks:repeating-linear-gradient(180deg,#c2588f 0 44px,#a8457a 44px 47px),repeating-linear-gradient(90deg,rgba(255,255,255,.12) 0 6px,transparent 6px 18px);background:#8a2f66}
+body[data-world="4"]{--ink:#121633;--ink2:#3a4170;--paper:#eef1ff;--paper2:#c8cff2;--wood:#2c3256;--woodD:#151a33;--woodL:#4b5590;--brass:#7df9ff;--brassD:#2fb3c4;--cream:#eef6ff;
+  --planks:repeating-linear-gradient(180deg,#2c3256 0 44px,#1f2442 44px 47px),radial-gradient(1px 1px at 30% 40%,#fff 50%,transparent 51%);background:#151a33}
+body[data-world] #banner{background:linear-gradient(180deg,rgba(255,255,255,.12),transparent 40%,rgba(0,0,0,.25)),linear-gradient(90deg,var(--woodL),var(--wood) 50%,var(--woodL))}
+body[data-world] .tabs button{background:linear-gradient(var(--woodL),var(--wood))}
+body[data-world] .tabs button.on{background:linear-gradient(var(--brass),var(--brassD));color:var(--ink)}
+body[data-world] .hbtn{background:linear-gradient(var(--woodL),var(--wood))}
+body[data-world] .logo{color:var(--brass)}
+body[data-world="1"] #left::after{background:radial-gradient(ellipse at 20% 100%,#fff 0 45%,transparent 46%),radial-gradient(ellipse at 75% 100%,#e6f4ff 0 50%,transparent 51%),linear-gradient(transparent 55%,#d6ecfb 56%)}
+body[data-world="2"] #left::after{background:radial-gradient(ellipse at 20% 100%,#f0d58e 0 45%,transparent 46%),radial-gradient(ellipse at 75% 100%,#e6c777 0 50%,transparent 51%),linear-gradient(transparent 55%,#dcb968 56%)}
+body[data-world="3"] #left::after{background:radial-gradient(ellipse at 20% 100%,#7a3b1e 0 45%,transparent 46%),radial-gradient(ellipse at 75% 100%,#a8f0d0 0 50%,transparent 51%),linear-gradient(transparent 55%,#6a3218 56%)}
+body[data-world="4"] #left::after{background:radial-gradient(ellipse at 20% 100%,#8a8fa8 0 45%,transparent 46%),radial-gradient(ellipse at 75% 100%,#6d7290 0 50%,transparent 51%),linear-gradient(transparent 55%,#5a5f7a 56%)}
+body[data-world="4"] #left{background-image:radial-gradient(1.5px 1.5px at 15% 20%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 70% 12%,#fff 50%,transparent 51%),radial-gradient(2px 2px at 40% 35%,#cfe 50%,transparent 51%),radial-gradient(1.5px 1.5px at 85% 40%,#fff 50%,transparent 51%),radial-gradient(ellipse at 50% 115%,rgba(125,249,255,.25),transparent 60%),linear-gradient(180deg,var(--b1),var(--b2) 60%,var(--b3))}
+#worldTag{position:relative;z-index:6;font-family:inherit;font-weight:900;font-size:14px;color:var(--cream);background:rgba(0,0,0,.35);border:2px solid var(--brass);border-radius:999px;padding:3px 14px;margin-bottom:4px;white-space:nowrap;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.3);text-shadow:1px 1px 0 #0008}
+#worldTag:hover{transform:translateY(-1px)}
+#worldTag .wtap{color:var(--brass);font-size:.9em}
+#worldTag.ready{animation:pulse 1.2s infinite;border-color:#7df9ff;box-shadow:0 0 14px #7df9ff}
+@media (max-width:900px){#worldTag{font-size:12px;padding:2px 10px;margin-bottom:2px}}
+.exbox .note{color:var(--ink2);text-align:left}
+.exworld{font-size:18px;margin:4px 0 8px}
+.exbox{max-height:90vh;overflow-y:auto}
+.exbox .vtitle{font-size:26px}
+.exrb{border-top:3px dashed var(--ink2);margin-top:12px;padding-top:8px}
+.wpt{font-size:13px;font-weight:900;margin:6px 0 4px}
+#worldPick{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+#worldPick .wpt{flex-basis:100%}
+.wpick{display:flex;flex-direction:column;align-items:center;width:84px;padding:6px 4px;font-size:24px;background:rgba(0,0,0,.08);border:2px solid var(--ink2);border-radius:10px;color:var(--ink)}
+.wpick small{font-size:10px;line-height:1.1;margin-top:2px}
+.wpick.on{background:var(--brass);border-color:var(--ink);box-shadow:0 0 10px var(--brass)}
+.exrb h3{color:var(--ink);text-shadow:none;margin-bottom:4px}
+.exnew{display:none;background:linear-gradient(90deg,#7df9ff,#ffd84a);color:#0b1a33;font-weight:900;border:3px solid var(--ink);border-radius:10px;padding:6px 10px;margin-bottom:8px;animation:pulse 1.2s infinite}
+.exbox.first .exnew{display:block}
+.exbox .medal{background:rgba(0,0,0,.12);border-color:rgba(0,0,0,.25)}
+.exbox .exinfo .ok{color:var(--green)}.exbox .exinfo .no{color:var(--red)}
+.medals{display:flex;justify-content:center;gap:8px;margin:8px 0}
+.medal{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;background:rgba(0,0,0,.35);border:3px dashed rgba(255,255,255,.3);filter:grayscale(1);opacity:.45}
+.medal.got{filter:none;opacity:1;border:3px solid var(--brass);background:radial-gradient(circle,rgba(255,255,255,.25),rgba(0,0,0,.2));box-shadow:0 0 14px var(--brass)}
+#extractBtn{background:linear-gradient(#7df9ff,#2f8fd0);color:#0b1a33;border-color:#0b1a33}
+#extractBtn:disabled{filter:grayscale(1);opacity:.6}
+.exinfo{font-size:13px;line-height:1.5;margin:6px 0}
+.exinfo .ok{color:var(--greenL)}.exinfo .no{color:#ff9a8a}
+
 /* ===== BONUS CHAOS THEME: the whole game turns into a neon space disco while chaos runs ===== */
 body.chaos{--ink:#ff4fd8;--ink2:#c9a5ff;--paper:#3a1670;--paper2:#1e0844;--wood:#1a0a3a;--woodD:#0b0320;--woodL:#3a1a7a;--brass:#4dfcff;--brassD:#1f9fc4;--cream:#fff;--red:#ff3d9a;--green:#22c47a;--greenL:#5cff9d;
   --planks:radial-gradient(circle at 20% 30%,rgba(255,79,216,.18),transparent 40%),radial-gradient(circle at 80% 70%,rgba(77,252,255,.15),transparent 40%),linear-gradient(180deg,#14063a,#0b0320);background:#0b0320}
@@ -466,6 +514,7 @@ body.chaos .toast b{color:#4dfcff}
       <div class="cactus c1" aria-hidden="true">🌵</div><div class="cactus c2" aria-hidden="true">🌵</div><div class="tumble" aria-hidden="true">🌾</div>
       <div id="weather" aria-hidden="true"><div class="wsky"></div><div class="wflash"></div></div>
       <div class="info">
+        <button id="worldTag" title="Your world – tap to see Extract and medals"></button>
         <div id="count">0</div>
         <div class="lbl">POTATOES</div>
         <div id="pps">0 per second</div>
@@ -589,12 +638,6 @@ body.chaos .toast b{color:#4dfcff}
         <h2>📊 Stats</h2>
         <div id="statList"></div>
         <div class="box">
-          <h3>✨ Rebirth</h3>
-          <div class="note" style="margin:0">Start over with potatoes, machines and upgrades — but earn <b>Potato Souls 👻</b>. Each soul gives <b>+5%</b> to everything forever. You keep your level, style, trophies and bag.</div>
-          <div id="rebInfo" style="margin:8px 0;font-size:14px"></div>
-          <button class="sbtn big" id="rebBtn">✨ REBIRTH</button>
-        </div>
-        <div class="box">
           <h3>🪙 Soul Shop</h3>
           <div class="note" style="margin:0">Every rebirth also gives Soul Coins 🪙 (1 per soul). Spend them on permanent perks.</div>
           <div class="tokens" id="tokTxt"></div>
@@ -642,6 +685,25 @@ body.chaos .toast b{color:#4dfcff}
     <div id="vq"></div>
     <div id="varea"></div>
     <div id="vmsg"></div>
+  </div>
+</div>
+<div id="exm" class="modal hidden">
+  <div class="mbox exbox">
+    <div class="exnew" id="exNew">🎉 You reached level 200 – Extract is unlocked! Collect enough potatoes and Extract to a new world.</div>
+    <div class="vtitle" id="exTitle">🧭 EXTRACT & ✨ REBIRTH</div>
+    <div class="exworld" id="exWorld"></div>
+          <div class="note" style="margin:0">Reach <b>level 200</b> and pay a big pile of potatoes to Extract. You win a <b>medal</b> and travel to a <b>brand new world</b> with a new look – but everything else starts over from zero. Each medal gives <b>x2 production and clicks</b> forever. 4 medals to collect!</div>
+          <div class="medals" id="medalRow"></div>
+          <div class="exinfo" id="exInfo"></div>
+          <button class="sbtn big" id="extractBtn">🧭 EXTRACT</button>
+            <div class="exrb">
+      <h3>✨ Rebirth</h3>
+      <div class="note" style="margin:0">Start over with potatoes, machines and upgrades — but earn <b>Potato Souls 👻</b>. Each soul gives <b>+5%</b> to everything forever. Your level goes back to 1 too. You keep your style, trophies and bag. Spend Soul Coins in the 🪙 Soul Shop in 📊 Stats.</div>
+      <div id="worldPick" style="display:none"></div>
+      <div id="rebInfo" style="margin:8px 0;font-size:14px"></div>
+      <button class="sbtn big" id="rebBtn">✨ REBIRTH</button>
+    </div>
+    <button class="sbtn" id="exClose" style="margin-top:8px">Close</button>
   </div>
 </div>
 <div id="clog" class="modal hidden">
@@ -860,9 +922,70 @@ function updBonus(){
   $('#bonusTxt').textContent=on?'CHAOS! '+Math.ceil(S.active.chaos)+'s':(S.bonus||0).toFixed(1)+'%';
 }
 
+/* =============== WORLDS & EXTRACT =============== */
+const WORLDS=[
+  {e:'🤠',n:'Wild West',deco:['🌵','🌵','🌾'],bg:['#f0b46a','#c9733a','#7a3f1d']},
+  {e:'❄️',n:'Frozen Peaks',deco:['⛄','🌲','❄️'],bg:['#dff4ff','#8cc8ee','#3d7fb8']},
+  {e:'🏴‍☠️',n:'Pirate Cove',deco:['🌴','🦀','🐚'],bg:['#9fe6f2','#3aa6c8','#0f5a7a']},
+  {e:'🍭',n:'Candy Land',deco:['🍭','🧁','🍬'],bg:['#ffe6f4','#ffb3d9','#c86fd6']},
+  {e:'🚀',n:'Space Colony',deco:['🪐','🛸','☄️'],bg:['#272c66','#11143a','#05061a']},
+];
+const MEDALS=[{e:'🥉',n:'Bronze'},{e:'🥈',n:'Silver'},{e:'🥇',n:'Gold'},{e:'💎',n:'Diamond'}];
+const EXTRACT_LVL=200;
+const extractCost=()=>1e18*Math.pow(1000,S.medals||0);
+const isMax=()=>(S.medals||0)>=MEDALS.length;
+let pickWorld=null;
+const canExtract=()=>(S.medals||0)<MEDALS.length&&S.level>=EXTRACT_LVL&&S.potatoes>=extractCost();
+function applyWorld(){
+  const w=WORLDS[S.world]||WORLDS[0];
+  if(S.world)document.body.dataset.world=S.world;else delete document.body.dataset.world;
+  const c=$$('.cactus');if(c[0])c[0].textContent=w.deco[0];if(c[1])c[1].textContent=w.deco[1];const t=$('.tumble');if(t)t.textContent=w.deco[2];
+  $('#worldTag').innerHTML=w.e+' '+w.n+(S.medals?' '+MEDALS.slice(0,S.medals).map(m=>m.e).join(''):'')+' · <span class="wtap">👆 Extract & Rebirth</span>';
+}
+function updExtract(){
+  $('#medalRow').innerHTML=MEDALS.map((m,i)=>`<div class="medal ${i<(S.medals||0)?'got':''}" title="${m.n} medal">${m.e}</div>`).join('');
+  const done=(S.medals||0)>=MEDALS.length,b=$('#extractBtn');
+  if(done){$('#exInfo').innerHTML='🏆 <b>MAX!</b> You have all 4 medals and reached the last world. You cannot Extract any more – but you can Rebirth to any world below. Legend!';b.disabled=true;b.textContent='🏆 MAX';return}
+  b.textContent='🧭 EXTRACT';
+  const nw=WORLDS[(S.world||0)+1],nm=MEDALS[S.medals||0],lvOk=S.level>=EXTRACT_LVL,cOk=S.potatoes>=extractCost();
+  $('#exInfo').innerHTML=`Next: ${nm.e} <b>${nm.n} medal</b> and ${nw.e} <b>${nw.n}</b><br><span class="${lvOk?'ok':'no'}">${lvOk?'✅':'❌'} Level ${EXTRACT_LVL} (you are ${S.level})</span><br><span class="${cOk?'ok':'no'}">${cOk?'✅':'❌'} 🥔 ${fmt(extractCost())} (you have ${fmt(S.potatoes)})</span>`;
+  b.disabled=!canExtract();
+}
+function doExtract(){
+  if(!canExtract()||vibe)return;
+  const nm=MEDALS[S.medals||0],nw=WORLDS[(S.world||0)+1];
+  if(!confirm(`🧭 EXTRACT\n\nYou pay ${fmt(extractCost())} potatoes and EVERYTHING starts over from zero: potatoes, level, machines, upgrades, souls, perks, style, trophies, bag and missions.\n\nYou get: ${nm.e} ${nm.n} medal (x2 production and clicks forever) and travel to ${nw.e} ${nw.n}.\n\nExtract now?`))return;
+  const keep={world:(S.world||0)+1,medals:(S.medals||0)+1,sound:S.sound,autoBuy:S.autoBuy};
+  S=Object.assign(defState(),keep);
+  try{save()}catch(e){}
+  fullRefresh();checkRestock();buildShop();fillMissions();
+  snd('lvl');confetti(300);
+  bigBanner(`${nm.e} ${nm.n.toUpperCase()} MEDAL!`,`Welcome to ${nw.e} ${nw.n} · x${fmt(Math.pow(2,S.medals))} production forever`);
+  toast('🧭 Extracted!','Welcome to '+nw.e+' '+nw.n+' – a brand new start');
+}
+$('#extractBtn').addEventListener('click',()=>{doExtract();if(!$('#exm').classList.contains('hidden')&&S.medals&&S.level===1)$('#exm').classList.add('hidden')});
+function openExtract(first){$('.exbox').classList.toggle('first',!!first);updStats();const w=WORLDS[S.world]||WORLDS[0];$('#exWorld').innerHTML=`You are in <b>${w.e} ${w.n}</b> · world ${(S.world||0)+1} of ${WORLDS.length}`;updExtract();$('#exm').classList.remove('hidden')}
+$('#worldTag').addEventListener('click',()=>{snd('tick');openExtract()});
+$('#exClose').addEventListener('click',()=>$('#exm').classList.add('hidden'));
+$('#exm').addEventListener('click',e=>{if(e.target.id==='exm')$('#exm').classList.add('hidden')});
+let exReadyNote=false;
+function updExtractTag(){
+  if(S.level>=EXTRACT_LVL&&!S.exPopup&&(S.medals||0)<MEDALS.length&&!vibe&&$('#daily').classList.contains('hidden')&&$('#clog').classList.contains('hidden')){S.exPopup=1;save();snd('lvl');confetti(120);openExtract(true)}
+const r=canExtract();$('#worldTag').classList.toggle('ready',r);if(r&&!exReadyNote){exReadyNote=true;toast('🧭 You can Extract!','Tap your world name above the potato count');snd('ready')}if(!r)exReadyNote=false;if(!$('#exm').classList.contains('hidden'))updExtract()}
+
 /* =============== CHANGELOG =============== */
 // newest first – add a new entry at the top every time the game is updated
 const CHANGELOG=[
+  {v:'1.5',date:'24 Oct 2026',t:'Extract & new worlds',items:[
+    '🧭 New Extract: reach level 200 and pay a big pile of potatoes to Extract. Tap your world name above the potato count to see Extract, Rebirth and your medals.',
+    '🎉 When you reach level 200 a popup tells you that you can Extract.',
+    '✨ Rebirth has moved from 📊 Stats to the Extract window. The 🪙 Soul Shop stays in Stats.',
+    '✨ Rebirth now also resets your level to 1.',
+    '🏆 When you have Extracted through all worlds and won all 4 medals you are MAX. You get no more medals, but you can Rebirth to any world you like and start over there.',
+    '🏅 Every Extract gives you a medal – 🥉 Bronze, 🥈 Silver, 🥇 Gold and 💎 Diamond. Each medal gives x2 production and clicks forever.',
+    '🔄 After an Extract everything starts over from zero – but in a brand new world with its own look.',
+    '🌍 4 new worlds: ❄️ Frozen Peaks, 🏴‍☠️ Pirate Cove, 🍭 Candy Land and 🚀 Space Colony.',
+    '🏷️ The name of the world you play in and your medals are always shown above your potato count. It glows when you can Extract.']},
   {v:'1.4',date:'24 Oct 2026',t:'Shop restocks',items:[
     '🛒 The shop now restocks every 20 minutes with 5 random items, each with its own stock and price – sometimes on sale, sometimes expensive. When an item is sold out, wait for the next restock. The shop shows when the next restock is.',
     '🛒 New shop items: ☕ Cowboy Coffee (x3 production for 3 min), 🌀 Chaos Charge (+15% Bonus Level) and 🎟️ Slot Tokens (10 extra Potato Slots spins).']},
@@ -907,7 +1030,7 @@ function defState(){return{
   aura:0,level:1,souls:0,rebirths:0,goldens:0,crits:0,vibes:0,boostsUsed:0,maxCombo:0,
   playTime:0,nextVibe:vibeGap(),vibePending:false,sound:true,buyAmt:1,started:Date.now(),
   bought:0,missions:[],missionsDone:0,lastDay:'',streak:0,dailyPending:false,nextSpin:60,spins:0,
-  tokens:0,perks:{},shopHeat:{},shopStock:null,shopNext:0,bonus:0,chaosN:0,slotN:0,slotUntil:0,slotWins:0,shopT:0,autoBuy:true,drops:0,bestPow:0,nextRain:rand(150,300),nextWater:7200,v:3,
+  world:0,medals:0,tokens:0,perks:{},shopHeat:{},shopStock:null,shopNext:0,bonus:0,chaosN:0,slotN:0,slotUntil:0,slotWins:0,shopT:0,autoBuy:true,drops:0,bestPow:0,nextRain:rand(150,300),nextWater:7200,v:3,
   weather:null,nextEvent:rand(70,130),weathers:0,bandits:0,trains:0
 }}
 let S=defState(),D={};
@@ -946,9 +1069,10 @@ function recalc(){
   cm*=1+PK('click');gf/=1+.2*PK('gold');
   const achN=Object.keys(S.ach).length,skinN=SKINS.filter(s=>S.skins[s.id]&&s.c>0).length;
   const bAch=achN*0.01,bLvl=(S.level-1)*0.01,bSoul=S.souls*0.05,bSkin=skinN*0.02;
-  const bonus=(1+bAch)*(1+bLvl)*(1+bSoul)*(1+bSkin);
+  const bMedal=Math.pow(2,S.medals||0);
+  const bonus=(1+bAch)*(1+bLvl)*(1+bSoul)*(1+bSkin)*bMedal;
   let base=0;MACHINES.forEach((m,i)=>base+=S.machines[i]*m.p*mm[i]);
-  D={mm,glob:g*bonus,cm,cp,cc,cx,gf,cmax,flat,xpc,bd,base:base*g*bonus,bonus,achN,skinN,bAch,bLvl,bSoul,bSkin,g};
+  D={mm,glob:g*bonus,cm,cp,cc,cx,gf,cmax,flat,xpc,bd,base:base*g*bonus,bonus,achN,skinN,bAch,bLvl,bSoul,bSkin,bMedal,g};
 }
 const wx=()=>(S.weather&&WEATHER[S.weather.id])||{};
 const prodBoost=()=>(S.active.chaos?10:1)*(S.active.coffee?3:1)*(S.active.frenzy?7:1)*(S.active.gfrenzy?7:1)*(wx().prod||1);
@@ -1274,8 +1398,9 @@ function applyLook(){
   const p=SKINS.find(s=>s.id===S.skin)||SKINS[0],r=document.documentElement.style;
   r.setProperty('--p1',p.col[0]);r.setProperty('--p2',p.col[1]);r.setProperty('--p3',p.col[2]);r.setProperty('--pglow',p.g);
   pot.classList.toggle('rainbow',!!p.rb);
-  const b=SKINS.find(s=>s.id===S.bg)||SKINS.find(s=>s.id==='bg0');
-  r.setProperty('--b1',b.col[0]);r.setProperty('--b2',b.col[1]);r.setProperty('--b3',b.col[2]);
+  const b=SKINS.find(s=>s.id===S.bg)||SKINS.find(s=>s.id==='bg0'),bc=(S.bg==='bg0'||!S.bg)&&S.world?WORLDS[S.world].bg:b.col;
+  r.setProperty('--b1',bc[0]);r.setProperty('--b2',bc[1]);r.setProperty('--b3',bc[2]);
+  applyWorld();
   const a=SKINS.find(s=>s.id===S.acc),ac=$('#acc');
   $('#shades').style.display=S.acc==='shades'?'':'none';
   $('#headset').style.display=S.acc==='headset'?'':'none';
@@ -1432,6 +1557,16 @@ function updStats(){
   const p=soulsPending();
   $('#rebInfo').innerHTML=p>0?`You get <b style="color:var(--brass)">+${p} 👻 souls</b> (+${p*5}% forever) and +${p} 🪙`:`Earn more potatoes in total to get souls (first soul at ${fmt(1e10)} all time)`;
   $('#rebBtn').disabled=p<1;
+  const mx=isMax();
+  $('#worldPick').style.display=mx?'':'none';
+  if(mx){
+    if(pickWorld==null)pickWorld=S.world;
+    const pk=WORLDS.map((w,i)=>`<button class="wpick ${i===pickWorld?'on':''}" data-w="${i}">${w.e}<small>${w.n}${i===S.world?' (now)':''}</small></button>`).join('');
+    if($('#worldPick').dataset.k!==pk){$('#worldPick').dataset.k=pk;$('#worldPick').innerHTML='<div class="wpt">🏆 MAX – no more medals, but you can Rebirth to any world:</div>'+pk;$$('#worldPick .wpick').forEach(b=>b.onclick=()=>{pickWorld=+b.dataset.w;snd('tick');updStats()})}
+    const w=WORLDS[pickWorld],move=pickWorld!==S.world;
+    $('#rebInfo').innerHTML=(p>0?`You get <b style="color:var(--brass)">+${p} 👻 souls</b> and +${p} 🪙`:'No new souls yet')+(move?` · you travel to <b>${w.e} ${w.n}</b>`:'');
+    $('#rebBtn').disabled=p<1&&!move;$('#rebBtn').textContent='✨ REBIRTH'+(move?' to '+w.e+' '+w.n:'');
+  }else $('#rebBtn').textContent='✨ REBIRTH';
 }
 
 /* =============== MISSIONS =============== */
@@ -1811,10 +1946,12 @@ function frame(t){
 
 /* =============== REBIRTH / SETTINGS =============== */
 $('#rebBtn').addEventListener('click',()=>{
-  const p=soulsPending();if(p<1||vibe)return;
-  if(!confirm(`✨ REBIRTH\n\nYou lose: potatoes, machines, upgrades and active boosts.\nYou keep: level, style, trophies and bag.\nYou get: +${p} Potato Souls (+${p*5}% forever) and +${p} 🪙 Soul Coins.\n\nRebirth now?`))return;
-  S.souls+=p;S.tokens+=p;S.rebirths++;S.potatoes=PK('start')?Math.pow(10,2+PK('start')):0;S.runEarned=0;S.machines=MACHINES.map(()=>0);S.upgrades={};S.active={};disp=0;
-  recalc();renderHideout();upgKey='';snd('lvl');confetti(200);toast('✨ REBORN!','+'+p+' souls. Start over — but stronger 💪');save();
+  const p=soulsPending(),mx=isMax(),to=mx?pickWorld:S.world,move=mx&&to!==S.world;if((p<1&&!move)||vibe)return;
+  const w=WORLDS[to];
+  if(!confirm(`✨ REBIRTH${mx?' to '+w.e+' '+w.n:''}\n\nYou lose: potatoes, level, machines, upgrades and active boosts.\nYou keep: style, trophies, bag and medals.\nYou get: +${p} Potato Souls (+${p*5}% forever) and +${p} 🪙 Soul Coins.${mx?'\nYou travel to '+w.e+' '+w.n+' (no new medal).':''}\n\nRebirth now?`))return;
+  if(mx){S.world=to;applyLook();$('#exm').classList.add('hidden')}
+  S.souls+=p;S.tokens+=p;S.rebirths++;S.level=1;S.aura=0;S.exPopup=0;S.potatoes=PK('start')?Math.pow(10,2+PK('start')):0;S.runEarned=0;S.machines=MACHINES.map(()=>0);S.upgrades={};S.active={};disp=0;
+  recalc();renderHideout();upgKey='';snd('lvl');confetti(200);toast('✨ REBORN!',(p?'+'+p+' souls. ':'')+(mx?'Welcome to '+WORLDS[S.world].e+' '+WORLDS[S.world].n+'!':'Start over — but stronger 💪'));save();
 });
 $('#expBtn').addEventListener('click',()=>{try{const s=btoa(unescape(encodeURIComponent(JSON.stringify(S))));prompt('Copy your save:',s)}catch(e){}});
 $('#impBtn').addEventListener('click',()=>{const s=prompt('Paste your save:');if(!s)return;try{importObj(JSON.parse(decodeURIComponent(escape(atob(s.trim())))));fullRefresh();save();toast('📥 Save imported','Welcome back, cowboy')}catch(e){toast('😬 Invalid save','That code does not work')}});
@@ -1840,7 +1977,7 @@ function nextTicker(){
 /* =============== START =============== */
 load();checkRestock();buildShop();fullRefresh();clampActive();if(S.weather&&!WEATHER[S.weather.id])S.weather=null;if(S.weather)setWeatherFx();checkDaily();showDaily();
 setInterval(logic,50);
-setInterval(()=>{updBonus();updSlot();updLeft();updMachines();updUpgrades();updShop();updLooks();updMissions();updSpin();updGoal();checkMilestone()},200);
+setInterval(()=>{updExtractTag();updBonus();updSlot();updLeft();updMachines();updUpgrades();updShop();updLooks();updMissions();updSpin();updGoal();checkMilestone()},200);
 setInterval(()=>{checkAch();updStats();renderPerks();autoBuy()},1000);
 setInterval(checkDaily,60000);
 setInterval(()=>save(false),15000);
