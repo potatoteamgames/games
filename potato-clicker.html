@@ -692,7 +692,7 @@ body.chaos .toast b{color:#4dfcff}
           <button class="sbtn big" id="extractBtn">🧭 EXTRACT</button>
             <div class="exrb">
       <h3>✨ Rebirth</h3>
-      <div class="note" style="margin:0">Start over with potatoes, machines and upgrades — but earn <b>Potato Souls 👻</b>. Each soul gives <b>+5%</b> to everything forever. You keep your level, style, trophies and bag. Spend Soul Coins in the 🪙 Soul Shop in 📊 Stats.</div>
+      <div class="note" style="margin:0">Start over with potatoes, machines and upgrades — but earn <b>Potato Souls 👻</b>. Each soul gives <b>+5%</b> to everything forever. Your level goes back to 1 too. You keep your style, trophies and bag. Spend Soul Coins in the 🪙 Soul Shop in 📊 Stats.</div>
       <div id="rebInfo" style="margin:8px 0;font-size:14px"></div>
       <button class="sbtn big" id="rebBtn">✨ REBIRTH</button>
     </div>
@@ -970,6 +970,7 @@ const CHANGELOG=[
     '🧭 New Extract: reach level 200 and pay a big pile of potatoes to Extract. Tap your world name above the potato count to see Extract, Rebirth and your medals.',
     '🎉 When you reach level 200 a popup tells you that you can Extract.',
     '✨ Rebirth has moved from 📊 Stats to the Extract window. The 🪙 Soul Shop stays in Stats.',
+    '✨ Rebirth now also resets your level to 1.',
     '🏅 Every Extract gives you a medal – 🥉 Bronze, 🥈 Silver, 🥇 Gold and 💎 Diamond. Each medal gives x2 production and clicks forever.',
     '🔄 After an Extract everything starts over from zero – but in a brand new world with its own look.',
     '🌍 4 new worlds: ❄️ Frozen Peaks, 🏴‍☠️ Pirate Cove, 🍭 Candy Land and 🚀 Space Colony.',
@@ -1925,8 +1926,8 @@ function frame(t){
 /* =============== REBIRTH / SETTINGS =============== */
 $('#rebBtn').addEventListener('click',()=>{
   const p=soulsPending();if(p<1||vibe)return;
-  if(!confirm(`✨ REBIRTH\n\nYou lose: potatoes, machines, upgrades and active boosts.\nYou keep: level, style, trophies and bag.\nYou get: +${p} Potato Souls (+${p*5}% forever) and +${p} 🪙 Soul Coins.\n\nRebirth now?`))return;
-  S.souls+=p;S.tokens+=p;S.rebirths++;S.potatoes=PK('start')?Math.pow(10,2+PK('start')):0;S.runEarned=0;S.machines=MACHINES.map(()=>0);S.upgrades={};S.active={};disp=0;
+  if(!confirm(`✨ REBIRTH\n\nYou lose: potatoes, level, machines, upgrades and active boosts.\nYou keep: style, trophies and bag.\nYou get: +${p} Potato Souls (+${p*5}% forever) and +${p} 🪙 Soul Coins.\n\nRebirth now?`))return;
+  S.souls+=p;S.tokens+=p;S.rebirths++;S.level=1;S.aura=0;S.exPopup=0;S.potatoes=PK('start')?Math.pow(10,2+PK('start')):0;S.runEarned=0;S.machines=MACHINES.map(()=>0);S.upgrades={};S.active={};disp=0;
   recalc();renderHideout();upgKey='';snd('lvl');confetti(200);toast('✨ REBORN!','+'+p+' souls. Start over — but stronger 💪');save();
 });
 $('#expBtn').addEventListener('click',()=>{try{const s=btoa(unescape(encodeURIComponent(JSON.stringify(S))));prompt('Copy your save:',s)}catch(e){}});
