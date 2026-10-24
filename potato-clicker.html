@@ -424,7 +424,14 @@ body[data-world="2"] #left::after{background:radial-gradient(ellipse at 20% 100%
 body[data-world="3"] #left::after{background:radial-gradient(ellipse at 20% 100%,#7a3b1e 0 45%,transparent 46%),radial-gradient(ellipse at 75% 100%,#a8f0d0 0 50%,transparent 51%),linear-gradient(transparent 55%,#6a3218 56%)}
 body[data-world="4"] #left::after{background:radial-gradient(ellipse at 20% 100%,#8a8fa8 0 45%,transparent 46%),radial-gradient(ellipse at 75% 100%,#6d7290 0 50%,transparent 51%),linear-gradient(transparent 55%,#5a5f7a 56%)}
 body[data-world="4"] #left{background-image:radial-gradient(1.5px 1.5px at 15% 20%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 70% 12%,#fff 50%,transparent 51%),radial-gradient(2px 2px at 40% 35%,#cfe 50%,transparent 51%),radial-gradient(1.5px 1.5px at 85% 40%,#fff 50%,transparent 51%),radial-gradient(ellipse at 50% 115%,rgba(125,249,255,.25),transparent 60%),linear-gradient(180deg,var(--b1),var(--b2) 60%,var(--b3))}
-#worldTag{font-size:12px;color:var(--cream);background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:1px 10px;margin-bottom:2px;white-space:nowrap}
+#worldTag{position:relative;z-index:6;font-family:inherit;font-weight:900;font-size:14px;color:var(--cream);background:rgba(0,0,0,.35);border:2px solid var(--brass);border-radius:999px;padding:3px 14px;margin-bottom:4px;white-space:nowrap;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.3);text-shadow:1px 1px 0 #0008}
+#worldTag:hover{transform:translateY(-1px)}
+#worldTag.ready{animation:pulse 1.2s infinite;border-color:#7df9ff;box-shadow:0 0 14px #7df9ff}
+@media (max-width:900px){#worldTag{font-size:12px;padding:2px 10px;margin-bottom:2px}}
+.exbox .note{color:var(--ink2);text-align:left}
+.exworld{font-size:18px;margin:4px 0 8px}
+.exbox .medal{background:rgba(0,0,0,.12);border-color:rgba(0,0,0,.25)}
+.exbox .exinfo .ok{color:var(--green)}.exbox .exinfo .no{color:var(--red)}
 .medals{display:flex;justify-content:center;gap:8px;margin:8px 0}
 .medal{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;background:rgba(0,0,0,.35);border:3px dashed rgba(255,255,255,.3);filter:grayscale(1);opacity:.45}
 .medal.got{filter:none;opacity:1;border:3px solid var(--brass);background:radial-gradient(circle,rgba(255,255,255,.25),rgba(0,0,0,.2));box-shadow:0 0 14px var(--brass)}
@@ -494,7 +501,7 @@ body.chaos .toast b{color:#4dfcff}
       <div class="cactus c1" aria-hidden="true">🌵</div><div class="cactus c2" aria-hidden="true">🌵</div><div class="tumble" aria-hidden="true">🌾</div>
       <div id="weather" aria-hidden="true"><div class="wsky"></div><div class="wflash"></div></div>
       <div class="info">
-        <div id="worldTag"></div>
+        <button id="worldTag" title="Your world – tap to see Extract and medals"></button>
         <div id="count">0</div>
         <div class="lbl">POTATOES</div>
         <div id="pps">0 per second</div>
@@ -618,13 +625,6 @@ body.chaos .toast b{color:#4dfcff}
         <h2>📊 Stats</h2>
         <div id="statList"></div>
         <div class="box">
-          <h3>🧭 Extract</h3>
-          <div class="note" style="margin:0">Reach <b>level 200</b> and pay a big pile of potatoes to Extract. You win a <b>medal</b> and travel to a <b>brand new world</b> with a new look – but everything else starts over from zero. Each medal gives <b>x2 production and clicks</b> forever. 4 medals to collect!</div>
-          <div class="medals" id="medalRow"></div>
-          <div class="exinfo" id="exInfo"></div>
-          <button class="sbtn big" id="extractBtn">🧭 EXTRACT</button>
-        </div>
-        <div class="box">
           <h3>✨ Rebirth</h3>
           <div class="note" style="margin:0">Start over with potatoes, machines and upgrades — but earn <b>Potato Souls 👻</b>. Each soul gives <b>+5%</b> to everything forever. You keep your level, style, trophies and bag.</div>
           <div id="rebInfo" style="margin:8px 0;font-size:14px"></div>
@@ -678,6 +678,17 @@ body.chaos .toast b{color:#4dfcff}
     <div id="vq"></div>
     <div id="varea"></div>
     <div id="vmsg"></div>
+  </div>
+</div>
+<div id="exm" class="modal hidden">
+  <div class="mbox exbox">
+    <div class="vtitle" id="exTitle">🧭 EXTRACT</div>
+    <div class="exworld" id="exWorld"></div>
+          <div class="note" style="margin:0">Reach <b>level 200</b> and pay a big pile of potatoes to Extract. You win a <b>medal</b> and travel to a <b>brand new world</b> with a new look – but everything else starts over from zero. Each medal gives <b>x2 production and clicks</b> forever. 4 medals to collect!</div>
+          <div class="medals" id="medalRow"></div>
+          <div class="exinfo" id="exInfo"></div>
+          <button class="sbtn big" id="extractBtn">🧭 EXTRACT</button>
+            <button class="sbtn" id="exClose" style="margin-top:8px">Close</button>
   </div>
 </div>
 <div id="clog" class="modal hidden">
@@ -912,7 +923,7 @@ function applyWorld(){
   const w=WORLDS[S.world]||WORLDS[0];
   if(S.world)document.body.dataset.world=S.world;else delete document.body.dataset.world;
   const c=$$('.cactus');if(c[0])c[0].textContent=w.deco[0];if(c[1])c[1].textContent=w.deco[1];const t=$('.tumble');if(t)t.textContent=w.deco[2];
-  $('#worldTag').textContent=w.e+' '+w.n+(S.medals?' · '+MEDALS.slice(0,S.medals).map(m=>m.e).join(''):'');
+  $('#worldTag').textContent=w.e+' '+w.n+(S.medals?' '+MEDALS.slice(0,S.medals).map(m=>m.e).join(''):'')+' · 🧭';
 }
 function updExtract(){
   $('#medalRow').innerHTML=MEDALS.map((m,i)=>`<div class="medal ${i<(S.medals||0)?'got':''}" title="${m.n} medal">${m.e}</div>`).join('');
@@ -934,17 +945,23 @@ function doExtract(){
   bigBanner(`${nm.e} ${nm.n.toUpperCase()} MEDAL!`,`Welcome to ${nw.e} ${nw.n} · x${fmt(Math.pow(2,S.medals))} production forever`);
   toast('🧭 Extracted!','Welcome to '+nw.e+' '+nw.n+' – a brand new start');
 }
-$('#extractBtn').addEventListener('click',doExtract);
+$('#extractBtn').addEventListener('click',()=>{doExtract();if(!$('#exm').classList.contains('hidden')&&S.medals&&S.level===1)$('#exm').classList.add('hidden')});
+function openExtract(){const w=WORLDS[S.world]||WORLDS[0];$('#exWorld').innerHTML=`You are in <b>${w.e} ${w.n}</b> · world ${(S.world||0)+1} of ${WORLDS.length}`;updExtract();$('#exm').classList.remove('hidden')}
+$('#worldTag').addEventListener('click',()=>{snd('tick');openExtract()});
+$('#exClose').addEventListener('click',()=>$('#exm').classList.add('hidden'));
+$('#exm').addEventListener('click',e=>{if(e.target.id==='exm')$('#exm').classList.add('hidden')});
+let exReadyNote=false;
+function updExtractTag(){const r=canExtract();$('#worldTag').classList.toggle('ready',r);if(r&&!exReadyNote){exReadyNote=true;toast('🧭 You can Extract!','Tap your world name above the potato count');snd('ready')}if(!r)exReadyNote=false;if(!$('#exm').classList.contains('hidden'))updExtract()}
 
 /* =============== CHANGELOG =============== */
 // newest first – add a new entry at the top every time the game is updated
 const CHANGELOG=[
   {v:'1.5',date:'24 Oct 2026',t:'Extract & new worlds',items:[
-    '🧭 New Extract (in 📊 Stats): reach level 200 and pay a big pile of potatoes to Extract.',
+    '🧭 New Extract: reach level 200 and pay a big pile of potatoes to Extract. Tap your world name above the potato count to see Extract and your medals.',
     '🏅 Every Extract gives you a medal – 🥉 Bronze, 🥈 Silver, 🥇 Gold and 💎 Diamond. Each medal gives x2 production and clicks forever.',
     '🔄 After an Extract everything starts over from zero – but in a brand new world with its own look.',
     '🌍 4 new worlds: ❄️ Frozen Peaks, 🏴‍☠️ Pirate Cove, 🍭 Candy Land and 🚀 Space Colony.',
-    '🏷️ Your world and medals are shown above your potato count.']},
+    '🏷️ The name of the world you play in and your medals are always shown above your potato count. It glows when you can Extract.']},
   {v:'1.4',date:'24 Oct 2026',t:'Shop restocks',items:[
     '🛒 The shop now restocks every 20 minutes with 5 random items, each with its own stock and price – sometimes on sale, sometimes expensive. When an item is sold out, wait for the next restock. The shop shows when the next restock is.',
     '🛒 New shop items: ☕ Cowboy Coffee (x3 production for 3 min), 🌀 Chaos Charge (+15% Bonus Level) and 🎟️ Slot Tokens (10 extra Potato Slots spins).']},
@@ -1510,13 +1527,12 @@ function updStats(){
     ['⬆️ Upgrades bought',Object.keys(S.upgrades).length+' / '+UPG.length],
     ['🏆 Trophy bonus','+'+Math.round(D.bAch*100)+'%'],['⭐ Level bonus','+'+Math.round(D.bLvl*100)+'%'],
     ['🎨 Style bonus','+'+Math.round(D.bSkin*100)+'%'],['👻 Potato Souls ('+S.souls+')','+'+Math.round(D.bSoul*100)+'%'],
-    ['🥘 Recipes','x'+fmt(D.g,1)],['✨ Rebirths',S.rebirths],['🧭 World',WORLDS[S.world].e+' '+WORLDS[S.world].n],['🏅 Medals ('+(S.medals||0)+'/4)','x'+fmt(D.bMedal)],
+    ['🥘 Recipes','x'+fmt(D.g,1)],['✨ Rebirths',S.rebirths],
   ];
   $('#statList').innerHTML=st.map(([a,b])=>`<div class="stat"><span>${a}</span><b>${b}</b></div>`).join('');
   const p=soulsPending();
   $('#rebInfo').innerHTML=p>0?`You get <b style="color:var(--brass)">+${p} 👻 souls</b> (+${p*5}% forever) and +${p} 🪙`:`Earn more potatoes in total to get souls (first soul at ${fmt(1e10)} all time)`;
   $('#rebBtn').disabled=p<1;
-  updExtract();
 }
 
 /* =============== MISSIONS =============== */
@@ -1925,7 +1941,7 @@ function nextTicker(){
 /* =============== START =============== */
 load();checkRestock();buildShop();fullRefresh();clampActive();if(S.weather&&!WEATHER[S.weather.id])S.weather=null;if(S.weather)setWeatherFx();checkDaily();showDaily();
 setInterval(logic,50);
-setInterval(()=>{updBonus();updSlot();updLeft();updMachines();updUpgrades();updShop();updLooks();updMissions();updSpin();updGoal();checkMilestone()},200);
+setInterval(()=>{updExtractTag();updBonus();updSlot();updLeft();updMachines();updUpgrades();updShop();updLooks();updMissions();updSpin();updGoal();checkMilestone()},200);
 setInterval(()=>{checkAch();updStats();renderPerks();autoBuy()},1000);
 setInterval(checkDaily,60000);
 setInterval(()=>save(false),15000);
