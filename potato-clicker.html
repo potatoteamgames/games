@@ -439,6 +439,10 @@ body.chaos .toast{background:rgba(20,6,58,.6);border-color:rgba(77,252,255,.5);b
 body.chaos .toast b{color:#4dfcff}
 @keyframes chaosStars{to{background-position:0 220px,0 260px,0 300px,0 240px,0 280px,0 200px,0 0,0 0}}
 @keyframes chaosGrid{to{background-position:0 0,0 0,0 22px}}
+.restock{display:flex;justify-content:center;align-items:center;gap:6px;margin:0 0 8px;padding:6px 10px;background:rgba(25,12,4,.55);border:2px dashed var(--brass);border-radius:10px;font-size:14px;color:var(--cream)}
+.restock b{color:var(--brass);font-size:16px;font-variant-numeric:tabular-nums}
+.row.soldout{filter:grayscale(1) brightness(.6)!important;cursor:not-allowed}
+.row.soldout .rc{color:var(--red)}
 </style>
 </head>
 <body>
@@ -552,7 +556,7 @@ body.chaos .toast b{color:#4dfcff}
         <div id="machList"></div>
       </div>
       <div class="tabc" id="t-upg"><h2>⬆️ Upgrades</h2><div class="note">Machines make potatoes. Upgrades make the things you already have <b>stronger</b>. Each upgrade is bought once. The colored tag tells you what it upgrades:</div><div class="uhelp"><span><b>🏭 MACHINE</b> = one machine type makes x2</span><span><b>🌍 ALL MACHINES</b> = every machine +25%</span><span><b>👆 CLICK</b> = more potatoes per click</span><span><b>💥 🔥 🌟 📚 ⏱️</b> = crits, combo, golden, XP, boosts</span></div><div class="note" id="upgNote"></div><div id="upgList"></div></div>
-      <div class="tabc" id="t-shop"><h2>🛒 Shop</h2><div class="note">Buy boosts now and save them in your bag for later. Prices follow your production — buy cheap now, use them when you're rich. Every boost you buy makes the next one of that kind more expensive; prices drop back one step every 10 minutes. You can keep up to 10 of each boost from the shop.</div><div id="shopList"></div></div>
+      <div class="tabc" id="t-shop"><h2>🛒 Shop</h2><div class="note">New items, prices and stock every 20 minutes. Each buy makes that item a bit dearer for a while. Max 10 of each in your bag.</div><div class="restock">🔄 Next restock in <b id="restockT">–</b></div><div id="shopList"></div></div>
       <div class="tabc" id="t-bag"><h2>🎒 Your Bag</h2><div class="note">Your saved boosts. Tap USE whenever you want.</div><div id="bagList"></div></div>
       <div class="tabc" id="t-mis">
         <h2>📜 Missions</h2>
@@ -725,12 +729,15 @@ const BOOSTS=[
   {id:'fanum',e:'⏩',n:'Time Skip',d:'Get 30 minutes of production instantly',k:2700,min:5000,g:.6,use:()=>{const v=Math.max(1000,D.base*1800);gain(v);bigFloat('⏩ +'+fmt(v),'#ffe08a')}},
   {id:'goldrain',e:'🌟',n:'Gold Rain',d:'5 golden potatoes appear',k:1200,min:5000,g:.4,use:()=>{for(let i=0;i<5;i++)setTimeout(spawnGolden,i*450)}},
   {id:'aura',e:'🧃',n:'XP Juice',d:'x3 XP for 5 minutes',k:600,min:2000,g:.4,use:()=>addActive('aura',300)},
+  {id:'coffee',e:'☕',n:'Cowboy Coffee',d:'x3 production for 3 minutes',k:300,min:800,g:.3,use:()=>addActive('coffee',180)},
+  {id:'charge',e:'🌀',n:'Chaos Charge',d:'+15% on the Bonus Level bar',k:1500,min:6000,g:.6,use:()=>addBonus(15)},
+  {id:'tokens',e:'🎟️',n:'Slot Tokens',d:'10 extra Potato Slots spins – also works while the machine cools down',k:600,min:2500,g:.5,use:()=>{if(slotCooling()){S.slotUntil=0;S.slotN=SLOT_MAX-10}else S.slotN=Math.max(0,S.slotN-10);updSlot()}},
   {id:'mystery',e:'🎁',n:'Mystery Box',d:'1-3 random boosts straight to your bag (Time Skip and Gold Rain are rare)',k:1000,min:3000,g:.6,use:()=>{const n=1+Math.floor(Math.random()*3),got=[];for(let i=0;i<n;i++){const b=boxPick();S.bag[b.id]=(S.bag[b.id]||0)+1;got.push(b.e)}toast('🎁 Mystery Box!','You got: '+got.join(' '));renderBag()}},
 ];
 // what a Mystery Box can give: small boosts often, the big ones rarely, never another box
 const BOX_W={frenzy:20,clickrizz:20,mewing:18,turbo:16,aura:12,goldrain:6,fanum:3};
 function boxPick(){let r=Math.random()*Object.values(BOX_W).reduce((a,b)=>a+b,0);for(const id in BOX_W){r-=BOX_W[id];if(r<0)return BOOSTS.find(b=>b.id===id)}return BOOSTS[0]}
-const ACTIVE_LBL={chaos:'🌀 BONUS CHAOS x10',frenzy:'🔥 x7 production',gfrenzy:'🌟 GOLD PARTY x7',clickrizz:'👆 x15 click',gclick:'⚡ CLICK FRENZY x77',mewing:'🎯 50% crit',turbo:'🤖 Robot Hand',aura:'🧃 x3 XP',sale:'🛒 Shop -50%'};
+const ACTIVE_LBL={coffee:'☕ x3 production',chaos:'🌀 BONUS CHAOS x10',frenzy:'🔥 x7 production',gfrenzy:'🌟 GOLD PARTY x7',clickrizz:'👆 x15 click',gclick:'⚡ CLICK FRENZY x77',mewing:'🎯 50% crit',turbo:'🤖 Robot Hand',aura:'🧃 x3 XP',sale:'🛒 Shop -50%'};
 
 const SKINS=[
   {id:'classic',t:'pot',n:'Classic',c:0,col:['#ffe0a3','#d99a4e','#8a5524'],g:'#ffb347'},
@@ -856,6 +863,9 @@ function updBonus(){
 /* =============== CHANGELOG =============== */
 // newest first – add a new entry at the top every time the game is updated
 const CHANGELOG=[
+  {v:'1.4',date:'24 Oct 2026',t:'Shop restocks',items:[
+    '🛒 The shop now restocks every 20 minutes with 5 random items, each with its own stock and price – sometimes on sale, sometimes expensive. When an item is sold out, wait for the next restock. The shop shows when the next restock is.',
+    '🛒 New shop items: ☕ Cowboy Coffee (x3 production for 3 min), 🌀 Chaos Charge (+15% Bonus Level) and 🎟️ Slot Tokens (10 extra Potato Slots spins).']},
   {v:'1.3',date:'24 Oct 2026',t:'Bonus Level, Potato Slots & shop update',items:[
     '🌀 New Bonus Level bar! It fills slowly while you click, catch golden potatoes, pass sheriff checks and finish missions.',
     '🌀 At 100% BONUS CHAOS starts for 1 minute: x10 production, x10 clicks and golden potatoes everywhere. It is rare – about once an hour if you play actively.',
@@ -897,7 +907,7 @@ function defState(){return{
   aura:0,level:1,souls:0,rebirths:0,goldens:0,crits:0,vibes:0,boostsUsed:0,maxCombo:0,
   playTime:0,nextVibe:vibeGap(),vibePending:false,sound:true,buyAmt:1,started:Date.now(),
   bought:0,missions:[],missionsDone:0,lastDay:'',streak:0,dailyPending:false,nextSpin:60,spins:0,
-  tokens:0,perks:{},shopHeat:{},bonus:0,chaosN:0,slotN:0,slotUntil:0,slotWins:0,shopT:0,autoBuy:true,drops:0,bestPow:0,nextRain:rand(150,300),nextWater:7200,v:3,
+  tokens:0,perks:{},shopHeat:{},shopStock:null,shopNext:0,bonus:0,chaosN:0,slotN:0,slotUntil:0,slotWins:0,shopT:0,autoBuy:true,drops:0,bestPow:0,nextRain:rand(150,300),nextWater:7200,v:3,
   weather:null,nextEvent:rand(70,130),weathers:0,bandits:0,trains:0
 }}
 let S=defState(),D={};
@@ -941,7 +951,7 @@ function recalc(){
   D={mm,glob:g*bonus,cm,cp,cc,cx,gf,cmax,flat,xpc,bd,base:base*g*bonus,bonus,achN,skinN,bAch,bLvl,bSoul,bSkin,g};
 }
 const wx=()=>(S.weather&&WEATHER[S.weather.id])||{};
-const prodBoost=()=>(S.active.chaos?10:1)*(S.active.frenzy?7:1)*(S.active.gfrenzy?7:1)*(wx().prod||1);
+const prodBoost=()=>(S.active.chaos?10:1)*(S.active.coffee?3:1)*(S.active.frenzy?7:1)*(S.active.gfrenzy?7:1)*(wx().prod||1);
 const cps=()=>D.base*prodBoost();
 const clickBoost=()=>(S.active.chaos?10:1)*(S.active.clickrizz?15:1)*(S.active.gclick?77:1)*(wx().click||1);
 const critChance=()=>S.active.mewing?0.5:Math.min(.9,D.cc+(wx().crit||0));
@@ -957,7 +967,7 @@ function addXP(x){
   if(up)levelUp();
 }
 // boosts stack, but never past 2x their normal length
-const BDUR={chaos:60,frenzy:60,clickrizz:30,mewing:30,turbo:30,aura:300,gfrenzy:77,gclick:13,sale:60};
+const BDUR={coffee:180,chaos:60,frenzy:60,clickrizz:30,mewing:30,turbo:30,aura:300,gfrenzy:77,gclick:13,sale:60};
 const activeCap=id=>2*(BDUR[id]||60)*(D.bd||1);
 function addActive(id,t){S.active[id]=Math.min(activeCap(id),(S.active[id]||0)+t*(D.bd||1))}
 function clampActive(){for(const k in S.active)S.active[k]=Math.min(S.active[k],activeCap(k))}
@@ -1216,8 +1226,23 @@ function buyUpg(u,el){
 }
 // every boost you buy makes the next one of that kind dearer; the price cools back down by one step every 10 minutes (also while away)
 const HEAT_MS=600000,SHOP_CAP=10;
+// the shop restocks every 20 minutes (real time) with 5 random items, each with its own stock and price
+const RESTOCK_MS=1200000,STOCK_N=5;
+const STOCK_RULE={frenzy:[10,3,6],clickrizz:[10,3,6],mewing:[9,2,5],turbo:[8,2,5],coffee:[9,3,6],aura:[6,2,4],goldrain:[4,1,3],tokens:[4,1,2],mystery:[4,1,3],fanum:[3,1,2],charge:[2,1,1]}; // weight, min, max stock
+const PRICE_MULTS=[.6,.75,.85,1,1,1,1.15,1.3,1.5];
+const stockMult=b=>(S.shopStock&&S.shopStock[b.id]?S.shopStock[b.id].m:1);
+function restock(){
+  const pool=BOOSTS.filter(b=>STOCK_RULE[b.id]),pickd=[];
+  while(pickd.length<Math.min(STOCK_N,pool.length)){let r=Math.random()*pool.reduce((a,b)=>a+(pickd.includes(b)?0:STOCK_RULE[b.id][0]),0);
+    for(const b of pool){if(pickd.includes(b))continue;r-=STOCK_RULE[b.id][0];if(r<0){pickd.push(b);break}}}
+  S.shopStock={};pickd.forEach(b=>{const[,lo,hi]=STOCK_RULE[b.id];S.shopStock[b.id]={q:lo+Math.floor(Math.random()*(hi-lo+1)),m:pick(PRICE_MULTS)}});
+}
+function checkRestock(){
+  const now=Date.now();
+  if(!S.shopStock||!S.shopNext||now>=S.shopNext){const was=!!S.shopStock;restock();S.shopNext=now+RESTOCK_MS;buildShop();if(was){toast('🛒 New stock in the shop!','Fresh items and new prices');snd('ready')}}
+}
 const heatMult=b=>Math.pow(1+b.g,S.shopHeat[b.id]||0);
-const boostCost=b=>Math.max(b.min,D.base*b.k)*heatMult(b)*(1-.1*PK('boost'))*(S.active.sale?.5:1);
+const boostCost=b=>Math.max(b.min,D.base*b.k)*heatMult(b)*stockMult(b)*(1-.1*PK('boost'))*(S.active.sale?.5:1);
 function coolShop(){
   const now=Date.now();if(!S.shopT||S.shopT>now){S.shopT=now;return}
   const n=Math.floor((now-S.shopT)/HEAT_MS);if(n<1)return;S.shopT+=n*HEAT_MS;
@@ -1226,12 +1251,14 @@ function coolShop(){
 }
 function buyBoost(b,el){
   if(vibe)return;const c=boostCost(b);if(S.potatoes<c){snd('no');return}
+  const st=S.shopStock&&S.shopStock[b.id];if(!st||st.q<=0){snd('no');toast('🚫 Sold out',b.e+' '+b.n+' is sold out – new stock soon');return}
   if((S.bag[b.id]||0)>=SHOP_CAP){snd('no');toast('🎒 Bag full','You can keep '+SHOP_CAP+' '+b.e+' '+b.n+' at a time — use some first');return}
   coolShop();if(!S.shopHeat[b.id]&&!Object.keys(S.shopHeat).length)S.shopT=Date.now();
-  S.potatoes-=c;S.shopHeat[b.id]=(S.shopHeat[b.id]||0)+1;S.bag[b.id]=(S.bag[b.id]||0)+1;snd('buy');fxAt(el);const r=el.getBoundingClientRect();floatTxt(r.left+r.width/2,r.top+10,'+1 '+b.e+' in bag','#ffd27a',20);renderBag();
+  S.potatoes-=c;st.q--;S.shopHeat[b.id]=(S.shopHeat[b.id]||0)+1;S.bag[b.id]=(S.bag[b.id]||0)+1;snd('buy');fxAt(el);const r=el.getBoundingClientRect();floatTxt(r.left+r.width/2,r.top+10,'+1 '+b.e+' in bag','#ffd27a',20);renderBag();
 }
 function useBoost(id){
   if(vibe||!S.bag[id])return;const b=BOOSTS.find(x=>x.id===id);
+  if(id==='charge'&&S.active.chaos){snd('no');toast('🌀 Chaos is already running','Save your Chaos Charge for later');return}
   if(BDUR[id]&&(S.active[id]||0)>activeCap(id)-BDUR[id]*(D.bd||1)){snd('no');toast('⏳ Already running',b.e+' '+b.n+' is at max time — wait a bit before using another');return}
   S.bag[id]--;if(!S.bag[id])delete S.bag[id];S.boostsUsed++;b.use();snd('boost');
   const r=pot.getBoundingClientRect();emojis(r.left+r.width/2,r.top+r.height/2,10,b.e);ring(r.left+r.width/2,r.top+r.height/2,'#ffd27a',260);
@@ -1330,17 +1357,20 @@ function updUpgrades(){
 /* =============== SHOP + STYLE =============== */
 const shopEls=[];
 function buildShop(){
-  BOOSTS.forEach(b=>{const el=document.createElement('div');el.className='row';
+  $('#shopList').innerHTML='';shopEls.length=0;if(!S.shopStock)return;
+  BOOSTS.filter(b=>S.shopStock[b.id]).forEach(b=>{const el=document.createElement('div');el.className='row';
     el.innerHTML=`<div class="ri">${b.e}</div><div class="rt"><div class="rn">${b.n}</div><div class="rd">${b.d}</div><div class="rc"></div></div><div class="ro" style="font-size:18px"></div>`;
     el.addEventListener('click',()=>buyBoost(b,el));$('#shopList').appendChild(el);
     shopEls.push({b,el,c:el.querySelector('.rc'),o:el.querySelector('.ro')})});
 }
 function updShop(){
-  coolShop();const left=Math.max(0,HEAT_MS-(Date.now()-S.shopT)),mm=Math.floor(left/60000),ss=String(Math.floor(left/1000)%60).padStart(2,'0');
-  shopEls.forEach(s=>{const c=boostCost(s.b),h=S.shopHeat[s.b.id]||0,full=(S.bag[s.b.id]||0)>=SHOP_CAP;
-    const t='🥔 '+fmt(c)+(h?` · 📈 x${heatMult(s.b).toFixed(1)} (cheaper in ${mm}:${ss})`:` · +${Math.round(s.b.g*100)}% per buy`);
+  checkRestock();coolShop();
+  $('#restockT').textContent=fmtTime((S.shopNext-Date.now())/1000);
+  shopEls.forEach(s=>{const c=boostCost(s.b),h=S.shopHeat[s.b.id]||0,full=(S.bag[s.b.id]||0)>=SHOP_CAP,st=S.shopStock[s.b.id],out=!st||st.q<=0,m=st?st.m:1;
+    const t=out?'🚫 SOLD OUT':'🥔 '+fmt(c)+' · 📦 '+st.q+' left'+(m<1?` · 🏷️ ${Math.round((1-m)*100)}% off`:m>1?` · 💸 +${Math.round((m-1)*100)}%`:'')+(h?` · 📈 x${heatMult(s.b).toFixed(1)}`:'');
     if(s.c.textContent!==t)s.c.textContent=t;
-    s.o.textContent=S.bag[s.b.id]?'🎒'+S.bag[s.b.id]+(full?' MAX':''):'';s.el.classList.toggle('can',S.potatoes>=c&&!full)})}
+    s.el.classList.toggle('soldout',out);
+    s.o.textContent=S.bag[s.b.id]?'🎒'+S.bag[s.b.id]+(full?' MAX':''):'';s.el.classList.toggle('can',S.potatoes>=c&&!full&&!out)})}
 let lookKey='',lookEls=[];
 function updLooks(){
   const key=JSON.stringify(S.skins)+S.skin+S.acc+S.bg;
@@ -1808,7 +1838,7 @@ function nextTicker(){
 }
 
 /* =============== START =============== */
-load();buildShop();fullRefresh();clampActive();if(S.weather&&!WEATHER[S.weather.id])S.weather=null;if(S.weather)setWeatherFx();checkDaily();showDaily();
+load();checkRestock();buildShop();fullRefresh();clampActive();if(S.weather&&!WEATHER[S.weather.id])S.weather=null;if(S.weather)setWeatherFx();checkDaily();showDaily();
 setInterval(logic,50);
 setInterval(()=>{updBonus();updSlot();updLeft();updMachines();updUpgrades();updShop();updLooks();updMissions();updSpin();updGoal();checkMilestone()},200);
 setInterval(()=>{checkAch();updStats();renderPerks();autoBuy()},1000);
