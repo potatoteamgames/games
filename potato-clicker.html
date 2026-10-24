@@ -434,6 +434,12 @@ body[data-world="4"] #left{background-image:radial-gradient(1.5px 1.5px at 15% 2
 .exbox{max-height:90vh;overflow-y:auto}
 .exbox .vtitle{font-size:26px}
 .exrb{border-top:3px dashed var(--ink2);margin-top:12px;padding-top:8px}
+.wpt{font-size:13px;font-weight:900;margin:6px 0 4px}
+#worldPick{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+#worldPick .wpt{flex-basis:100%}
+.wpick{display:flex;flex-direction:column;align-items:center;width:84px;padding:6px 4px;font-size:24px;background:rgba(0,0,0,.08);border:2px solid var(--ink2);border-radius:10px;color:var(--ink)}
+.wpick small{font-size:10px;line-height:1.1;margin-top:2px}
+.wpick.on{background:var(--brass);border-color:var(--ink);box-shadow:0 0 10px var(--brass)}
 .exrb h3{color:var(--ink);text-shadow:none;margin-bottom:4px}
 .exnew{display:none;background:linear-gradient(90deg,#7df9ff,#ffd84a);color:#0b1a33;font-weight:900;border:3px solid var(--ink);border-radius:10px;padding:6px 10px;margin-bottom:8px;animation:pulse 1.2s infinite}
 .exbox.first .exnew{display:block}
@@ -693,6 +699,7 @@ body.chaos .toast b{color:#4dfcff}
             <div class="exrb">
       <h3>✨ Rebirth</h3>
       <div class="note" style="margin:0">Start over with potatoes, machines and upgrades — but earn <b>Potato Souls 👻</b>. Each soul gives <b>+5%</b> to everything forever. Your level goes back to 1 too. You keep your style, trophies and bag. Spend Soul Coins in the 🪙 Soul Shop in 📊 Stats.</div>
+      <div id="worldPick" style="display:none"></div>
       <div id="rebInfo" style="margin:8px 0;font-size:14px"></div>
       <button class="sbtn big" id="rebBtn">✨ REBIRTH</button>
     </div>
@@ -926,6 +933,8 @@ const WORLDS=[
 const MEDALS=[{e:'🥉',n:'Bronze'},{e:'🥈',n:'Silver'},{e:'🥇',n:'Gold'},{e:'💎',n:'Diamond'}];
 const EXTRACT_LVL=200;
 const extractCost=()=>1e18*Math.pow(1000,S.medals||0);
+const isMax=()=>(S.medals||0)>=MEDALS.length;
+let pickWorld=null;
 const canExtract=()=>(S.medals||0)<MEDALS.length&&S.level>=EXTRACT_LVL&&S.potatoes>=extractCost();
 function applyWorld(){
   const w=WORLDS[S.world]||WORLDS[0];
@@ -936,7 +945,7 @@ function applyWorld(){
 function updExtract(){
   $('#medalRow').innerHTML=MEDALS.map((m,i)=>`<div class="medal ${i<(S.medals||0)?'got':''}" title="${m.n} medal">${m.e}</div>`).join('');
   const done=(S.medals||0)>=MEDALS.length,b=$('#extractBtn');
-  if(done){$('#exInfo').innerHTML='🏆 <b>MAX!</b> You have all 4 medals and reached the last world. You cannot Extract or Rebirth any more. Legend!';b.disabled=true;b.textContent='🏆 MAX';return}
+  if(done){$('#exInfo').innerHTML='🏆 <b>MAX!</b> You have all 4 medals and reached the last world. You cannot Extract any more – but you can Rebirth to any world below. Legend!';b.disabled=true;b.textContent='🏆 MAX';return}
   b.textContent='🧭 EXTRACT';
   const nw=WORLDS[(S.world||0)+1],nm=MEDALS[S.medals||0],lvOk=S.level>=EXTRACT_LVL,cOk=S.potatoes>=extractCost();
   $('#exInfo').innerHTML=`Next: ${nm.e} <b>${nm.n} medal</b> and ${nw.e} <b>${nw.n}</b><br><span class="${lvOk?'ok':'no'}">${lvOk?'✅':'❌'} Level ${EXTRACT_LVL} (you are ${S.level})</span><br><span class="${cOk?'ok':'no'}">${cOk?'✅':'❌'} 🥔 ${fmt(extractCost())} (you have ${fmt(S.potatoes)})</span>`;
@@ -972,7 +981,7 @@ const CHANGELOG=[
     '🎉 When you reach level 200 a popup tells you that you can Extract.',
     '✨ Rebirth has moved from 📊 Stats to the Extract window. The 🪙 Soul Shop stays in Stats.',
     '✨ Rebirth now also resets your level to 1.',
-    '🏆 When you have Extracted through all worlds and won all 4 medals you are MAX – Extract and Rebirth are then finished.',
+    '🏆 When you have Extracted through all worlds and won all 4 medals you are MAX. You get no more medals, but you can Rebirth to any world you like and start over there.',
     '🏅 Every Extract gives you a medal – 🥉 Bronze, 🥈 Silver, 🥇 Gold and 💎 Diamond. Each medal gives x2 production and clicks forever.',
     '🔄 After an Extract everything starts over from zero – but in a brand new world with its own look.',
     '🌍 4 new worlds: ❄️ Frozen Peaks, 🏴‍☠️ Pirate Cove, 🍭 Candy Land and 🚀 Space Colony.',
@@ -1548,9 +1557,16 @@ function updStats(){
   const p=soulsPending();
   $('#rebInfo').innerHTML=p>0?`You get <b style="color:var(--brass)">+${p} 👻 souls</b> (+${p*5}% forever) and +${p} 🪙`:`Earn more potatoes in total to get souls (first soul at ${fmt(1e10)} all time)`;
   $('#rebBtn').disabled=p<1;
-  const mx=(S.medals||0)>=MEDALS.length;
-  if(mx){$('#rebInfo').innerHTML='🏆 <b>MAX!</b> You have completed all worlds and won all 4 medals – you cannot Rebirth any more.';$('#rebBtn').disabled=true}
-  $('#rebBtn').textContent=mx?'🏆 MAX':'✨ REBIRTH';
+  const mx=isMax();
+  $('#worldPick').style.display=mx?'':'none';
+  if(mx){
+    if(pickWorld==null)pickWorld=S.world;
+    const pk=WORLDS.map((w,i)=>`<button class="wpick ${i===pickWorld?'on':''}" data-w="${i}">${w.e}<small>${w.n}${i===S.world?' (now)':''}</small></button>`).join('');
+    if($('#worldPick').dataset.k!==pk){$('#worldPick').dataset.k=pk;$('#worldPick').innerHTML='<div class="wpt">🏆 MAX – no more medals, but you can Rebirth to any world:</div>'+pk;$$('#worldPick .wpick').forEach(b=>b.onclick=()=>{pickWorld=+b.dataset.w;snd('tick');updStats()})}
+    const w=WORLDS[pickWorld],move=pickWorld!==S.world;
+    $('#rebInfo').innerHTML=(p>0?`You get <b style="color:var(--brass)">+${p} 👻 souls</b> and +${p} 🪙`:'No new souls yet')+(move?` · you travel to <b>${w.e} ${w.n}</b>`:'');
+    $('#rebBtn').disabled=p<1&&!move;$('#rebBtn').textContent='✨ REBIRTH'+(move?' to '+w.e+' '+w.n:'');
+  }else $('#rebBtn').textContent='✨ REBIRTH';
 }
 
 /* =============== MISSIONS =============== */
@@ -1930,10 +1946,12 @@ function frame(t){
 
 /* =============== REBIRTH / SETTINGS =============== */
 $('#rebBtn').addEventListener('click',()=>{
-  const p=soulsPending();if(p<1||vibe||(S.medals||0)>=MEDALS.length)return;
-  if(!confirm(`✨ REBIRTH\n\nYou lose: potatoes, level, machines, upgrades and active boosts.\nYou keep: style, trophies and bag.\nYou get: +${p} Potato Souls (+${p*5}% forever) and +${p} 🪙 Soul Coins.\n\nRebirth now?`))return;
+  const p=soulsPending(),mx=isMax(),to=mx?pickWorld:S.world,move=mx&&to!==S.world;if((p<1&&!move)||vibe)return;
+  const w=WORLDS[to];
+  if(!confirm(`✨ REBIRTH${mx?' to '+w.e+' '+w.n:''}\n\nYou lose: potatoes, level, machines, upgrades and active boosts.\nYou keep: style, trophies, bag and medals.\nYou get: +${p} Potato Souls (+${p*5}% forever) and +${p} 🪙 Soul Coins.${mx?'\nYou travel to '+w.e+' '+w.n+' (no new medal).':''}\n\nRebirth now?`))return;
+  if(mx){S.world=to;applyLook();$('#exm').classList.add('hidden')}
   S.souls+=p;S.tokens+=p;S.rebirths++;S.level=1;S.aura=0;S.exPopup=0;S.potatoes=PK('start')?Math.pow(10,2+PK('start')):0;S.runEarned=0;S.machines=MACHINES.map(()=>0);S.upgrades={};S.active={};disp=0;
-  recalc();renderHideout();upgKey='';snd('lvl');confetti(200);toast('✨ REBORN!','+'+p+' souls. Start over — but stronger 💪');save();
+  recalc();renderHideout();upgKey='';snd('lvl');confetti(200);toast('✨ REBORN!',(p?'+'+p+' souls. ':'')+(mx?'Welcome to '+WORLDS[S.world].e+' '+WORLDS[S.world].n+'!':'Start over — but stronger 💪'));save();
 });
 $('#expBtn').addEventListener('click',()=>{try{const s=btoa(unescape(encodeURIComponent(JSON.stringify(S))));prompt('Copy your save:',s)}catch(e){}});
 $('#impBtn').addEventListener('click',()=>{const s=prompt('Paste your save:');if(!s)return;try{importObj(JSON.parse(decodeURIComponent(escape(atob(s.trim())))));fullRefresh();save();toast('📥 Save imported','Welcome back, cowboy')}catch(e){toast('😬 Invalid save','That code does not work')}});
