@@ -445,6 +445,19 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
               <path d="M210 110 H156 Q152 110 153 116 L158 140 Q162 156 182 156 Q204 156 209 140 L214 116 Q214 110 210 110Z" fill="url(#lens)" stroke="#1a0d05" stroke-width="5" stroke-linejoin="round"/>
               <path d="M96 118 L112 118 L100 140Z M162 118 L178 118 L166 140Z" fill="#fff" opacity=".28"/>
             </g>
+            <g id="headset" style="display:none">
+              <defs><linearGradient id="cup" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4a4f5c"/><stop offset="100%" stop-color="#14161c"/></linearGradient></defs>
+              <path d="M32 140 C26 52 84 8 150 8 C216 8 274 52 268 140" stroke="#1a0d05" stroke-width="18" fill="none" stroke-linecap="round"/>
+              <path d="M32 140 C26 52 84 8 150 8 C216 8 274 52 268 140" stroke="#3b3f4a" stroke-width="10" fill="none" stroke-linecap="round"/>
+              <path d="M70 52 C96 26 124 18 150 18" stroke="#fff" stroke-width="3" opacity=".35" fill="none" stroke-linecap="round"/>
+              <path d="M30 168 Q50 214 112 214" stroke="#1a0d05" stroke-width="7" fill="none" stroke-linecap="round"/>
+              <circle cx="116" cy="214" r="9" fill="#2a2d36" stroke="#1a0d05" stroke-width="4"/>
+              <rect x="4" y="112" width="44" height="76" rx="20" fill="url(#cup)" stroke="#1a0d05" stroke-width="5"/>
+              <rect x="252" y="112" width="44" height="76" rx="20" fill="url(#cup)" stroke="#1a0d05" stroke-width="5"/>
+              <rect x="34" y="122" width="16" height="56" rx="8" fill="#ff4d6d" stroke="#1a0d05" stroke-width="3"/>
+              <rect x="250" y="122" width="16" height="56" rx="8" fill="#ff4d6d" stroke="#1a0d05" stroke-width="3"/>
+              <path d="M14 128 Q12 150 16 170 M286 128 Q288 150 284 170" stroke="#fff" stroke-width="3" opacity=".3" fill="none" stroke-linecap="round"/>
+            </g>
             <path id="mouth" d="M122 186 Q150 214 178 186" stroke="#3a1d08" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           <div id="acc"></div>
@@ -665,7 +678,7 @@ const SKINS=[
   {id:'bow',t:'acc',n:'Bow',c:2e6,e:'🎀',pos:[76,12,28]},
   {id:'crown',t:'acc',n:'Crown',c:2e8,e:'👑',pos:[50,2,40]},
   {id:'tophat',t:'acc',n:'Top Hat',c:2e10,e:'🎩',pos:[50,-4,46]},
-  {id:'headset',t:'acc',n:'Headset',c:2e12,e:'🎧',pos:[50,36,96]},
+  {id:'headset',t:'acc',n:'Headset',c:2e12,e:'🎧'},
   {id:'bg0',t:'bg',n:'Prairie',c:0,col:['#f0b46a','#c9733a','#7a3f1d']},
   {id:'bg1',t:'bg',n:'Sunset',c:1e4,col:['#ff8a5c','#c73866','#3d1e4a']},
   {id:'bg2',t:'bg',n:'Desert Night',c:1e6,col:['#2a3060','#1b1f3a','#0b0d1e']},
@@ -749,6 +762,7 @@ const CHANGELOG=[
     'You can keep up to 10 of each boost from the shop in your bag. Free boosts do not count.',
     'All boosts have new, higher prices. Time Skip can no longer be used to earn endless potatoes.',
     'Mystery Box now gives 1-3 boosts instead of 2-4. Gold Rain and Time Skip are rare, and a box never gives another box.',
+    'The Headset now sits properly on the potato – band over the head, ear cups on the sides and a little microphone.',
     'New 📜 Update changelog button so you can always see what is new.']},
   {v:'1.2',date:'21 Oct 2026',t:'Discord & phones',items:[
     'Join the Potato Team Games Discord with the new button at the top.',
@@ -1130,6 +1144,7 @@ function applyLook(){
   r.setProperty('--b1',b.col[0]);r.setProperty('--b2',b.col[1]);r.setProperty('--b3',b.col[2]);
   const a=SKINS.find(s=>s.id===S.acc),ac=$('#acc');
   $('#shades').style.display=S.acc==='shades'?'':'none';
+  $('#headset').style.display=S.acc==='headset'?'':'none';
   if(a&&a.pos){ac.textContent=a.e;ac.style.left=a.pos[0]+'%';ac.style.top=a.pos[1]+'%';ac.style.fontSize=`calc(var(--ps)*${a.pos[2]/100})`}else ac.textContent='';
 }
 
