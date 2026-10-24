@@ -491,6 +491,35 @@ body.chaos .toast b{color:#4dfcff}
 .restock b{color:var(--brass);font-size:16px;font-variant-numeric:tabular-nums}
 .row.soldout{filter:grayscale(1) brightness(.6)!important;cursor:not-allowed}
 .row.soldout .rc{color:var(--red)}
+/* ===== WORLD WARP (Extract / Rebirth transition) ===== */
+#app.warpOut{animation:warpOut 1.3s cubic-bezier(.6,0,.9,.4) forwards}
+#app.warpIn{animation:warpIn .9s cubic-bezier(.2,1.3,.4,1)}
+@keyframes warpOut{to{transform:scale(.15) rotate(25deg);filter:blur(8px);opacity:0}}
+@keyframes warpIn{from{transform:scale(1.6);filter:blur(10px) brightness(2);opacity:0}}
+#warp{position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(circle,#2a0a5e,#0b0320 70%);animation:wIn .25s ease-out}
+#warp.out{animation:wOut .8s ease-in forwards}
+@keyframes wIn{from{opacity:0}}@keyframes wOut{to{opacity:0;transform:scale(1.4)}}
+.wtun{position:absolute;left:50%;top:50%;width:240vmax;height:240vmax;margin:-120vmax 0 0 -120vmax;border-radius:50%;
+  background:repeating-conic-gradient(from 0deg,rgba(255,79,216,.55) 0 6deg,transparent 6deg 14deg,rgba(77,252,255,.5) 14deg 18deg,transparent 18deg 30deg);
+  -webkit-mask:radial-gradient(circle,transparent 4%,#000 30%);mask:radial-gradient(circle,transparent 4%,#000 30%);animation:wSpin 2.2s linear infinite}
+.wtun.t2{background:repeating-radial-gradient(circle,rgba(255,255,255,.0) 0 40px,rgba(255,216,74,.35) 40px 44px);animation:wZoom .9s linear infinite;-webkit-mask:radial-gradient(circle,transparent 2%,#000 40%);mask:radial-gradient(circle,transparent 2%,#000 40%)}
+.wstars{position:absolute;inset:-50%;background:radial-gradient(2px 2px at 10% 20%,#fff 50%,transparent 51%),radial-gradient(2px 2px at 80% 30%,#fff 50%,transparent 51%),radial-gradient(3px 3px at 40% 70%,#ffd6fa 50%,transparent 51%),radial-gradient(2px 2px at 65% 85%,#c9fbff 50%,transparent 51%);background-size:300px 300px;animation:wZoom 1.2s linear infinite}
+@keyframes wSpin{to{transform:rotate(360deg)}}
+@keyframes wZoom{from{transform:scale(.6);opacity:.4}to{transform:scale(1.8);opacity:1}}
+.wbox{position:relative;z-index:2;text-align:center;color:#fff;padding:0 16px}
+.whead{font-family:Rye,Georgia,serif;font-size:clamp(30px,7vw,60px);text-shadow:0 0 12px #ff4fd8,0 0 30px #4dfcff;animation:pulse .6s infinite}
+.wreveal{display:none}
+#warp.rev .whead{display:none}
+#warp.rev .wreveal{display:block;animation:wPop .7s cubic-bezier(.2,1.6,.4,1)}
+#warp.rev .wtun{animation-duration:6s}#warp.rev .wtun.t2,#warp.rev .wstars{animation-duration:3s}
+@keyframes wPop{from{transform:scale(0) rotate(-20deg);opacity:0}}
+.we{font-size:clamp(90px,22vw,170px);line-height:1;filter:drop-shadow(0 0 30px #fff);animation:gold 2.4s ease-in-out infinite}
+.wn{font-family:Rye,Georgia,serif;font-size:clamp(32px,7vw,64px);margin-top:6px;text-shadow:0 0 10px #ff4fd8,0 0 26px #4dfcff,3px 3px 0 #0008}
+.wm{font-size:clamp(50px,12vw,90px);margin-top:6px;animation:wPop .9s .3s both cubic-bezier(.2,1.6,.4,1)}
+.wsub{font-size:clamp(14px,3vw,20px);font-weight:900;margin-top:8px;color:#ffe9a8;text-shadow:1px 1px 0 #0008}
+.wflash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:3}
+#warp.flash .wflash{animation:wFlash .7s ease-out}
+@keyframes wFlash{0%{opacity:0}35%{opacity:1}100%{opacity:0}}
 </style>
 </head>
 <body>
@@ -956,26 +985,42 @@ function doExtract(){
   const nm=MEDALS[S.medals||0],nw=WORLDS[(S.world||0)+1];
   if(!confirm(`🧭 EXTRACT\n\nYou pay ${fmt(extractCost())} potatoes and EVERYTHING starts over from zero: potatoes, level, machines, upgrades, souls, perks, style, trophies, bag and missions.\n\nYou get: ${nm.e} ${nm.n} medal (x2 production and clicks forever) and travel to ${nw.e} ${nw.n}.\n\nExtract now?`))return;
   const keep={world:(S.world||0)+1,medals:(S.medals||0)+1,sound:S.sound,autoBuy:S.autoBuy};
-  S=Object.assign(defState(),keep);
-  try{save()}catch(e){}
-  fullRefresh();checkRestock();buildShop();fillMissions();
-  snd('lvl');confetti(300);
-  bigBanner(`${nm.e} ${nm.n.toUpperCase()} MEDAL!`,`Welcome to ${nw.e} ${nw.n} · x${fmt(Math.pow(2,S.medals))} production forever`);
-  toast('🧭 Extracted!','Welcome to '+nw.e+' '+nw.n+' – a brand new start');
+  worldWarp({head:'🧭 EXTRACTING…',w:nw,medal:nm,sub:`${nm.e} ${nm.n} medal · x${fmt(Math.pow(2,keep.medals))} production forever`},()=>{
+    S=Object.assign(defState(),keep);
+    try{save()}catch(e){}
+    fullRefresh();checkRestock();buildShop();fillMissions();
+  },()=>toast('🧭 Extracted!','Welcome to '+nw.e+' '+nw.n+' – a brand new start'));
 }
-$('#extractBtn').addEventListener('click',()=>{doExtract();if(!$('#exm').classList.contains('hidden')&&S.medals&&S.level===1)$('#exm').classList.add('hidden')});
+/* the big world transition: the game spins away into a warp tunnel, the new world is revealed, then the game zooms back in */
+let warping=false;
+function worldWarp(o,apply,done){
+  if(warping)return;warping=true;
+  $$('.modal').forEach(m=>m.classList.add('hidden'));
+  const ov=document.createElement('div');ov.id='warp';
+  ov.innerHTML=`<div class="wtun"></div><div class="wtun t2"></div><div class="wstars"></div><div class="wbox"><div class="whead">${o.head}</div><div class="wreveal"><div class="we">${o.w.e}</div><div class="wn">${o.w.n}</div>${o.medal?`<div class="wm">${o.medal.e}</div>`:''}<div class="wsub">${o.sub||''}</div></div></div><div class="wflash"></div>`;
+  document.body.appendChild(ov);const app=$('#app');app.classList.remove('warpIn');app.classList.add('warpOut');
+  snd('boost');setTimeout(()=>snd('boost'),400);
+  setTimeout(()=>{ov.classList.add('flash')},1200);
+  setTimeout(()=>{apply();ov.classList.add('rev');snd('lvl');confetti(160)},1450);
+  setTimeout(()=>{app.classList.remove('warpOut');app.classList.add('warpIn');ov.classList.add('out');confetti(220);snd('ach')},3600);
+  setTimeout(()=>{ov.remove();app.classList.remove('warpIn');warping=false;if(done)done()},4400);
+}
+$('#extractBtn').addEventListener('click',doExtract);
 function openExtract(first){$('.exbox').classList.toggle('first',!!first);updStats();const w=WORLDS[S.world]||WORLDS[0];$('#exWorld').innerHTML=`You are in <b>${w.e} ${w.n}</b> · world ${(S.world||0)+1} of ${WORLDS.length}`;updExtract();$('#exm').classList.remove('hidden')}
 $('#worldTag').addEventListener('click',()=>{snd('tick');openExtract()});
 $('#exClose').addEventListener('click',()=>$('#exm').classList.add('hidden'));
 $('#exm').addEventListener('click',e=>{if(e.target.id==='exm')$('#exm').classList.add('hidden')});
 let exReadyNote=false;
 function updExtractTag(){
+  if(warping)return;
   if(S.level>=EXTRACT_LVL&&!S.exPopup&&(S.medals||0)<MEDALS.length&&!vibe&&$('#daily').classList.contains('hidden')&&$('#clog').classList.contains('hidden')){S.exPopup=1;save();snd('lvl');confetti(120);openExtract(true)}
 const r=canExtract();$('#worldTag').classList.toggle('ready',r);if(r&&!exReadyNote){exReadyNote=true;toast('🧭 You can Extract!','Tap your world name above the potato count');snd('ready')}if(!r)exReadyNote=false;if(!$('#exm').classList.contains('hidden'))updExtract()}
 
 /* =============== CHANGELOG =============== */
 // newest first – add a new entry at the top every time the game is updated
 const CHANGELOG=[
+  {v:'1.6',date:'24 Oct 2026',t:'Warp to new worlds',items:[
+    '🌀 Extract and Rebirth now have a big warp animation: the game spins away into a neon tunnel, your new world and medal are revealed, and then you zoom into the new world.']},
   {v:'1.5',date:'24 Oct 2026',t:'Extract & new worlds',items:[
     '🧭 New Extract: reach level 200 and pay a big pile of potatoes to Extract. Tap your world name above the potato count to see Extract, Rebirth and your medals.',
     '🎉 When you reach level 200 a popup tells you that you can Extract.',
@@ -1949,9 +1994,11 @@ $('#rebBtn').addEventListener('click',()=>{
   const p=soulsPending(),mx=isMax(),to=mx?pickWorld:S.world,move=mx&&to!==S.world;if((p<1&&!move)||vibe)return;
   const w=WORLDS[to];
   if(!confirm(`✨ REBIRTH${mx?' to '+w.e+' '+w.n:''}\n\nYou lose: potatoes, level, machines, upgrades and active boosts.\nYou keep: style, trophies, bag and medals.\nYou get: +${p} Potato Souls (+${p*5}% forever) and +${p} 🪙 Soul Coins.${mx?'\nYou travel to '+w.e+' '+w.n+' (no new medal).':''}\n\nRebirth now?`))return;
-  if(mx){S.world=to;applyLook();$('#exm').classList.add('hidden')}
-  S.souls+=p;S.tokens+=p;S.rebirths++;S.level=1;S.aura=0;S.exPopup=0;S.potatoes=PK('start')?Math.pow(10,2+PK('start')):0;S.runEarned=0;S.machines=MACHINES.map(()=>0);S.upgrades={};S.active={};disp=0;
-  recalc();renderHideout();upgKey='';snd('lvl');confetti(200);toast('✨ REBORN!',(p?'+'+p+' souls. ':'')+(mx?'Welcome to '+WORLDS[S.world].e+' '+WORLDS[S.world].n+'!':'Start over — but stronger 💪'));save();
+  worldWarp({head:'✨ REBIRTH…',w,sub:(p?`+${p} 👻 souls · +${p*5}% forever`:'A fresh start')+(move?' · new world!':'')},()=>{
+    if(mx){S.world=to;applyLook()}
+    S.souls+=p;S.tokens+=p;S.rebirths++;S.level=1;S.aura=0;S.exPopup=0;S.potatoes=PK('start')?Math.pow(10,2+PK('start')):0;S.runEarned=0;S.machines=MACHINES.map(()=>0);S.upgrades={};S.active={};disp=0;
+    recalc();renderHideout();upgKey='';save();
+  },()=>toast('✨ REBORN!',(p?'+'+p+' souls. ':'')+(mx?'Welcome to '+WORLDS[S.world].e+' '+WORLDS[S.world].n+'!':'Start over — but stronger 💪')));
 });
 $('#expBtn').addEventListener('click',()=>{try{const s=btoa(unescape(encodeURIComponent(JSON.stringify(S))));prompt('Copy your save:',s)}catch(e){}});
 $('#impBtn').addEventListener('click',()=>{const s=prompt('Paste your save:');if(!s)return;try{importObj(JSON.parse(decodeURIComponent(escape(atob(s.trim())))));fullRefresh();save();toast('📥 Save imported','Welcome back, cowboy')}catch(e){toast('😬 Invalid save','That code does not work')}});
