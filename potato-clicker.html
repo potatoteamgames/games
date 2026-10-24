@@ -642,7 +642,14 @@ body.chaos .toast b{color:#4dfcff}
         <div id="machList"></div>
       </div>
       <div class="tabc" id="t-upg"><h2>⬆️ Upgrades</h2><div class="note">Machines make potatoes. Upgrades make the things you already have <b>stronger</b>. Each upgrade is bought once. The colored tag tells you what it upgrades:</div><div class="uhelp"><span><b>🏭 MACHINE</b> = one machine type makes x2</span><span><b>🌍 ALL MACHINES</b> = every machine +25%</span><span><b>👆 CLICK</b> = more potatoes per click</span><span><b>💥 🔥 🌟 📚 ⏱️</b> = crits, combo, golden, XP, boosts</span></div><div class="note" id="upgNote"></div><div id="upgList"></div></div>
-      <div class="tabc" id="t-shop"><h2>🛒 Shop</h2><div class="note">New items, prices and stock every 20 minutes. Each buy makes that item a bit dearer for a while. Max 10 of each in your bag.</div><div class="restock">🔄 Next restock in <b id="restockT">–</b></div><div id="shopList"></div></div>
+      <div class="tabc" id="t-shop"><h2>🛒 Shop</h2><div class="note">New items, prices and stock every 20 minutes. Each buy makes that item a bit dearer for a while. Max 10 of each in your bag.</div><div class="restock">🔄 Next restock in <b id="restockT">–</b></div><div id="shopList"></div>
+        <div class="box">
+          <h3>🪙 Soul Shop</h3>
+          <div class="note" style="margin:0">Permanent perks that stay forever. Pay with Soul Coins 🪙 – you get them from ✨ Rebirth (1 for every 10 souls, at least 1 per Rebirth).</div>
+          <div class="tokens" id="tokTxt"></div>
+          <div id="perkList"></div>
+        </div>
+      </div>
       <div class="tabc" id="t-bag"><h2>🎒 Your Bag</h2><div class="note">Your saved boosts. Tap USE whenever you want.</div><div id="bagList"></div></div>
       <div class="tabc" id="t-mis">
         <h2>📜 Missions</h2>
@@ -674,12 +681,6 @@ body.chaos .toast b{color:#4dfcff}
       <div class="tabc" id="t-stats">
         <h2>📊 Stats</h2>
         <div id="statList"></div>
-        <div class="box">
-          <h3>🪙 Soul Shop</h3>
-          <div class="note" style="margin:0">Every rebirth also gives Soul Coins 🪙 (1 for every 10 souls, at least 1). Spend them on permanent perks.</div>
-          <div class="tokens" id="tokTxt"></div>
-          <div id="perkList"></div>
-        </div>
         <div class="box">
           <h3>⚙️ Settings</h3>
           <div class="btnrow">
@@ -740,7 +741,7 @@ body.chaos .toast b{color:#4dfcff}
           <button class="sbtn big" id="extractBtn">🧭 EXTRACT</button>
             <div class="exrb">
       <h3>✨ Rebirth – same world</h3>
-      <div class="note" style="margin:0">Start over with potatoes, machines and upgrades — but earn <b>Potato Souls 👻</b>. Each soul gives <b>+5%</b> to everything forever. Your level goes back to 1 too. You keep your style, trophies and bag. Spend Soul Coins in the 🪙 Soul Shop in 📊 Stats.</div>
+      <div class="note" style="margin:0">Start over with potatoes, machines and upgrades — but earn <b>Potato Souls 👻</b>. Each soul gives <b>+5%</b> to everything forever. Your level goes back to 1 too. You keep your style, trophies and bag. Spend Soul Coins in the 🪙 Soul Shop at the bottom of 🛒 Shop.</div>
       <div id="worldPick" style="display:none"></div>
       <div id="rebInfo" style="margin:8px 0;font-size:14px"></div>
       <button class="sbtn big" id="rebBtn">✨ REBIRTH</button>
@@ -1033,6 +1034,8 @@ const r=canExtract();$('#worldTag').classList.toggle('ready',r);$('#exTabBtn').c
 /* =============== CHANGELOG =============== */
 // newest first – add a new entry at the top every time the game is updated
 const CHANGELOG=[
+  {v:'1.8.1',date:'24 Oct 2026',t:'Soul Shop moved',items:[
+    '🪙 The Soul Shop has moved from 📊 Stats to the bottom of 🛒 Shop.']},
   {v:'1.8',date:'24 Oct 2026',t:'Rebirth balance',items:[
     '⚖️ Souls now grow much slower: 1 soul at 10 B, 36 at 1 Qa, 81 at 1 Qi and about 1,100 at the very top. Rebirth can no longer give billions of percent.',
     '⚖️ A Rebirth must be worth it: you need at least +10% more souls than you already have.',
