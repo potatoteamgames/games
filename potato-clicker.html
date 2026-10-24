@@ -440,6 +440,9 @@ body[data-world="4"] #left{background-image:radial-gradient(1.5px 1.5px at 15% 2
 .wpick{display:flex;flex-direction:column;align-items:center;width:84px;padding:6px 4px;font-size:24px;background:rgba(0,0,0,.08);border:2px solid var(--ink2);border-radius:10px;color:var(--ink)}
 .wpick small{font-size:10px;line-height:1.1;margin-top:2px}
 .wpick.on{background:var(--brass);border-color:var(--ink);box-shadow:0 0 10px var(--brass)}
+.exdiff{display:grid;gap:6px;margin:4px 0 10px;text-align:left;font-size:13px;line-height:1.4}
+.exdiff>div{background:rgba(0,0,0,.07);border:2px solid var(--ink2);border-radius:10px;padding:6px 10px}
+.exh{color:var(--ink);text-shadow:none;margin:4px 0}
 .exrb h3{color:var(--ink);text-shadow:none;margin-bottom:4px}
 .exnew{display:none;background:linear-gradient(90deg,#7df9ff,#ffd84a);color:#0b1a33;font-weight:900;border:3px solid var(--ink);border-radius:10px;padding:6px 10px;margin-bottom:8px;animation:pulse 1.2s infinite}
 .exbox.first .exnew{display:block}
@@ -726,12 +729,17 @@ body.chaos .toast b{color:#4dfcff}
     <div class="exnew" id="exNew">🎉 You reached level 200 – Extract is unlocked! Collect enough potatoes and Extract to a new world.</div>
     <div class="vtitle" id="exTitle">🧭 EXTRACT & ✨ REBIRTH</div>
     <div class="exworld" id="exWorld"></div>
+    <div class="exdiff">
+      <div><b>🧭 Extract</b> = go to the <b>NEXT WORLD</b> and win a <b>medal</b>. Needs level 200. Everything starts over from zero. Only 4 times – one per world.</div>
+      <div><b>✨ Rebirth</b> = start over in the <b>SAME WORLD</b> and earn <b>souls</b>. You keep souls, style, trophies and bag. Do it as often as you like to get stronger.</div>
+    </div>
+    <h3 class="exh">🧭 Extract – next world</h3>
           <div class="note" style="margin:0">Reach <b>level 200</b> and pay a big pile of potatoes to Extract. You win a <b>medal</b> and travel to a <b>brand new world</b> with a new look – but everything else starts over from zero. Each medal gives <b>x2 production and clicks</b> forever. 4 medals to collect!</div>
           <div class="medals" id="medalRow"></div>
           <div class="exinfo" id="exInfo"></div>
           <button class="sbtn big" id="extractBtn">🧭 EXTRACT</button>
             <div class="exrb">
-      <h3>✨ Rebirth</h3>
+      <h3>✨ Rebirth – same world</h3>
       <div class="note" style="margin:0">Start over with potatoes, machines and upgrades — but earn <b>Potato Souls 👻</b>. Each soul gives <b>+5%</b> to everything forever. Your level goes back to 1 too. You keep your style, trophies and bag. Spend Soul Coins in the 🪙 Soul Shop in 📊 Stats.</div>
       <div id="worldPick" style="display:none"></div>
       <div id="rebInfo" style="margin:8px 0;font-size:14px"></div>
@@ -1026,6 +1034,7 @@ const r=canExtract();$('#worldTag').classList.toggle('ready',r);$('#exTabBtn').c
 // newest first – add a new entry at the top every time the game is updated
 const CHANGELOG=[
   {v:'1.7',date:'24 Oct 2026',t:'Easier to find Extract',items:[
+    '📖 The Extract & Rebirth window now explains the difference: Extract takes you to the next world and gives a medal, Rebirth starts over in the same world and gives souls.',
     '🧭 Extract and Rebirth now have their own big button under Missions, Style, Trophies and Stats. It shows your progress to level 200 and glows when you can Extract.']},
   {v:'1.6',date:'24 Oct 2026',t:'Warp to new worlds',items:[
     '🌀 Extract and Rebirth now have a big warp animation: the game spins away into a neon tunnel, your new world and medal are revealed, and then you zoom into the new world.']},
