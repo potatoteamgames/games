@@ -1033,6 +1033,8 @@ const r=canExtract();$('#worldTag').classList.toggle('ready',r);$('#exTabBtn').c
 /* =============== CHANGELOG =============== */
 // newest first – add a new entry at the top every time the game is updated
 const CHANGELOG=[
+  {v:'1.7.1',date:'24 Oct 2026',t:'Fix',items:[
+    '🐛 Opening and closing Extract & Rebirth no longer hides the menu you were on.']},
   {v:'1.7',date:'24 Oct 2026',t:'Easier to find Extract',items:[
     '📖 The Extract & Rebirth window now explains the difference: Extract takes you to the next world and gives a medal, Rebirth starts over in the same world and gives souls.',
     '🧭 Extract and Rebirth now have their own big button under Missions, Style, Trophies and Stats. It shows your progress to level 200 and glows when you can Extract.']},
@@ -2022,7 +2024,7 @@ $('#impBtn').addEventListener('click',()=>{const s=prompt('Paste your save:');if
 $('#resetBtn').addEventListener('click',()=>{if(confirm('Delete EVERYTHING? This cannot be undone.')&&confirm('Are you really sure? Your potato will be sad 😢')){S=defState();try{localStorage.removeItem(KEY)}catch(e){}fullRefresh();toast('🗑️ Everything deleted','A brand new start')}});
 $('#sndBtn').addEventListener('click',()=>{S.sound=!S.sound;$('#sndBtn').textContent=S.sound?'🔊':'🔇';if(S.sound)snd('buy')});
 $('#saveBtn').addEventListener('click',()=>save(true));
-$$('.tabs button').forEach(b=>b.addEventListener('click',()=>{$$('.tabs button').forEach(x=>x.classList.toggle('on',x===b));$$('.tabc').forEach(x=>x.classList.toggle('on',x.id==='t-'+b.dataset.t))}));
+$$('.tabs button[data-t]').forEach(b=>b.addEventListener('click',()=>{$$('.tabs button[data-t]').forEach(x=>x.classList.toggle('on',x===b));$$('.tabc').forEach(x=>x.classList.toggle('on',x.id==='t-'+b.dataset.t))}));
 $$('#amtBtns button').forEach(b=>b.addEventListener('click',()=>{S.buyAmt=b.dataset.a==='max'?'max':+b.dataset.a;$$('#amtBtns button').forEach(x=>x.classList.toggle('on',x===b));updMachines()}));
 
 function fullRefresh(){
