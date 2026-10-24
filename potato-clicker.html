@@ -431,6 +431,12 @@ body[data-world="4"] #left{background-image:radial-gradient(1.5px 1.5px at 15% 2
 @media (max-width:900px){#worldTag{font-size:12px;padding:2px 10px;margin-bottom:2px}}
 .exbox .note{color:var(--ink2);text-align:left}
 .exworld{font-size:18px;margin:4px 0 8px}
+.exbox{max-height:90vh;overflow-y:auto}
+.exbox .vtitle{font-size:26px}
+.exrb{border-top:3px dashed var(--ink2);margin-top:12px;padding-top:8px}
+.exrb h3{color:var(--ink);text-shadow:none;margin-bottom:4px}
+.exnew{display:none;background:linear-gradient(90deg,#7df9ff,#ffd84a);color:#0b1a33;font-weight:900;border:3px solid var(--ink);border-radius:10px;padding:6px 10px;margin-bottom:8px;animation:pulse 1.2s infinite}
+.exbox.first .exnew{display:block}
 .exbox .medal{background:rgba(0,0,0,.12);border-color:rgba(0,0,0,.25)}
 .exbox .exinfo .ok{color:var(--green)}.exbox .exinfo .no{color:var(--red)}
 .medals{display:flex;justify-content:center;gap:8px;margin:8px 0}
@@ -626,12 +632,6 @@ body.chaos .toast b{color:#4dfcff}
         <h2>📊 Stats</h2>
         <div id="statList"></div>
         <div class="box">
-          <h3>✨ Rebirth</h3>
-          <div class="note" style="margin:0">Start over with potatoes, machines and upgrades — but earn <b>Potato Souls 👻</b>. Each soul gives <b>+5%</b> to everything forever. You keep your level, style, trophies and bag.</div>
-          <div id="rebInfo" style="margin:8px 0;font-size:14px"></div>
-          <button class="sbtn big" id="rebBtn">✨ REBIRTH</button>
-        </div>
-        <div class="box">
           <h3>🪙 Soul Shop</h3>
           <div class="note" style="margin:0">Every rebirth also gives Soul Coins 🪙 (1 per soul). Spend them on permanent perks.</div>
           <div class="tokens" id="tokTxt"></div>
@@ -683,13 +683,19 @@ body.chaos .toast b{color:#4dfcff}
 </div>
 <div id="exm" class="modal hidden">
   <div class="mbox exbox">
-    <div class="vtitle" id="exTitle">🧭 EXTRACT</div>
+    <div class="exnew" id="exNew">🎉 You reached level 200 – Extract is unlocked! Collect enough potatoes and Extract to a new world.</div>
+    <div class="vtitle" id="exTitle">🧭 EXTRACT & ✨ REBIRTH</div>
     <div class="exworld" id="exWorld"></div>
           <div class="note" style="margin:0">Reach <b>level 200</b> and pay a big pile of potatoes to Extract. You win a <b>medal</b> and travel to a <b>brand new world</b> with a new look – but everything else starts over from zero. Each medal gives <b>x2 production and clicks</b> forever. 4 medals to collect!</div>
           <div class="medals" id="medalRow"></div>
           <div class="exinfo" id="exInfo"></div>
           <button class="sbtn big" id="extractBtn">🧭 EXTRACT</button>
-            <div class="note" style="text-align:center;margin:8px 0 0">✨ Looking for <b>Rebirth</b>? It is still in <b>📊 Stats</b>.</div>
+            <div class="exrb">
+      <h3>✨ Rebirth</h3>
+      <div class="note" style="margin:0">Start over with potatoes, machines and upgrades — but earn <b>Potato Souls 👻</b>. Each soul gives <b>+5%</b> to everything forever. You keep your level, style, trophies and bag. Spend Soul Coins in the 🪙 Soul Shop in 📊 Stats.</div>
+      <div id="rebInfo" style="margin:8px 0;font-size:14px"></div>
+      <button class="sbtn big" id="rebBtn">✨ REBIRTH</button>
+    </div>
     <button class="sbtn" id="exClose" style="margin-top:8px">Close</button>
   </div>
 </div>
@@ -925,7 +931,7 @@ function applyWorld(){
   const w=WORLDS[S.world]||WORLDS[0];
   if(S.world)document.body.dataset.world=S.world;else delete document.body.dataset.world;
   const c=$$('.cactus');if(c[0])c[0].textContent=w.deco[0];if(c[1])c[1].textContent=w.deco[1];const t=$('.tumble');if(t)t.textContent=w.deco[2];
-  $('#worldTag').innerHTML=w.e+' '+w.n+(S.medals?' '+MEDALS.slice(0,S.medals).map(m=>m.e).join(''):'')+' · <span class="wtap">👆 Tap for Extract</span>';
+  $('#worldTag').innerHTML=w.e+' '+w.n+(S.medals?' '+MEDALS.slice(0,S.medals).map(m=>m.e).join(''):'')+' · <span class="wtap">👆 Extract & Rebirth</span>';
 }
 function updExtract(){
   $('#medalRow').innerHTML=MEDALS.map((m,i)=>`<div class="medal ${i<(S.medals||0)?'got':''}" title="${m.n} medal">${m.e}</div>`).join('');
@@ -948,18 +954,22 @@ function doExtract(){
   toast('🧭 Extracted!','Welcome to '+nw.e+' '+nw.n+' – a brand new start');
 }
 $('#extractBtn').addEventListener('click',()=>{doExtract();if(!$('#exm').classList.contains('hidden')&&S.medals&&S.level===1)$('#exm').classList.add('hidden')});
-function openExtract(){const w=WORLDS[S.world]||WORLDS[0];$('#exWorld').innerHTML=`You are in <b>${w.e} ${w.n}</b> · world ${(S.world||0)+1} of ${WORLDS.length}`;updExtract();$('#exm').classList.remove('hidden')}
+function openExtract(first){$('.exbox').classList.toggle('first',!!first);updStats();const w=WORLDS[S.world]||WORLDS[0];$('#exWorld').innerHTML=`You are in <b>${w.e} ${w.n}</b> · world ${(S.world||0)+1} of ${WORLDS.length}`;updExtract();$('#exm').classList.remove('hidden')}
 $('#worldTag').addEventListener('click',()=>{snd('tick');openExtract()});
 $('#exClose').addEventListener('click',()=>$('#exm').classList.add('hidden'));
 $('#exm').addEventListener('click',e=>{if(e.target.id==='exm')$('#exm').classList.add('hidden')});
 let exReadyNote=false;
-function updExtractTag(){const r=canExtract();$('#worldTag').classList.toggle('ready',r);if(r&&!exReadyNote){exReadyNote=true;toast('🧭 You can Extract!','Tap your world name above the potato count');snd('ready')}if(!r)exReadyNote=false;if(!$('#exm').classList.contains('hidden'))updExtract()}
+function updExtractTag(){
+  if(S.level>=EXTRACT_LVL&&!S.exPopup&&(S.medals||0)<MEDALS.length&&!vibe&&$('#daily').classList.contains('hidden')&&$('#clog').classList.contains('hidden')){S.exPopup=1;save();snd('lvl');confetti(120);openExtract(true)}
+const r=canExtract();$('#worldTag').classList.toggle('ready',r);if(r&&!exReadyNote){exReadyNote=true;toast('🧭 You can Extract!','Tap your world name above the potato count');snd('ready')}if(!r)exReadyNote=false;if(!$('#exm').classList.contains('hidden'))updExtract()}
 
 /* =============== CHANGELOG =============== */
 // newest first – add a new entry at the top every time the game is updated
 const CHANGELOG=[
   {v:'1.5',date:'24 Oct 2026',t:'Extract & new worlds',items:[
-    '🧭 New Extract: reach level 200 and pay a big pile of potatoes to Extract. Tap your world name above the potato count to see Extract and your medals.',
+    '🧭 New Extract: reach level 200 and pay a big pile of potatoes to Extract. Tap your world name above the potato count to see Extract, Rebirth and your medals.',
+    '🎉 When you reach level 200 a popup tells you that you can Extract.',
+    '✨ Rebirth has moved from 📊 Stats to the Extract window. The 🪙 Soul Shop stays in Stats.',
     '🏅 Every Extract gives you a medal – 🥉 Bronze, 🥈 Silver, 🥇 Gold and 💎 Diamond. Each medal gives x2 production and clicks forever.',
     '🔄 After an Extract everything starts over from zero – but in a brand new world with its own look.',
     '🌍 4 new worlds: ❄️ Frozen Peaks, 🏴‍☠️ Pirate Cove, 🍭 Candy Land and 🚀 Space Colony.',
