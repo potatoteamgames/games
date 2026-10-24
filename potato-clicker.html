@@ -936,7 +936,8 @@ function applyWorld(){
 function updExtract(){
   $('#medalRow').innerHTML=MEDALS.map((m,i)=>`<div class="medal ${i<(S.medals||0)?'got':''}" title="${m.n} medal">${m.e}</div>`).join('');
   const done=(S.medals||0)>=MEDALS.length,b=$('#extractBtn');
-  if(done){$('#exInfo').innerHTML='🏆 You have all 4 medals and reached the last world. Legend!';b.disabled=true;return}
+  if(done){$('#exInfo').innerHTML='🏆 <b>MAX!</b> You have all 4 medals and reached the last world. You cannot Extract or Rebirth any more. Legend!';b.disabled=true;b.textContent='🏆 MAX';return}
+  b.textContent='🧭 EXTRACT';
   const nw=WORLDS[(S.world||0)+1],nm=MEDALS[S.medals||0],lvOk=S.level>=EXTRACT_LVL,cOk=S.potatoes>=extractCost();
   $('#exInfo').innerHTML=`Next: ${nm.e} <b>${nm.n} medal</b> and ${nw.e} <b>${nw.n}</b><br><span class="${lvOk?'ok':'no'}">${lvOk?'✅':'❌'} Level ${EXTRACT_LVL} (you are ${S.level})</span><br><span class="${cOk?'ok':'no'}">${cOk?'✅':'❌'} 🥔 ${fmt(extractCost())} (you have ${fmt(S.potatoes)})</span>`;
   b.disabled=!canExtract();
@@ -971,6 +972,7 @@ const CHANGELOG=[
     '🎉 When you reach level 200 a popup tells you that you can Extract.',
     '✨ Rebirth has moved from 📊 Stats to the Extract window. The 🪙 Soul Shop stays in Stats.',
     '✨ Rebirth now also resets your level to 1.',
+    '🏆 When you have Extracted through all worlds and won all 4 medals you are MAX – Extract and Rebirth are then finished.',
     '🏅 Every Extract gives you a medal – 🥉 Bronze, 🥈 Silver, 🥇 Gold and 💎 Diamond. Each medal gives x2 production and clicks forever.',
     '🔄 After an Extract everything starts over from zero – but in a brand new world with its own look.',
     '🌍 4 new worlds: ❄️ Frozen Peaks, 🏴‍☠️ Pirate Cove, 🍭 Candy Land and 🚀 Space Colony.',
@@ -1546,6 +1548,9 @@ function updStats(){
   const p=soulsPending();
   $('#rebInfo').innerHTML=p>0?`You get <b style="color:var(--brass)">+${p} 👻 souls</b> (+${p*5}% forever) and +${p} 🪙`:`Earn more potatoes in total to get souls (first soul at ${fmt(1e10)} all time)`;
   $('#rebBtn').disabled=p<1;
+  const mx=(S.medals||0)>=MEDALS.length;
+  if(mx){$('#rebInfo').innerHTML='🏆 <b>MAX!</b> You have completed all worlds and won all 4 medals – you cannot Rebirth any more.';$('#rebBtn').disabled=true}
+  $('#rebBtn').textContent=mx?'🏆 MAX':'✨ REBIRTH';
 }
 
 /* =============== MISSIONS =============== */
@@ -1925,7 +1930,7 @@ function frame(t){
 
 /* =============== REBIRTH / SETTINGS =============== */
 $('#rebBtn').addEventListener('click',()=>{
-  const p=soulsPending();if(p<1||vibe)return;
+  const p=soulsPending();if(p<1||vibe||(S.medals||0)>=MEDALS.length)return;
   if(!confirm(`✨ REBIRTH\n\nYou lose: potatoes, level, machines, upgrades and active boosts.\nYou keep: style, trophies and bag.\nYou get: +${p} Potato Souls (+${p*5}% forever) and +${p} 🪙 Soul Coins.\n\nRebirth now?`))return;
   S.souls+=p;S.tokens+=p;S.rebirths++;S.level=1;S.aura=0;S.exPopup=0;S.potatoes=PK('start')?Math.pow(10,2+PK('start')):0;S.runEarned=0;S.machines=MACHINES.map(()=>0);S.upgrades={};S.active={};disp=0;
   recalc();renderHideout();upgKey='';snd('lvl');confetti(200);toast('✨ REBORN!','+'+p+' souls. Start over — but stronger 💪');save();
