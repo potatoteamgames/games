@@ -4533,14 +4533,15 @@ async function boot(){
   const tips=[L('Tip: take the 🚌 bus to get around the big town!','Tip: tag 🚌 bussen for at komme rundt i den store by!'),L('Tip: fill your pets’ bowls every day for a bonus.','Tip: fyld dine kæledyrs skåle hver dag for en bonus.'),L('Tip: lamps make your home cozy at night.','Tip: lamper gør dit hjem hyggeligt om natten.'),L('Tip: cook with veggies from your own garden!','Tip: lav mad med grøntsager fra din egen have!'),L('Tip: challenge friends to a duel in the arcade.','Tip: udfordr venner til en duel i spillehallen.')];
   tip.textContent=pick(tips);
   const step=(p,txt)=>new Promise(r=>{bar.style.width=p+'%';$('#ldTxt').textContent=txt;setTimeout(r,60)});
-  const t0=performance.now();
-  await step(10,L('Waking up the potatoes…','Vækker kartoflerne…'));
+  // the loading screen stays about 8 seconds so there is time to read the tip; the bar fills smoothly
+  const t0=performance.now(),until=ms=>new Promise(r=>setTimeout(r,Math.max(0,ms-(performance.now()-t0))));
+  bar.style.transition='width 1.9s ease-in-out';
+  await step(15,L('Waking up the potatoes…','Vækker kartoflerne…'));
   try{await Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,2500))])}catch(e){}
-  await step(35,L('Opening the shops…','Åbner butikkerne…'));buildShops();
-  await step(65,L('Building the town…','Bygger byen…'));buildTownBG();
-  await step(90,L('Watering the flowers…','Vander blomsterne…'));resize();document.documentElement.lang=LANG;applyStatic();
-  await new Promise(r=>setTimeout(r,Math.max(0,900-(performance.now()-t0))));
-  await step(100,L('Ready!','Klar!'));
+  await until(2000);await step(40,L('Opening the shops…','Åbner butikkerne…'));buildShops();
+  await until(4000);await step(65,L('Building the town…','Bygger byen…'));buildTownBG();
+  await until(6000);await step(90,L('Watering the flowers…','Vander blomsterne…'));resize();document.documentElement.lang=LANG;applyStatic();
+  await until(7600);await step(100,L('Ready!','Klar!'));await until(8000);
   ld.classList.add('out');setTimeout(()=>ld.remove(),450);
   showMainMenu();
 }
