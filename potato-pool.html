@@ -652,7 +652,7 @@ const hexRgb=h=>{const v=parseInt(h.slice(1),16);return[v>>16&255,v>>8&255,v&255
 let BSET=BALLSETS[0];
 function ballRGB(n){if(n===0)return hexRgb(BSET.cue);return hexRgb(BSET.c[(n>8?n-8:n)-1])}
 const SPR={};let SPRV=1;
-const LX=-.36,LY=-.56,LZ=.75,HX=LX/1.58,HY=LY/1.58,HZ=(LZ+1)/1.58; // light + half vector (approx normalised)
+const LX=-.36,LY=-.56,LZ=.75,HN=Math.hypot(LX,LY,LZ+1),HX=LX/HN,HY=LY/HN,HZ=(LZ+1)/HN; // light + half vector (normalised, so the gloss stays a small glint)
 function ballSprite(b,rpx){
   const sz=Math.ceil(rpx*2)+2;let s=SPR[b.n];
   if(!s||s.sz!==sz){const c=document.createElement('canvas');c.width=c.height=sz;s=SPR[b.n]={c,g:c.getContext('2d'),sz,ver:-1,gv:-1};s.img=s.g.createImageData(sz,sz)}
@@ -668,14 +668,14 @@ function ballSprite(b,rpx){
     if(n===0){
       if(l0>.55){const u=l1/.8,v=l2/.8,gx=((u+1)*.5*gw)|0,gy=((v+1)*.5*gw)|0;if(gx>=0&&gy>=0&&gx<gw&&gy<gw){const k=gy*gw+gx,a=gl.a[k];if(a>0){const ink=gl.col[k]?[208,64,90]:[70,40,22];R=lerp(R,ink[0],a);G=lerp(G,ink[1],a);Bc=lerp(Bc,ink[2],a)}}}
     }else{
-      if(stripe&&(l2>.6||l2<-.6)){R=wr;G=wg;Bc=wb}
+      if(stripe){const al2=l2<0?-l2:l2;if(al2>.53){R=wr;G=wg;Bc=wb}else if(al2>.5){const t=(al2-.5)/.03;R=lerp(R,wr,t);G=lerp(G,wg,t);Bc=lerp(Bc,wb,t)}}
       const al=l0<0?-l0:l0;
-      if(al>.875){R=wr;G=wg;Bc=wb;const fc=BSET.faces&&l0<0,gg=fc?GF:gl,u=(l0<0?-l1:l1)/(fc?.5:.48),v=l2/(fc?.5:.48),gx=((u+1)*.5*gw)|0,gy=((v+1)*.5*gw)|0;
+      if(al>.935){R=wr;G=wg;Bc=wb;const fc=BSET.faces&&l0<0,gg=fc?GF:gl,u=(l0<0?-l1:l1)/(fc?.5:.355),v=l2/(fc?.5:.355),gx=((u+1)*.5*gw)|0,gy=((v+1)*.5*gw)|0;
         if(fc){R=240;G=205;Bc=140}if(gx>=0&&gy>=0&&gx<gw&&gy<gw){const a=gg.a[gy*gw+gx];if(a>0){R=lerp(R,20,a);G=lerp(G,18,a);Bc=lerp(Bc,16,a)}}}
-      else if(al>.855){const t=(al-.855)/.02;R=lerp(R,wr,t);G=lerp(G,wg,t);Bc=lerp(Bc,wb,t)}
+      else if(al>.92){const t=(al-.92)/.015;R=lerp(R,wr,t);G=lerp(G,wg,t);Bc=lerp(Bc,wb,t)}
     }
-    const df=x*LX+y*LY+z*LZ,sh=.3+.8*(df>0?df:0)+.12*z;let hs=x*HX+y*HY+z*HZ;hs=hs>0?hs:0;
-    const h2=hs*hs,h4=h2*h2,h8=h4*h4,h16=h8*h8,h32=h16*h16,spec=h32*h16*.55+h32*h32*h32*.9;
+    const df=x*LX+y*LY+z*LZ,sh=.45+.62*(df>0?df:0)+.1*z;let hs=x*HX+y*HY+z*HZ;hs=hs>0?hs:0;
+    const h2=hs*hs,h4=h2*h2,h8=h4*h4,h16=h8*h8,h32=h16*h16,spec=h32*h16*.18+h32*h32*h32*.32;
     const bounce=y>.3?(y-.3)*.12:0;
     d[i]=clamp(R*sh+spec*255,0,255);d[i+1]=clamp(G*sh+spec*255+bounce*40,0,255);d[i+2]=clamp(Bc*sh+spec*255,0,255);d[i+3]=cov*255;
   }}
@@ -1148,6 +1148,11 @@ const hideBih=()=>{$('#bihHint').style.display='none'};
 /* ================= INPUT ================= */
 const IN={mode:null,id:null};
 function cueScreen(){const c=G.W.b[0];return T(c.x,c.y)}
+// is the pointer on the cue stick (behind the cue ball, along the aim line)?
+function onCue(px,py){const c=G.W.b[0],[X,Y]=cueScreen(),[ax,ay]=T(c.x+Math.cos(G.aim)*100,c.y+Math.sin(G.aim)*100);
+  let ux=ax-X,uy=ay-Y;const ul=Math.hypot(ux,uy);ux/=ul;uy/=ul;
+  const vx=px-X,vy=py-Y,back=-(vx*ux+vy*uy),side=Math.abs(vx*uy-vy*ux);
+  return back>BR*V.S*1.2&&back<Math.min(1150*V.S,Math.hypot(V.w,V.h))&&side<Math.max(26,BR*V.S*1.6)}
 cv.addEventListener('pointerdown',e=>{
   SFX.unlock();if(!canControl())return;
   try{cv.setPointerCapture(e.pointerId)}catch(_){}
@@ -1155,6 +1160,7 @@ cv.addEventListener('pointerdown',e=>{
   Object.assign(IN,{id:e.pointerId,sx:e.clientX,sy:e.clientY,lx:e.clientX,ly:e.clientY,t0:performance.now(),moved:0});
   if(G.bih&&dS<Math.max(40,BR*V.S*2.6)){IN.mode='place';IN.ox=c.x-x;IN.oy=c.y-y}
   else if(!G.bih&&dS<Math.max(30,BR*V.S*2)){IN.mode='pull';G.pow=0}
+  else if(onCue(e.clientX,e.clientY)){IN.mode='cue';G.pow=0;IN.grab=Math.hypot(e.clientX-X,e.clientY-Y)}
   else IN.mode='rot';
 });
 cv.addEventListener('pointermove',e=>{
@@ -1166,6 +1172,11 @@ cv.addEventListener('pointermove',e=>{
     netAim();}
   else if(IN.mode==='pull'){const[ax,ay]=T(c.x+Math.cos(G.aim)*100,c.y+Math.sin(G.aim)*100);let ux=ax-X,uy=ay-Y;const ul=Math.hypot(ux,uy);ux/=ul;uy/=ul;
     const pl=-((e.clientX-IN.sx)*ux+(e.clientY-IN.sy)*uy),mx=clamp(Math.min(V.w,V.h)*.38,130,300);G.pow=clamp(pl/mx,0,1);renderPower();netAim()}
+  else if(IN.mode==='cue'){
+    // grab the stick: swing it around the cue ball to aim, pull it back to load power, release to shoot
+    const dx=X-e.clientX,dy=Y-e.clientY,d=Math.hypot(dx,dy);
+    if(d>BR*V.S*1.2){const[ax,ay]=Tinv(X+dx/d*100,Y+dy/d*100);G.aim=Math.atan2(ay-c.y,ax-c.x)}
+    const mx=clamp(Math.min(V.w,V.h)*.38,130,300);G.pow=clamp((d-IN.grab)/mx,0,1);renderPower();drawFine();netAim()}
   else{const a0=Math.atan2(IN.ly-Y,IN.lx-X),a1=Math.atan2(e.clientY-Y,e.clientX-X),dist=Math.hypot(e.clientX-X,e.clientY-Y);
     let da=Math.atan2(Math.sin(a1-a0),Math.cos(a1-a0));G.aim+=da*clamp(dist/170,.15,1);drawFine();netAim()}
   IN.lx=e.clientX;IN.ly=e.clientY;DIRTY=true;
@@ -1173,7 +1184,7 @@ cv.addEventListener('pointermove',e=>{
 function ptrEnd(e){
   if(e.pointerId!==IN.id||!IN.mode)return;const m=IN.mode;IN.mode=null;IN.id=null;
   if(!canControl())return;
-  if(m==='pull'){if(G.pow>.03)takeShot(G.aim,G.pow,G.spin.x,G.spin.y);else{G.pow=0;renderPower()}}
+  if(m==='pull'||m==='cue'){if(G.pow>.03)takeShot(G.aim,G.pow,G.spin.x,G.spin.y);else{G.pow=0;renderPower()}}
   else if(m==='rot'&&IN.moved<8&&performance.now()-IN.t0<400){const c=G.W.b[0],[x,y]=Tinv(e.clientX,e.clientY);G.aim=Math.atan2(y-c.y,x-c.x);drawFine();netAim()}
   else if(m==='place')updateHud();
   DIRTY=true;
@@ -1636,11 +1647,11 @@ const SHEETS={
   help(){return{title:L('How to play','Sådan spiller du'),html:`<div class="card help">${helpHTML()}</div>`}},
 };
 function perkTxt(it){const p=it.perk;if(!p)return L('Cosmetic','Kun udseende');const a=[];if(p.aim)a.push(L(`+${p.aim} aim guide`,`+${p.aim} sigtelinje`));if(p.spin)a.push(L(`+${Math.round((p.spin-1)*100)}% spin`,`+${Math.round((p.spin-1)*100)}% effet`));return '✨ '+a.join(' · ')}
-function helpHTML(){return L(`<h3>🎯 Aiming & shooting</h3><ul><li><b>Drag anywhere</b> on the table to rotate your aim. <b>Tap</b> a spot to aim straight at it.</li><li>Use the <b>fine-tune wheel</b> for tiny adjustments (or the mouse wheel / arrow keys).</li><li><b>Pull the power bar</b> and release to shoot – or drag backwards from the cue ball.</li><li>Tap the <b>cue ball button</b> to add spin: top spin follows through, back spin draws back, side spin changes the cushion bounce.</li></ul>
+function helpHTML(){return L(`<h3>🎯 Aiming & shooting</h3><ul><li><b>Drag anywhere</b> on the table to rotate your aim. <b>Tap</b> a spot to aim straight at it.</li><li>Use the <b>fine-tune wheel</b> for tiny adjustments (or the mouse wheel / arrow keys).</li><li><b>Grab the cue stick</b> and swing it around to aim, then <b>pull it back and let go</b> to shoot. Pull further for more power – push it back in to cancel.</li><li>Or <b>pull the power bar</b> and release to shoot.</li><li>Tap the <b>cue ball button</b> to add spin: top spin follows through, back spin draws back, side spin changes the cushion bounce.</li></ul>
 <h3>🎱 8-ball rules</h3><ul><li>Break from behind the line. The table is open until someone pots a ball after the break: that player gets that group – <b>solids (1–7)</b> or <b>stripes (9–15)</b>.</li><li>Pot one of your balls to keep shooting. When your group is cleared, pot the <b>8-ball</b> to win.</li><li>Potting the 8-ball early (or with a foul) loses the frame. Potting it on the break wins!</li><li><b>Fouls:</b> scratching the cue ball, hitting no ball, hitting the wrong ball first, or no ball touching a cushion after contact. Your opponent then gets <b>ball in hand</b> and can place the cue ball anywhere.</li></ul>
 <h3>🗺️ Campaign & rewards</h3><ul><li>Tour 8 potato cities. Each has a 3-round tournament; win the final to claim the city cup. Cities unlock with your level and the previous cup.</li><li>Collect flawless medals and special trophies for great feats. Earn XP and coins, complete daily and weekly quests and keep your daily streak going.</li><li>Spend coins on new cues, cloth colours and ball sets in the shop.</li></ul>
 <h3>👥 Multiplayer</h3><ul><li><b>Same device:</b> pass the phone between turns.</li><li><b>Same Wi-Fi:</b> one player hosts a table and shares the 4-letter code; the other joins. No accounts, no servers – your devices talk directly.</li></ul>`,
-`<h3>🎯 Sigt & stød</h3><ul><li><b>Træk hvor som helst</b> på bordet for at dreje sigtet. <b>Tryk</b> et sted for at sigte direkte derhen.</li><li>Brug <b>finjusteringshjulet</b> til små justeringer (eller musehjulet / piletasterne).</li><li><b>Træk i kraftbjælken</b> og slip for at støde – eller træk baglæns fra køballen.</li><li>Tryk på <b>køball-knappen</b> for effet: overskru følger efter, underskru trækker tilbage, sideskru ændrer bandespringet.</li></ul>
+`<h3>🎯 Sigt & stød</h3><ul><li><b>Træk hvor som helst</b> på bordet for at dreje sigtet. <b>Tryk</b> et sted for at sigte direkte derhen.</li><li>Brug <b>finjusteringshjulet</b> til små justeringer (eller musehjulet / piletasterne).</li><li><b>Tag fat i køen</b> og drej den rundt for at sigte, og <b>træk den tilbage og slip</b> for at støde. Træk længere for mere kraft – skub den ind igen for at fortryde.</li><li>Eller <b>træk i kraftbjælken</b> og slip for at støde.</li><li>Tryk på <b>køball-knappen</b> for effet: overskru følger efter, underskru trækker tilbage, sideskru ændrer bandespringet.</li></ul>
 <h3>🎱 8-ball regler</h3><ul><li>Break fra bag linjen. Bordet er åbent, indtil nogen sænker en kugle efter breaket: den spiller får den gruppe – <b>helfarvede (1–7)</b> eller <b>halvfarvede (9–15)</b>.</li><li>Sænk en af dine kugler for at blive ved. Når din gruppe er ryddet, skal du sænke <b>8-kuglen</b> for at vinde.</li><li>Sænker du 8-kuglen for tidligt (eller med en fejl), taber du. Sænker du den på breaket, vinder du!</li><li><b>Fejl:</b> køballen i hul, ingen kugle ramt, forkert kugle ramt først, eller ingen kugle rammer en bande efter berøring. Modstanderen får så <b>kugle i hånd</b> og kan placere køballen hvor som helst.</li></ul>
 <h3>🗺️ Kampagne & belønninger</h3><ul><li>Tag på turné i 8 kartoffelbyer. Hver by har en turnering med 3 runder; vind finalen og få bypokalen. Byer låses op med dit niveau og den forrige pokal.</li><li>Saml fejlfri-medaljer og specialtrofæer for flotte præstationer. Optjen XP og mønter, klar daglige og ugentlige opgaver og hold din daglige stime i live.</li><li>Brug mønter på nye køer, klæder og kuglesæt i butikken.</li></ul>
 <h3>👥 Multiplayer</h3><ul><li><b>Samme enhed:</b> giv telefonen videre mellem turene.</li><li><b>Samme wifi:</b> én spiller åbner et bord og deler den 4-tegns kode; den anden deltager. Ingen konti, ingen servere – jeres enheder taler direkte sammen.</li></ul>`)}
