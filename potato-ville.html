@@ -3375,7 +3375,7 @@ function openScratch(){
   panel({title:'🎫 '+L('Scratch card','Skrabelod'),sm:true,cls:'scrpn',html:`<p class="hint" style="text-align:center;margin:0">${L('Hold down and drag the 🪙 coin to scratch – find <b>3 of the same</b> to win!','Hold nede og træk 🪙 mønten for at skrabe – find <b>3 ens</b> for at vinde!')}</p>
     <div class="scrwrap" id="scrWrap"><div class="scrgrid">${cells.map(k=>`<div class="scell">${k}</div>`).join('')}</div><canvas id="scrCan"></canvas><div id="scrCoin">🪙</div></div>
     <div class="scrpay">${Object.entries(SCR_P).map(([k,p])=>`${k} ${L(p.en,p.da)}`).join(' · ')}</div><div id="scrMsg"></div>
-    <div style="display:flex;gap:8px;justify-content:center"><button class="btn" id="scrAll">✨ ${L('Reveal all','Vis alle')}</button></div>`,
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="btn" id="scrAll">✨ ${L('Reveal all','Vis alle')}</button><button class="btn go" id="scrNext" style="display:none"></button></div>`,
     render:(b,close,ov)=>{
       const c=$('#scrCan',b);
       const coat=()=>{const w=c.offsetWidth,h=c.offsetHeight;if(!w){requestAnimationFrame(coat);return}const dpr=Math.min(2,devicePixelRatio||1);c.width=w*dpr;c.height=h*dpr;const g=c.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);SCR.ctx=g;
@@ -3395,6 +3395,7 @@ function openScratch(){
         g.beginPath();g.moveTo((SCR.last||p).x,(SCR.last||p).y);g.lineTo(p.x,p.y);g.stroke();g.beginPath();g.arc(p.x,p.y,13,0,7);g.fill();SCR.last=p;
         const now=performance.now();if(now-SCR.snd>90){SCR.snd=now;SFX.tone(1400+Math.random()*200,.03,'square',.025)}if(now-SCR.chk>200){SCR.chk=now;check()}};
       const finish=()=>{if(SCR.done)return;SCR.done=true;c.style.opacity='0';$('#scrAll',b).disabled=true;
+        const nx=$('#scrNext',b);if(S.scratch>0){nx.style.display='';nx.textContent='🎫 '+L(`Scratch next (${S.scratch} left)`,`Skrab næste (${S.scratch} tilbage)`);nx.onclick=()=>{SFX.click();close(null);setTimeout(openScratch,230)}}
         const w=SCR.win;if(!w){$('#scrMsg',b).innerHTML=S.scratch>0?L(`😅 No 3 of the same this time. You have ${S.scratch} more in your bag!`,`😅 Ingen 3 ens denne gang. Du har ${S.scratch} mere i din taske!`):L('😅 No 3 of the same this time. Come back tomorrow for 3 new cards!','😅 Ingen 3 ens denne gang. Kom tilbage i morgen efter 3 nye lodder!');SFX.bad();save();return}
         $$('.scell',b).forEach((x,i)=>{if(SCR.cells[i]===w)x.classList.add('win')});
         let txt=SCR_P[w].f();if(txt==null){const cc=60+S.lvl*10;addCoins(cc);txt=`${cc} 🪙 `+L('(your bag was full)','(din taske var fuld)')}
