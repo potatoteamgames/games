@@ -1021,7 +1021,7 @@ function doExtract(){
   if(!canExtract()||vibe)return;
   const nm=MEDALS[S.medals||0],nw=WORLDS[(S.world||0)+1];
   if(!confirm(`🧭 EXTRACT\n\nYou pay ${fmt(extractCost())} potatoes and EVERYTHING starts over from zero: potatoes, level, machines, upgrades, souls, perks, style, trophies, bag and missions.\n\nYou get: ${nm.e} ${nm.n} medal (x2 production and clicks forever) and travel to ${nw.e} ${nw.n}.\n\nExtract now?`))return;
-  const keep={world:(S.world||0)+1,medals:(S.medals||0)+1,sound:S.sound,autoBuy:S.autoBuy};
+  const keep={world:(S.world||0)+1,medals:(S.medals||0)+1,sound:S.sound,autoBuy:S.autoBuy,scratchGift:S.scratchGift};
   worldWarp({head:'🧭 EXTRACTING…',w:nw,medal:nm,sub:`${nm.e} ${nm.n} medal · x${fmt(Math.pow(2,keep.medals))} production forever`},()=>{
     S=Object.assign(defState(),keep);
     try{save()}catch(e){}
@@ -1093,6 +1093,8 @@ $('#scrClose').addEventListener('click',()=>$('#scr').classList.add('hidden'));
 /* =============== CHANGELOG =============== */
 // newest first – add a new entry at the top every time the game is updated
 const CHANGELOG=[
+  {v:'1.9.1',date:'26 Oct 2026',t:'Free Scratch Cards',items:[
+    '🎁 Everyone gets 2 free 🎫 Scratch Cards (one time) to try them – find them in 🎒 Bag.']},
   {v:'1.9',date:'24 Oct 2026',t:'Scratch cards, auto spin & Extract at level 100',items:[
     '🎫 New Scratch Cards – sometimes for sale in the 🛒 Shop. Scratch 9 fields and find 3 of the same to win: potatoes, a boost, Slot Tokens or Gold Rain. About 1 in 3 cards wins.',
     '🔁 Potato Slots has an Auto spin button. Turn it on and the machine spins by itself until it cools down – turn it off to spin by hand.',
@@ -2134,7 +2136,10 @@ function nextTicker(){
 }
 
 /* =============== START =============== */
-load();checkRestock();buildShop();fullRefresh();clampActive();if(S.weather&&!WEATHER[S.weather.id])S.weather=null;if(S.weather)setWeatherFx();checkDaily();showDaily();
+load();
+// one-time gift: everyone gets 2 free Scratch Cards to try them
+if(!S.scratchGift){S.scratchGift=1;S.bag.scratch=(S.bag.scratch||0)+2;setTimeout(()=>{toast('🎁 2 free Scratch Cards!','Find them in 🎒 Bag and scratch away 🎫');snd('ready')},4000);save()}
+checkRestock();buildShop();fullRefresh();clampActive();if(S.weather&&!WEATHER[S.weather.id])S.weather=null;if(S.weather)setWeatherFx();checkDaily();showDaily();
 setInterval(logic,50);
 setInterval(()=>{updExtractTag();updBonus();updSlot();updLeft();updMachines();updUpgrades();updShop();updLooks();updMissions();updSpin();updGoal();checkMilestone()},200);
 setInterval(()=>{checkAch();updStats();renderPerks();autoBuy()},1000);
