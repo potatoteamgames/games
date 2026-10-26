@@ -3345,9 +3345,9 @@ function THUMB_CLEAR(){for(const k in THUMB)if(k.startsWith('cloth:'))delete THU
 
 /* ---------------- bag & food ---------------- */
 /* ---------------- daily scratch card: one free card in your bag every day you visit (they can't be bought) ---------------- */
-function scratchDaily(){if(S.scratchDay===today())return false;S.scratchDay=today();S.scratch=Math.min(3,(S.scratch||0)+1);save();return true}
+function scratchDaily(){if(S.scratchDay===today())return false;S.scratchDay=today();S.scratch=Math.min(9,(S.scratch||0)+3);save();return true}
 function scratchGiftMsg(){
-  panel({title:'🎁 '+L('A gift for visiting!','En gave for at kigge forbi!'),sm:true,html:`<div style="text-align:center;font-size:64px;line-height:1.1">🎫</div><p style="text-align:center">${L('Thanks for visiting Potato Ville today! A <b>scratch card</b> has been put in your 🎒 bag. You get a new one every day you play.','Tak fordi du kigger forbi Potato Ville i dag! Der er lagt et <b>skrabelod</b> i din 🎒 taske. Du får et nyt hver dag, du spiller.')}</p>`,
+  panel({title:'🎁 '+L('A gift for visiting!','En gave for at kigge forbi!'),sm:true,html:`<div style="text-align:center;font-size:64px;line-height:1.1">🎫</div><p style="text-align:center">${L('Thanks for visiting Potato Ville today! <b>3 scratch cards</b> have been put in your 🎒 bag. You get 3 new ones every day you play.','Tak fordi du kigger forbi Potato Ville i dag! Der er lagt <b>3 skrabelodder</b> i din 🎒 taske. Du får 3 nye hver dag, du spiller.')}</p>`,
     buttons:[{label:L('Later','Senere'),v:0},{label:'🪙 '+L('Scratch now!','Skrab nu!'),cls:'go',v:1}]}).then(v=>{if(v)openScratch()});SFX.lvl();
 }
 function scrFromBag(btn){const o=btn.closest('.ov');if(o&&o._close)o._close(null);setTimeout(openScratch,220)}
@@ -3362,7 +3362,7 @@ const SCR_P={
 const SCR_WIN=.5;
 let SCR=null;
 function openScratch(){
-  if(!(S.scratch>0)){toast(L('🎫 No scratch cards – you get a new one every day you visit!','🎫 Ingen skrabelodder – du får et nyt hver dag, du kigger forbi!'));return}
+  if(!(S.scratch>0)){toast(L('🎫 No scratch cards – you get 3 new ones every day you visit!','🎫 Ingen skrabelodder – du får 3 nye hver dag, du kigger forbi!'));return}
   S.scratch--;save();
   const syms=Object.keys(SCR_P);let win=null;
   if(Math.random()<SCR_WIN){let r=Math.random()*syms.reduce((a,k)=>a+SCR_P[k].w,0);for(const k of syms){r-=SCR_P[k].w;if(r<0){win=k;break}}win=win||syms[0]}
@@ -3393,7 +3393,7 @@ function openScratch(){
         g.beginPath();g.moveTo((SCR.last||p).x,(SCR.last||p).y);g.lineTo(p.x,p.y);g.stroke();g.beginPath();g.arc(p.x,p.y,13,0,7);g.fill();SCR.last=p;
         const now=performance.now();if(now-SCR.snd>90){SCR.snd=now;SFX.tone(1400+Math.random()*200,.03,'square',.025)}if(now-SCR.chk>200){SCR.chk=now;check()}};
       const finish=()=>{if(SCR.done)return;SCR.done=true;c.style.opacity='0';$('#scrAll',b).disabled=true;
-        const w=SCR.win;if(!w){$('#scrMsg',b).innerHTML=L('😅 No 3 of the same this time. Come back tomorrow for a new card!','😅 Ingen 3 ens denne gang. Kom tilbage i morgen efter et nyt lod!');SFX.bad();save();return}
+        const w=SCR.win;if(!w){$('#scrMsg',b).innerHTML=S.scratch>0?L(`😅 No 3 of the same this time. You have ${S.scratch} more in your bag!`,`😅 Ingen 3 ens denne gang. Du har ${S.scratch} mere i din taske!`):L('😅 No 3 of the same this time. Come back tomorrow for 3 new cards!','😅 Ingen 3 ens denne gang. Kom tilbage i morgen efter 3 nye lodder!');SFX.bad();save();return}
         $$('.scell',b).forEach((x,i)=>{if(SCR.cells[i]===w)x.classList.add('win')});
         let txt=SCR_P[w].f();if(txt==null){const cc=60+S.lvl*10;addCoins(cc);txt=`${cc} 🪙 `+L('(your bag was full)','(din taske var fuld)')}
         $('#scrMsg',b).innerHTML=`🎉 <b>3 × ${w}!</b> ${L('You win','Du vinder')}: <b>${esc(txt)}</b>`;SFX.buy();toast('🎫 '+L('Scratch card win: ','Gevinst på skrabelod: ')+txt,3200);save()};
@@ -3418,7 +3418,7 @@ function openBag(onlyFood,startTab){
         h=`<div class="grid">${list.map(([id,n])=>`<div class="card"><span class="own">×${n}</span><div style="font-size:40px">${supIcon(id,52)}</div><div class="nm">${esc(nm(SUP[id]))}</div><div class="hint">${esc(itemDesc('sup',id))}</div></div>`).join('')||`<p class="hint">${L('No seeds or pet food yet.','Ingen frø eller dyrefoder endnu.')}</p>`}</div>`}
       else if(tab==='furn'){const furn=Object.entries(S.inv).filter(([,n])=>n>0);
         h=furn.length?`<div class="grid">${furn.map(([id,n])=>`<div class="card" data-f="${id}" title="${esc(itemDesc('furn',id))}"><span class="own">×${n}</span><div class="cv"></div><div class="nm">${esc(nm(FURN[id]))}</div><div class="hint">${esc(itemDesc('furn',id))}</div></div>`).join('')}</div><p class="hint">${L('Go home and press 🔨 Build to place them.','Gå hjem og tryk 🔨 Byg for at placere dem.')}</p>`:`<p class="hint">${L('No furniture waiting. Buy some at Spud & Sofa!','Ingen møbler venter. Køb nogle hos Spud & Sofa!')}</p>`}
-      else if(tab==='scr'){h=`<div class="goal"><div class="ic" style="font-size:34px">🎫</div><div class="tx"><b>${L('Scratch cards','Skrabelodder')}: ${S.scratch||0}</b><small>${L('You get one free scratch card every day you visit. They can not be bought. Win coins or items!','Du får et gratis skrabelod hver dag, du kigger forbi. De kan ikke købes. Vind mønter eller ting!')}</small></div>${S.scratch>0?`<button class="btn go" onclick="scrFromBag(this)">🪙 ${L('Scratch','Skrab')}</button>`:''}</div>`}
+      else if(tab==='scr'){h=`<div class="goal"><div class="ic" style="font-size:34px">🎫</div><div class="tx"><b>${L('Scratch cards','Skrabelodder')}: ${S.scratch||0}</b><small>${L('You get 3 free scratch cards every day you visit. They can not be bought. Win coins or items!','Du får 3 gratis skrabelodder hver dag, du kigger forbi. De kan ikke købes. Vind mønter eller ting!')}</small></div>${S.scratch>0?`<button class="btn go" onclick="scrFromBag(this)">🪙 ${L('Scratch','Skrab')}</button>`:''}</div>`}
       else if(tab==='eggs'){h=`<div class="grid">${S.eggs.map((g,i)=>`<div class="card" data-eg="${i}"><canvas width="120" height="110" style="width:60px;height:55px"></canvas><div class="nm">${esc(nm(EGGS[g.r]))}</div><div class="hint">⏱️ ${EGGS[g.r].h} ${L('hours','timer')}</div></div>`).join('')||''}</div><p class="hint">${L('Put eggs in an 🥚 incubator at home (tap it). Eggs can also be sold at Paws & Peels.','Læg æg i en 🥚 rugemaskine derhjemme (tryk på den). Æg kan også sælges hos Poter & Skræller.')}</p>`}
       else{const home=SCENE.type==='home'&&SCENE.owner==='me',here=SCENE.yard?'yard':SCENE.room;
         h=S.pets.map((p,i)=>`<div class="goal"><div class="ic"><canvas data-p="${i}" width="96" height="96" style="width:48px;height:48px"></canvas></div><div class="tx">${esc(p.name)} <button class="btn sm" data-rn="${i}" style="padding:2px 6px">✏️</button><small>${esc(nm(PET_T[p.type]))} · ${'❤'.repeat(Math.min(10,p.love||0))}${'♡'.repeat(10-Math.min(10,p.love||0))}</small><small>${p.where==='bag'?'🎒 '+L('In your bag','I din taske'):'🏠 '+(p.room==='yard'?roomName({n:'yard'}):roomName(S.rooms[p.room]))}</small></div>
@@ -4408,7 +4408,7 @@ function startGame(first){
   ensureDaily();initBills();goHome(0);hud();goalsCheck();qTick();applyStatic();
   const gotScr=scratchDaily();
   if(!first)setTimeout(billReminder,1300);
-  if(gotScr&&!first)setTimeout(()=>{if(!anyPanel())scratchGiftMsg();else toast(L('🎫 A free scratch card is in your 🎒 bag – a gift for visiting today!','🎫 Der ligger et gratis skrabelod i din 🎒 taske – en gave for at kigge forbi i dag!'),4500)},2600);
+  if(gotScr&&!first)setTimeout(()=>{if(!anyPanel())scratchGiftMsg();else toast(L('🎫 3 free scratch cards are in your 🎒 bag – a gift for visiting today!','🎫 Der ligger 3 gratis skrabelodder i din 🎒 taske – en gave for at kigge forbi i dag!'),4500)},2600);
   if(first){setTimeout(()=>panel({title:L(`👋 Welcome to Potato Ville, ${esc(S.name)}!`,`👋 Velkommen til Potato Ville, ${esc(S.name)}!`),sm:true,html:`<p>${L('This is your new home! A few tips to get started:','Dette er dit nye hjem! Et par tips til at komme i gang:')}</p>
     <div class="goal"><div class="ic">🧊</div><div class="tx">${L('Tap the fridge to eat a snack.','Tryk på køleskabet for at få en snack.')}</div></div>
     <div class="goal"><div class="ic">🗺️</div><div class="tx">${L('Go to town to meet neighbours, shop and work jobs.','Gå til byen for at møde naboer, shoppe og tage jobs.')}</div></div>
