@@ -3345,7 +3345,9 @@ function THUMB_CLEAR(){for(const k in THUMB)if(k.startsWith('cloth:'))delete THU
 
 /* ---------------- bag & food ---------------- */
 /* ---------------- daily scratch card: one free card in your bag every day you visit (they can't be bought) ---------------- */
-function scratchDaily(){if(S.scratchDay===today())return false;S.scratchDay=today();S.scratch=Math.min(9,(S.scratch||0)+3);save();return true}
+const SCR_DAILY=3;
+// 3 cards a day; S.scratchGot remembers how many you got today, so anyone who got fewer is topped up
+function scratchDaily(){const got=S.scratchDay===today()?(S.scratchGot||1):0;if(got>=SCR_DAILY)return false;S.scratchDay=today();S.scratchGot=SCR_DAILY;S.scratch=Math.min(9,(S.scratch||0)+SCR_DAILY-got);save();return true}
 function scratchGiftMsg(){
   panel({title:'🎁 '+L('A gift for visiting!','En gave for at kigge forbi!'),sm:true,html:`<div style="text-align:center;font-size:64px;line-height:1.1">🎫</div><p style="text-align:center">${L('Thanks for visiting Potato Ville today! <b>3 scratch cards</b> have been put in your 🎒 bag. You get 3 new ones every day you play.','Tak fordi du kigger forbi Potato Ville i dag! Der er lagt <b>3 skrabelodder</b> i din 🎒 taske. Du får 3 nye hver dag, du spiller.')}</p>`,
     buttons:[{label:L('Later','Senere'),v:0},{label:'🪙 '+L('Scratch now!','Skrab nu!'),cls:'go',v:1}]}).then(v=>{if(v)openScratch()});SFX.lvl();
@@ -3359,7 +3361,7 @@ const SCR_P={
   '📦':{w:15,en:'Furniture',da:'Et møbel',f:()=>{const it=pick(listCat('small').filter(id=>FURN[id].lvl<=S.lvl+1));if(bagFull())return null;S.inv[it]=(S.inv[it]||0)+1;return'📦 '+nm(FURN[it])}},
   '💰':{w:10,en:'Big coin prize',da:'Stor møntgevinst',f:()=>{const c=200+S.lvl*30;addCoins(c);return`${c} 🪙`}},
   '⭐':{w:5,en:'Special item',da:'Fin genstand',f:()=>{const l=Object.values(FURN).filter(f=>f.price>=250&&f.price<=900&&f.lvl<=S.lvl+2&&!f.lux);const it=l.length?pick(l).id:null;if(!it||bagFull())return null;S.inv[it]=(S.inv[it]||0)+1;return'⭐ '+nm(FURN[it])}}};
-const SCR_WIN=.5;
+const SCR_WIN=.3;
 let SCR=null;
 function openScratch(){
   if(!(S.scratch>0)){toast(L('🎫 No scratch cards – you get 3 new ones every day you visit!','🎫 Ingen skrabelodder – du får 3 nye hver dag, du kigger forbi!'));return}
