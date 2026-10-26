@@ -1175,7 +1175,9 @@ cv.addEventListener('pointermove',e=>{
   else if(IN.mode==='cue'){
     // grab the stick: swing it around the cue ball to aim, pull it back to load power, release to shoot
     const dx=X-e.clientX,dy=Y-e.clientY,d=Math.hypot(dx,dy);
-    if(d>BR*V.S*1.2){const[ax,ay]=Tinv(X+dx/d*100,Y+dy/d*100);G.aim=Math.atan2(ay-c.y,ax-c.x)}
+    // calm aiming: the stick turns only a fraction of how far you swing, and even less close to the ball
+    const a0=Math.atan2(IN.ly-Y,IN.lx-X),a1=Math.atan2(e.clientY-Y,e.clientX-X),da=Math.atan2(Math.sin(a1-a0),Math.cos(a1-a0));
+    if(d>BR*V.S*1.2)G.aim+=da*.35*clamp(d/260,.35,1);
     const mx=clamp(Math.min(V.w,V.h)*.38,130,300);G.pow=clamp((d-IN.grab)/mx,0,1);renderPower();drawFine();netAim()}
   else{const a0=Math.atan2(IN.ly-Y,IN.lx-X),a1=Math.atan2(e.clientY-Y,e.clientX-X),dist=Math.hypot(e.clientX-X,e.clientY-Y);
     let da=Math.atan2(Math.sin(a1-a0),Math.cos(a1-a0));G.aim+=da*clamp(dist/170,.15,1);drawFine();netAim()}
