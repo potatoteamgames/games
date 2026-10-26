@@ -160,6 +160,12 @@ button:disabled{cursor:not-allowed;opacity:.45}
 .seat.B .bub{bottom:auto;top:calc(-100% - 6px)}
 .seat.L .nm,.seat.R .nm{max-width:calc(var(--av) + 30px)}
 .dis{font-size:10px;color:#ffd0c0}
+#tmr{position:absolute;z-index:31;width:42px;height:42px;transform:translate(-50%,-50%);pointer-events:none;display:grid;place-items:center;font-family:'Lilita One',sans-serif;font-size:16px;color:#1b120b;transition:left .3s,top .3s}
+#tmr svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
+#tmr .tb{fill:#fff8ec;stroke:#1b120b;stroke-width:2.5}#tmr .tf{fill:none;stroke:#36a443;stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset .25s linear}
+#tmr b{position:relative;font-weight:400}
+#tmr.low .tf{stroke:#e8453c}#tmr.low{color:#c62a20;animation:bop .5s infinite alternate}
+#tmr.hide{display:none}
 
 /* game hud */
 #hud{position:absolute;inset:0;pointer-events:none;z-index:30}
@@ -290,6 +296,7 @@ table.sc tr.win td{background:#fff1b8}
   <div id="seats"></div>
   <div id="cards"></div>
   <div id="status"></div>
+  <div id="tmr" class="hide" role="timer"><svg viewBox="0 0 36 36"><circle class="tb" cx="18" cy="18" r="16"/><circle class="tf" cx="18" cy="18" r="13" pathLength="100" stroke-dasharray="100"/></svg><b></b></div>
   <div id="hud" class="hide">
     <button class="tbtn" id="bMenu" aria-label="Menu">☰</button>
     <div id="roundTag"></div>
@@ -404,6 +411,7 @@ const SFX={ctx:null,on:PREF.snd!==false,
   turn(){this.tone(880,.12,'sine',.12);this.tone(1175,.2,'sine',.1,0,.1)},
   err(){this.tone(130,.18,'square',.08)},
   click(){this.tone(700,.05,'sine',.08)},
+  tick(){this.tone(1400,.035,'sine',.05)},
   catch(){this.tone(900,.15,'sawtooth',.07,-500);this.tone(900,.15,'sawtooth',.07,-500,.17)},
   hot(){this.noise(.4,.25,900,0,.5);this.tone(200,.4,'sawtooth',.06,600)},
   pop(){this.tone(600,.08,'sine',.14,300)},
@@ -435,7 +443,7 @@ const EVC=window.__evc={};
 function ev(k,o={}){EVC[k]=(EVC[k]||0)+1;G.evSeq=(G.evSeq||0)+1;G.evs.push({s:G.evSeq,k,...o});if(G.evs.length>24)G.evs.shift()}
 function newMatch(players,rules){
   G={players:players.map((p,i)=>({name:p.name,av:p.av!=null?p.av:i,ai:p.ai||null,ctl:p.ctl||'local',cid:p.cid||null,hand:[],spud:false,score:0,disc:false})),
-    rules:{...rules},round:0,dealer:rnd(players.length),evs:[],evSeq:0,ver:0,me:0,phase:'idle'};
+    rules:{...rules},round:0,dealer:rnd(players.length),evs:[],evSeq:0,ver:0,me:0,phase:'idle',tn:0,dl:0};
   newRound();
 }
 function newRound(){
@@ -444,7 +452,7 @@ function newRound(){
   for(let k=0;k<7;k++)G.players.forEach(p=>p.hand.push(G.deck.pop()));
   let c;while(true){c=G.deck.pop();if(/^\d$/.test(c.v))break;G.deck.splice(rnd(G.deck.length),0,c)}
   G.discard.push(c);G.color=c.c;
-  G.dealer=(G.dealer+1)%N();G.turn=nextSeat(G.dealer);G.phase='play';
+  G.dealer=(G.dealer+1)%N();G.turn=nextSeat(G.dealer);G.phase='play';G.tn++;
   ev('deal',{round:G.round});
 }
 function drawCards(seat,n){
@@ -456,7 +464,7 @@ function drawCards(seat,n){
   if(p.hand.length>1)p.spud=false;
   return got;
 }
-function advance(n){G.turn=nextSeat(G.turn,n);G.drawnId=null}
+function advance(n){G.turn=nextSeat(G.turn,n);G.drawnId=null;G.tn++}
 function pickTarget(seat){let b=-1;G.players.forEach((p,i)=>{if(i!==seat&&(b<0||p.hand.length<G.players[b].hand.length))b=i});return b}
 function rotateHands(){
   const hs=G.players.map(p=>p.hand),n=N(),from={};
@@ -579,11 +587,11 @@ function view(seat){
   const g=G;
   return{ver:g.ver,me:seat,phase:g.phase,dir:g.dir,turn:g.turn,color:g.color,pending:g.pending,pendKind:g.pendKind,
     drawnId:g.turn===seat?g.drawnId:null,deckN:g.deck.length,discard:g.discard.slice(-6),round:g.round,rules:g.rules,
-    evs:g.evs.slice(-14),result:g.result,code:NET.code||null,lan:!!NET.role,
+    evs:g.evs.slice(-14),result:g.result,code:NET.code||null,lan:!!NET.role,tn:g.tn,tl:g.dl?Math.max(0,g.dl-Date.now()):-1,
     players:g.players.map((p,i)=>({name:p.name,av:p.av,ai:!!p.ai,bot:p.ctl==='ai',disc:p.disc,n:p.hand.length,spud:p.spud,score:p.score,hand:i===seat?p.hand:null}))};
 }
 function commit(){
-  G.ver++;
+  G.ver++;armClock();
   render(view(G.me));
   if(NET.role==='host')G.players.forEach((p,i)=>{const c=NET.conns[p.ctl];if(c&&c.open){try{c.send({t:'state',V:view(i)})}catch(e){}}});
   schedule();
@@ -615,6 +623,39 @@ function doMy(a){
   if(NET.role==='guest'){if(NET.conn&&NET.conn.open)NET.conn.send({t:'act',a});return}
   if(act(G.me,a))commit();else SFX.err();
 }
+/* ================= turn timer (host is the clock) ================= */
+let TURN_MS=30000;const TT={fired:-1,last:0,beep:''};
+const humanTurn=()=>G&&G.phase==='play'&&G.players[G.turn]&&!G.players[G.turn].ai&&!(AUTO&&G.turn===G.me);
+// host/local: (re)arm the deadline once per turn, before the state goes out
+function armClock(){if(!humanTurn()){G.dl=0;return}if(G.dlTn!==G.tn||!G.dl){G.dlTn=G.tn;G.dl=Date.now()+TURN_MS}}
+const late=()=>!!(VIEW&&VIEW._dl>0&&Date.now()>=VIEW._dl);
+const bestColor=h=>{const n=[0,0,0,0];h.forEach(c=>{if(c.c<4)n[c.c]++});return n.indexOf(Math.max(...n))};
+// host: seat s ran out of time → finish a half-made choice, else draw (and pass)
+function timeUp(s){
+  if(!G||G.phase!=='play'||G.turn!==s)return;
+  const pk=s===G.me&&$('.ov.pick');if(pk&&!pk._done){pk._done=1;pk._auto();G.dl=Date.now()+900;return}
+  TT.fired=G.tn;ev('tout',{seat:s});
+  if(G.drawnId==null)act(s,{k:'draw'});
+  if(G.phase==='play'&&G.turn===s&&G.drawnId!=null)act(s,{k:'pass'});
+  commit();
+}
+setInterval(()=>{
+  const now=Date.now(),dt=now-(TT.last||now),V=VIEW,el=$('#tmr');TT.last=now;
+  const on=!!(V&&V.phase==='play'&&V._dl>0&&!$('#room').classList.contains('idle'));
+  // offline: the clock is frozen while the menu / help is open
+  if(on&&!NET.role&&$$('.ov').some(o=>!o.classList.contains('pick'))){V._dl+=dt;if(G&&G.dl)G.dl+=dt}
+  if(G&&isHost()&&humanTurn()&&G.dl&&TT.fired!==G.tn&&now>=G.dl+(G.turn===G.me?250:1500))timeUp(G.turn);
+  if(!on){el.classList.add('hide');return}
+  const left=Math.max(0,V._dl-now),sec=Math.ceil(left/1000),mine=V.turn===V.me;
+  if(mine&&left<=0&&NET.role==='guest'){const pk=$('.ov.pick');if(pk&&!pk._done){pk._done=1;pk._auto()}}
+  if(mine&&sec>0&&sec<=5&&TT.beep!==V.tn+':'+sec){TT.beep=V.tn+':'+sec;SFX.tick()}
+  const se=$$('#seats .seat')[V.turn];if(!se){el.classList.add('hide');return}
+  const x=parseFloat(se.style.left),y=parseFloat(se.style.top),dx=x+AVS*1.1>W?-1:1;
+  el.style.left=(x+dx*AVS*.66)+'px';el.style.top=(y-AVS*.85)+'px';
+  el.classList.remove('hide');el.classList.toggle('low',sec<=10);el.querySelector('b').textContent=sec;
+  el.querySelector('.tf').style.strokeDashoffset=(100*(1-Math.min(1,left/TURN_MS))).toFixed(1);
+  el.title=mine?L(`${sec}s left of your turn`,`${sec} sek. tilbage af din tur`):L(`${sec}s left`,`${sec} sek. tilbage`);
+},200);
 
 /* ================= rendering ================= */
 let W=0,H=0,CW=64,CH=96,SAFEB=0,AVS=48;
@@ -684,6 +725,7 @@ function setT(e,x,y,r=0,s=1){e.style.transform=`translate(${(x-CW/2).toFixed(1)}
 
 function render(V,instant){
   const prevV=VIEW;VIEW=V;
+  if(V._dl==null)V._dl=V.tl>=0?Date.now()+V.tl:0; // turn deadline on this device's clock
   if(!W)measure();
   const LY=layout(V);
   const newEvs=V.evs.filter(e=>e.s>lastEv);
@@ -803,6 +845,7 @@ function render(V,instant){
   if(V.phase==='play'&&V.turn===V.me&&lastTurn!==V.me&&!firstRender)setTimeout(()=>SFX.turn(),250);
   lastTurn=V.phase==='play'?V.turn:-2;
   if(V.phase==='play')$$('.ov.res').forEach(o=>o._close('x'));
+  if(!myTurn)$$('.ov.pick').forEach(o=>o._close('x'));
   if(V.phase==='over'&&V.result&&lastResult!==V.result.id){lastResult=V.result.id;setTimeout(()=>showResult(V),1100)}
 }
 const nextSeatV=(V,s)=>((s+V.dir)%V.players.length+V.players.length)%V.players.length;
@@ -827,6 +870,7 @@ function fxEvent(V,e){
     case'emote':bubble(e.seat,esc(e.e));SFX.pop();break;
     case'left':toast(L(`🚪 ${e.name} left – a computer player takes over`,`🚪 ${e.name} gik – en computerspiller tager over`));break;
     case'back':toast(L(`📶 ${e.name} is back!`,`📶 ${e.name} er tilbage!`));break;
+    case'tout':if(e.seat===V.me)banner(L("⏰ Time's up!",'⏰ Tiden er gået!'),L('A card was drawn for you','Der blev trukket et kort for dig'));else toast(L(`⏰ ${V.players[e.seat].name} ran out of time`,`⏰ ${V.players[e.seat].name} løb tør for tid`));break;
     case'win':break;
   }
 }
@@ -846,6 +890,7 @@ $('#cards').addEventListener('click',async e=>{
   if(card.c===4){const c=await pickColor();if(c==null)return;a.color=c}
   if(card.v==='peel'||(card.v==='7'&&V.rules.sevenO)){const t=await pickTarget2(V,card.v==='peel'?L('Peel Swap: swap hands with…','Skrællebyt: byt hånd med…'):L('Seven: swap hands with…','Syv: byt hånd med…'));if(t==null)return;a.t=t}
   if(VIEW.turn!==VIEW.me)return;
+  if(late()){const me=VIEW.players[VIEW.me];if(me.n===2&&!me.spud)doMy({k:'spud'})} // auto-finished on time-out: call SPUD for them
   SFX.flick();doMy(a);
 });
 function shake(el){el.animate([{marginLeft:'0px'},{marginLeft:'-6px'},{marginLeft:'6px'},{marginLeft:'0px'}],{duration:250})}
@@ -870,14 +915,15 @@ function modal(o){return new Promise(res=>{
   document.body.appendChild(ov);if(o.onOpen)o.onOpen(ov);
 })}
 function pickColor(){return new Promise(res=>{
-  modal({title:L('🌈 Pick a colour','🌈 Vælg en farve'),html:`<div class="cpick">${COLORS.map((c,i)=>`<button data-c="${i}" style="background:${c.hex}">${potSVG({mood:'happy'})}<span>${CN(i)}</span></button>`).join('')}</div>`,
-    buttons:[{k:'x',label:L('Cancel','Annullér')}],onOpen:ov=>ov.querySelectorAll('.cpick button').forEach(b=>b.onclick=()=>{SFX.click();ov._close('c'+b.dataset.c)})})
+  modal({title:L('🌈 Pick a colour','🌈 Vælg en farve'),cls:'pick',html:`<div class="cpick">${COLORS.map((c,i)=>`<button data-c="${i}" style="background:${c.hex}">${potSVG({mood:'happy'})}<span>${CN(i)}</span></button>`).join('')}</div>`,
+    buttons:[{k:'x',label:L('Cancel','Annullér')}],onOpen:ov=>{ov._auto=()=>ov._close('c'+bestColor((VIEW.players[VIEW.me].hand||[])));ov.querySelectorAll('.cpick button').forEach(b=>b.onclick=()=>{SFX.click();ov._close('c'+b.dataset.c)})}})
   .then(k=>res(k&&k[0]==='c'?+k.slice(1):null));
 })}
 function pickTarget2(V,title){return new Promise(res=>{
+  if(late())return res(-1); // out of time: the engine picks the default target
   const opts=V.players.map((p,i)=>({p,i})).filter(o=>o.i!==V.me);
-  modal({title,html:`<div class="tpick">${opts.map(o=>`<button data-t="${o.i}"><span class="mav" style="--av:40px;width:40px;height:40px;display:block">${avHTML(o.p.av)}</span><b style="flex:1;text-align:left">${esc(o.p.name)}</b><span>🃏 ${o.p.n}</span></button>`).join('')}</div>`,
-    buttons:[{k:'x',label:L('Cancel','Annullér')}],onOpen:ov=>ov.querySelectorAll('.tpick button').forEach(b=>b.onclick=()=>{SFX.click();ov._close('t'+b.dataset.t)})})
+  modal({title,cls:'pick',html:`<div class="tpick">${opts.map(o=>`<button data-t="${o.i}"><span class="mav" style="--av:40px;width:40px;height:40px;display:block">${avHTML(o.p.av)}</span><b style="flex:1;text-align:left">${esc(o.p.name)}</b><span>🃏 ${o.p.n}</span></button>`).join('')}</div>`,
+    buttons:[{k:'x',label:L('Cancel','Annullér')}],onOpen:ov=>{ov._auto=()=>ov._close('t-1');ov.querySelectorAll('.tpick button').forEach(b=>b.onclick=()=>{SFX.click();ov._close('t'+b.dataset.t)})}})
   .then(k=>res(k&&k[0]==='t'?+k.slice(1):null));
 })}
 function showResult(V){
@@ -1008,6 +1054,8 @@ function howTo(){
    </div>
    <h3>🏆 ${L('Scoring','Point')}</h3>
    <p>${L('The round winner scores the cards left in everyone else\'s hands: numbers = face value, action cards = 20, special potato cards = 30, wilds = 50. First to 500 wins the match.','Rundens vinder får point for kortene på de andres hænder: tal = pålydende, actionkort = 20, særlige kartoffelkort = 30, jokere = 50. Først til 500 vinder kampen.')}</p>
+   <h3>⏰ ${L('Turn timer','Tur-ur')}</h3>
+   <p>${L('You have <b>30 seconds</b> for each turn – watch the ring by the player whose turn it is. If time runs out, a card is drawn for you and the turn moves on (a colour you were picking is chosen for you).','Du har <b>30 sekunder</b> til hver tur – hold øje med ringen ved den spiller, der har turen. Løber tiden ud, trækkes der et kort for dig, og turen går videre (er du ved at vælge farve, vælges den for dig).')}</p>
    <p class="hint">${L('If you draw a card you can play, you may play it right away or keep it and pass.','Trækker du et kort, du kan spille, må du spille det med det samme eller beholde det og give turen videre.')}</p>
    </div>`,buttons:[{k:'ok',label:L('Got it! 🥔','Forstået! 🥔'),cls:'go'}]});
 }
@@ -1200,7 +1248,7 @@ let gaT=0;function guestAuto(V){clearTimeout(gaT);if(V.phase!=='play'||V.turn!==
 },500*SPEED)}
 
 /* ================= boot ================= */
-window.__UNO={speed:v=>{SPEED=v},auto:v=>{AUTO=!!v;if(G&&isHost())schedule();else if(VIEW&&AUTO)guestAuto(VIEW)},G:()=>G,V:()=>VIEW,act:a=>doMy(a),net:()=>NET,rules:RULES,stats:STATS,startLocal:cfg=>startLocal(cfg)};
+window.__UNO={speed:v=>{SPEED=v},auto:v=>{AUTO=!!v;if(G&&isHost())schedule();else if(VIEW&&AUTO)guestAuto(VIEW)},G:()=>G,V:()=>VIEW,act:a=>doMy(a),net:()=>NET,rules:RULES,stats:STATS,startLocal:cfg=>startLocal(cfg),turnMs:v=>{TURN_MS=v}};
 (function boot(){
   document.documentElement.lang=LANG;
   $('.ldPot').innerHTML=potato({mood:'happy'});

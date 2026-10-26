@@ -167,6 +167,12 @@ h1,h2,h3,.lil{font-family:'Lilita One',Nunito,sans-serif;font-weight:400;letter-
 .pc.turn{opacity:1;border-color:var(--gold);background:#ffcb5218;box-shadow:0 0 14px #ffcb5240}
 .pc.r{flex-direction:row-reverse;padding:4px 4px 4px 8px;text-align:right}
 .pc canvas{width:42px;height:42px;flex:none;border-radius:50%;border:2px solid #000;background:#2b1b10}
+/* shot clock: ring around the portrait + seconds badge */
+.pw{position:relative;flex:none;display:block;line-height:0;--t:1;--tc:var(--gold)}
+.pw::before{content:'';position:absolute;inset:-5px;border-radius:50%;opacity:0;transition:opacity .25s;background:conic-gradient(var(--tc) calc(var(--t)*1turn),#0006 0);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 4px),#000 calc(100% - 3.5px));mask:radial-gradient(farthest-side,#0000 calc(100% - 4px),#000 calc(100% - 3.5px))}
+.pw::after{content:attr(data-s);position:absolute;right:-6px;bottom:-5px;min-width:18px;padding:0 3px;border-radius:9px;border:2px solid #000;background:var(--tc);color:#000;font:400 11px/14px 'Lilita One',sans-serif;text-align:center;opacity:0;transition:opacity .25s}
+.pw.on::before,.pw.on::after{opacity:1}.pw.low{--tc:#e8453c}.pw.low::after{color:#fff;animation:clkP .5s ease-in-out infinite alternate}
+@keyframes clkP{to{transform:scale(1.18)}}
 .pc .nm{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pc .nm small{color:var(--muted);font-size:11px;margin:0 4px}
 .tray{display:flex;gap:2px;margin-top:2px;min-height:16px;flex-wrap:nowrap}
@@ -296,9 +302,9 @@ h1,h2,h3,.lil{font-family:'Lilita One',Nunito,sans-serif;font-weight:400;letter-
 <div id="game" class="screen">
   <canvas id="cv"></canvas>
   <div id="hud">
-    <div class="pc" id="pc0"><canvas width="84" height="84"></canvas><div style="min-width:0"><div class="nm"></div><div class="tray"></div></div></div>
+    <div class="pc" id="pc0"><span class="pw"><canvas width="84" height="84"></canvas></span><div style="min-width:0"><div class="nm"></div><div class="tray"></div></div></div>
     <div id="mid"><b id="turnT"></b><small id="subT"></small></div>
-    <div class="pc r" id="pc1"><canvas width="84" height="84"></canvas><div style="min-width:0"><div class="nm"></div><div class="tray"></div></div></div>
+    <div class="pc r" id="pc1"><span class="pw"><canvas width="84" height="84"></canvas></span><div style="min-width:0"><div class="nm"></div><div class="tray"></div></div></div>
     <button class="ibtn" id="gMenuB" aria-label="Menu">⏸</button>
   </div>
   <div id="ctl">
@@ -832,7 +838,7 @@ function aimDefault(){
 }
 function legalTargets(bs,g){const on=bs.filter(b=>b.on&&!b.drop&&b.n>0);if(!g)return on.filter(b=>b.n!==8);const m=on.filter(b=>grp(b.n)===g);return m.length?m:on.filter(b=>b.n===8)}
 function startTurn(){
-  G.tok++;G.phase='aim';G.pow=0;G.spin={x:0,y:0};G.aiBusy=false;
+  G.tok++;G.phase='aim';G.pow=0;G.spin={x:0,y:0};G.aiBusy=false;G.clk=SHOT_T();G.clkP=0;G.clkS=0;
   if(G.breakShot){const c=G.W.b[0];G.aim=Math.atan2(FOOT.y-c.y,FOOT.x-c.x)}else aimDefault();
   updateHud();updateSpinBtn();renderPower();DIRTY=true;
   const p=G.players[G.cur];
@@ -855,6 +861,7 @@ function takeShot(a,pow,sx,sy){
 function update(dt){
   if(!G)return;
   const sp=DBG.fast||1;
+  shotClock(dt);
   if(G.phase==='strike'){
     G.strikeT+=dt*sp;DIRTY=true;
     if(G.strikeT>=.09){setTimeout(renderPower,0);
@@ -875,6 +882,40 @@ function update(dt){
 }
 function dropAnim(dt){
   for(const b of G.W.b){if(!b.drop)continue;b.drop.t+=dt*5;if(b.drop.t>=1){b.drop=null;b.on=false;updateHud()}}
+}
+/* shot clock: 30 s per human shot. Host/local is the authority; a guest only shows the countdown it is sent. */
+const SHOT_T=()=>DBG.shotT||30;
+const clkOn=()=>G&&G.phase==='aim'&&G.clk!=null&&G.players[G.cur].ai==null&&!DBG.auto;
+const clkBlocked=()=>!!($('.ov')||SH||document.hidden);
+function shotClock(dt){
+  if(!clkOn()){drawClk();return}
+  if(G.net==='guest'){if(!G.clkP)G.clk=Math.max(0,G.clk-dt);drawClk();return}
+  const p=clkBlocked()?1:0;if(p!==G.clkP){G.clkP=p;G.clkS=0}
+  if(!p)G.clk=Math.max(0,G.clk-dt);
+  if(G.net==='host'&&(G.clkS-=dt)<=0){G.clkS=1;netSend({t:'clk',c:Math.round(G.clk*10)/10,p})}
+  drawClk();
+  if(G.clk<=0)timeUp();
+}
+let CLK='';
+function drawClk(){
+  const on=clkOn(),sec=on?Math.ceil(G.clk):0,key=on?G.cur+':'+Math.round(G.clk*20)+':'+G.clkP:'';
+  if(key===CLK)return;const prev=CLK;CLK=key;
+  for(let i=0;i<2;i++){const w=$('#pc'+i+' .pw');if(!w)continue;const me=on&&G.cur===i;
+    w.classList.toggle('on',me);w.classList.toggle('low',me&&G.clk<=10);
+    if(me){w.style.setProperty('--t',clamp(G.clk/SHOT_T(),0,1).toFixed(3));w.dataset.s=G.clkP?'⏸':sec}}
+  // soft tick in the last 5 s for the player whose turn it is
+  if(on&&!G.clkP&&sec<=5&&sec>0&&isMine(G.cur)&&prev.split(':')[0]==G.cur&&Math.ceil(+prev.split(':')[1]/20)>sec)SFX.tick();
+}
+function timeUp(){
+  if(!G||G.phase!=='aim'||G.net==='guest'||G.clk>0)return;
+  const me=G.cur,opp=1-me;G.clk=null;
+  IN.mode=null;IN.id=null;PW.drag=false;$('#spinPop').classList.remove('on');
+  G.frameFouls[me]++;G.fouls[me]++;if(isMine(me)&&G.mode!=='local')S.st.fouls++;SFX.foul();
+  G.visit=0;G.visitBreak=false;G.vflags={};G.cur=opp;G.bih=true;G.kitchen=!!G.breakShot;
+  if(G.kitchen){const c=G.W.b[0],f=findFree(G.W.b,KITCHEN*.7,TH/2,c,KITCHEN);c.x=f.x;c.y=f.y;c.ver++}
+  toast(B("⏱️ Time's up!",'⏱️ Tiden er gået!'),1900);
+  setTimeout(()=>G&&toast(B(`✋ Ball in hand for ${ctlName(opp)}`,`✋ Kugle i hånd til ${ctlName(opp)}`),1900),250);
+  saveSoon();startTurn();
 }
 // pure rules evaluation (used by the game and the AI)
 function judge(ev,pre,me,groups){
@@ -1649,11 +1690,11 @@ const SHEETS={
   help(){return{title:L('How to play','Sådan spiller du'),html:`<div class="card help">${helpHTML()}</div>`}},
 };
 function perkTxt(it){const p=it.perk;if(!p)return L('Cosmetic','Kun udseende');const a=[];if(p.aim)a.push(L(`+${p.aim} aim guide`,`+${p.aim} sigtelinje`));if(p.spin)a.push(L(`+${Math.round((p.spin-1)*100)}% spin`,`+${Math.round((p.spin-1)*100)}% effet`));return '✨ '+a.join(' · ')}
-function helpHTML(){return L(`<h3>🎯 Aiming & shooting</h3><ul><li><b>Drag anywhere</b> on the table to rotate your aim. <b>Tap</b> a spot to aim straight at it.</li><li>Use the <b>fine-tune wheel</b> for tiny adjustments (or the mouse wheel / arrow keys).</li><li><b>Grab the cue stick</b> and swing it around to aim, then <b>pull it back and let go</b> to shoot. Pull further for more power – push it back in to cancel.</li><li>Or <b>pull the power bar</b> and release to shoot.</li><li>Tap the <b>cue ball button</b> to add spin: top spin follows through, back spin draws back, side spin changes the cushion bounce.</li></ul>
+function helpHTML(){return L(`<h3>🎯 Aiming & shooting</h3><ul><li><b>Drag anywhere</b> on the table to rotate your aim. <b>Tap</b> a spot to aim straight at it.</li><li>Use the <b>fine-tune wheel</b> for tiny adjustments (or the mouse wheel / arrow keys).</li><li><b>Grab the cue stick</b> and swing it around to aim, then <b>pull it back and let go</b> to shoot. Pull further for more power – push it back in to cancel.</li><li>Or <b>pull the power bar</b> and release to shoot.</li><li>Tap the <b>cue ball button</b> to add spin: top spin follows through, back spin draws back, side spin changes the cushion bounce.</li><li>⏱️ You have <b>30 seconds</b> per shot – watch the ring around your portrait. If time runs out, your opponent gets <b>ball in hand</b>.</li></ul>
 <h3>🎱 8-ball rules</h3><ul><li>Break from behind the line. The table is open until someone pots a ball after the break: that player gets that group – <b>solids (1–7)</b> or <b>stripes (9–15)</b>.</li><li>Pot one of your balls to keep shooting. When your group is cleared, pot the <b>8-ball</b> to win.</li><li>Potting the 8-ball early (or with a foul) loses the frame. Potting it on the break wins!</li><li><b>Fouls:</b> scratching the cue ball, hitting no ball, hitting the wrong ball first, or no ball touching a cushion after contact. Your opponent then gets <b>ball in hand</b> and can place the cue ball anywhere.</li></ul>
 <h3>🗺️ Campaign & rewards</h3><ul><li>Tour 8 potato cities. Each has a 3-round tournament; win the final to claim the city cup. Cities unlock with your level and the previous cup.</li><li>Collect flawless medals and special trophies for great feats. Earn XP and coins, complete daily and weekly quests and keep your daily streak going.</li><li>Spend coins on new cues, cloth colours and ball sets in the shop.</li></ul>
 <h3>👥 Multiplayer</h3><ul><li><b>Same device:</b> pass the phone between turns.</li><li><b>Same Wi-Fi:</b> one player hosts a table and shares the 4-letter code; the other joins. No accounts, no servers – your devices talk directly.</li></ul>`,
-`<h3>🎯 Sigt & stød</h3><ul><li><b>Træk hvor som helst</b> på bordet for at dreje sigtet. <b>Tryk</b> et sted for at sigte direkte derhen.</li><li>Brug <b>finjusteringshjulet</b> til små justeringer (eller musehjulet / piletasterne).</li><li><b>Tag fat i køen</b> og drej den rundt for at sigte, og <b>træk den tilbage og slip</b> for at støde. Træk længere for mere kraft – skub den ind igen for at fortryde.</li><li>Eller <b>træk i kraftbjælken</b> og slip for at støde.</li><li>Tryk på <b>køball-knappen</b> for effet: overskru følger efter, underskru trækker tilbage, sideskru ændrer bandespringet.</li></ul>
+`<h3>🎯 Sigt & stød</h3><ul><li><b>Træk hvor som helst</b> på bordet for at dreje sigtet. <b>Tryk</b> et sted for at sigte direkte derhen.</li><li>Brug <b>finjusteringshjulet</b> til små justeringer (eller musehjulet / piletasterne).</li><li><b>Tag fat i køen</b> og drej den rundt for at sigte, og <b>træk den tilbage og slip</b> for at støde. Træk længere for mere kraft – skub den ind igen for at fortryde.</li><li>Eller <b>træk i kraftbjælken</b> og slip for at støde.</li><li>Tryk på <b>køball-knappen</b> for effet: overskru følger efter, underskru trækker tilbage, sideskru ændrer bandespringet.</li><li>⏱️ Du har <b>30 sekunder</b> pr. stød – hold øje med ringen om dit billede. Løber tiden ud, får modstanderen <b>kugle i hånd</b>.</li></ul>
 <h3>🎱 8-ball regler</h3><ul><li>Break fra bag linjen. Bordet er åbent, indtil nogen sænker en kugle efter breaket: den spiller får den gruppe – <b>helfarvede (1–7)</b> eller <b>halvfarvede (9–15)</b>.</li><li>Sænk en af dine kugler for at blive ved. Når din gruppe er ryddet, skal du sænke <b>8-kuglen</b> for at vinde.</li><li>Sænker du 8-kuglen for tidligt (eller med en fejl), taber du. Sænker du den på breaket, vinder du!</li><li><b>Fejl:</b> køballen i hul, ingen kugle ramt, forkert kugle ramt først, eller ingen kugle rammer en bande efter berøring. Modstanderen får så <b>kugle i hånd</b> og kan placere køballen hvor som helst.</li></ul>
 <h3>🗺️ Kampagne & belønninger</h3><ul><li>Tag på turné i 8 kartoffelbyer. Hver by har en turnering med 3 runder; vind finalen og få bypokalen. Byer låses op med dit niveau og den forrige pokal.</li><li>Saml fejlfri-medaljer og specialtrofæer for flotte præstationer. Optjen XP og mønter, klar daglige og ugentlige opgaver og hold din daglige stime i live.</li><li>Brug mønter på nye køer, klæder og kuglesæt i butikken.</li></ul>
 <h3>👥 Multiplayer</h3><ul><li><b>Samme enhed:</b> giv telefonen videre mellem turene.</li><li><b>Samme wifi:</b> én spiller åbner et bord og deler den 4-tegns kode; den anden deltager. Ingen konti, ingen servere – jeres enheder taler direkte sammen.</li></ul>`)}
@@ -1688,7 +1729,7 @@ const cleanName=s=>String(s||'').replace(/[<>]/g,'').trim().slice(0,14)||L('Gues
 function netSend(m){try{if(NET.conn&&NET.conn.open)NET.conn.send(m)}catch(e){}}
 function netBcast(m){if(NET.role==='host')netSend(m)}
 function netSnd(k,v){if(G&&G.net==='host'&&NET.sq.length<120)NET.sq.push(k,Math.round(v))}
-function snapshot(){return{b:G.W.b.map(b=>[Math.round(b.x*10)/10,Math.round(b.y*10)/10,b.on&&!b.drop?1:0]),cur:G.cur,groups:G.groups,bih:G.bih,kitchen:G.kitchen,breakShot:G.breakShot,phase:G.phase,score:G.score,race:G.race,frameNo:G.frameNo,aim:G.aim}}
+function snapshot(){return{b:G.W.b.map(b=>[Math.round(b.x*10)/10,Math.round(b.y*10)/10,b.on&&!b.drop?1:0]),cur:G.cur,groups:G.groups,bih:G.bih,kitchen:G.kitchen,breakShot:G.breakShot,phase:G.phase,score:G.score,race:G.race,frameNo:G.frameNo,aim:G.aim,clk:G.clk,clkP:G.clkP}}
 function netSync(){if(G&&G.net==='host')netSend({t:'st',s:snapshot()})}
 function netFrame(){if(!G||G.net!=='host')return;const p=[];let on=0;G.W.b.forEach((b,i)=>{const dx=b.drop?lerp(b.drop.x,POCK[b.drop.p].x,b.drop.t):b.x,dy=b.drop?lerp(b.drop.y,POCK[b.drop.p].y,b.drop.t):b.y;p.push(Math.round(dx),Math.round(dy));if(b.on&&!b.drop)on|=1<<i});netSend({t:'fr',p,on,s:NET.sq.splice(0)})}
 let aimT=0,aimLast=0;
@@ -1802,6 +1843,7 @@ function guestMsg(m){
     const s=m.s||[];for(let i=0;i<s.length;i+=2){if(s[i]===1)SFX.clack(s[i+1]/1700);else if(s[i]===2)SFX.cushion(s[i+1]/2400);else if(s[i]===3)SFX.pocket()}DIRTY=true}
   else if(m.t==='shot'){const c=G.W.b[0];if(m.cx!=null){c.x=m.cx;c.y=m.cy;c.ver++}G.aim=+m.a;G.pow=+m.pow;G.spin={x:+m.sx||0,y:+m.sy||0};G.phase='strike';G.strikeT=0;G.tgt=null;SFX.cue(.3+G.pow*.7);hideBih();DIRTY=true}
   else if(m.t==='aim')applyAim(m);
+  else if(m.t==='clk'){if(G.phase==='aim'){G.clk=clamp(+m.c||0,0,99);G.clkP=m.p?1:0}}
   else if(m.t==='toast')toast(m.m,m.ms,true);
   else if(m.t==='fend'){G.score=m.score;G.phase='over';updateHud();if(m.w===1)SFX.cheer(m.mo);else SFX.lose();setTimeout(()=>{if(!G)return;if(m.mo)matchEnd(m.w);else frameModal(m.w)},1300)}
   else if(m.t==='bye')netLeftModal(B('The host left the game.','Værten har forladt spillet.'));
@@ -1811,6 +1853,7 @@ function applyState(s){
   G.W.b.forEach((b,i)=>{const q=s.b[i];if(!q)return;if(Math.abs(b.x-q[0])>.5||Math.abs(b.y-q[1])>.5){roll(b,q[0]-b.x,q[1]-b.y);b.x=q[0];b.y=q[1]}b.on=!!q[2];b.drop=null;b.vx=b.vy=0});
   const turnChange=G.cur!==s.cur||G.phase!=='aim';
   Object.assign(G,{cur:s.cur,groups:s.groups,bih:s.bih,kitchen:s.kitchen,breakShot:s.breakShot,score:s.score,race:s.race,frameNo:s.frameNo});
+  G.clk=s.clk==null?null:clamp(+s.clk||0,0,99);G.clkP=s.clkP?1:0;if(turnChange){IN.mode=null;IN.id=null;PW.drag=false}
   if(s.phase==='aim'){G.phase='aim';G.pow=0;G.spin={x:0,y:0};if(turnChange)G.aim=s.aim;if(newFrameNo)closeModals();if(turnChange&&isMine(G.cur)){toast(B('🎯 Your turn!','🎯 Din tur!'),1100,true)}}
   else if(s.phase==='over')G.phase='over';else G.phase='wait';
   if(newFrameNo)closeModals();
