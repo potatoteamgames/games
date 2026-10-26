@@ -439,6 +439,16 @@ button:disabled{cursor:not-allowed;opacity:.45}
 .dcBtn{display:flex;align-items:center;justify-content:center;gap:10px;background:#5865f2;color:#fff!important;text-decoration:none!important;border-radius:14px;padding:9px 16px;font-family:inherit;font-weight:800;font-size:15px;line-height:1.15;text-align:left;box-shadow:0 4px 0 #3c45a5;transition:transform .12s}
 .dcBtn:hover{transform:translateY(-2px)}.dcBtn:active{transform:translateY(2px);box-shadow:none}
 .dcBtn svg{width:30px;height:24px;flex:none}.dcBtn small{display:block;font-size:11px;font-weight:700;opacity:.85}
+.rejoin{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:#e6f2ff;border:2px solid #2a7de1;border-radius:14px;padding:8px 12px;margin-bottom:8px;font-size:14px;color:#1b3554}
+.rejoin .btn{flex:0 0 auto}
+.roomInfo{display:none;margin:-2px 0 8px;font-size:13px;color:var(--muted);text-align:center}
+.roomInfo b{font-family:'Lilita One',sans-serif;font-size:18px;letter-spacing:3px;color:#ffcb52;background:#2a1a0e;border-radius:8px;padding:1px 8px;margin-left:4px}
+.roomInfo.on{display:block}
+.turnTimer{display:none;position:relative;height:22px;border-radius:11px;background:#2a1a0e;border:2px solid #000;overflow:hidden;margin-bottom:8px}
+.turnTimer.on{display:block}
+.turnTimer i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#2fb35a,#7ee08a);transition:width .25s linear}
+.turnTimer.low i{background:linear-gradient(90deg,#d23a2a,#ff7a5a)}
+.turnTimer b{position:relative;display:block;text-align:center;font-size:12px;line-height:18px;color:#fff;text-shadow:1px 1px 0 #000}
 </style>
 </head>
 <body>
@@ -475,8 +485,10 @@ button:disabled{cursor:not-allowed;opacity:.45}
   </div>
   <aside class="side" aria-label="Players and actions">
     <div class="turnInfo"><span id="turnName">The Potato Empire</span><small id="roundNo"></small></div>
+    <div class="roomInfo" id="roomInfo"></div>
     <div class="players" id="players"></div>
     <div class="actions" id="actions">
+      <div class="turnTimer" id="turnTimer"><i></i><b></b></div>
       <div class="actMsg" id="actMsg">Set up a game to start playing.</div>
       <div class="actMain" id="actMain"></div>
       <div class="tools"><button id="btnManage" disabled>🏠 Properties</button><button id="btnTrade" disabled>🤝 Trade</button></div>
@@ -973,7 +985,7 @@ function modal({title='',html='',buttons=[],cls='',render,dismiss}){
     document.body.appendChild(ov);requestAnimationFrame(()=>ov.classList.add('in'));
     let done=false;
     const close=k=>{if(done)return;done=true;ov.classList.remove('in');setTimeout(()=>ov.remove(),200);res(k)};
-    ov._close=close;ov._dismiss=dismiss;
+    ov._close=close;ov._dismiss=dismiss;ov._btns=buttons;
     const bb=$('.mbtns',ov);
     buttons.forEach(b=>{const e=document.createElement('button');e.className='btn '+(b.cls||'');e.innerHTML=b.label;e.disabled=!!b.dis;e.onclick=()=>{SFX.click();close(b.k)};bb.appendChild(e)});
     if(render)render(ov,close);
@@ -1113,13 +1125,13 @@ async function gameLoop(){
       if(id!==LOOP)return;
       if(alive().length<=1){await gameOver(alive()[0]);return}
     }
-    G.phase='start';
+    G.phase='start';stopTurnClock();
     let n=G.turn;do{n=(n+1)%G.players.length;if(n===0)G.round++}while(G.players[n].out);
     G.turn=n;
   }
 }
 async function takeTurn(p){
-  G.dbl=0;save();
+  G.dbl=0;save();startTurnClock(p);
   banner(`${gen(p.name)} ${L('turn','tur')}`,p.color);
   if(p.human&&mine(p)&&G.players.filter(q=>q.human&&!q.out&&mine(q)).length>1)await passDevice(p);
   if(!p.human){idleMsg(L(`🤖 ${esc(p.name)} is thinking…`,`🤖 ${esc(p.name)} tænker…`));await sleep(700*SP());await aiPreTurn(p);if(p.out)return}
@@ -1139,7 +1151,7 @@ async function takeTurn(p){
     await moveSteps(p,a+b);
     await land(p,a+b);
     if(p.out||p.jail||!dbl)break;
-    banner(L('🎲 Doubles! Roll again','🎲 To ens! Slå igen'),'#2a7de1');
+    banner(L('🎲 Doubles! Roll again','🎲 To ens! Slå igen'),'#2a7de1');if(!G.autoTurn)startTurnClock(p);
   }
   if(!p.out)await endPhase(p);
 }
@@ -1166,7 +1178,7 @@ async function jailTurn(p){
   banner(L(`🔒 No doubles – ${p.jailTries}/3`,`🔒 Ikke to ens – ${p.jailTries}/3`),'#3a2616');log(L(`No doubles – ${pName(p)}: still in Jail (${p.jailTries}/3 tries used).`,`Ikke to ens – ${pName(p)}: stadig i fængsel (${p.jailTries}/3 forsøg brugt).`));renderPlayers();return'stay';
 }
 async function endPhase(p){
-  G.phase='end';save();
+  G.phase='end';save();if(!G.turnEnd&&!G.autoTurn)startTurnClock(p);
   if(p.human)await choose(p,()=>[{k:'end',label:L('✅ End turn','✅ Afslut tur'),cls:'go'}],L(`${pName(p)}: build houses 🏠, trade 🤝 or end your turn.`,`${pName(p)}: byg huse 🏠, handl 🤝 eller afslut din tur.`));
   else{aiUnmortgage(p);aiBuild(p);await sleep(450*SP())}
   G.phase='start';
@@ -1577,7 +1589,8 @@ async function leaveGame(){
   quitOnline();
   setTimeout(()=>location.reload(),NET.role?350:0);
 }
-addEventListener('beforeunload',()=>{if(NET.role&&!NET.leaving&&G&&!G.over)quitOnline()});
+// closing or reloading the tab is NOT leaving: the seat is kept for 5 minutes so you can rejoin with the table code (only the Leave button gives it up)
+addEventListener('beforeunload',()=>{if(NET.role==='host'&&NET.started&&G&&!G.over)save()});
 
 /* ================= ONLINE (WebRTC via PeerJS) ================= */
 // The host's browser runs the game. Guests receive the state + visual effects and answer when it's their move.
@@ -1586,8 +1599,12 @@ const PEER_PREFIX='potato-empire-ptg-',PEERJS='https://cdn.jsdelivr.net/npm/peer
 const ICE={sdpSemantics:'unified-plan',iceServers:[]};
 const peerOpts=()=>window.__PEER_OPTS||{config:ICE,pingInterval:4000};
 // a per-tab id so a guest whose connection drops can get their seat back
-NET.cid=(()=>{try{let c=sessionStorage.getItem('pe_cid');if(!c){c=Math.random().toString(36).slice(2,12);sessionStorage.setItem('pe_cid',c)}return c}catch(e){return Math.random().toString(36).slice(2,12)}})();
+NET.cid=(()=>{try{let c=localStorage.getItem('pe_cid')||sessionStorage.getItem('pe_cid');if(!c)c=Math.random().toString(36).slice(2,12);localStorage.setItem('pe_cid',c);return c}catch(e){return Math.random().toString(36).slice(2,12)}})();
 NET.discT={};
+// a player who drops out (closed tab, crashed browser) keeps their seat for 5 minutes and can rejoin with the table code
+const REJOIN_MS=300000;
+const lastTable=()=>{try{const t=JSON.parse(localStorage.getItem('pe_last')||'null');return t&&Date.now()-t.at<3*3600e3?t:null}catch(e){return null}};
+const rememberTable=role=>{try{localStorage.setItem('pe_last',JSON.stringify({code:NET.code,role,at:Date.now()}))}catch(e){}};
 // keep the screen on while hosting / playing online, so the phone doesn't sleep and drop the table
 let WAKE=null;async function wake(){try{if(NET.role&&navigator.wakeLock&&!WAKE){WAKE=await navigator.wakeLock.request('screen');WAKE.addEventListener('release',()=>{WAKE=null})}}catch(e){}}
 document.addEventListener('visibilitychange',()=>{
@@ -1621,12 +1638,38 @@ function ask(p,spec){
   // a player who is reconnecting keeps the question; it is re-sent when they come back
   return new Promise(res=>{const id=++NET.seq;NET.pend[id]={res,pid:p.id,spec};const c=NET.conns[p.ctl];if(c&&c.open)c.send({t:'ask',id,pid:p.id,spec});else if(!p.disc)dropAsk(id)});
 }
-function dropAsk(id){ // answer for a player who left
+const modalDefault=b=>{b=b||[];const n=b.find(b=>['n','no','x'].includes(b.k));return n?n.k:(b.find(b=>!b.dis&&b.k!=='bk')||b[0]||{}).k};
+function dropAsk(id){ // answer for a player who left (or ran out of time)
   const x=NET.pend[id];if(!x)return;delete NET.pend[id];const s=x.spec;
+  const p=G&&G.players[x.pid],c=p&&NET.conns[p.ctl];if(c&&c.open)try{c.send({t:'unask',id:+id})}catch(e){}
   if(s.k==='actions'){const a=s.list.find(a=>!a.dis);x.res(a?a.k:null)}
-  else if(s.k==='modal'){const b=s.spec.buttons||[],n=b.find(b=>['n','no','x'].includes(b.k));x.res(n?n.k:(b.find(b=>!b.dis&&b.k!=='bk')||b[0]||{}).k)}
+  else if(s.k==='modal')x.res(modalDefault(s.spec.buttons))
   else x.res(s.k==='bid'?0:1);
 }
+/* ---- turn timer (online games): 60 seconds per player per turn, the host keeps the clock ---- */
+const TURN_MS=60000;
+function startTurnClock(p){if(NET.role==='host'&&G.online&&p.human&&!p.out){G.turnEnd=Date.now()+TURN_MS;syncSoon()}}
+function stopTurnClock(){if(!G)return;G.turnEnd=0;G.players.forEach(q=>{if(q._auto){if(!q.left)q.human=true;delete q._auto}});G.autoTurn=null}
+function turnTimeout(){
+  const p=cur();G.turnEnd=0;if(!p||p.out||!p.human)return;
+  log(L(`⏱️ ${pName(p)} ran out of time – the turn is played automatically.`,`⏱️ ${pName(p)} løb tør for tid – turen spilles automatisk.`));
+  banner(L(`⏱️ Time's up, ${p.name}!`,`⏱️ Tiden er gået, ${p.name}!`),'#a8321f');SFX.bad();
+  p._auto=1;p.human=false;G.autoTurn=p.id; // the computer finishes the turn for them
+  Object.keys(NET.pend).forEach(id=>{if(NET.pend[id].pid===p.id)dropAsk(id)});
+  if(ACT){const a=ACT.fn().find(a=>!a.dis),r=ACT.res;ACT=null;drawActions();r(a?a.k:null)}
+  $$('.ov').forEach(o=>{if(o._btns&&!o.classList.contains('reconn')&&o._close)o._close(modalDefault(o._btns))});
+  renderPlayers();syncNow();
+}
+setInterval(()=>{
+  const t=$('#turnTimer'),ri=$('#roomInfo');if(!t)return;
+  const on=!!(G&&G.online&&!G.over&&G.turnEnd);t.classList.toggle('on',on);
+  if(on){const left=Math.max(0,G.turnEnd-Date.now()),sec=Math.ceil(left/1000),p=cur();
+    $('i',t).style.width=(left/TURN_MS*100)+'%';t.classList.toggle('low',sec<=10);
+    $('b',t).textContent=L(`⏱️ ${p?p.name:''}: ${sec}s`,`⏱️ ${p?p.name:''}: ${sec} sek`);
+    if(NET.role==='host'&&left<=0)turnTimeout()}
+  const code=NET.code||(G&&G.code);ri.classList.toggle('on',!!(G&&G.online&&code&&!G.over));
+  if(G&&G.online&&code)ri.innerHTML=L('📶 Table code','📶 Bordkode')+`<b>${esc(code)}</b>`;
+},250);
 const askModal=(p,spec)=>isRemote(p)?ask(p,{k:'modal',spec}):modal(spec);
 const choose=(p,fn,msg)=>isRemote(p)?(idleMsg(L(`🌐 Waiting for ${esc(p.name)}…`,`🌐 Venter på ${esc(p.name)}…`)),ask(p,{k:'actions',list:fn(),msg:typeof msg==='function'?msg():msg})):setActions(fn,msg);
 const manageFor=p=>isRemote(p)?ask(p,{k:'manage'}):openManage(p);
@@ -1646,16 +1689,38 @@ async function hostGame(){
   const tryOpen=()=>new Promise((res,rej)=>{NET.code=newCode();const pr=new Peer(PEER_PREFIX+NET.code,peerOpts());pr.on('open',()=>res(pr));pr.on('error',e=>{pr.destroy();rej(e)})});
   let pr;for(let k=0;k<3&&!pr;k++){try{pr=await tryOpen()}catch(e){if(k===2){box.innerHTML=`<p class="err">${L('Could not open a table','Kunne ikke åbne et bord')} (${esc(e.type||e.message)}). ${L('Try again in a moment.','Prøv igen om lidt.')}</p>`;return}}}
   NET.role='host';NET.peer=pr;NET.id='host';NET.lobby=[];
+  hostHandlers(pr);
+  wake();
+  drawHostLobby();
+}
+function hostHandlers(pr){
   pr.on('connection',c=>{
     c.on('data',m=>hostMsg(c,m));
     c.on('close',()=>hostLost(c.peer));
     c.on('error',()=>hostLost(c.peer));
   });
   // the matchmaking link drops when the phone switches apps; keep re-registering the table code
-  pr.on('disconnected',()=>{let n=0;const t=setInterval(()=>{if(pr.destroyed||!pr.disconnected||n++>40){clearInterval(t);return}try{pr.reconnect()}catch(e){}},2500);try{pr.reconnect()}catch(e){}});
+  pr.on('disconnected',()=>{let n=0;const t=setInterval(()=>{if(pr.destroyed||!pr.disconnected||n++>120){clearInterval(t);return}try{pr.reconnect()}catch(e){}},2500);try{pr.reconnect()}catch(e){}});
   pr.on('error',e=>{if(e.type==='unavailable-id'&&!NET.started)console.warn('table id taken')});
-  wake();
-  drawHostLobby();
+}
+// the host's browser closed or crashed: reopen the same table code and let everyone come back to their seats
+async function resumeHost(s){
+  $('#setup').classList.add('hide');
+  const msg=t=>idleMsg(t);
+  try{await loadPeer()}catch(e){msg(`<span class="err">${e.message}</span>`);return}
+  const t0=Date.now();let pr=null;
+  while(!pr&&Date.now()-t0<REJOIN_MS){
+    msg(L(`📶 Reopening table <b>${esc(s.code)}</b>… (the old connection can take up to a minute to clear)`,`📶 Genåbner bord <b>${esc(s.code)}</b>… (den gamle forbindelse kan tage op til et minut om at forsvinde)`));
+    pr=await new Promise(res=>{const x=new Peer(PEER_PREFIX+s.code,peerOpts());x.on('open',()=>res(x));x.on('error',()=>{x.destroy();res(null)})});
+    if(!pr)await sleep(5000);
+  }
+  if(!pr){msg(L('😕 Could not reopen the table. Start a new game from the menu.','😕 Kunne ikke genåbne bordet. Start et nyt spil fra menuen.'));return}
+  NET.role='host';NET.peer=pr;NET.id='host';NET.lobby=[];NET.code=s.code;NET.started=true;hostHandlers(pr);wake();rememberTable('host');
+  // every remote player gets 5 minutes to rejoin before their seat is given up
+  s.players.forEach(p=>{if(p.human&&p.ctl&&p.ctl!=='host'&&!p.out){p.disc=true;NET.discT[p.id]=setTimeout(()=>{if(p.disc&&!p.out){p.disc=false;leaveSeat(p)}},REJOIN_MS)}});
+  startFrom(s);
+  log(L(`📶 Table ${esc(s.code)} is open again – players can rejoin with the code.`,`📶 Bord ${esc(s.code)} er åbent igen – spillerne kan joine igen med koden.`));
+  banner(L(`📶 Table ${s.code} is back`,`📶 Bord ${s.code} er tilbage`),'#2a7de1');syncNow();
 }
 function hostMsg(c,m){
   if(!m||typeof m!=='object')return;
@@ -1669,7 +1734,7 @@ function hostMsg(c,m){
         p.ctl=c.peer;p.disc=false;NET.conns[c.peer]=c;clearTimeout(NET.discT[p.id]);
         c.send({t:'start',lang:LANG,rejoin:1});syncNow();
         Object.entries(NET.pend).forEach(([id,x])=>{if(x.pid===p.id)c.send({t:'ask',id:+id,pid:p.id,spec:x.spec})});
-        log(L(`📶 ${pName(p)} is back!`,`📶 ${pName(p)} er tilbage!`));banner(L(`📶 ${p.name} is back`,`📶 ${p.name} er tilbage`),p.color);renderPlayers();return;
+        log(L(`📶 ${pName(p)} is back!`,`📶 ${pName(p)} er tilbage!`));if(cur()===p&&G.turnEnd)G.turnEnd=Math.max(G.turnEnd,Date.now()+20000);banner(L(`📶 ${p.name} is back`,`📶 ${p.name} er tilbage`),p.color);renderPlayers();return;
       }
     }
     const again=!NET.started&&NET.lobby.find(g=>g.cid===cid);
@@ -1702,10 +1767,10 @@ function hostLost(peer,final){
   if(!NET.started){NET.lobby=NET.lobby.filter(g=>g.peer!==peer);drawHostLobby();return}
   const p=G&&G.players.find(q=>q.ctl===peer);if(!p||p.out)return;
   if(final){leaveSeat(p);return}
-  // connection dropped (app switch, tunnel…): keep the seat for 60 seconds
+  // connection dropped (app switch, crash, closed tab…): keep the seat for 5 minutes – they can rejoin with the table code
   if(p.disc)return;p.disc=true;
-  log(L(`📶 ${pName(p)} lost the connection – waiting up to 60 seconds…`,`📶 ${pName(p)} mistede forbindelsen – venter op til 60 sekunder…`));banner(L(`📶 ${p.name} is reconnecting…`,`📶 ${p.name} forbinder igen…`),'#3a2616');renderPlayers();
-  NET.discT[p.id]=setTimeout(()=>{if(p.disc&&!p.out){p.disc=false;leaveSeat(p)}},60000);
+  log(L(`📶 ${pName(p)} lost the connection – they have 5 minutes to rejoin with table code <b>${esc(NET.code)}</b>…`,`📶 ${pName(p)} mistede forbindelsen – har 5 minutter til at joine igen med bordkoden <b>${esc(NET.code)}</b>…`));banner(L(`📶 ${p.name} dropped out – code ${NET.code}`,`📶 ${p.name} røg ud – kode ${NET.code}`),'#3a2616');renderPlayers();syncNow();
+  NET.discT[p.id]=setTimeout(()=>{if(p.disc&&!p.out){p.disc=false;leaveSeat(p)}},REJOIN_MS);
 }
 function leaveSeat(p){ // a guest left: their property goes back to the bank and the rest play on
   p.human=false;p.ctl='host';p.left=true;p.out=true;p.jail=false;
@@ -1753,7 +1818,7 @@ function hostStart(){
     return{name:s.name,token:t,human:!s.cpu,ctl:s.peer||'host',cid:s.cid}});
   NET.started=true;try{localStorage.setItem('monongoly_setup_v1',JSON.stringify(CFG))}catch(e){}
   newGame({players,money:CFG.money,pot:CFG.pot,speed:CFG.speed,auc:CFG.auc});
-  G.online=true;
+  G.online=true;G.code=NET.code;rememberTable('host');
   bcast({t:'start',lang:LANG});
   log(L(`📶 Wi-Fi game started! Table ${NET.code}. Everyone starts with ${M(CFG.money)}.`,`📶 Wifi-spillet er startet! Bord ${NET.code}. Alle starter med ${M(CFG.money)}.`));
   startFrom(G);syncNow();
@@ -1777,7 +1842,7 @@ async function joinGame(){
   pr.on('disconnected',()=>{if(!pr.destroyed)try{pr.reconnect()}catch(e){}});
   pr.on('error',e=>{
     // the host's phone may be re-registering the table (e.g. after switching apps) – try a few more times
-    if(e.type==='peer-unavailable'&&!NET.started&&++tries<6){box.innerHTML=L(`<p>⏳ Looking for table <b>${esc(code)}</b>… (try ${tries+1}/6)</p>`,`<p>⏳ Leder efter bord <b>${esc(code)}</b>… (forsøg ${tries+1}/6)</p>`);setTimeout(()=>guestConnect(code,box),2500);return}
+    if(e.type==='peer-unavailable'&&!NET.started&&++tries<12){box.innerHTML=L(`<p>⏳ Looking for table <b>${esc(code)}</b>… (try ${tries+1}/12)</p>`,`<p>⏳ Leder efter bord <b>${esc(code)}</b>… (forsøg ${tries+1}/12)</p>`);setTimeout(()=>guestConnect(code,box),2500);return}
     if(NET.started)return;
     fail(e.type==='peer-unavailable'?L('No table found with code <b>'+esc(code)+'</b>. Check the code, that the host is still waiting, and that you are on the same Wi-Fi.','Intet bord fundet med koden <b>'+esc(code)+'</b>. Tjek koden, at hosten stadig venter, og at I er på samme wifi.'):L('Connection problem: ','Forbindelsesproblem: ')+esc(e.type||e.message));
   });
@@ -1799,13 +1864,13 @@ function guestConnect(code,box,fail){
 function guestReconnect(){
   if(NET.reconn||NET.ended||NET.leaving||(G&&G.over))return;NET.reconn=true;
   idleMsg(L('📶 Connection lost – reconnecting…','📶 Forbindelsen er tabt – forbinder igen…'));
-  modal({title:L('📶 Reconnecting…','📶 Forbinder igen…'),cls:'reconn',html:L('<p>The connection to the host dropped. Trying to get you back to your seat…</p>','<p>Forbindelsen til hosten blev afbrudt. Prøver at få dig tilbage på din plads…</p>')}).then(()=>{});
+  modal({title:L('📶 Reconnecting…','📶 Forbinder igen…'),cls:'reconn',html:L('<p>The connection to the host dropped. Trying to get you back to your seat for up to 5 minutes…</p>','<p>Forbindelsen til hosten blev afbrudt. Prøver at få dig tilbage på din plads i op til 5 minutter…</p>')}).then(()=>{});
   $$('.ov').pop().classList.add('reconn');
   const t0=Date.now();
   const tick=()=>{
     if(!NET.reconn)return;
     if(NET.conn&&NET.conn.open){NET.reconn=false;return}
-    if(Date.now()-t0>55000){NET.reconn=false;$$('.ov.reconn').forEach(o=>o._close('x'));guestLost();return}
+    if(Date.now()-t0>REJOIN_MS){NET.reconn=false;$$('.ov.reconn').forEach(o=>o._close('x'));guestLost();return}
     const pr=NET.peer;
     if(!pr||pr.destroyed){NET.peer=new Peer(undefined,peerOpts());NET.peer.on('open',id=>{NET.id=id;guestConnect(NET.code)});NET.peer.on('error',()=>{})}
     else if(pr.disconnected){try{pr.reconnect()}catch(e){}}
@@ -1832,12 +1897,13 @@ async function guestMsg(m){
       const rb=$('#gReadyBtn');if(rb)rb.onclick=()=>{SFX.click();rb.disabled=true;NET.conn.send({t:'ready',v:!meS.ready})};
       $$('#onlineBox .tokPick button').forEach(b=>b.onclick=()=>{CFG.players[0].token=+b.dataset.tok;SFX.click();NET.conn.send({t:'tok',token:+b.dataset.tok})});}
       break;
-    case'start':if(m.rejoin){NET.started=true;break}NET.started=true;$('#log').innerHTML='';if(m.lang&&m.lang!==LANG){LANG=m.lang;applyLang(false)}break; // everyone plays in the host's language
+    case'start':rememberTable('guest');if(m.rejoin){NET.started=true;break}NET.started=true;$('#log').innerHTML='';if(m.lang&&m.lang!==LANG){LANG=m.lang;applyLang(false)}break; // everyone plays in the host's language
     case'end':if(!NET.ended&&!(G&&G.over)){NET.ended=true;ACT=null;idleMsg(L('🏁 The host ended the game.','🏁 Hosten afsluttede spillet.'));
       modal({title:L('🏁 The host left','🏁 Hosten er gået'),html:L('<p>The host has left, so the game has ended.</p>','<p>Hosten er gået, så spillet er slut.</p>'),buttons:[{k:'r',label:L('↩ Back to menu','↩ Tilbage til menuen'),cls:'go'}]}).then(()=>location.reload())}break;
     case'state':applyState(m.G);break;
     case'fx':await guestFx(m.e,m.d);break;
     case'ask':guestAsk(m);break;
+    case'unask':{const f=NET.askUI&&NET.askUI[m.id];if(f){delete NET.askUI[m.id];f()}break}
     case'reply':{const r=NET.cmds[m.id];if(r){delete NET.cmds[m.id];r(m.v)}break}
   }
 }
@@ -1881,13 +1947,14 @@ function guestAuction(d){
 }
 function guestAsk(m){
   NET.asks=NET.asks||{};if(NET.asks[m.id])return;NET.asks[m.id]=1; // questions are re-sent after a reconnect – show each only once
-  const ans=v=>{if(NET.conn&&NET.conn.open)NET.conn.send({t:'ans',id:m.id,v})};
-  const s=m.spec,p=G&&G.players[m.pid];
+  const ans=v=>{if(NET.askUI)delete NET.askUI[m.id];if(NET.conn&&NET.conn.open)NET.conn.send({t:'ans',id:m.id,v})};
+  const s=m.spec,p=G&&G.players[m.pid];NET.askUI=NET.askUI||{};
+  const topOv=()=>{const o=$$('.ov').pop();NET.askUI[m.id]=()=>{if(o&&o._close)o._close('x')}};
   switch(s.k){
-    case'actions':SFX.bid();setActions(()=>s.list,s.msg).then(ans);break;
-    case'modal':modal(s.spec).then(ans);break;
-    case'manage':openManage(p).then(()=>ans(1));break;
-    case'trade':openTrade(p).then(()=>ans(1));break;
+    case'actions':SFX.bid();NET.askUI[m.id]=()=>{if(ACT){ACT=null;drawActions()}};setActions(()=>s.list,s.msg).then(ans);break;
+    case'modal':modal(s.spec).then(ans);topOv();break;
+    case'manage':openManage(p).then(()=>ans(1));topOv();break;
+    case'trade':openTrade(p).then(()=>ans(1));topOv();break;
     case'card':specCard&&specCard.close();showCardUI(s.type,DECKS[s.type][s.ci],'ok').done.then(()=>ans(1));break;
     case'bid':{
       const go=()=>{if(!specAuc||!specAuc.ov){return setTimeout(go,50)}
@@ -1901,8 +1968,8 @@ function guestAsk(m){
 
 /* ---- setup screen: online panel ---- */
 function drawOnline(){
-  const me=CFG.players[0];
-  $('#onlineBox').innerHTML=`<div class="prow" style="--pc:${PCOLORS[0]};grid-template-columns:1fr">
+  const me=CFG.players[0],lt=lastTable();
+  $('#onlineBox').innerHTML=(lt&&lt.role==='guest'?`<div class="rejoin"><span>${L(`🔁 Dropped out of table <b>${esc(lt.code)}</b>?`,`🔁 Røget ud af bord <b>${esc(lt.code)}</b>?`)}</span><button class="btn go" id="rejoinBtn">${L('Rejoin','Join igen')}</button></div>`:'')+`<div class="prow" style="--pc:${PCOLORS[0]};grid-template-columns:1fr">
       <input id="onName" value="${esc(['You','Dig'].includes(me.name)?'':me.name)}" placeholder="${L('Your name','Dit navn')}" maxlength="14" aria-label="${L('Your name','Dit navn')}"></div>
     ${tokPicker(me.token,[],'#ffcb52')}
     <div class="onGrid">
@@ -1916,6 +1983,7 @@ function drawOnline(){
   $('#hostBtn').onclick=()=>{SFX.ac();hostGame()};
   $('#joinBtn').onclick=()=>{SFX.ac();joinGame()};
   $('#joinCode').onkeydown=e=>{if(e.key==='Enter')joinGame()};
+  const rj=$('#rejoinBtn');if(rj)rj.onclick=()=>{SFX.ac();$('#joinCode').value=lt.code;joinGame()};
 }
 
 /* ================= SETUP ================= */
@@ -1985,6 +2053,8 @@ $('#startBtn').onclick=()=>{
 };
 function drawCont(){
   const s=loadSave();$('#contBox').innerHTML='';
+  if(s&&s.online&&s.code){$('#contBox').innerHTML=`<div class="rejoin"><span>${L(`📶 Your Wi-Fi game on table <b>${esc(s.code)}</b> (round ${s.round}) was interrupted.`,`📶 Dit wifi-spil på bord <b>${esc(s.code)}</b> (runde ${s.round}) blev afbrudt.`)}</span><button class="btn go" id="resumeBtn">${L('▶ Reopen table','▶ Genåbn bord')}</button><button class="btn" id="dropOnBtn">${L('🗑️','🗑️')}</button></div>`;
+    $('#resumeBtn').onclick=()=>{SFX.ac();resumeHost(s)};$('#dropOnBtn').onclick=()=>{try{localStorage.removeItem(SAVE_KEY)}catch(e){}drawCont()};return}
   if(s){$('#contBox').innerHTML=`<div style="background:#f3e9cf;border:2px solid #d8c9a3;border-radius:14px;padding:10px 12px;margin-bottom:8px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap">
     <div style="font-size:14px">${L('💾 Saved game · Round','💾 Gemt spil · Runde')} ${s.round} · ${s.players.filter(p=>!p.out).length} ${L('players left','spillere tilbage')}<br><small style="color:#6b5a3e">${s.players.filter(p=>!p.out).map(p=>esc(p.name)).join(', ')}</small></div>
     <div style="display:flex;gap:6px"><button class="btn danger" id="delBtn" style="flex:0 0 auto;color:#fff" title="${L('Delete saved game','Slet gemt spil')}">${L('🗑️ Delete','🗑️ Slet')}</button><button class="btn go" id="contBtn" style="flex:0 0 auto">${L('▶ Continue','▶ Fortsæt')}</button></div></div>`;

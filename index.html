@@ -234,24 +234,52 @@ footer a{color:var(--txt)}
 
 @media (max-width:760px){
   .nav nav{display:none}
-  .fin{grid-template-columns:1fr;padding:22px 20px 34px;text-align:center}
-  .fart{order:-1;min-height:170px}
-  .fpot{width:150px}
-  .rays{width:260px;height:260px}
-  .fdesc{margin:0 auto 14px}
-  .chips{justify-content:center}
-  .play{font-size:20px;padding:10px 20px}
-  .featured{min-height:0}
-  .cactus{font-size:32px}.cactus.b{font-size:26px}
-  .bart{order:-1;min-height:190px}
-  .bcard{width:170px}
-  .bball{width:48px;height:48px;font-size:15px}
+  /* compact featured banners on phones: text left, small art on the right */
+  .featured{min-height:0;margin:20px 0 6px;border-radius:20px;border-width:3px}
+  .fin{grid-template-columns:minmax(0,1fr) 96px;grid-template-areas:"txt art";gap:8px;padding:14px 12px 16px 16px;text-align:left;align-items:center}
+  .fin>div:first-child{grid-area:txt;min-width:0}
+  .fart,.bart,.mart,.vart{grid-area:art;order:0;min-height:96px;align-self:start;margin-top:26px}
+  .tag{font-size:10px;padding:2px 8px;border-width:2px;letter-spacing:.5px}
+  .ftitle{font-size:28px;margin:8px 0 6px;text-shadow:2px 2px 0 var(--ink),-1px -1px 0 var(--ink),1px -1px 0 var(--ink),-1px 1px 0 var(--ink)}
+  .fdesc{font-size:13px;line-height:1.35;margin:0 0 8px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;overflow:hidden}
+  .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:4px;margin:0 -96px 10px 0;padding-right:4px;-webkit-mask:linear-gradient(90deg,#000 88%,transparent);mask:linear-gradient(90deg,#000 88%,transparent)}
+  .chips::-webkit-scrollbar{display:none}
+  .chips span{flex:none;font-size:11px;padding:2px 8px;white-space:nowrap}
+  .play{font-size:16px;padding:7px 16px;border-width:3px;border-radius:12px;box-shadow:0 4px 0 #2a1708;gap:6px;min-height:40px;animation:none}
+  .progress{margin-top:8px;font-size:12px}
+  .progress:empty{display:none}
+  /* default (clicker) */
+  .fpot{width:88px}
+  .rays{width:150px;height:150px}
+  .cactus{display:none}
+  .featured::after{height:14%}
+  /* bingo */
+  .featured.bingo .ftitle{font-size:26px}
+  .bcard{width:92px;border-width:3px;border-radius:10px;padding:4px}
+  .bcard .bh,.bcard .bg{gap:2px}.bcard .bg{margin-top:2px}
+  .bcard .bh span{font-size:9px;border-radius:3px}
+  .bcard .bg span{font-size:7px;border-radius:3px}
+  .bball{width:30px;height:30px;font-size:9px}.bball.c{width:26px;height:26px;font-size:8px}
+  .bball.a{top:-8%;left:-6%}.bball.b{bottom:-10%;right:-4%}.bball.c{top:-6%;right:-4%}
   .flags{display:none}
-  .mart{order:-1;min-height:200px}
-  .vart{order:-1;min-height:170px}
-  .vart img{width:min(300px,90%)}
-  .mboard{width:160px}
-  .mdie{width:36px;height:36px;padding:5px}.mdie s{width:6px;height:6px}
+  /* empire */
+  .featured.mono .ftitle{font-size:24px;margin:10px 0 10px;padding:3px 10px 0;border-width:3px;border-radius:9px;box-shadow:0 4px 0 #000;text-shadow:2px 2px 0 #000}
+  .featured.mono .play,.featured.ville .play,.featured.bingo .play{box-shadow:0 4px 0 var(--pshadow,#000)}
+  .mboard{width:74px;box-shadow:0 0 0 3px #f4ecd5,0 0 0 4px #8e1b1b,5px 10px 14px rgba(0,0,0,.5)}
+  .mboard .mc b{font-size:6px;padding:1px 3px 0;border-width:1px;border-radius:3px}
+  .mdie{width:22px;height:22px;padding:3px;border-radius:5px}.mdie s{width:4px;height:4px}
+  .mdie.a{top:-6%;left:-4%}.mdie.b{bottom:-6%;right:-2%}
+  .mpiece{font-size:20px;top:-8%;right:0}
+  .mhouse{font-size:14px;bottom:-4%;left:0}
+  /* ville */
+  .featured.ville .ftitle{font-size:32px;text-shadow:2px 2px 0 #fff,-2px -2px 0 #fff,2px -2px 0 #fff,-2px 2px 0 #fff,0 4px 0 rgba(0,0,0,.18)}
+  .featured.ville{--pshadow:#16304d}
+  .featured.bingo{--pshadow:#120a30}
+  .vart{align-items:center}
+  .vart img{width:120px;max-width:none;height:auto}
+  .vart .vh{font-size:26px;right:-6px;top:-18px}
+  .vart .vc{font-size:18px;left:-6px;top:-14px}
+  .ea{font-size:12px;padding:5px 9px;margin:4px 0 8px;border-width:2px}
   .shead{flex-direction:column;align-items:start}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
