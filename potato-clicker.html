@@ -2265,6 +2265,7 @@ function applyLang(){
   $$('#langSeg button').forEach(b=>b.classList.toggle('on',b.dataset.l===LANG));
 }
 function setLang(l){
+  $('#toasts').innerHTML=''; // old notifications were written in the other language
   if(l===LANG)return;LANG=l;try{localStorage.setItem(LANG_KEY,l)}catch(e){}
   snd('tick');applyLang();
   // rebuild everything that was rendered with the old language (progress is untouched)
