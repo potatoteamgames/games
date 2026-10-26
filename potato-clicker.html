@@ -539,6 +539,15 @@ body.chaos .toast b{color:#4dfcff}
 #scrMsg{min-height:22px;margin:8px 0;font-size:15px}
 .scrbox .row2{display:flex;gap:8px;justify-content:center}
 #slotAuto.on{background:linear-gradient(#7cc35a,var(--green));color:#fff}
+/* language: a compact flag button in the header (shows the language you switch TO) + English/Dansk in Settings */
+.langbtn{font-size:22px;line-height:1;padding:0}
+.langrow{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:6px;font-size:13px}
+.langSeg{display:flex;gap:6px}
+.langSeg .sbtn{padding:6px 10px}
+.langSeg .sbtn.on{background:linear-gradient(#ffd77a,var(--brassD));color:var(--ink)}
+.tabs button .tl{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:900px){.langbtn{font-size:19px}}
+@media (max-width:420px){#banner .hbtn,#banner .clbtn{width:34px;height:34px;font-size:16px;border-radius:8px}#banner .clbtn{padding:0}#banner .homebtn{height:34px;padding:0 7px;font-size:12px;border-radius:8px}.tabs button{font-size:9.5px;letter-spacing:-.2px}}
 </style>
 </head>
 <body>
@@ -548,13 +557,14 @@ body.chaos .toast b{color:#4dfcff}
 </noscript>
 <div id="app">
   <header id="banner">
-    <a class="homebtn" href="./" title="Back to Potato Team Games" aria-label="Back to Potato Team Games">⬅ <span class="hl1">All Games</span><span class="hl2">Home</span></a>
+    <a class="homebtn" href="./" title="Back to Potato Team Games" aria-label="Back to Potato Team Games" data-i18n-t="home">⬅ <span class="hl1" data-i18n="hAll">All Games</span><span class="hl2" data-i18n="hHome">Home</span></a>
     <h1 class="logo" title="Potato Clicker">POTATO <small>CLICKER</small> <span>🥔</span></h1>
-    <div class="ticker" aria-hidden="true"><div id="tick">Welcome to Potato Clicker 🥔 — the wildest potato game in the West.</div></div>
-    <button class="clbtn" id="clBtn" title="Update changelog" aria-label="Update changelog">📜<span class="cll"> Update changelog</span><i class="cldot" id="clDot"></i></button>
-    <a class="hbtn dchb" href="https://discord.gg/kZa6F4s5f9" target="_blank" rel="noopener" title="Join the Potato Team Games Discord" aria-label="Join the Potato Team Games Discord"><svg viewBox="0 0 127.14 96.36" aria-hidden="true"><path fill="currentColor" d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15ZM42.45 65.69C36.18 65.69 31 60 31 53s5-12.74 11.43-12.74S54 46 53.89 53s-5.05 12.69-11.44 12.69Zm42.24 0C78.41 65.69 73.25 60 73.25 53s5-12.74 11.44-12.74S96.23 46 96.12 53s-5.04 12.69-11.43 12.69Z"/></svg></a>
-    <button class="hbtn" id="sndBtn" title="Sound on/off" aria-label="Sound on/off">🔊</button>
-    <button class="hbtn" id="saveBtn" title="Save game" aria-label="Save game">💾</button>
+    <div class="ticker" aria-hidden="true"><div id="tick" data-i18n="tick0">Welcome to Potato Clicker 🥔 — the wildest potato game in the West.</div></div>
+    <button class="clbtn" id="clBtn" title="Update changelog" aria-label="Update changelog" data-i18n-t="clBtn">📜<span class="cll" data-i18n="clBtn"> Update changelog</span><i class="cldot" id="clDot"></i></button>
+    <button class="hbtn langbtn" id="langBtn" title="Spil på dansk" aria-label="Spil på dansk">🇩🇰</button>
+    <a class="hbtn dchb" href="https://discord.gg/kZa6F4s5f9" target="_blank" rel="noopener" title="Join the Potato Team Games Discord" aria-label="Join the Potato Team Games Discord" data-i18n-t="discord"><svg viewBox="0 0 127.14 96.36" aria-hidden="true"><path fill="currentColor" d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15ZM42.45 65.69C36.18 65.69 31 60 31 53s5-12.74 11.43-12.74S54 46 53.89 53s-5.05 12.69-11.44 12.69Zm42.24 0C78.41 65.69 73.25 60 73.25 53s5-12.74 11.44-12.74S96.23 46 96.12 53s-5.04 12.69-11.43 12.69Z"/></svg></a>
+    <button class="hbtn" id="sndBtn" title="Sound on/off" aria-label="Sound on/off" data-i18n-t="snd">🔊</button>
+    <button class="hbtn" id="saveBtn" title="Save game" aria-label="Save game" data-i18n-t="save">💾</button>
   </header>
 
   <main id="main">
@@ -562,9 +572,9 @@ body.chaos .toast b{color:#4dfcff}
       <div class="cactus c1" aria-hidden="true">🌵</div><div class="cactus c2" aria-hidden="true">🌵</div><div class="tumble" aria-hidden="true">🌾</div>
       <div id="weather" aria-hidden="true"><div class="wsky"></div><div class="wflash"></div></div>
       <div class="info">
-        <button id="worldTag" title="Your world – tap to see Extract and medals"></button>
+        <button id="worldTag" title="Your world – tap to see Extract and medals" data-i18n-t="world"></button>
         <div id="count">0</div>
-        <div class="lbl">POTATOES</div>
+        <div class="lbl" data-i18n="lbl">POTATOES</div>
         <div id="pps">0 per second</div>
       </div>
       <div class="levelbox">
@@ -572,14 +582,14 @@ body.chaos .toast b{color:#4dfcff}
         <div class="bar"><div id="xpBar"></div></div>
         <div class="sub" id="xpTxt"></div>
       </div>
-      <div id="goal"><div class="gt"><span>🎯 Next goal</span><b id="goalTxt"></b></div><div class="bar"><div id="goalBar"></div></div></div>
-      <div id="bonusBox" title="Bonus Level: fills slowly while you play. At 100% BONUS CHAOS starts for 1 minute!"><div class="gt"><span>🌀 Bonus Level</span><b id="bonusTxt">0%</b></div><div class="bar"><div id="bonusBar"></div></div></div>
+      <div id="goal"><div class="gt"><span data-i18n="goal">🎯 Next goal</span><b id="goalTxt"></b></div><div class="bar"><div id="goalBar"></div></div></div>
+      <div id="bonusBox" title="Bonus Level: fills slowly while you play. At 100% BONUS CHAOS starts for 1 minute!" data-i18n-t="bonus"><div class="gt"><span data-i18n="bonus">🌀 Bonus Level</span><b id="bonusTxt">0%</b></div><div class="bar"><div id="bonusBar"></div></div></div>
       <div id="chips"></div>
       <div id="potArea">
         <div id="glow"></div>
         <div id="rays"></div>
         <div id="hands"></div>
-        <div id="potWrap" role="button" aria-label="Click the potato">
+        <div id="potWrap" role="button" aria-label="Click the potato" data-i18n-t="pot">
           <svg viewBox="0 0 300 300" aria-hidden="true">
             <defs>
               <radialGradient id="pg" cx="38%" cy="30%" r="78%">
@@ -634,79 +644,80 @@ body.chaos .toast b{color:#4dfcff}
 
     <aside id="right" aria-label="Game menus">
       <nav class="tabs">
-        <button data-t="mach" class="on"><span class="tb">🏭</span>Machines</button>
-        <button data-t="upg"><span class="tb">⬆️</span>Upgrades<span class="badge" id="bUpg"></span></button>
-        <button data-t="shop"><span class="tb">🛒</span>Shop</button>
-        <button data-t="bag"><span class="tb">🎒</span>Bag<span class="badge" id="bBag"></span></button>
-        <button data-t="mis"><span class="tb">📜</span>Missions<span class="badge" id="bMis"></span></button>
-        <button data-t="look"><span class="tb">🎨</span>Style</button>
-        <button data-t="ach"><span class="tb">🏆</span>Trophies</button>
-        <button data-t="stats"><span class="tb">📊</span>Stats</button>
+        <button data-t="mach" class="on"><span class="tb">🏭</span><span class="tl" data-i18n="tMach">Machines</span></button>
+        <button data-t="upg"><span class="tb">⬆️</span><span class="tl" data-i18n="tUpg">Upgrades</span><span class="badge" id="bUpg"></span></button>
+        <button data-t="shop"><span class="tb">🛒</span><span class="tl" data-i18n="tShop">Shop</span></button>
+        <button data-t="bag"><span class="tb">🎒</span><span class="tl" data-i18n="tBag">Bag</span><span class="badge" id="bBag"></span></button>
+        <button data-t="mis"><span class="tb">📜</span><span class="tl" data-i18n="tMis">Missions</span><span class="badge" id="bMis"></span></button>
+        <button data-t="look"><span class="tb">🎨</span><span class="tl" data-i18n="tLook">Style</span></button>
+        <button data-t="ach"><span class="tb">🏆</span><span class="tl" data-i18n="tAch">Trophies</span></button>
+        <button data-t="stats"><span class="tb">📊</span><span class="tl" data-i18n="tStats">Stats</span></button>
         <button id="exTabBtn" class="exTab">🧭 EXTRACT &amp; ✨ REBIRTH <small id="exTabSub"></small></button>
       </nav>
 
       <div class="tabc on" id="t-mach">
-        <h2>🏭 Your Ranch</h2>
+        <h2 data-i18n="hMach">🏭 Your Ranch</h2>
         <div id="hideScene"></div>
         <div class="amt" id="amtBtns">
           <button data-a="1" class="on">x1</button><button data-a="10">x10</button><button data-a="100">x100</button><button data-a="max">MAX</button>
         </div>
         <div id="machList"></div>
       </div>
-      <div class="tabc" id="t-upg"><h2>⬆️ Upgrades</h2><div class="note">Machines make potatoes. Upgrades make the things you already have <b>stronger</b>. Each upgrade is bought once. The colored tag tells you what it upgrades:</div><div class="uhelp"><span><b>🏭 MACHINE</b> = one machine type makes x2</span><span><b>🌍 ALL MACHINES</b> = every machine +25%</span><span><b>👆 CLICK</b> = more potatoes per click</span><span><b>💥 🔥 🌟 📚 ⏱️</b> = crits, combo, golden, XP, boosts</span></div><div class="note" id="upgNote"></div><div id="upgList"></div></div>
-      <div class="tabc" id="t-shop"><h2>🛒 Shop</h2><div class="note">New items, prices and stock every 20 minutes. Each buy makes that item a bit dearer for a while. Max 10 of each in your bag.</div><div class="restock">🔄 Next restock in <b id="restockT">–</b></div><div id="shopList"></div>
+      <div class="tabc" id="t-upg"><h2 data-i18n="tUpgH">⬆️ Upgrades</h2><div class="note" data-i18n="upgNote">Machines make potatoes. Upgrades make the things you already have <b>stronger</b>. Each upgrade is bought once. The colored tag tells you what it upgrades:</div><div class="uhelp" data-i18n="uhelp"><span><b>🏭 MACHINE</b> = one machine type makes x2</span><span><b>🌍 ALL MACHINES</b> = every machine +25%</span><span><b>👆 CLICK</b> = more potatoes per click</span><span><b>💥 🔥 🌟 📚 ⏱️</b> = crits, combo, golden, XP, boosts</span></div><div class="note" id="upgNote"></div><div id="upgList"></div></div>
+      <div class="tabc" id="t-shop"><h2 data-i18n="tShopH">🛒 Shop</h2><div class="note" data-i18n="shopNote">New items, prices and stock every 20 minutes. Each buy makes that item a bit dearer for a while. Max 10 of each in your bag.</div><div class="restock"><span data-i18n="restock">🔄 Next restock in</span> <b id="restockT">–</b></div><div id="shopList"></div>
         <div class="box">
           <h3>🪙 Soul Shop</h3>
-          <div class="note" style="margin:0">Permanent perks that stay forever. Pay with Soul Coins 🪙 – you get them from ✨ Rebirth (1 for every 10 souls, at least 1 per Rebirth).</div>
+          <div class="note" style="margin:0" data-i18n="soulNote">Permanent perks that stay forever. 👻 Souls build up from all the potatoes you have ever earned (first soul at 10 B). Collect them with ✨ Rebirth – every 10 souls also gives 1 🪙 Soul Coin (at least 1 per Rebirth). Spend Soul Coins here.</div>
           <div class="tokens" id="tokTxt"></div>
           <div id="perkList"></div>
         </div>
       </div>
-      <div class="tabc" id="t-bag"><h2>🎒 Your Bag</h2><div class="note">Your saved boosts. Tap USE whenever you want.</div><div id="bagList"></div></div>
+      <div class="tabc" id="t-bag"><h2 data-i18n="tBagH">🎒 Your Bag</h2><div class="note" data-i18n="bagNote">Your saved boosts. Tap USE whenever you want.</div><div id="bagList"></div></div>
       <div class="tabc" id="t-mis">
-        <h2>📜 Missions</h2>
+        <h2 data-i18n="tMisH">📜 Missions</h2>
         <div class="streak" id="streakTxt"></div>
         <div id="misList"></div>
         <div class="box wheelbox">
-          <h3>🎡 Lucky Wheel</h3>
-          <div class="note">Free spin every 20 minutes of play</div>
+          <h3 data-i18n="wheelH">🎡 Lucky Wheel</h3>
+          <div class="note" data-i18n="wheelNote">Free spin every 20 minutes of play</div>
           <div class="wheelWrap"><div id="wheelPtr">▼</div><div id="wheel"></div><div id="wheelHub">🥔</div></div>
           <button class="sbtn big" id="spinBtn">SPIN</button>
         </div>
         <div class="box slotbox">
-          <h3>🎰 Potato Slots</h3>
-          <div class="note">Free to play! Small wins often, big wins rarely. 50 spins, then the machine cools down for 60 minutes.</div>
+          <h3 data-i18n="slotH">🎰 Potato Slots</h3>
+          <div class="note" data-i18n="slotNote">Free to play! Small wins often, big wins rarely. 50 spins, then the machine cools down for 60 minutes.</div>
           <div class="slotm"><div class="reel" id="reel0">🥔</div><div class="reel" id="reel1">🌽</div><div class="reel" id="reel2">🤠</div></div>
-          <div class="slotpay">🥔🥔 any pair · 🥔🥔🥔 · 🌽🌽🌽 · 🤠🤠🤠 · ⭐⭐⭐ · 🍀🍀🍀 · 💎💎💎 JACKPOT</div>
+          <div class="slotpay" data-i18n="slotPay">🥔🥔 any pair · 🥔🥔🥔 · 🌽🌽🌽 · 🤠🤠🤠 · ⭐⭐⭐ · 🍀🍀🍀 · 💎💎💎 JACKPOT</div>
           <button class="sbtn big" id="slotBtn">🎰 SPIN</button>
           <button class="sbtn" id="slotAuto" style="margin-top:6px">🔁 Auto spin: OFF</button>
           <div class="slotleft" id="slotLeft"></div>
         </div>
       </div>
       <div class="tabc" id="t-look">
-        <h2>🎨 Style</h2>
-        <div class="note">Every item you buy gives +2% production forever.</div>
-        <h4>🥔 Potato Skins</h4><div class="grid" id="lookPot"></div>
-        <h4>🤠 Accessories</h4><div class="grid" id="lookAcc"></div>
-        <h4>🌄 Backgrounds</h4><div class="grid" id="lookBg"></div>
+        <h2 data-i18n="tLookH">🎨 Style</h2>
+        <div class="note" data-i18n="lookNote">Every item you buy gives +2% production forever.</div>
+        <h4 data-i18n="lookPot">🥔 Potato Skins</h4><div class="grid" id="lookPot"></div>
+        <h4 data-i18n="lookAcc">🤠 Accessories</h4><div class="grid" id="lookAcc"></div>
+        <h4 data-i18n="lookBg">🌄 Backgrounds</h4><div class="grid" id="lookBg"></div>
       </div>
-      <div class="tabc" id="t-ach"><h2 id="achH">🏆 Trophies</h2><div class="note">Every trophy gives +1% production forever.</div><div class="achgrid" id="achGrid"></div></div>
+      <div class="tabc" id="t-ach"><h2 id="achH">🏆 Trophies</h2><div class="note" data-i18n="achNote">Every trophy gives +1% production forever.</div><div class="achgrid" id="achGrid"></div></div>
       <div class="tabc" id="t-stats">
-        <h2>📊 Stats</h2>
+        <h2 data-i18n="tStatsH">📊 Stats</h2>
         <div id="statList"></div>
         <div class="box">
-          <h3>⚙️ Settings</h3>
+          <h3 data-i18n="setH">⚙️ Settings</h3>
+          <div class="langrow"><span data-i18n="langL">🌐 Language</span><div class="langSeg" id="langSeg"><button class="sbtn" data-l="en">🇬🇧 English</button><button class="sbtn" data-l="da">🇩🇰 Dansk</button></div></div>
           <div class="btnrow">
-            <button class="sbtn" id="expBtn">📤 Export save</button>
-            <button class="sbtn" id="impBtn">📥 Import save</button>
-            <button class="sbtn red" id="resetBtn">🗑️ Delete all</button>
+            <button class="sbtn" id="expBtn" data-i18n="exp">📤 Export save</button>
+            <button class="sbtn" id="impBtn" data-i18n="imp">📥 Import save</button>
+            <button class="sbtn red" id="resetBtn" data-i18n="reset">🗑️ Delete all</button>
           </div>
         </div>
         <section class="box about" aria-labelledby="aboutH">
-          <h2 id="aboutH">🥔 About Potato Clicker</h2>
-          <p><b>Potato Clicker</b> is a free idle clicker game set in the Wild West. Click the giant potato, earn potatoes and build a potato empire — from a tiny peeler to steam trains, gold mines and galaxy farms. No download and no sign-up: it runs right in your browser on PC, Mac, Chromebook, iPhone and Android.</p>
-          <h3>How to play</h3>
-          <ul>
+          <h2 id="aboutH" data-i18n="aboutH">🥔 About Potato Clicker</h2>
+          <p data-i18n="ab1"><b>Potato Clicker</b> is a free idle clicker game set in the Wild West. Click the giant potato, earn potatoes and build a potato empire — from a tiny peeler to steam trains, gold mines and galaxy farms. No download and no sign-up: it runs right in your browser on PC, Mac, Chromebook, iPhone and Android.</p>
+          <h3 data-i18n="ab2">How to play</h3>
+          <ul data-i18n="ab3">
             <li><b>Click the potato</b> to earn potatoes. Fast clicks build a combo bonus.</li>
             <li><b>Buy machines</b> that make potatoes for you, even while you're not clicking.</li>
             <li><b>Unlock 300+ upgrades</b> that multiply your clicks and production.</li>
@@ -715,12 +726,12 @@ body.chaos .toast b{color:#4dfcff}
             <li><b>Complete missions</b>, spin the lucky wheel and open your daily chest.</li>
             <li><b>Level up</b>, collect 350+ trophies and <b>rebirth</b> for permanent power.</li>
           </ul>
-          <h3>Features</h3>
-          <p>Endless machines, skins, hats and backgrounds, boosts you can save for later, a soul shop with perks, and automatic saving. Like Cookie Clicker — but with potatoes and cowboys.</p>
-          <h3>Is it free?</h3>
-          <p>Yes. Potato Clicker is 100% free to play with no ads and no in-app purchases. Your progress is saved in your browser.</p>
-          <p><a href="./" style="color:var(--brass)">🎮 More free games from Potato Team Games →</a></p>
-          <p><a class="dcBtn" href="https://discord.gg/kZa6F4s5f9" target="_blank" rel="noopener" style="display:inline-flex"><svg viewBox="0 0 127.14 96.36" aria-hidden="true"><path fill="currentColor" d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15ZM42.45 65.69C36.18 65.69 31 60 31 53s5-12.74 11.43-12.74S54 46 53.89 53s-5.05 12.69-11.44 12.69Zm42.24 0C78.41 65.69 73.25 60 73.25 53s5-12.74 11.44-12.74S96.23 46 96.12 53s-5.04 12.69-11.43 12.69Z"/></svg><span>Join our Discord<small>Chat with other players in the Potato Team Games community</small></span></a></p>
+          <h3 data-i18n="ab4">Features</h3>
+          <p data-i18n="ab5">Endless machines, skins, hats and backgrounds, boosts you can save for later, a soul shop with perks, and automatic saving. Like Cookie Clicker — but with potatoes and cowboys.</p>
+          <h3 data-i18n="ab6">Is it free?</h3>
+          <p data-i18n="ab7">Yes. Potato Clicker is 100% free to play with no ads and no in-app purchases. Your progress is saved in your browser.</p>
+          <p><a href="./" style="color:var(--brass)" data-i18n="ab8">🎮 More free games from Potato Team Games →</a></p>
+          <p><a class="dcBtn" href="https://discord.gg/kZa6F4s5f9" target="_blank" rel="noopener" style="display:inline-flex"><svg viewBox="0 0 127.14 96.36" aria-hidden="true"><path fill="currentColor" d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15ZM42.45 65.69C36.18 65.69 31 60 31 53s5-12.74 11.43-12.74S54 46 53.89 53s-5.05 12.69-11.44 12.69Zm42.24 0C78.41 65.69 73.25 60 73.25 53s5-12.74 11.44-12.74S96.23 46 96.12 53s-5.04 12.69-11.43 12.69Z"/></svg><span data-i18n="dc">Join our Discord<small>Chat with other players in the Potato Team Games community</small></span></a></p>
         </section>
       </div>
     </aside>
@@ -731,7 +742,7 @@ body.chaos .toast b{color:#4dfcff}
 <div id="toasts" aria-live="polite"></div>
 <div id="vibe" class="modal hidden">
   <div class="mbox" id="vbox">
-    <div class="vtitle">🤠 SHERIFF CHECK!</div>
+    <div class="vtitle" data-i18n="vTitle">🤠 SHERIFF CHECK!</div>
     <div id="vsub"></div>
     <div id="vq"></div>
     <div id="varea"></div>
@@ -740,51 +751,51 @@ body.chaos .toast b{color:#4dfcff}
 </div>
 <div id="exm" class="modal hidden">
   <div class="mbox exbox">
-    <div class="exnew" id="exNew">🎉 You reached level 100 – Extract is unlocked! Collect enough potatoes and Extract to a new world.</div>
+    <div class="exnew" id="exNew" data-i18n="exNew">🎉 You reached level 100 – Extract is unlocked! Collect enough potatoes and Extract to a new world.</div>
     <div class="vtitle" id="exTitle">🧭 EXTRACT & ✨ REBIRTH</div>
     <div class="exworld" id="exWorld"></div>
     <div class="exdiff">
-      <div><b>🧭 Extract</b> = go to the <b>NEXT WORLD</b> and win a <b>medal</b>. Needs level 100. Everything starts over from zero. Only 4 times – one per world.</div>
-      <div><b>✨ Rebirth</b> = start over in the <b>SAME WORLD</b> and earn <b>souls</b>. You keep souls, style, trophies and bag. Do it as often as you like to get stronger.</div>
+      <div data-i18n="exD1"><b>🧭 Extract</b> = go to the <b>NEXT WORLD</b> and win a <b>medal</b>. Needs level 100. Everything starts over from zero. Only 4 times – one per world.</div>
+      <div data-i18n="exD2"><b>✨ Rebirth</b> = start over in the <b>SAME WORLD</b> and collect <b>souls</b> (they build up from all the potatoes you have ever earned). You keep souls, style, trophies and bag. Do it as often as you like to get stronger.</div>
     </div>
-    <h3 class="exh">🧭 Extract – next world</h3>
-          <div class="note" style="margin:0">Reach <b>level 100</b> and pay a big pile of potatoes to Extract. You win a <b>medal</b> and travel to a <b>brand new world</b> with a new look – but everything else starts over from zero. Each medal gives <b>x2 production and clicks</b> forever. 4 medals to collect!</div>
+    <h3 class="exh" data-i18n="exH">🧭 Extract – next world</h3>
+          <div class="note" style="margin:0" data-i18n="exNote">Reach <b>level 100</b> and pay a big pile of potatoes to Extract. You win a <b>medal</b> and travel to a <b>brand new world</b> with a new look – but everything else starts over from zero. Each medal gives <b>x2 production and clicks</b> forever. 4 medals to collect!</div>
           <div class="medals" id="medalRow"></div>
           <div class="exinfo" id="exInfo"></div>
           <button class="sbtn big" id="extractBtn">🧭 EXTRACT</button>
             <div class="exrb">
-      <h3>✨ Rebirth – same world</h3>
-      <div class="note" style="margin:0">Start over with potatoes, machines and upgrades — but earn <b>Potato Souls 👻</b>. Each soul gives <b>+5%</b> to everything forever. Your level goes back to 1 too. You keep your style, trophies and bag. Spend Soul Coins in the 🪙 Soul Shop at the bottom of 🛒 Shop.</div>
+      <h3 data-i18n="rbH">✨ Rebirth – same world</h3>
+      <div class="note" style="margin:0" data-i18n="rbNote">👻 <b>Potato Souls</b> build up from <b>all the potatoes you have ever earned</b> (first soul at 10 B). Rebirth collects them: you start over with potatoes, machines and upgrades, and your level goes back to 1 – but each soul gives <b>+5%</b> to everything forever. Every 10 souls also gives 1 🪙 Soul Coin (at least 1 per Rebirth). You keep your style, trophies and bag. Spend Soul Coins in the 🪙 Soul Shop at the bottom of 🛒 Shop.</div>
       <div id="worldPick" style="display:none"></div>
       <div id="rebInfo" style="margin:8px 0;font-size:14px"></div>
       <button class="sbtn big" id="rebBtn">✨ REBIRTH</button>
     </div>
-    <button class="sbtn" id="exClose" style="margin-top:8px">Close</button>
+    <button class="sbtn" id="exClose" style="margin-top:8px" data-i18n="close">Close</button>
   </div>
 </div>
 <div id="scr" class="modal hidden">
   <div class="mbox scrbox">
-    <div class="vtitle">🎫 SCRATCH CARD</div>
-    <div class="note" style="color:var(--ink2)">Scratch the fields – find <b>3 of the same</b> to win that prize!</div>
+    <div class="vtitle" data-i18n="scrT">🎫 SCRATCH CARD</div>
+    <div class="note" style="color:var(--ink2)" data-i18n="scrNote">Scratch the fields – find <b>3 of the same</b> to win that prize!</div>
     <div class="scrwrap" id="scrWrap"><div class="scrgrid" id="scrGrid"></div><canvas id="scrCan"></canvas><div id="scrCoinIco">🪙</div></div>
-    <div class="scrpay">🥔 5 min of production · 🔥 Production Party · 👆 Click Power · ☕ Cowboy Coffee · 🎟️ Slot Tokens · 🌟 Gold Rain</div>
+    <div class="scrpay" data-i18n="scrPay">🥔 5 min of production · 🔥 Production Party · 👆 Click Power · ☕ Cowboy Coffee · 🎟️ Slot Tokens · 🌟 Gold Rain</div>
     <div id="scrMsg"></div>
-    <div class="row2"><button class="sbtn" id="scrAll">✨ Reveal all</button><button class="sbtn" id="scrClose" disabled>Close</button></div>
+    <div class="row2"><button class="sbtn" id="scrAll" data-i18n="scrAll">✨ Reveal all</button><button class="sbtn" id="scrClose" disabled data-i18n="close">Close</button></div>
   </div>
 </div>
 <div id="clog" class="modal hidden">
   <div class="mbox clbox">
-    <div class="vtitle">📜 UPDATE CHANGELOG</div>
+    <div class="vtitle" data-i18n="clT">📜 UPDATE CHANGELOG</div>
     <div id="clList"></div>
-    <button class="sbtn big" id="clClose">GOT IT 🤠</button>
+    <button class="sbtn big" id="clClose" data-i18n="clClose">GOT IT 🤠</button>
   </div>
 </div>
 <div id="daily" class="modal hidden">
   <div class="mbox">
-    <div class="vtitle">🎁 DAILY CHEST</div>
+    <div class="vtitle" data-i18n="dT">🎁 DAILY CHEST</div>
     <div id="dStreak" style="font-size:15px;margin-top:6px"></div>
     <div class="days" id="dDays"></div>
-    <button class="sbtn big" id="dOpen">OPEN CHEST 🔓</button>
+    <button class="sbtn big" id="dOpen" data-i18n="dOpen">OPEN CHEST 🔓</button>
   </div>
 </div>
 
@@ -805,160 +816,172 @@ function fmt(n,dec){
   return (v<10?v.toFixed(2):v<100?v.toFixed(1):Math.floor(v).toString())+' '+SUF[e];
 }
 function fmtTime(s){s=Math.max(0,Math.floor(s));const d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),x=s%60;return (d?d+'d ':'')+(h||d?h+'h ':'')+(m||h||d?m+'m ':'')+x+'s'}
-const plural=(n,w)=>n+' '+w+(n===1?'':'s');
+/* =============== LANGUAGE (English / Danish) =============== */
+const LANG_KEY='potato_clicker_lang';
+let LANG=(()=>{try{const l=localStorage.getItem(LANG_KEY);if(l==='en'||l==='da')return l}catch(e){}return (navigator.language||'').toLowerCase().startsWith('da')?'da':'en'})();
+const L=(en,da)=>LANG==='da'?da:en;
+// a text is a plain string, an [en,da] pair or a function that builds it in the current language
+const tx=v=>typeof v==='function'?v():Array.isArray(v)?(LANG==='da'?v[1]:v[0]):v;
+// turns the given fields into getters, so names/descriptions built once at startup always follow the current language
+function BI(o,...keys){for(const k of keys){const v=o[k];if(v!==undefined)Object.defineProperty(o,k,{get:()=>tx(v),enumerable:true,configurable:true})}return o}
+const days=n=>n+' '+L(n===1?'day':'days',n===1?'dag':'dage');
 
 /* =============== DATA =============== */
 const MACHINES=[
-  {n:'Peeler',e:'🔪',c:15,p:0.1,d:'A small knife with a big dream'},
-  {n:'Potato Field',e:'🌱',c:100,p:1,d:'Fresh soil, happy potatoes'},
-  {n:'Deep Fryer',e:'🍟',c:1100,p:8,d:'Makes fries around the clock'},
-  {n:'Tractor',e:'🚜',c:12000,p:47,d:'Plows the field in record time'},
-  {n:'Ranch',e:'🐎',c:130000,p:260,d:'Horses, hay bales and loads of potatoes'},
-  {n:'Potato Factory',e:'🏭',c:1.4e6,p:1400,d:'Conveyor belts full of potatoes'},
-  {n:'Steam Train',e:'🚂',c:2e7,p:7800,d:'Hauls potatoes across the prairie'},
-  {n:'Gold Mine',e:'⛏️',c:3.3e8,p:44000,d:'Digs for gold — finds potatoes'},
-  {n:'Potato Bank',e:'🏦',c:5.1e9,p:260000,d:'Interest paid in potatoes'},
-  {n:'Laboratory',e:'🧪',c:7.5e10,p:1.6e6,d:'Researching super potatoes'},
-  {n:'Rocket',e:'🚀',c:1e12,p:1e7,d:'Fetches potatoes from space'},
-  {n:'Moon Base',e:'🌕',c:1.4e13,p:6.5e7,d:'Low-gravity potato farming'},
-  {n:'Time Machine',e:'⏳',c:1.7e14,p:4.3e8,d:'Brings potatoes back from the future'},
-  {n:'Galaxy Farm',e:'🌌',c:2.1e15,p:2.9e9,d:'Potato fields across the stars'},
-  {n:'Potato King',e:'👑',c:2.6e16,p:2.1e10,d:'The biggest potato of them all'},
-];
+  {n:['Peeler','Skræller'],e:'🔪',c:15,p:0.1,d:['A small knife with a big dream','En lille kniv med en stor drøm']},
+  {n:['Potato Field','Kartoffelmark'],e:'🌱',c:100,p:1,d:['Fresh soil, happy potatoes','Frisk jord, glade kartofler']},
+  {n:['Deep Fryer','Frituregryde'],e:'🍟',c:1100,p:8,d:['Makes fries around the clock','Laver pomfritter døgnet rundt']},
+  {n:['Tractor','Traktor'],e:'🚜',c:12000,p:47,d:['Plows the field in record time','Pløjer marken på rekordtid']},
+  {n:['Ranch','Ranch'],e:'🐎',c:130000,p:260,d:['Horses, hay bales and loads of potatoes','Heste, høballer og masser af kartofler']},
+  {n:['Potato Factory','Kartoffelfabrik'],e:'🏭',c:1.4e6,p:1400,d:['Conveyor belts full of potatoes','Samlebånd fulde af kartofler']},
+  {n:['Steam Train','Damptog'],e:'🚂',c:2e7,p:7800,d:['Hauls potatoes across the prairie','Kører kartofler hen over prærien']},
+  {n:['Gold Mine','Guldmine'],e:'⛏️',c:3.3e8,p:44000,d:['Digs for gold — finds potatoes','Graver efter guld — finder kartofler']},
+  {n:['Potato Bank','Kartoffelbank'],e:'🏦',c:5.1e9,p:260000,d:['Interest paid in potatoes','Renter betalt i kartofler']},
+  {n:['Laboratory','Laboratorium'],e:'🧪',c:7.5e10,p:1.6e6,d:['Researching super potatoes','Forsker i superkartofler']},
+  {n:['Rocket','Raket'],e:'🚀',c:1e12,p:1e7,d:['Fetches potatoes from space','Henter kartofler fra rummet']},
+  {n:['Moon Base','Månebase'],e:'🌕',c:1.4e13,p:6.5e7,d:['Low-gravity potato farming','Kartoffeldyrkning uden ret meget tyngdekraft']},
+  {n:['Time Machine','Tidsmaskine'],e:'⏳',c:1.7e14,p:4.3e8,d:['Brings potatoes back from the future','Henter kartofler tilbage fra fremtiden']},
+  {n:['Galaxy Farm','Galaksefarm'],e:'🌌',c:2.1e15,p:2.9e9,d:['Potato fields across the stars','Kartoffelmarker ude mellem stjernerne']},
+  {n:['Potato King','Kartoffelkonge'],e:'👑',c:2.6e16,p:2.1e10,d:['The biggest potato of them all','Den største kartoffel af dem alle']},
+].map(m=>BI(m,'n','d'));
 
 /* ---- UPGRADES (300+) ---- */
 const UPG=[];
 const ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX','X'];
 const TIERS=[[1,10],[5,50],[25,500],[50,5e4],[100,5e6],[150,5e8],[200,5e10],[250,5e12],[300,5e14],[400,5e16],[500,5e18],[600,5e20],[700,5e22],[850,5e24],[1000,5e26]];
-const TN=['Sharper','Faster','Stronger','Turbo','Deluxe','Premium','Gold Edition','Diamond Edition','Masterpiece','Legendary','Mythic','Cosmic','Infinite','Divine','Ultimate'];
-const machUpg=(m,i)=>TIERS.forEach(([r,mul],t)=>UPG.push({id:'m'+i+'_'+t,n:m.n+': '+TN[t],e:m.e,d:'Every '+m.n+' you own makes x2 potatoes',c:m.c*mul,t:'mach',i,req:()=>S.machines[i]>=r}));
+const TN=[['Sharper','Skarpere'],['Faster','Hurtigere'],['Stronger','Stærkere'],['Turbo','Turbo'],['Deluxe','Deluxe'],['Premium','Premium'],['Gold Edition','Guldudgave'],['Diamond Edition','Diamantudgave'],['Masterpiece','Mesterværk'],['Legendary','Legendarisk'],['Mythic','Mytisk'],['Cosmic','Kosmisk'],['Infinite','Uendelig'],['Divine','Guddommelig'],['Ultimate','Ultimativ']];
+const addUpg=o=>UPG.push(BI(o,'n','d'));
+const machUpg=(m,i)=>TIERS.forEach(([r,mul],t)=>addUpg({id:'m'+i+'_'+t,n:()=>m.n+': '+tx(TN[t]),e:m.e,d:()=>L('Every '+m.n+' you own makes x2 potatoes','Hver '+m.n+' du ejer laver x2 kartofler'),c:m.c*mul,t:'mach',i,req:()=>S.machines[i]>=r}));
 MACHINES.forEach(machUpg);
-['Strong Finger','Quick Hand','Turbo Thumb','Iron Grip','Rocket Click','Lightning Finger','Super Hand','Giant Fist','Diamond Finger','Golden Hand',...ROMAN.map(r=>'Click Master '+r)].forEach((n,t)=>{
+[['Strong Finger','Stærk finger'],['Quick Hand','Hurtig hånd'],['Turbo Thumb','Turbotommel'],['Iron Grip','Jerngreb'],['Rocket Click','Raketklik'],['Lightning Finger','Lynfinger'],['Super Hand','Superhånd'],['Giant Fist','Kæmpenæve'],['Diamond Finger','Diamantfinger'],['Golden Hand','Gylden hånd'],...ROMAN.map(r=>['Click Master '+r,'Klikmester '+r])].forEach((n,t)=>{
   const c=t<3?[100,500,1e4][t]:1e6*Math.pow(100,t-3), r=t<10?[0,25,100,250,500,1000,2000,4000,8000,15000][t]:15000+(t-9)*10000;
-  UPG.push({id:'c'+t,n,e:'👆',d:'Clicks give x2 potatoes',c,t:'click',req:()=>S.clicks>=r});
+  addUpg({id:'c'+t,n,e:'👆',d:['Clicks give x2 potatoes','Klik giver x2 kartofler'],c,t:'click',req:()=>S.clicks>=r});
 });
 [[0.1,1e4],[0.5,1e5],[5,1e7],[50,1e9],[500,1e11],[5000,1e13],[5e4,1e15],[5e5,1e17],[5e6,1e19],[5e7,1e21]].forEach(([v,c],t)=>
-  UPG.push({id:'f'+t,n:'Many Hands '+ROMAN[t],e:'🙌',d:'+'+fmt(v,1)+' potatoes per click for every machine you own',c,t:'flat',v,req:()=>totalMach()>=10+t*25}));
-ROMAN.forEach((r,t)=>UPG.push({id:'cp'+t,n:'Potato Magnet '+r,e:'🧲',d:'Each click also gives +1% of your potatoes per second',c:5e4*Math.pow(100,t),t:'cpct',req:()=>S.clicks>=100*(t+1)*(t+1)}));
-['Potato Salad','French Fries','Mashed Potatoes','Potato Chips','Rösti','Hasselback Potatoes','Baked Potato','Potato Soup','Gnocchi','Croquettes','Potato Bread','Scalloped Potatoes','Potato Pizza','Hash Browns','Potato Muffins','Potato Cake','Potato Ice Cream','Potato Pie','Potato Festival','The Perfect Potato'].forEach((n,t)=>
-  UPG.push({id:'g'+t,n:'Recipe: '+n,e:'🥘',d:'+25% to ALL production',c:1e5*Math.pow(50,t),t:'glob',v:1.25,req:()=>true}));
-['Lucky Potato','Four-Leaf Clover','Lucky Coin','Horseshoe','Shooting Star','Fortune Potato'].forEach((n,t)=>UPG.push({id:'cr'+t,n,e:'🍀',d:'+2% critical click chance',c:1e3*Math.pow(1000,t),t:'crit',req:()=>true}));
-['Hard Hit','Mega Hit','Ultra Hit','Giant Hit','Potato Bomb'].forEach((n,t)=>UPG.push({id:'cx'+t,n,e:'💥',d:'Critical clicks give +5x more',c:5e4*Math.pow(1e4,t),t:'critx',req:()=>S.crits>=10}));
-['Gold Radar','Gold Magnet','Gold Fever','Gold Seeker','Midas Touch'].forEach((n,t)=>UPG.push({id:'gd'+t,n,e:'🌟',d:'Golden potatoes appear 15% more often',c:5e4*Math.pow(1000,t),t:'gold',req:()=>S.goldens>=1}));
-ROMAN.slice(0,5).forEach((r,t)=>UPG.push({id:'cb'+t,n:'Combo Artist '+r,e:'🔥',d:'+25 max combo (bigger combo bonus)',c:2e3*Math.pow(1000,t),t:'combo',req:()=>S.maxCombo>=20}));
-ROMAN.forEach((r,t)=>UPG.push({id:'xp'+t,n:'Smarter Potato '+r,e:'📚',d:'+1 XP per click (level up faster)',c:1e3*Math.pow(100,t),t:'xp',req:()=>S.level>=3+t*5}));
-ROMAN.slice(0,5).forEach((r,t)=>UPG.push({id:'bd'+t,n:'Long Party '+r,e:'⏱️',d:'All boosts last 20% longer',c:1e4*Math.pow(1000,t),t:'bdur',req:()=>S.boostsUsed>=1}));
+  addUpg({id:'f'+t,n:['Many Hands '+ROMAN[t],'Mange hænder '+ROMAN[t]],e:'🙌',d:()=>L('+'+fmt(v,1)+' potatoes per click for every machine you own','+'+fmt(v,1)+' kartofler pr. klik for hver maskine, du ejer'),c,t:'flat',v,req:()=>totalMach()>=10+t*25}));
+ROMAN.forEach((r,t)=>addUpg({id:'cp'+t,n:['Potato Magnet '+r,'Kartoffelmagnet '+r],e:'🧲',d:['Each click also gives +1% of your potatoes per second','Hvert klik giver også +1% af dine kartofler pr. sekund'],c:5e4*Math.pow(100,t),t:'cpct',req:()=>S.clicks>=100*(t+1)*(t+1)}));
+[['Potato Salad','Kartoffelsalat'],['French Fries','Pomfritter'],['Mashed Potatoes','Kartoffelmos'],['Potato Chips','Kartoffelchips'],['Rösti','Rösti'],['Hasselback Potatoes','Hasselbackkartofler'],['Baked Potato','Bagt kartoffel'],['Potato Soup','Kartoffelsuppe'],['Gnocchi','Gnocchi'],['Croquettes','Kroketter'],['Potato Bread','Kartoffelbrød'],['Scalloped Potatoes','Flødekartofler'],['Potato Pizza','Kartoffelpizza'],['Hash Browns','Kartoffelpandekager'],['Potato Muffins','Kartoffelmuffins'],['Potato Cake','Kartoffelkage'],['Potato Ice Cream','Kartoffelis'],['Potato Pie','Kartoffeltærte'],['Potato Festival','Kartoffelfest'],['The Perfect Potato','Den perfekte kartoffel']].forEach(([n,nd],t)=>
+  addUpg({id:'g'+t,n:['Recipe: '+n,'Opskrift: '+nd],e:'🥘',d:['+25% to ALL production','+25% til AL produktion'],c:1e5*Math.pow(50,t),t:'glob',v:1.25,req:()=>true}));
+[['Lucky Potato','Heldig kartoffel'],['Four-Leaf Clover','Firkløver'],['Lucky Coin','Lykkemønt'],['Horseshoe','Hestesko'],['Shooting Star','Stjerneskud'],['Fortune Potato','Lykkekartoffel']].forEach((n,t)=>addUpg({id:'cr'+t,n,e:'🍀',d:['+2% critical click chance','+2% chance for kritisk klik'],c:1e3*Math.pow(1000,t),t:'crit',req:()=>true}));
+[['Hard Hit','Hårdt slag'],['Mega Hit','Megaslag'],['Ultra Hit','Ultraslag'],['Giant Hit','Kæmpeslag'],['Potato Bomb','Kartoffelbombe']].forEach((n,t)=>addUpg({id:'cx'+t,n,e:'💥',d:['Critical clicks give +5x more','Kritiske klik giver +5x mere'],c:5e4*Math.pow(1e4,t),t:'critx',req:()=>S.crits>=10}));
+[['Gold Radar','Guldradar'],['Gold Magnet','Guldmagnet'],['Gold Fever','Guldfeber'],['Gold Seeker','Guldsøger'],['Midas Touch','Midas-fingre']].forEach((n,t)=>addUpg({id:'gd'+t,n,e:'🌟',d:['Golden potatoes appear 15% more often','Gyldne kartofler dukker op 15% oftere'],c:5e4*Math.pow(1000,t),t:'gold',req:()=>S.goldens>=1}));
+ROMAN.slice(0,5).forEach((r,t)=>addUpg({id:'cb'+t,n:['Combo Artist '+r,'Kombokunstner '+r],e:'🔥',d:['+25 max combo (bigger combo bonus)','+25 maks. kombo (større kombobonus)'],c:2e3*Math.pow(1000,t),t:'combo',req:()=>S.maxCombo>=20}));
+ROMAN.forEach((r,t)=>addUpg({id:'xp'+t,n:['Smarter Potato '+r,'Klogere kartoffel '+r],e:'📚',d:['+1 XP per click (level up faster)','+1 XP pr. klik (stig hurtigere i level)'],c:1e3*Math.pow(100,t),t:'xp',req:()=>S.level>=3+t*5}));
+ROMAN.slice(0,5).forEach((r,t)=>addUpg({id:'bd'+t,n:['Long Party '+r,'Lang fest '+r],e:'⏱️',d:['All boosts last 20% longer','Alle boosts varer 20% længere'],c:1e4*Math.pow(1000,t),t:'bdur',req:()=>S.boostsUsed>=1}));
 
 const BOOSTS=[
-  {id:'frenzy',e:'🔥',n:'Production Party',d:'x7 production for 60 sec',k:240,min:500,g:.25,use:()=>addActive('frenzy',60)},
-  {id:'clickrizz',e:'👆',n:'Click Power',d:'x15 potatoes per click for 30 sec',k:150,min:300,g:.25,use:()=>addActive('clickrizz',30)},
-  {id:'mewing',e:'🎯',n:'Sharpshooter',d:'50% critical click chance for 30 sec',k:150,min:600,g:.25,use:()=>addActive('mewing',30)},
-  {id:'turbo',e:'🤖',n:'Robot Hand',d:'20 free clicks per second for 30 sec — the only legal auto clicker',k:200,min:800,g:.25,use:()=>addActive('turbo',30)},
-  {id:'fanum',e:'⏩',n:'Time Skip',d:'Get 30 minutes of production instantly',k:2700,min:5000,g:.6,use:()=>{const v=Math.max(1000,D.base*1800);gain(v);bigFloat('⏩ +'+fmt(v),'#ffe08a')}},
-  {id:'goldrain',e:'🌟',n:'Gold Rain',d:'5 golden potatoes appear',k:1200,min:5000,g:.4,use:()=>{for(let i=0;i<5;i++)setTimeout(spawnGolden,i*450)}},
-  {id:'aura',e:'🧃',n:'XP Juice',d:'x3 XP for 5 minutes',k:600,min:2000,g:.4,use:()=>addActive('aura',300)},
-  {id:'coffee',e:'☕',n:'Cowboy Coffee',d:'x3 production for 3 minutes',k:300,min:800,g:.3,use:()=>addActive('coffee',180)},
-  {id:'charge',e:'🌀',n:'Chaos Charge',d:'+15% on the Bonus Level bar',k:1500,min:6000,g:.6,use:()=>addBonus(15)},
-  {id:'tokens',e:'🎟️',n:'Slot Tokens',d:'10 extra Potato Slots spins – also works while the machine cools down',k:600,min:2500,g:.5,use:()=>{if(slotCooling()){S.slotUntil=0;S.slotN=SLOT_MAX-10}else S.slotN=Math.max(0,S.slotN-10);updSlot()}},
-  {id:'scratch',e:'🎫',n:'Scratch Card',d:'Scratch 9 fields – 3 of the same wins that prize',k:400,min:1500,g:.4,use:()=>openScratch()},
-  {id:'mystery',e:'🎁',n:'Mystery Box',d:'1-3 random boosts straight to your bag (Time Skip and Gold Rain are rare)',k:1000,min:3000,g:.6,use:()=>{const n=1+Math.floor(Math.random()*3),got=[];for(let i=0;i<n;i++){const b=boxPick();S.bag[b.id]=(S.bag[b.id]||0)+1;got.push(b.e)}toast('🎁 Mystery Box!','You got: '+got.join(' '));renderBag()}},
-];
+  {id:'frenzy',e:'🔥',n:['Production Party','Produktionsfest'],d:['x7 production for 60 sec','x7 produktion i 60 sek.'],k:240,min:500,g:.25,use:()=>addActive('frenzy',60)},
+  {id:'clickrizz',e:'👆',n:['Click Power','Klikkraft'],d:['x15 potatoes per click for 30 sec','x15 kartofler pr. klik i 30 sek.'],k:150,min:300,g:.25,use:()=>addActive('clickrizz',30)},
+  {id:'mewing',e:'🎯',n:['Sharpshooter','Skarpskytte'],d:['50% critical click chance for 30 sec','50% chance for kritisk klik i 30 sek.'],k:150,min:600,g:.25,use:()=>addActive('mewing',30)},
+  {id:'turbo',e:'🤖',n:['Robot Hand','Robothånd'],d:['20 free clicks per second for 30 sec — the only legal auto clicker','20 gratis klik i sekundet i 30 sek. — den eneste lovlige autoklikker'],k:200,min:800,g:.25,use:()=>addActive('turbo',30)},
+  {id:'fanum',e:'⏩',n:['Time Skip','Tidsspring'],d:['Get 30 minutes of production instantly','Få 30 minutters produktion med det samme'],k:2700,min:5000,g:.6,use:()=>{const v=Math.max(1000,D.base*1800);gain(v);bigFloat('⏩ +'+fmt(v),'#ffe08a')}},
+  {id:'goldrain',e:'🌟',n:['Gold Rain','Guldregn'],d:['5 golden potatoes appear','5 gyldne kartofler dukker op'],k:1200,min:5000,g:.4,use:()=>{for(let i=0;i<5;i++)setTimeout(spawnGolden,i*450)}},
+  {id:'aura',e:'🧃',n:['XP Juice','XP-juice'],d:['x3 XP for 5 minutes','x3 XP i 5 minutter'],k:600,min:2000,g:.4,use:()=>addActive('aura',300)},
+  {id:'coffee',e:'☕',n:['Cowboy Coffee','Cowboykaffe'],d:['x3 production for 3 minutes','x3 produktion i 3 minutter'],k:300,min:800,g:.3,use:()=>addActive('coffee',180)},
+  {id:'charge',e:'🌀',n:['Chaos Charge','Kaosladning'],d:['+15% on the Bonus Level bar','+15% på Bonus-level-baren'],k:1500,min:6000,g:.6,use:()=>addBonus(15)},
+  {id:'tokens',e:'🎟️',n:['Slot Tokens','Spillemønter'],d:['10 extra Potato Slots spins – also works while the machine cools down','10 ekstra spins på Kartoffelautomaten – virker også, mens maskinen køler af'],k:600,min:2500,g:.5,use:()=>{if(slotCooling()){S.slotUntil=0;S.slotN=SLOT_MAX-10}else S.slotN=Math.max(0,S.slotN-10);updSlot()}},
+  {id:'scratch',e:'🎫',n:['Scratch Card','Skrabelod'],d:['Scratch 9 fields – 3 of the same wins that prize','Skrab 9 felter – 3 ens vinder den præmie'],k:400,min:1500,g:.4,use:()=>openScratch()},
+  {id:'mystery',e:'🎁',n:['Mystery Box','Mysterieboks'],d:['1-3 random boosts straight to your bag (Time Skip and Gold Rain are rare)','1-3 tilfældige boosts direkte i din taske (Tidsspring og Guldregn er sjældne)'],k:1000,min:3000,g:.6,use:()=>{const n=1+Math.floor(Math.random()*3),got=[];for(let i=0;i<n;i++){const b=boxPick();S.bag[b.id]=(S.bag[b.id]||0)+1;got.push(b.e)}toast(L('🎁 Mystery Box!','🎁 Mysterieboks!'),L('You got: ','Du fik: ')+got.join(' '));renderBag()}},
+].map(b=>BI(b,'n','d'));
 // what a Mystery Box can give: small boosts often, the big ones rarely, never another box
 const BOX_W={frenzy:20,clickrizz:20,mewing:18,turbo:16,aura:12,goldrain:6,fanum:3};
 function boxPick(){let r=Math.random()*Object.values(BOX_W).reduce((a,b)=>a+b,0);for(const id in BOX_W){r-=BOX_W[id];if(r<0)return BOOSTS.find(b=>b.id===id)}return BOOSTS[0]}
-const ACTIVE_LBL={coffee:'☕ x3 production',chaos:'🌀 BONUS CHAOS x10',frenzy:'🔥 x7 production',gfrenzy:'🌟 GOLD PARTY x7',clickrizz:'👆 x15 click',gclick:'⚡ CLICK FRENZY x77',mewing:'🎯 50% crit',turbo:'🤖 Robot Hand',aura:'🧃 x3 XP',sale:'🛒 Shop -50%'};
+const ACTIVE_LBL={coffee:['☕ x3 production','☕ x3 produktion'],chaos:['🌀 BONUS CHAOS x10','🌀 BONUSKAOS x10'],frenzy:['🔥 x7 production','🔥 x7 produktion'],gfrenzy:['🌟 GOLD PARTY x7','🌟 GULDFEST x7'],clickrizz:['👆 x15 click','👆 x15 klik'],gclick:['⚡ CLICK FRENZY x77','⚡ KLIKVANVID x77'],mewing:['🎯 50% crit','🎯 50% krit'],turbo:['🤖 Robot Hand','🤖 Robothånd'],aura:'🧃 x3 XP',sale:['🛒 Shop -50%','🛒 Butik -50%']};
+const activeLbl=k=>ACTIVE_LBL[k]?tx(ACTIVE_LBL[k]):k;
 
 const SKINS=[
-  {id:'classic',t:'pot',n:'Classic',c:0,col:['#ffe0a3','#d99a4e','#8a5524'],g:'#ffb347'},
-  {id:'gold',t:'pot',n:'Gold',c:5e3,col:['#fff7b0','#ffc400','#a86f00'],g:'#ffd000'},
-  {id:'slime',t:'pot',n:'Cactus',c:5e4,col:['#d8ffb0','#4cb137','#1e5a12'],g:'#7dff4a'},
-  {id:'diamond',t:'pot',n:'Diamond',c:5e5,col:['#f0ffff','#7fdfff','#2a7fbf'],g:'#88ffff'},
-  {id:'neon',t:'pot',n:'Pink',c:5e6,col:['#ffc2f7','#ff5bd6','#7a0066'],g:'#ff5bd6'},
-  {id:'lava',t:'pot',n:'Lava',c:5e7,col:['#ffe08a','#ff4d00','#6a0a00'],g:'#ff5a00'},
-  {id:'ohio',t:'pot',n:'Stone',c:1e9,col:['#d5d5d5','#7a7a7a','#2a2a2a'],g:'#bbbbbb'},
-  {id:'galaxy',t:'pot',n:'Galaxy',c:1e11,col:['#e0c4ff','#5b2bd6','#120840'],g:'#9a6bff'},
-  {id:'rainbow',t:'pot',n:'Rainbow',c:1e13,col:['#fff0a3','#ff6b6b','#8a2be2'],g:'#ffffff',rb:1},
-  {id:'void',t:'pot',n:'Shadow',c:1e16,col:['#5a5a5a','#151515','#000'],g:'#ff7a00'},
-  {id:'none',t:'acc',n:'None',c:0,e:'🚫'},
-  {id:'shades',t:'acc',n:'Sunglasses',c:2e3,e:'🕶️'},
-  {id:'star',t:'acc',n:'Sheriff Star',c:2e4,e:'⭐',pos:[72,76,20]},
-  {id:'cap',t:'acc',n:'Cap',c:2e5,e:'🧢',pos:[50,6,46]},
-  {id:'bow',t:'acc',n:'Bow',c:2e6,e:'🎀',pos:[76,12,28]},
-  {id:'crown',t:'acc',n:'Crown',c:2e8,e:'👑',pos:[50,2,40]},
-  {id:'tophat',t:'acc',n:'Top Hat',c:2e10,e:'🎩',pos:[50,-4,46]},
-  {id:'headset',t:'acc',n:'Headset',c:2e12,e:'🎧'},
-  {id:'bg0',t:'bg',n:'Prairie',c:0,col:['#f0b46a','#c9733a','#7a3f1d']},
-  {id:'bg1',t:'bg',n:'Sunset',c:1e4,col:['#ff8a5c','#c73866','#3d1e4a']},
-  {id:'bg2',t:'bg',n:'Desert Night',c:1e6,col:['#2a3060','#1b1f3a','#0b0d1e']},
-  {id:'bg3',t:'bg',n:'Canyon',c:1e8,col:['#d0704f','#8a3324','#4a1a12']},
-  {id:'bg4',t:'bg',n:'Cactus Valley',c:1e10,col:['#a9cf78','#6b8f3a','#33461d']},
-  {id:'bg5',t:'bg',n:'Sandstorm',c:1e12,col:['#e8cf9a','#c9a96e','#8a6d3b']},
-  {id:'bg6',t:'bg',n:'Northern Lights',c:1e14,col:['#1f4a5a','#2c5364','#00805f']},
-  {id:'bg7',t:'bg',n:'Gold Rush',c:1e17,col:['#ffd56a','#d4a017','#6b4f00']},
-];
+  {id:'classic',t:'pot',n:['Classic','Klassisk'],c:0,col:['#ffe0a3','#d99a4e','#8a5524'],g:'#ffb347'},
+  {id:'gold',t:'pot',n:['Gold','Guld'],c:5e3,col:['#fff7b0','#ffc400','#a86f00'],g:'#ffd000'},
+  {id:'slime',t:'pot',n:['Cactus','Kaktus'],c:5e4,col:['#d8ffb0','#4cb137','#1e5a12'],g:'#7dff4a'},
+  {id:'diamond',t:'pot',n:['Diamond','Diamant'],c:5e5,col:['#f0ffff','#7fdfff','#2a7fbf'],g:'#88ffff'},
+  {id:'neon',t:'pot',n:['Pink','Pink'],c:5e6,col:['#ffc2f7','#ff5bd6','#7a0066'],g:'#ff5bd6'},
+  {id:'lava',t:'pot',n:['Lava','Lava'],c:5e7,col:['#ffe08a','#ff4d00','#6a0a00'],g:'#ff5a00'},
+  {id:'ohio',t:'pot',n:['Stone','Sten'],c:1e9,col:['#d5d5d5','#7a7a7a','#2a2a2a'],g:'#bbbbbb'},
+  {id:'galaxy',t:'pot',n:['Galaxy','Galakse'],c:1e11,col:['#e0c4ff','#5b2bd6','#120840'],g:'#9a6bff'},
+  {id:'rainbow',t:'pot',n:['Rainbow','Regnbue'],c:1e13,col:['#fff0a3','#ff6b6b','#8a2be2'],g:'#ffffff',rb:1},
+  {id:'void',t:'pot',n:['Shadow','Skygge'],c:1e16,col:['#5a5a5a','#151515','#000'],g:'#ff7a00'},
+  {id:'none',t:'acc',n:['None','Ingen'],c:0,e:'🚫'},
+  {id:'shades',t:'acc',n:['Sunglasses','Solbriller'],c:2e3,e:'🕶️'},
+  {id:'star',t:'acc',n:['Sheriff Star','Sheriffstjerne'],c:2e4,e:'⭐',pos:[72,76,20]},
+  {id:'cap',t:'acc',n:['Cap','Kasket'],c:2e5,e:'🧢',pos:[50,6,46]},
+  {id:'bow',t:'acc',n:['Bow','Sløjfe'],c:2e6,e:'🎀',pos:[76,12,28]},
+  {id:'crown',t:'acc',n:['Crown','Krone'],c:2e8,e:'👑',pos:[50,2,40]},
+  {id:'tophat',t:'acc',n:['Top Hat','Høj hat'],c:2e10,e:'🎩',pos:[50,-4,46]},
+  {id:'headset',t:'acc',n:['Headset','Headset'],c:2e12,e:'🎧'},
+  {id:'bg0',t:'bg',n:['Prairie','Prærie'],c:0,col:['#f0b46a','#c9733a','#7a3f1d']},
+  {id:'bg1',t:'bg',n:['Sunset','Solnedgang'],c:1e4,col:['#ff8a5c','#c73866','#3d1e4a']},
+  {id:'bg2',t:'bg',n:['Desert Night','Ørkennat'],c:1e6,col:['#2a3060','#1b1f3a','#0b0d1e']},
+  {id:'bg3',t:'bg',n:['Canyon','Canyon'],c:1e8,col:['#d0704f','#8a3324','#4a1a12']},
+  {id:'bg4',t:'bg',n:['Cactus Valley','Kaktusdalen'],c:1e10,col:['#a9cf78','#6b8f3a','#33461d']},
+  {id:'bg5',t:'bg',n:['Sandstorm','Sandstorm'],c:1e12,col:['#e8cf9a','#c9a96e','#8a6d3b']},
+  {id:'bg6',t:'bg',n:['Northern Lights','Nordlys'],c:1e14,col:['#1f4a5a','#2c5364','#00805f']},
+  {id:'bg7',t:'bg',n:['Gold Rush','Guldrush'],c:1e17,col:['#ffd56a','#d4a017','#6b4f00']},
+].map(s=>BI(s,'n'));
 
-const TITLES=[[1,'Greenhorn 🥔'],[5,'Field Hand 🌱'],[10,'Potato Picker 🧺'],[15,'Cowboy 🤠'],[20,'Rancher 🐎'],[25,'Sheriff ⭐'],[30,'Prospector ⛏️'],[40,'Potato Baron 🎩'],[50,'Railroad Tycoon 🚂'],[65,'Potato King 👑'],[80,'Legend 🏆'],[100,'Hero of the West 🌵'],[150,'Potato God ✨'],[200,'Potato of the Universe 🌌']];
-const title=l=>{let t=TITLES[0][1];for(const [n,s] of TITLES)if(l>=n)t=s;return t};
+const TITLES=[[1,['Greenhorn 🥔','Grønskolling 🥔']],[5,['Field Hand 🌱','Markarbejder 🌱']],[10,['Potato Picker 🧺','Kartoffelplukker 🧺']],[15,['Cowboy 🤠','Cowboy 🤠']],[20,['Rancher 🐎','Rancher 🐎']],[25,['Sheriff ⭐','Sherif ⭐']],[30,['Prospector ⛏️','Guldgraver ⛏️']],[40,['Potato Baron 🎩','Kartoffelbaron 🎩']],[50,['Railroad Tycoon 🚂','Jernbanekonge 🚂']],[65,['Potato King 👑','Kartoffelkonge 👑']],[80,['Legend 🏆','Legende 🏆']],[100,['Hero of the West 🌵','Vestens helt 🌵']],[150,['Potato God ✨','Kartoffelgud ✨']],[200,['Potato of the Universe 🌌','Universets kartoffel 🌌']]];
+const title=l=>{let t=TITLES[0][1];for(const [n,s] of TITLES)if(l>=n)t=s;return tx(t)};
 const need=l=>Math.floor(30*Math.pow(l,1.65));
 
 /* ---- TROPHIES ---- */
 const ACH=[];
-const A=(id,n,d,e,f)=>ACH.push({id,n,d,e,f});
-[[1,'First Click','This is how it starts'],[100,'Click Rookie','100 clicks'],[1000,'Click Machine','1,000 clicks'],[1e4,'Finger on Fire 🔥','10,000 clicks'],[5e4,'Sore Fingers','50,000 clicks'],[1e5,'100,000 Clicks','100,000 clicks'],[5e5,'Not Human','500,000 clicks'],[1e6,'Click Legend','1 million clicks']]
-  .forEach(([n,a,b])=>A('cl'+n,a,b,'👆',()=>S.clicks>=n));
-[[100,'Small Farmer'],[1e3,'A Thousand Potatoes'],[1e4,'Potato Expert'],[1e5,'Almost Rich'],[1e6,'Potato Millionaire'],[1e8,'Rich Rancher'],[1e9,'Billion Mash'],[1e11,'Potato Baron'],[1e12,'Trillionaire'],[1e15,'Quadrillionaire'],[1e18,'Potato Galaxy'],[1e21,'Mash of the Universe'],[1e24,'Infinite Mash'],[1e30,'Why Are You Still Playing?']]
-  .forEach(([n,a])=>A('e'+n,a,'Earn '+fmt(n)+' potatoes in total','🥔',()=>S.allEarned>=n));
-for(let e=33;e<=303;e+=3)A('e'+e,'Potato Rank '+((e-30)/3),'Earn '+fmt(Math.pow(10,e))+' potatoes in total','🌠',()=>S.allEarned>=Math.pow(10,e));
-[[1,'Passive Income'],[10,'Small Business'],[100,'Side Hustle'],[1e3,'Full-Time Job'],[1e4,'CEO'],[1e5,'Big Industry'],[1e6,'A Million per Second'],[1e8,'World Economy'],[1e10,'Potato Empire'],[1e12,'Potato Bank'],[1e15,'Infinite Production']]
-  .forEach(([n,a])=>A('ps'+n,a,'Make '+fmt(n)+' potatoes per second','📈',()=>D.base>=n));
-const machAch=(m,i)=>[[1,'First '+m.n],[10,'10 × '+m.n],[50,'50 × '+m.n],[100,m.n+' Empire'],[200,m.n+' Master']]
-  .forEach(([n,a])=>A('m'+i+'_'+n,a,'Own '+n+' '+m.n,m.e,()=>S.machines[i]>=n));
+// n and d are [en,da] pairs or functions (see tx), so trophy texts follow the language
+const A=(id,n,d,e,f)=>ACH.push(BI({id,n,d,e,f},'n','d'));
+const n1=(n,one,many)=>n+' '+(n===1?one:many); // Danish singular/plural
+[[1,'First Click','Første klik','This is how it starts','Sådan starter det'],[100,'Click Rookie','Klik-begynder','100 clicks','100 klik'],[1000,'Click Machine','Klikmaskine','1,000 clicks','1.000 klik'],[1e4,'Finger on Fire 🔥','Finger i flammer 🔥','10,000 clicks','10.000 klik'],[5e4,'Sore Fingers','Ømme fingre','50,000 clicks','50.000 klik'],[1e5,'100,000 Clicks','100.000 klik','100,000 clicks','100.000 klik'],[5e5,'Not Human','Ikke et menneske','500,000 clicks','500.000 klik'],[1e6,'Click Legend','Kliklegende','1 million clicks','1 million klik']]
+  .forEach(([n,a,ad,b,bd])=>A('cl'+n,[a,ad],[b,bd],'👆',()=>S.clicks>=n));
+[[100,'Small Farmer','Lille landmand'],[1e3,'A Thousand Potatoes','Tusind kartofler'],[1e4,'Potato Expert','Kartoffelekspert'],[1e5,'Almost Rich','Næsten rig'],[1e6,'Potato Millionaire','Kartoffelmillionær'],[1e8,'Rich Rancher','Rig rancher'],[1e9,'Billion Mash','Milliard-mos'],[1e11,'Potato Baron','Kartoffelbaron'],[1e12,'Trillionaire','Billionær'],[1e15,'Quadrillionaire','Billiardær'],[1e18,'Potato Galaxy','Kartoffelgalakse'],[1e21,'Mash of the Universe','Universets mos'],[1e24,'Infinite Mash','Uendelig mos'],[1e30,'Why Are You Still Playing?','Hvorfor spiller du stadig?']]
+  .forEach(([n,a,ad])=>A('e'+n,[a,ad],()=>L('Earn '+fmt(n)+' potatoes in total','Tjen '+fmt(n)+' kartofler i alt'),'🥔',()=>S.allEarned>=n));
+for(let e=33;e<=303;e+=3)A('e'+e,['Potato Rank '+((e-30)/3),'Kartoffelrang '+((e-30)/3)],()=>L('Earn '+fmt(Math.pow(10,e))+' potatoes in total','Tjen '+fmt(Math.pow(10,e))+' kartofler i alt'),'🌠',()=>S.allEarned>=Math.pow(10,e));
+[[1,'Passive Income','Passiv indkomst'],[10,'Small Business','Lille forretning'],[100,'Side Hustle','Sidejob'],[1e3,'Full-Time Job','Fuldtidsjob'],[1e4,'CEO','Direktør'],[1e5,'Big Industry','Storindustri'],[1e6,'A Million per Second','En million i sekundet'],[1e8,'World Economy','Verdensøkonomi'],[1e10,'Potato Empire','Kartoffelimperium'],[1e12,'Potato Bank','Kartoffelbank'],[1e15,'Infinite Production','Uendelig produktion']]
+  .forEach(([n,a,ad])=>A('ps'+n,[a,ad],()=>L('Make '+fmt(n)+' potatoes per second','Lav '+fmt(n)+' kartofler i sekundet'),'📈',()=>D.base>=n));
+const machAch=(m,i)=>[[1,()=>L('First '+m.n,'Første '+m.n)],[10,()=>'10 × '+m.n],[50,()=>'50 × '+m.n],[100,()=>L(m.n+' Empire',m.n+'-imperium')],[200,()=>L(m.n+' Master',m.n+'-mester')]]
+  .forEach(([n,a])=>A('m'+i+'_'+n,a,()=>L('Own '+n+' '+m.n,'Hav '+n+' × '+m.n),m.e,()=>S.machines[i]>=n));
 MACHINES.forEach(machAch);
-[5,10,25,50,75,100,150,200].forEach(n=>A('lv'+n,'Level '+n,'Reach level '+n+' — '+title(n),'⭐',()=>S.level>=n));
-for(let l=250;l<=5000;l+=50)A('lv'+l,'Level '+l,'Reach level '+l,'🌟',()=>S.level>=l);
-[[1,'Gold Find'],[10,'Gold Hunter'],[50,'Gold Digger'],[200,'Gold Baron'],[1000,'Midas']].forEach(([n,a])=>A('gd'+n,a,'Click '+n+' golden potatoes','🌟',()=>S.goldens>=n));
-A('wx1','Weather Watcher','Live through your first weather event','🌦️',()=>S.weathers>=1);
-A('wx25','Storm Chaser','Live through 25 weather events','⛈️',()=>S.weathers>=25);
-A('band1',"Sheriff's Helper",'Catch a bandit','🏇',()=>S.bandits>=1);
-A('band10','Bounty Hunter','Catch 10 bandits','💰',()=>S.bandits>=10);
-A('train5','Train Robber','Grab the cargo from 5 trains','🚂',()=>S.trains>=5);
-[[1,'Critical!'],[100,'Sharpshooter'],[1000,'Precision Master'],[1e4,'Critical Legend'],[1e5,'Bullseye Only']].forEach(([n,a])=>A('cr'+n,a,n+' critical clicks','💥',()=>S.crits>=n));
-[[1,'Not a Robot ✅'],[10,'Real Human'],[50,"Sheriff's Friend"],[100,'Honored Citizen'],[500,'Regular']].forEach(([n,a])=>A('vb'+n,a,'Pass '+n+' sheriff checks','🤠',()=>S.vibes>=n));
-[[1,'First Boost'],[10,'Boost Fan'],[50,'Boost Expert'],[200,'Boost Master']].forEach(([n,a])=>A('bu'+n,a,'Use '+n+' boosts','⚡',()=>S.boostsUsed>=n));
-[[2,'A Bit of Style'],[5,'Fashionable'],[10,'Style Icon'],[20,'Full Wardrobe']].forEach(([n,a])=>A('sk'+n,a,'Own '+n+' skins, accessories or backgrounds','🎨',()=>D.skinN>=n));
-[[1,'Reborn'],[3,'Again and Again'],[10,'Eternal Soul'],[25,'Rebirth Master']].forEach(([n,a])=>A('rb'+n,a,'Rebirth '+n+' times','👻',()=>S.rebirths>=n));
-[[25,'Combo Starter'],[50,'Combo Warrior'],[100,'Combo God']].forEach(([n,a])=>A('cb'+n,a,'Reach a '+n+' combo','🔥',()=>S.maxCombo>=n));
-[[1,"An Hour's Work"],[5,'Long Day'],[24,'A Whole Day'],[72,'Three Days'],[168,'A Whole Week'],[720,'A Month'],[1440,'Two Months'],[4320,'Half a Year'],[8760,'A Whole Year']].forEach(([n,a])=>A('pt'+n,a,'Play for '+n+' hours','⏰',()=>S.playTime>=n*3600));
-[[1,'First Mission'],[10,'Helpful'],[50,'Deputy'],[100,'Mission Master'],[250,'Secret Agent'],[500,'Mission Machine'],[1000,'Mission Legend']].forEach(([n,a])=>A('mi'+n,a,'Complete '+n+' missions','📜',()=>S.missionsDone>=n));
-[[3,'3-Day Streak'],[7,'1-Week Streak'],[14,'2-Week Streak'],[30,'1-Month Streak'],[100,'100-Day Streak']].forEach(([n,a])=>A('st'+n,a,'Log in '+n+' days in a row','📅',()=>S.streak>=n));
-[[1,'First Spin'],[10,'Wheel Fan'],[50,'Lucky Rider'],[100,'Lord of the Wheel']].forEach(([n,a])=>A('sp'+n,a,'Spin the lucky wheel '+n+' times','🎡',()=>S.spins>=n));
-[[10,'Rain Catcher'],[100,'Rain Master'],[1000,'Cloudburst']].forEach(([n,a])=>A('dr'+n,a,'Catch '+n+' falling potatoes','🌧️',()=>S.drops>=n));
-[[10,'Upgraded'],[50,'Well Upgraded'],[150,'Super Upgraded'],[300,'Fully Upgraded']].forEach(([n,a])=>A('up'+n,a,'Buy '+n+' upgrades','⬆️',()=>Object.keys(S.upgrades).length>=n));
-A('lucky','Lucky Number 🍀','Have exactly 777 potatoes','🍀',()=>Math.floor(S.potatoes)===777);
-A('broke','Empty Wallet','Spend so much you have less than 1 potato','🥲',()=>S.clicks>10&&S.potatoes<1);
+[5,10,25,50,75,100,150,200].forEach(n=>A('lv'+n,'Level '+n,()=>L('Reach level ','Nå level ')+n+' — '+title(n),'⭐',()=>S.level>=n));
+for(let l=250;l<=5000;l+=50)A('lv'+l,'Level '+l,()=>L('Reach level ','Nå level ')+l,'🌟',()=>S.level>=l);
+[[1,'Gold Find','Guldfund'],[10,'Gold Hunter','Guldjæger'],[50,'Gold Digger','Guldgraver'],[200,'Gold Baron','Guldbaron'],[1000,'Midas','Midas']].forEach(([n,a,ad])=>A('gd'+n,[a,ad],()=>L('Click '+n+' golden potatoes','Klik på '+n1(n,'gylden kartoffel','gyldne kartofler')),'🌟',()=>S.goldens>=n));
+A('wx1',['Weather Watcher','Vejrvagt'],['Live through your first weather event','Oplev dit første vejrskift'],'🌦️',()=>S.weathers>=1);
+A('wx25',['Storm Chaser','Stormjæger'],['Live through 25 weather events','Oplev 25 vejrskift'],'⛈️',()=>S.weathers>=25);
+A('band1',["Sheriff's Helper",'Sheriffens hjælper'],['Catch a bandit','Fang en bandit'],'🏇',()=>S.bandits>=1);
+A('band10',['Bounty Hunter','Dusørjæger'],['Catch 10 bandits','Fang 10 banditter'],'💰',()=>S.bandits>=10);
+A('train5',['Train Robber','Togrøver'],['Grab the cargo from 5 trains','Snup lasten fra 5 tog'],'🚂',()=>S.trains>=5);
+[[1,'Critical!','Kritisk!'],[100,'Sharpshooter','Skarpskytte'],[1000,'Precision Master','Præcisionsmester'],[1e4,'Critical Legend','Kritisk legende'],[1e5,'Bullseye Only','Kun plettere']].forEach(([n,a,ad])=>A('cr'+n,[a,ad],()=>n+L(' critical clicks',' kritiske klik'),'💥',()=>S.crits>=n));
+[[1,'Not a Robot ✅','Ikke en robot ✅'],[10,'Real Human','Ægte menneske'],[50,"Sheriff's Friend",'Sheriffens ven'],[100,'Honored Citizen','Æresborger'],[500,'Regular','Stamgæst']].forEach(([n,a,ad])=>A('vb'+n,[a,ad],()=>L('Pass '+n+' sheriff checks','Bestå '+n1(n,'sheriftjek','sheriftjek')),'🤠',()=>S.vibes>=n));
+[[1,'First Boost','Første boost'],[10,'Boost Fan','Boost-fan'],[50,'Boost Expert','Boost-ekspert'],[200,'Boost Master','Boost-mester']].forEach(([n,a,ad])=>A('bu'+n,[a,ad],()=>L('Use '+n+' boosts','Brug '+n1(n,'boost','boosts')),'⚡',()=>S.boostsUsed>=n));
+[[2,'A Bit of Style','Lidt stil'],[5,'Fashionable','Moderigtig'],[10,'Style Icon','Stilikon'],[20,'Full Wardrobe','Fyldt garderobe']].forEach(([n,a,ad])=>A('sk'+n,[a,ad],()=>L('Own '+n+' skins, accessories or backgrounds','Hav '+n+' skins, tilbehør eller baggrunde'),'🎨',()=>D.skinN>=n));
+[[1,'Reborn','Genfødt'],[3,'Again and Again','Igen og igen'],[10,'Eternal Soul','Evig sjæl'],[25,'Rebirth Master','Rebirth-mester']].forEach(([n,a,ad])=>A('rb'+n,[a,ad],()=>L('Rebirth '+n+' times','Lav Rebirth '+n1(n,'gang','gange')),'👻',()=>S.rebirths>=n));
+[[25,'Combo Starter','Kombo-starter'],[50,'Combo Warrior','Kombo-kriger'],[100,'Combo God','Kombo-gud']].forEach(([n,a,ad])=>A('cb'+n,[a,ad],()=>L('Reach a '+n+' combo','Nå en kombo på '+n),'🔥',()=>S.maxCombo>=n));
+[[1,"An Hour's Work",'En times arbejde'],[5,'Long Day','Lang dag'],[24,'A Whole Day','En hel dag'],[72,'Three Days','Tre dage'],[168,'A Whole Week','En hel uge'],[720,'A Month','En måned'],[1440,'Two Months','To måneder'],[4320,'Half a Year','Et halvt år'],[8760,'A Whole Year','Et helt år']].forEach(([n,a,ad])=>A('pt'+n,[a,ad],()=>L('Play for '+n+' hours','Spil i '+n1(n,'time','timer')),'⏰',()=>S.playTime>=n*3600));
+[[1,'First Mission','Første mission'],[10,'Helpful','Hjælpsom'],[50,'Deputy','Vicesherif'],[100,'Mission Master','Missionsmester'],[250,'Secret Agent','Hemmelig agent'],[500,'Mission Machine','Missionsmaskine'],[1000,'Mission Legend','Missionslegende']].forEach(([n,a,ad])=>A('mi'+n,[a,ad],()=>L('Complete '+n+' missions','Klar '+n1(n,'mission','missioner')),'📜',()=>S.missionsDone>=n));
+[[3,'3-Day Streak','3 dage i træk'],[7,'1-Week Streak','1 uge i træk'],[14,'2-Week Streak','2 uger i træk'],[30,'1-Month Streak','1 måned i træk'],[100,'100-Day Streak','100 dage i træk']].forEach(([n,a,ad])=>A('st'+n,[a,ad],()=>L('Log in '+n+' days in a row','Kom ind '+n+' dage i træk'),'📅',()=>S.streak>=n));
+[[1,'First Spin','Første spin'],[10,'Wheel Fan','Hjul-fan'],[50,'Lucky Rider','Heldig rytter'],[100,'Lord of the Wheel','Hjulets herre']].forEach(([n,a,ad])=>A('sp'+n,[a,ad],()=>L('Spin the lucky wheel '+n+' times','Drej lykkehjulet '+n1(n,'gang','gange')),'🎡',()=>S.spins>=n));
+[[10,'Rain Catcher','Regnfanger'],[100,'Rain Master','Regnmester'],[1000,'Cloudburst','Skybrud']].forEach(([n,a,ad])=>A('dr'+n,[a,ad],()=>L('Catch '+n+' falling potatoes','Fang '+n+' faldende kartofler'),'🌧️',()=>S.drops>=n));
+[[10,'Upgraded','Opgraderet'],[50,'Well Upgraded','Godt opgraderet'],[150,'Super Upgraded','Superopgraderet'],[300,'Fully Upgraded','Fuldt opgraderet']].forEach(([n,a,ad])=>A('up'+n,[a,ad],()=>L('Buy '+n+' upgrades','Køb '+n+' opgraderinger'),'⬆️',()=>Object.keys(S.upgrades).length>=n));
+A('lucky',['Lucky Number 🍀','Lykketal 🍀'],['Have exactly 777 potatoes','Hav præcis 777 kartofler'],'🍀',()=>Math.floor(S.potatoes)===777);
+A('broke',['Empty Wallet','Tom pung'],['Spend so much you have less than 1 potato','Brug så meget, at du har under 1 kartoffel'],'🥲',()=>S.clicks>10&&S.potatoes<1);
 
 const TICK=[
-  'NEWS: Local potato wins beauty contest 🥔👑',
-  'Scientists confirm: potatoes are the best vegetable in the world',
-  'French fries declare war on chips. Hash browns stay neutral.',
-  "Today's weather: 100% chance of potatoes 🌧️🥔",
-  'Mom: "We have potatoes at home." The potatoes at home: 🥔',
-  'Potato refuses to become mash: "I am more than a side dish!"',
-  'New study: 9 out of 10 potatoes love being clicked',
-  'Expert: "It\'s just a potato." The expert has been fired.',
-  "Potato spotted driving a tractor without a license 🚜",
-  'Rumor: there is a potato shaped exactly like Texas',
-  'The sheriff warns: watch out for potato thieves near the saloon 🤠',
-  'The steam train is late — it is carrying too many potatoes 🚂',
-  'Gold miners disappointed: only found potatoes. Happy anyway.',
-  'The Potato King says: "Click more."',
-  'Moon landing! First potato on the moon 🌕',
-  'Tumbleweed spotted on Main Street. It was looking for potatoes. 🌾',
-  'Potato prices are rising! No wait, falling. Potatoes are confusing.',
-  'Cowboy trades his horse for a really nice potato 🐎',
+  ['NEWS: Local potato wins beauty contest 🥔👑','NYHEDER: Lokal kartoffel vinder skønhedskonkurrence 🥔👑'],
+  ['Scientists confirm: potatoes are the best vegetable in the world','Forskere bekræfter: kartofler er verdens bedste grøntsag'],
+  ['French fries declare war on chips. Hash browns stay neutral.','Pomfritterne erklærer krig mod chipsene. Kartoffelmosen holder sig neutral.'],
+  ["Today's weather: 100% chance of potatoes 🌧️🥔",'Dagens vejr: 100% chance for kartofler 🌧️🥔'],
+  ['Mom: "We have potatoes at home." The potatoes at home: 🥔','Mor: "Vi har kartofler derhjemme." Kartoflerne derhjemme: 🥔'],
+  ['Potato refuses to become mash: "I am more than a side dish!"','Kartoffel nægter at blive til mos: "Jeg er mere end tilbehør!"'],
+  ['New study: 9 out of 10 potatoes love being clicked','Ny undersøgelse: 9 ud af 10 kartofler elsker at blive klikket på'],
+  ['Expert: "It\'s just a potato." The expert has been fired.','Ekspert: "Det er bare en kartoffel." Eksperten er blevet fyret.'],
+  ['Potato spotted driving a tractor without a license 🚜','Kartoffel set køre traktor uden kørekort 🚜'],
+  ['Rumor: there is a potato shaped exactly like Texas','Rygte: der findes en kartoffel, der ligner Texas helt præcist'],
+  ['The sheriff warns: watch out for potato thieves near the saloon 🤠','Sheriffen advarer: pas på kartoffeltyve ved saloonen 🤠'],
+  ['The steam train is late — it is carrying too many potatoes 🚂','Damptoget er forsinket — det har for mange kartofler med 🚂'],
+  ['Gold miners disappointed: only found potatoes. Happy anyway.','Guldgravere skuffede: fandt kun kartofler. Glade alligevel.'],
+  ['The Potato King says: "Click more."','Kartoffelkongen siger: "Klik mere."'],
+  ['Moon landing! First potato on the moon 🌕','Månelanding! Første kartoffel på månen 🌕'],
+  ['Tumbleweed spotted on Main Street. It was looking for potatoes. 🌾','Busk set trille ned ad hovedgaden. Den ledte efter kartofler. 🌾'],
+  ['Potato prices are rising! No wait, falling. Potatoes are confusing.','Kartoffelpriserne stiger! Nej vent, de falder. Kartofler er forvirrende.'],
+  ['Cowboy trades his horse for a really nice potato 🐎','Cowboy bytter sin hest for en rigtig flot kartoffel 🐎'],
 ];
-const CRITW=['CRITICAL!','BOOM!','WOW!','MEGA!','SUPER!','PERFECT!','HUGE!','YEEHAW!','BULLSEYE!'];
-const HYPE=['What a harvest! 🌾','Your potato is proud 🥹','New record! 🏆','The sheriff tips his hat 🤠','Yeehaw! 🐎','The Potato King is impressed 👑'];
+const CRITW=[['CRITICAL!','KRITISK!'],'BOOM!','WOW!','MEGA!','SUPER!',['PERFECT!','PERFEKT!'],['HUGE!','KÆMPE!'],'YEEHAW!',['BULLSEYE!','PLET!']];
+const HYPE=[['What a harvest! 🌾','Sikke en høst! 🌾'],['Your potato is proud 🥹','Din kartoffel er stolt 🥹'],['New record! 🏆','Ny rekord! 🏆'],['The sheriff tips his hat 🤠','Sheriffen letter på hatten 🤠'],'Yeehaw! 🐎',['The Potato King is impressed 👑','Kartoffelkongen er imponeret 👑']];
 
 /* =============== BONUS LEVEL =============== */
 // a rare second bar: it fills slowly while you play (about once an hour for an active player) and at 100% starts BONUS CHAOS for 1 minute
@@ -973,8 +996,8 @@ function startChaos(){
   S.bonus=0;S.chaosN=(S.chaosN||0)+1;S.active.chaos=60*(D.bd||1);chaosGold=1;chaosRain=0;
   snd('lvl');snd('boost');confetti(200);
   const m=$('#left');m.classList.remove('shake');void m.offsetWidth;m.classList.add('shake');
-  bigBanner('🌀 BONUS CHAOS!','x10 production · x10 clicks · golden potatoes everywhere · 1 minute!');
-  toast('🌀 BONUS CHAOS!','x10 production and clicks for 1 minute – click like crazy!');
+  bigBanner(L('🌀 BONUS CHAOS!','🌀 BONUSKAOS!'),L('x10 production · x10 clicks · golden potatoes everywhere · 1 minute!','x10 produktion · x10 klik · gyldne kartofler overalt · 1 minut!'));
+  toast(L('🌀 BONUS CHAOS!','🌀 BONUSKAOS!'),L('x10 production and clicks for 1 minute – click like crazy!','x10 produktion og klik i 1 minut – klik som en vild!'));
 }
 function chaosTick(dt){
   $('#left').classList.toggle('chaos',!!S.active.chaos);document.body.classList.toggle('chaos',!!S.active.chaos);
@@ -986,18 +1009,19 @@ function updBonus(){
   const box=$('#bonusBox'),on=!!S.active.chaos;
   box.classList.toggle('full',on);
   $('#bonusBar').style.width=(on?100:S.bonus||0)+'%';
-  $('#bonusTxt').textContent=on?'CHAOS! '+Math.ceil(S.active.chaos)+'s':(S.bonus||0).toFixed(1)+'%';
+  $('#bonusTxt').textContent=on?L('CHAOS! ','KAOS! ')+Math.ceil(S.active.chaos)+'s':(S.bonus||0).toFixed(1)+'%';
 }
 
 /* =============== WORLDS & EXTRACT =============== */
 const WORLDS=[
-  {e:'🤠',n:'Wild West',deco:['🌵','🌵','🌾'],bg:['#f0b46a','#c9733a','#7a3f1d']},
-  {e:'❄️',n:'Frozen Peaks',deco:['⛄','🌲','❄️'],bg:['#dff4ff','#8cc8ee','#3d7fb8']},
-  {e:'🏴‍☠️',n:'Pirate Cove',deco:['🌴','🦀','🐚'],bg:['#9fe6f2','#3aa6c8','#0f5a7a']},
-  {e:'🍭',n:'Candy Land',deco:['🍭','🧁','🍬'],bg:['#ffe6f4','#ffb3d9','#c86fd6']},
-  {e:'🚀',n:'Space Colony',deco:['🪐','🛸','☄️'],bg:['#272c66','#11143a','#05061a']},
-];
-const MEDALS=[{e:'🥉',n:'Bronze'},{e:'🥈',n:'Silver'},{e:'🥇',n:'Gold'},{e:'💎',n:'Diamond'}];
+  {e:'🤠',n:['Wild West','Det Vilde Vesten'],deco:['🌵','🌵','🌾'],bg:['#f0b46a','#c9733a','#7a3f1d']},
+  {e:'❄️',n:['Frozen Peaks','Frosne Tinder'],deco:['⛄','🌲','❄️'],bg:['#dff4ff','#8cc8ee','#3d7fb8']},
+  {e:'🏴‍☠️',n:['Pirate Cove','Piratbugten'],deco:['🌴','🦀','🐚'],bg:['#9fe6f2','#3aa6c8','#0f5a7a']},
+  {e:'🍭',n:['Candy Land','Slikland'],deco:['🍭','🧁','🍬'],bg:['#ffe6f4','#ffb3d9','#c86fd6']},
+  {e:'🚀',n:['Space Colony','Rumkolonien'],deco:['🪐','🛸','☄️'],bg:['#272c66','#11143a','#05061a']},
+].map(w=>BI(w,'n'));
+const MEDALS=[{e:'🥉',n:['Bronze','Bronze']},{e:'🥈',n:['Silver','Sølv']},{e:'🥇',n:['Gold','Guld']},{e:'💎',n:['Diamond','Diamant']}].map(m=>BI(m,'n'));
+const medalN=m=>L(m.n+' medal',m.n+'medalje');
 const EXTRACT_LVL=100;
 const extractCost=()=>1e15*Math.pow(1000,S.medals||0);
 const isMax=()=>(S.medals||0)>=MEDALS.length;
@@ -1010,24 +1034,24 @@ function applyWorld(){
   $('#worldTag').innerHTML=w.e+' '+w.n+(S.medals?' '+MEDALS.slice(0,S.medals).map(m=>m.e).join(''):'')+'';
 }
 function updExtract(){
-  $('#medalRow').innerHTML=MEDALS.map((m,i)=>`<div class="medal ${i<(S.medals||0)?'got':''}" title="${m.n} medal">${m.e}</div>`).join('');
+  $('#medalRow').innerHTML=MEDALS.map((m,i)=>`<div class="medal ${i<(S.medals||0)?'got':''}" title="${medalN(m)}">${m.e}</div>`).join('');
   const done=(S.medals||0)>=MEDALS.length,b=$('#extractBtn');
-  if(done){$('#exInfo').innerHTML='🏆 <b>MAX!</b> You have all 4 medals and reached the last world. You cannot Extract any more – but you can Rebirth to any world below. Legend!';b.disabled=true;b.textContent='🏆 MAX';return}
+  if(done){$('#exInfo').innerHTML=L('🏆 <b>MAX!</b> You have all 4 medals and reached the last world. You cannot Extract any more – but you can Rebirth to any world below. Legend!','🏆 <b>MAX!</b> Du har alle 4 medaljer og er nået til den sidste verden. Du kan ikke lave Extract mere – men du kan lave Rebirth til en hvilken som helst verden herunder. Legende!');b.disabled=true;b.textContent='🏆 MAX';return}
   b.textContent='🧭 EXTRACT';
   const nw=WORLDS[(S.world||0)+1],nm=MEDALS[S.medals||0],lvOk=S.level>=EXTRACT_LVL,cOk=S.potatoes>=extractCost();
-  $('#exInfo').innerHTML=`Next: ${nm.e} <b>${nm.n} medal</b> and ${nw.e} <b>${nw.n}</b><br><span class="${lvOk?'ok':'no'}">${lvOk?'✅':'❌'} Level ${EXTRACT_LVL} (you are ${S.level})</span><br><span class="${cOk?'ok':'no'}">${cOk?'✅':'❌'} 🥔 ${fmt(extractCost())} (you have ${fmt(S.potatoes)})</span>`;
+  $('#exInfo').innerHTML=`${L('Next','Næste')}: ${nm.e} <b>${medalN(nm)}</b> ${L('and','og')} ${nw.e} <b>${nw.n}</b><br><span class="${lvOk?'ok':'no'}">${lvOk?'✅':'❌'} Level ${EXTRACT_LVL} (${L('you are','du er')} ${S.level})</span><br><span class="${cOk?'ok':'no'}">${cOk?'✅':'❌'} 🥔 ${fmt(extractCost())} (${L('you have','du har')} ${fmt(S.potatoes)})</span>`;
   b.disabled=!canExtract();
 }
 function doExtract(){
   if(!canExtract()||vibe)return;
   const nm=MEDALS[S.medals||0],nw=WORLDS[(S.world||0)+1];
-  if(!confirm(`🧭 EXTRACT\n\nYou pay ${fmt(extractCost())} potatoes and EVERYTHING starts over from zero: potatoes, level, machines, upgrades, souls, perks, style, trophies, bag and missions.\n\nYou get: ${nm.e} ${nm.n} medal (x2 production and clicks forever) and travel to ${nw.e} ${nw.n}.\n\nExtract now?`))return;
+  if(!confirm(L(`🧭 EXTRACT\n\nYou pay ${fmt(extractCost())} potatoes and EVERYTHING starts over from zero: potatoes, level, machines, upgrades, souls, perks, style, trophies, bag and missions.\n\nYou get: ${nm.e} ${medalN(nm)} (x2 production and clicks forever) and travel to ${nw.e} ${nw.n}.\n\nExtract now?`,`🧭 EXTRACT\n\nDu betaler ${fmt(extractCost())} kartofler, og ALT starter forfra fra nul: kartofler, level, maskiner, opgraderinger, souls, fordele, stil, trofæer, taske og missioner.\n\nDu får: ${nm.e} ${medalN(nm)} (x2 produktion og klik for altid) og rejser til ${nw.e} ${nw.n}.\n\nVil du lave Extract nu?`)))return;
   const keep={world:(S.world||0)+1,medals:(S.medals||0)+1,sound:S.sound,autoBuy:S.autoBuy,scratchGift:S.scratchGift};
-  worldWarp({head:'🧭 EXTRACTING…',w:nw,medal:nm,sub:`${nm.e} ${nm.n} medal · x${fmt(Math.pow(2,keep.medals))} production forever`},()=>{
+  worldWarp({head:L('🧭 EXTRACTING…','🧭 EXTRACT I GANG…'),w:nw,medal:nm,sub:`${nm.e} ${medalN(nm)} · x${fmt(Math.pow(2,keep.medals))} ${L('production forever','produktion for altid')}`},()=>{
     S=Object.assign(defState(),keep);
     try{save()}catch(e){}
     fullRefresh();checkRestock();buildShop();fillMissions();
-  },()=>toast('🧭 Extracted!','Welcome to '+nw.e+' '+nw.n+' – a brand new start'));
+  },()=>toast(L('🧭 Extracted!','🧭 Extract klaret!'),L('Welcome to ','Velkommen til ')+nw.e+' '+nw.n+L(' – a brand new start',' – en helt ny start')));
 }
 /* the big world transition: the game spins away into a warp tunnel, the new world is revealed, then the game zooms back in */
 let warping=false;
@@ -1044,7 +1068,7 @@ function worldWarp(o,apply,done){
   setTimeout(()=>{ov.remove();app.classList.remove('warpIn');warping=false;if(done)done()},4400);
 }
 $('#extractBtn').addEventListener('click',doExtract);
-function openExtract(first){$('.exbox').classList.toggle('first',!!first);updStats();const w=WORLDS[S.world]||WORLDS[0];$('#exWorld').innerHTML=`You are in <b>${w.e} ${w.n}</b> · world ${(S.world||0)+1} of ${WORLDS.length}`;updExtract();$('#exm').classList.remove('hidden')}
+function openExtract(first){$('.exbox').classList.toggle('first',!!first);updStats();const w=WORLDS[S.world]||WORLDS[0];$('#exWorld').innerHTML=L(`You are in <b>${w.e} ${w.n}</b> · world ${(S.world||0)+1} of ${WORLDS.length}`,`Du er i <b>${w.e} ${w.n}</b> · verden ${(S.world||0)+1} af ${WORLDS.length}`);updExtract();$('#exm').classList.remove('hidden')}
 $('#worldTag').addEventListener('click',()=>{snd('tick');openExtract()});
 $('#exTabBtn').addEventListener('click',()=>{snd('tick');openExtract()});
 $('#exClose').addEventListener('click',()=>$('#exm').classList.add('hidden'));
@@ -1053,13 +1077,14 @@ let exReadyNote=false;
 function updExtractTag(){
   if(warping)return;
   if(S.level>=EXTRACT_LVL&&!S.exPopup&&(S.medals||0)<MEDALS.length&&!vibe&&$('#daily').classList.contains('hidden')&&$('#clog').classList.contains('hidden')){S.exPopup=1;save();snd('lvl');confetti(120);openExtract(true)}
-const r=canExtract();$('#worldTag').classList.toggle('ready',r);$('#exTabBtn').classList.toggle('ready',r);$('#exTabSub').textContent=isMax()?'· 🏆 MAX':r?'· READY!':S.level<EXTRACT_LVL?`· level ${S.level}/${EXTRACT_LVL}`:'· need more 🥔';if(r&&!exReadyNote){exReadyNote=true;toast('🧭 You can Extract!','Tap the 🧭 EXTRACT & ✨ REBIRTH button under the menu');snd('ready')}if(!r)exReadyNote=false;if(!$('#exm').classList.contains('hidden'))updExtract()}
+const r=canExtract();$('#worldTag').classList.toggle('ready',r);$('#exTabBtn').classList.toggle('ready',r);$('#exTabSub').textContent=isMax()?'· 🏆 MAX':r?L('· READY!','· KLAR!'):S.level<EXTRACT_LVL?`· level ${S.level}/${EXTRACT_LVL}`:L('· need more 🥔','· mangler 🥔');if(r&&!exReadyNote){exReadyNote=true;toast(L('🧭 You can Extract!','🧭 Du kan lave Extract!'),L('Tap the 🧭 EXTRACT & ✨ REBIRTH button under the menu','Tryk på knappen 🧭 EXTRACT & ✨ REBIRTH under menuen'));snd('ready')}if(!r)exReadyNote=false;if(!$('#exm').classList.contains('hidden'))updExtract()}
 
 /* =============== SCRATCH CARDS =============== */
 // a small, fair prize: about 1 in 3 cards wins, never more than the card is roughly worth
-const SCR_SYM={'🥔':{w:30,n:'5 min of production',f:()=>{const v=Math.max(500,D.base*300);gain(v);return '+'+fmt(v)+' 🥔'}},
-  '🔥':{w:20,n:'Production Party',bag:'frenzy'},'👆':{w:20,n:'Click Power',bag:'clickrizz'},'☕':{w:15,n:'Cowboy Coffee',bag:'coffee'},
-  '🎟️':{w:10,n:'Slot Tokens',bag:'tokens'},'🌟':{w:5,n:'Gold Rain',bag:'goldrain'}};
+const SCR_SYM={'🥔':{w:30,n:['5 min of production','5 min. produktion'],f:()=>{const v=Math.max(500,D.base*300);gain(v);return '+'+fmt(v)+' 🥔'}},
+  '🔥':{w:20,n:['Production Party','Produktionsfest'],bag:'frenzy'},'👆':{w:20,n:['Click Power','Klikkraft'],bag:'clickrizz'},'☕':{w:15,n:['Cowboy Coffee','Cowboykaffe'],bag:'coffee'},
+  '🎟️':{w:10,n:['Slot Tokens','Spillemønter'],bag:'tokens'},'🌟':{w:5,n:['Gold Rain','Guldregn'],bag:'goldrain'}};
+for(const k in SCR_SYM)BI(SCR_SYM[k],'n');
 const SCR_WIN=.33;
 let scrCard=null;
 function openScratch(){
@@ -1070,7 +1095,7 @@ function openScratch(){
   while(cells.length<9){const k=pick(syms);if(k===win||(cnt[k]||0)>=2)continue;cnt[k]=(cnt[k]||0)+1;cells.push(k)}
   scrCard={cells:shuffle(cells),open:Array(9).fill(false),win,done:false};
   $('#scrGrid').innerHTML=scrCard.cells.map((k,i)=>`<div class="scell" data-i="${i}"><span>${k}</span></div>`).join('');
-  $('#scrMsg').textContent='Hold down and drag the 🪙 coin to scratch';$('#scrClose').disabled=true;$('#scrAll').disabled=false;
+  $('#scrMsg').textContent=L('Hold down and drag the 🪙 coin to scratch','Hold nede og træk 🪙-mønten for at skrabe');$('#scrClose').disabled=true;$('#scrAll').disabled=false;
   $('#scr').classList.remove('hidden');
   requestAnimationFrame(scrCoat);
 }
@@ -1088,7 +1113,7 @@ function scrCoat(){
   for(let k=1;k<3;k++){g.beginPath();g.moveTo(r.width*k/3,6);g.lineTo(r.width*k/3,r.height-6);g.stroke();g.beginPath();g.moveTo(6,r.height*k/3);g.lineTo(r.width-6,r.height*k/3);g.stroke()}
   g.fillStyle='rgba(80,86,100,.45)';g.font='900 30px Nunito,sans-serif';g.textAlign='center';g.textBaseline='middle';
   for(let i=0;i<9;i++)g.fillText('?',r.width*((i%3)+.5)/3,r.height*(Math.floor(i/3)+.5)/3);
-  g.font='900 13px Nunito,sans-serif';g.fillStyle='rgba(60,66,80,.7)';g.fillText('SCRATCH HERE',r.width/2,r.height/2+24);
+  g.font='900 13px Nunito,sans-serif';g.fillStyle='rgba(60,66,80,.7)';g.fillText(L('SCRATCH HERE','SKRAB HER'),r.width/2,r.height/2+24);
 }
 function scrPos(e){const c=$('#scrCan'),r=c.getBoundingClientRect();return{x:(e.clientX-r.left)*c.offsetWidth/r.width,y:(e.clientY-r.top)*c.offsetHeight/r.height}}
 function scrScratch(p){
@@ -1118,87 +1143,95 @@ function scrFinish(){
   if(scrCard.done)return;scrCard.done=true;$('#scrAll').disabled=true;$('#scrClose').disabled=false;
   const c=$('#scrCan');c.style.opacity='0';
   const w=scrCard.win;
-  if(!w){$('#scrMsg').innerHTML='😅 No 3 of the same this time. Better luck next card!';snd('no');return}
+  if(!w){$('#scrMsg').innerHTML=L('😅 No 3 of the same this time. Better luck next card!','😅 Ingen 3 ens denne gang. Bedre held med næste lod!');snd('no');return}
   $$('#scrGrid .scell').forEach((c,i)=>{if(scrCard.cells[i]===w)c.classList.add('win')});
   const p=SCR_SYM[w];let txt;
-  if(p.bag){S.bag[p.bag]=(S.bag[p.bag]||0)+1;renderBag();txt='+1 '+w+' '+p.n+' in your bag'}else txt=p.f();
-  $('#scrMsg').innerHTML=`🎉 <b>3 × ${w}!</b> You win ${p.n}: ${txt}`;snd('ach');confetti(70);toast('🎫 Scratch card win!',txt);
+  if(p.bag){S.bag[p.bag]=(S.bag[p.bag]||0)+1;renderBag();txt='+1 '+w+' '+p.n+L(' in your bag',' i din taske')}else txt=p.f();
+  $('#scrMsg').innerHTML=`🎉 <b>3 × ${w}!</b> ${L('You win','Du vinder')} ${p.n}: ${txt}`;snd('ach');confetti(70);toast(L('🎫 Scratch card win!','🎫 Gevinst på skrabelod!'),txt);
 }
 $('#scrAll').addEventListener('click',()=>{if(scrCard)scrFinish()});
 $('#scrClose').addEventListener('click',()=>$('#scr').classList.add('hidden'));
 
 /* =============== CHANGELOG =============== */
 // newest first – add a new entry at the top every time the game is updated
+// t and every item are [English, Danish] pairs, shown in the current language
 const CHANGELOG=[
-  {v:'1.9.3',date:'26 Oct 2026',t:'Fix',items:[
-    '🐛 Scratch Cards: the coating is now scratched exactly where the 🪙 coin is.']},
-  {v:'1.9.2',date:'26 Oct 2026',t:'Real scratching',items:[
-    '🪙 Scratch Cards are now scratched for real: hold the mouse or your finger down and drag the coin over the big silver field to scratch it away, slowly and calmly.']},
-  {v:'1.9.1',date:'26 Oct 2026',t:'Free Scratch Cards',items:[
-    '🎁 Everyone gets 2 free 🎫 Scratch Cards (one time) to try them – find them in 🎒 Bag.']},
-  {v:'1.9',date:'24 Oct 2026',t:'Scratch cards, auto spin & Extract at level 100',items:[
-    '🎫 New Scratch Cards – sometimes for sale in the 🛒 Shop. Scratch 9 fields and find 3 of the same to win: potatoes, a boost, Slot Tokens or Gold Rain. About 1 in 3 cards wins.',
-    '🔁 Potato Slots has an Auto spin button. Turn it on and the machine spins by itself until it cools down – turn it off to spin by hand.',
-    '🧭 Extract now unlocks at level 100 instead of 200, and costs less (first Extract 1 Qa).',
-    '⬆️ Upgrades cost 2% more for every level you have, so they get more expensive the higher your level.']},
-  {v:'1.8.2',date:'24 Oct 2026',t:'Slower levels',items:[
-    '⚖️ Levels go up slower: each level needs a bit more XP, and missions give 6% of a level instead of 12% (Mission Master now only boosts the potato reward).',
-    '⚖️ After a Rebirth you get fresh missions, and "Earn potatoes" missions grow with how much you have earned this run – so they are no longer finished in seconds.']},
-  {v:'1.8.1',date:'24 Oct 2026',t:'Soul Shop moved',items:[
-    '🪙 The Soul Shop has moved from 📊 Stats to the bottom of 🛒 Shop.']},
-  {v:'1.8',date:'24 Oct 2026',t:'Rebirth balance',items:[
-    '⚖️ Souls now grow much slower: 1 soul at 10 B, 36 at 1 Qa, 81 at 1 Qi and about 1,100 at the very top. Rebirth can no longer give billions of percent.',
-    '⚖️ A Rebirth must be worth it: you need at least +10% more souls than you already have.',
-    '🪙 Soul Coins: you now get 1 for every 10 souls (at least 1 per Rebirth) instead of 1 per soul.',
-    '📚 Buying lots of machines at once gives at most 10% of a level in XP, so you no longer fly up in level.',
-    '🔧 Players who already have souls keep them until their next Rebirth. That Rebirth resets old souls and Soul Coins and gives you souls from the new formula. Perks you already bought stay.']},
-  {v:'1.7.1',date:'24 Oct 2026',t:'Fix',items:[
-    '🐛 Opening and closing Extract & Rebirth no longer hides the menu you were on.']},
-  {v:'1.7',date:'24 Oct 2026',t:'Easier to find Extract',items:[
-    '📖 The Extract & Rebirth window now explains the difference: Extract takes you to the next world and gives a medal, Rebirth starts over in the same world and gives souls.',
-    '🧭 Extract and Rebirth now have their own big button under Missions, Style, Trophies and Stats. It shows your progress to level 200 and glows when you can Extract.']},
-  {v:'1.6',date:'24 Oct 2026',t:'Warp to new worlds',items:[
-    '🌀 Extract and Rebirth now have a big warp animation: the game spins away into a neon tunnel, your new world and medal are revealed, and then you zoom into the new world.']},
-  {v:'1.5',date:'24 Oct 2026',t:'Extract & new worlds',items:[
-    '🧭 New Extract: reach level 200 and pay a big pile of potatoes to Extract. Tap the big 🧭 EXTRACT & ✨ REBIRTH button under the menu to see Extract, Rebirth and your medals.',
-    '🎉 When you reach level 200 a popup tells you that you can Extract.',
-    '✨ Rebirth has moved from 📊 Stats to the Extract window. The 🪙 Soul Shop stays in Stats.',
-    '✨ Rebirth now also resets your level to 1.',
-    '🏆 When you have Extracted through all worlds and won all 4 medals you are MAX. You get no more medals, but you can Rebirth to any world you like and start over there.',
-    '🏅 Every Extract gives you a medal – 🥉 Bronze, 🥈 Silver, 🥇 Gold and 💎 Diamond. Each medal gives x2 production and clicks forever.',
-    '🔄 After an Extract everything starts over from zero – but in a brand new world with its own look.',
-    '🌍 4 new worlds: ❄️ Frozen Peaks, 🏴‍☠️ Pirate Cove, 🍭 Candy Land and 🚀 Space Colony.',
-    '🏷️ The name of the world you play in and your medals are always shown above your potato count. It glows when you can Extract.']},
-  {v:'1.4',date:'24 Oct 2026',t:'Shop restocks',items:[
-    '🛒 The shop now restocks every 20 minutes with 5 random items, each with its own stock and price – sometimes on sale, sometimes expensive. When an item is sold out, wait for the next restock. The shop shows when the next restock is.',
-    '🛒 New shop items: ☕ Cowboy Coffee (x3 production for 3 min), 🌀 Chaos Charge (+15% Bonus Level) and 🎟️ Slot Tokens (10 extra Potato Slots spins).']},
-  {v:'1.3',date:'24 Oct 2026',t:'Bonus Level, Potato Slots & shop update',items:[
-    '🌀 New Bonus Level bar! It fills slowly while you click, catch golden potatoes, pass sheriff checks and finish missions.',
-    '🌀 At 100% BONUS CHAOS starts for 1 minute: x10 production, x10 clicks and golden potatoes everywhere. It is rare – about once an hour if you play actively.',
-    '🌀 During BONUS CHAOS the whole game changes into a neon space disco – stars, a glowing grid, neon menus and a rainbow potato.',
-    '🎰 New Potato Slots in 📜 Missions, next to the Lucky Wheel. Free to play – small wins often, big wins rarely, and a 💎💎💎 JACKPOT.',
-    '🎰 50 spins, then the slot machine cools down for 60 minutes.',
-    '🛒 Every boost you buy makes the next one of that kind more expensive. Prices drop back one step every 10 minutes – also while you are away.',
-    '🛒 The shop shows how much more expensive a boost has become and when it gets cheaper.',
-    '🛒 You can keep up to 10 of each boost from the shop in your bag. Free boosts do not count.',
-    '🛒 All boosts have new, higher prices. Time Skip can no longer be used to earn endless potatoes.',
-    '🎁 Mystery Box now gives 1-3 boosts instead of 2-4. Gold Rain and Time Skip are rare, and a box never gives another box.',
-    '🎧 The Headset now sits properly on the potato – band over the head, ear cups on the sides and a little microphone.',
-    '📏 The Level, Next goal and Bonus Level bars are slimmer, so the potato gets more room.',
-    '🔔 Notifications have a new see-through look and never cover golden potatoes or other things you can catch.',
-    '📜 New Update changelog button so you can always see what is new.']},
-  {v:'1.2',date:'21 Oct 2026',t:'Discord & phones',items:[
-    'Join the Potato Team Games Discord with the new button at the top.',
-    'Trains, bandits, golden potatoes and potato rain stay in the potato area and never cover the menus.',
-    'The potato fits above the menu on phones.']},
-  {v:'1.1',date:'19 Oct 2026',t:'Event chips',items:[
-    'Active events are shown as chips above the potato, so the helping hands never cover them.']},
+  {v:'1.10',date:'26 Oct 2026',t:['Danish language','Dansk sprog'],items:[
+    ['🇩🇰 Potato Clicker can now be played in Danish – switch language with the flag button at the top.','🇩🇰 Potato Clicker kan nu spilles på dansk – skift sprog med flag-knappen øverst.'],
+    ['🪙 The Soul Shop and the Rebirth window now explain where souls come from: they build up from all the potatoes you have ever earned, and you collect them with ✨ Rebirth.','🪙 Soul Shop og Rebirth-vinduet forklarer nu, hvor souls kommer fra: de samles op af alle de kartofler, du nogensinde har tjent, og du får dem, når du laver ✨ Rebirth.']]},
+  {v:'1.9.3',date:'26 Oct 2026',t:['Fix','Rettelse'],items:[
+    ['🐛 Scratch Cards: the coating is now scratched exactly where the 🪙 coin is.','🐛 Skrabelodder: belægningen skrabes nu af præcis der, hvor 🪙-mønten er.']]},
+  {v:'1.9.2',date:'26 Oct 2026',t:['Real scratching','Rigtig skrabning'],items:[
+    ['🪙 Scratch Cards are now scratched for real: hold the mouse or your finger down and drag the coin over the big silver field to scratch it away, slowly and calmly.','🪙 Skrabelodder skrabes nu for alvor: hold musen eller fingeren nede og træk mønten hen over det store sølvfelt for at skrabe det væk, stille og roligt.']]},
+  {v:'1.9.1',date:'26 Oct 2026',t:['Free Scratch Cards','Gratis skrabelodder'],items:[
+    ['🎁 Everyone gets 2 free 🎫 Scratch Cards (one time) to try them – find them in 🎒 Bag.','🎁 Alle får 2 gratis 🎫 skrabelodder (én gang), så de kan prøve dem – find dem i 🎒 Taske.']]},
+  {v:'1.9',date:'24 Oct 2026',t:['Scratch cards, auto spin & Extract at level 100','Skrabelodder, auto-spin & Extract ved level 100'],items:[
+    ['🎫 New Scratch Cards – sometimes for sale in the 🛒 Shop. Scratch 9 fields and find 3 of the same to win: potatoes, a boost, Slot Tokens or Gold Rain. About 1 in 3 cards wins.','🎫 Nye skrabelodder – nogle gange til salg i 🛒 Butik. Skrab 9 felter og find 3 ens for at vinde: kartofler, et boost, spillemønter eller guldregn. Cirka hvert 3. lod vinder.'],
+    ['🔁 Potato Slots has an Auto spin button. Turn it on and the machine spins by itself until it cools down – turn it off to spin by hand.','🔁 Kartoffelautomaten har en auto-spin-knap. Slå den til, og maskinen drejer selv, indtil den skal køle af – slå den fra for at dreje selv.'],
+    ['🧭 Extract now unlocks at level 100 instead of 200, and costs less (first Extract 1 Qa).','🧭 Extract låses nu op ved level 100 i stedet for 200 og koster mindre (første Extract 1 Qa).'],
+    ['⬆️ Upgrades cost 2% more for every level you have, so they get more expensive the higher your level.','⬆️ Opgraderinger koster 2% mere for hvert level, du har, så de bliver dyrere, jo højere level du er.']]},
+  {v:'1.8.2',date:'24 Oct 2026',t:['Slower levels','Langsommere levels'],items:[
+    ['⚖️ Levels go up slower: each level needs a bit more XP, and missions give 6% of a level instead of 12% (Mission Master now only boosts the potato reward).','⚖️ Levels stiger langsommere: hvert level kræver lidt mere XP, og missioner giver 6% af et level i stedet for 12% (Missionsmester giver nu kun flere kartofler).'],
+    ['⚖️ After a Rebirth you get fresh missions, and "Earn potatoes" missions grow with how much you have earned this run – so they are no longer finished in seconds.','⚖️ Efter en Rebirth får du nye missioner, og "Tjen kartofler"-missioner vokser med, hvor meget du har tjent i denne runde – så de ikke længere klares på få sekunder.']]},
+  {v:'1.8.1',date:'24 Oct 2026',t:['Soul Shop moved','Soul Shop er flyttet'],items:[
+    ['🪙 The Soul Shop has moved from 📊 Stats to the bottom of 🛒 Shop.','🪙 Soul Shop er flyttet fra 📊 Statistik til bunden af 🛒 Butik.']]},
+  {v:'1.8',date:'24 Oct 2026',t:['Rebirth balance','Rebirth-balance'],items:[
+    ['⚖️ Souls now grow much slower: 1 soul at 10 B, 36 at 1 Qa, 81 at 1 Qi and about 1,100 at the very top. Rebirth can no longer give billions of percent.','⚖️ Souls vokser nu meget langsommere: 1 soul ved 10 B, 36 ved 1 Qa, 81 ved 1 Qi og omkring 1.100 helt i toppen. Rebirth kan ikke længere give milliarder af procent.'],
+    ['⚖️ A Rebirth must be worth it: you need at least +10% more souls than you already have.','⚖️ En Rebirth skal kunne betale sig: du skal have mindst +10% flere souls, end du allerede har.'],
+    ['🪙 Soul Coins: you now get 1 for every 10 souls (at least 1 per Rebirth) instead of 1 per soul.','🪙 Soul Coins: du får nu 1 for hver 10 souls (mindst 1 pr. Rebirth) i stedet for 1 pr. soul.'],
+    ['📚 Buying lots of machines at once gives at most 10% of a level in XP, so you no longer fly up in level.','📚 Køber du mange maskiner på én gang, giver det højst 10% af et level i XP, så du ikke længere flyver op i level.'],
+    ['🔧 Players who already have souls keep them until their next Rebirth. That Rebirth resets old souls and Soul Coins and gives you souls from the new formula. Perks you already bought stay.','🔧 Spillere, der allerede har souls, beholder dem indtil deres næste Rebirth. Den Rebirth nulstiller gamle souls og Soul Coins og giver dig souls efter den nye formel. Fordele, du allerede har købt, bliver.']]},
+  {v:'1.7.1',date:'24 Oct 2026',t:['Fix','Rettelse'],items:[
+    ['🐛 Opening and closing Extract & Rebirth no longer hides the menu you were on.','🐛 Når du åbner og lukker Extract & Rebirth, skjules den menu, du var i, ikke længere.']]},
+  {v:'1.7',date:'24 Oct 2026',t:['Easier to find Extract','Lettere at finde Extract'],items:[
+    ['📖 The Extract & Rebirth window now explains the difference: Extract takes you to the next world and gives a medal, Rebirth starts over in the same world and gives souls.','📖 Extract & Rebirth-vinduet forklarer nu forskellen: Extract tager dig til næste verden og giver en medalje, Rebirth starter forfra i samme verden og giver souls.'],
+    ['🧭 Extract and Rebirth now have their own big button under Missions, Style, Trophies and Stats. It shows your progress to level 200 and glows when you can Extract.','🧭 Extract og Rebirth har nu deres egen store knap under Missioner, Stil, Trofæer og Statistik. Den viser, hvor langt du er mod level 200, og lyser, når du kan lave Extract.']]},
+  {v:'1.6',date:'24 Oct 2026',t:['Warp to new worlds','Warp til nye verdener'],items:[
+    ['🌀 Extract and Rebirth now have a big warp animation: the game spins away into a neon tunnel, your new world and medal are revealed, and then you zoom into the new world.','🌀 Extract og Rebirth har nu en stor warp-animation: spillet snurrer væk i en neontunnel, din nye verden og medalje bliver afsløret, og så zoomer du ind i den nye verden.']]},
+  {v:'1.5',date:'24 Oct 2026',t:['Extract & new worlds','Extract & nye verdener'],items:[
+    ['🧭 New Extract: reach level 200 and pay a big pile of potatoes to Extract. Tap the big 🧭 EXTRACT & ✨ REBIRTH button under the menu to see Extract, Rebirth and your medals.','🧭 Nyt: Extract! Nå level 200 og betal en stor bunke kartofler for at lave Extract. Tryk på den store 🧭 EXTRACT & ✨ REBIRTH-knap under menuen for at se Extract, Rebirth og dine medaljer.'],
+    ['🎉 When you reach level 200 a popup tells you that you can Extract.','🎉 Når du når level 200, fortæller en popup dig, at du kan lave Extract.'],
+    ['✨ Rebirth has moved from 📊 Stats to the Extract window. The 🪙 Soul Shop stays in Stats.','✨ Rebirth er flyttet fra 📊 Statistik til Extract-vinduet. 🪙 Soul Shop bliver i Statistik.'],
+    ['✨ Rebirth now also resets your level to 1.','✨ Rebirth sætter nu også dit level tilbage til 1.'],
+    ['🏆 When you have Extracted through all worlds and won all 4 medals you are MAX. You get no more medals, but you can Rebirth to any world you like and start over there.','🏆 Når du har lavet Extract gennem alle verdener og vundet alle 4 medaljer, er du MAX. Du får ikke flere medaljer, men du kan lave Rebirth til lige den verden, du vil, og starte forfra der.'],
+    ['🏅 Every Extract gives you a medal – 🥉 Bronze, 🥈 Silver, 🥇 Gold and 💎 Diamond. Each medal gives x2 production and clicks forever.','🏅 Hver Extract giver dig en medalje – 🥉 bronze, 🥈 sølv, 🥇 guld og 💎 diamant. Hver medalje giver x2 produktion og klik for altid.'],
+    ['🔄 After an Extract everything starts over from zero – but in a brand new world with its own look.','🔄 Efter en Extract starter alt forfra fra nul – men i en helt ny verden med sit eget udseende.'],
+    ['🌍 4 new worlds: ❄️ Frozen Peaks, 🏴‍☠️ Pirate Cove, 🍭 Candy Land and 🚀 Space Colony.','🌍 4 nye verdener: ❄️ Frosne Tinder, 🏴‍☠️ Piratbugten, 🍭 Slikland og 🚀 Rumkolonien.'],
+    ['🏷️ The name of the world you play in and your medals are always shown above your potato count. It glows when you can Extract.','🏷️ Navnet på den verden, du spiller i, og dine medaljer står altid over dit antal kartofler. Det lyser, når du kan lave Extract.']]},
+  {v:'1.4',date:'24 Oct 2026',t:['Shop restocks','Nye varer i butikken'],items:[
+    ['🛒 The shop now restocks every 20 minutes with 5 random items, each with its own stock and price – sometimes on sale, sometimes expensive. When an item is sold out, wait for the next restock. The shop shows when the next restock is.','🛒 Butikken får nu nye varer hvert 20. minut: 5 tilfældige ting, hver med sit eget lager og sin egen pris – nogle gange på tilbud, nogle gange dyre. Når en vare er udsolgt, må du vente på de næste nye varer. Butikken viser, hvornår de kommer.'],
+    ['🛒 New shop items: ☕ Cowboy Coffee (x3 production for 3 min), 🌀 Chaos Charge (+15% Bonus Level) and 🎟️ Slot Tokens (10 extra Potato Slots spins).','🛒 Nye varer i butikken: ☕ Cowboykaffe (x3 produktion i 3 min.), 🌀 Kaosladning (+15% Bonus-level) og 🎟️ Spillemønter (10 ekstra spins på Kartoffelautomaten).']]},
+  {v:'1.3',date:'24 Oct 2026',t:['Bonus Level, Potato Slots & shop update','Bonus-level, Kartoffelautomat & ny butik'],items:[
+    ['🌀 New Bonus Level bar! It fills slowly while you click, catch golden potatoes, pass sheriff checks and finish missions.','🌀 Ny Bonus-level-bar! Den fyldes langsomt, mens du klikker, fanger gyldne kartofler, består sheriftjek og klarer missioner.'],
+    ['🌀 At 100% BONUS CHAOS starts for 1 minute: x10 production, x10 clicks and golden potatoes everywhere. It is rare – about once an hour if you play actively.','🌀 Ved 100% starter BONUSKAOS i 1 minut: x10 produktion, x10 klik og gyldne kartofler overalt. Det er sjældent – cirka én gang i timen, hvis du spiller aktivt.'],
+    ['🌀 During BONUS CHAOS the whole game changes into a neon space disco – stars, a glowing grid, neon menus and a rainbow potato.','🌀 Under BONUSKAOS bliver hele spillet til et neon-rumdiskotek – stjerner, et lysende gitter, neonmenuer og en regnbuekartoffel.'],
+    ['🎰 New Potato Slots in 📜 Missions, next to the Lucky Wheel. Free to play – small wins often, big wins rarely, and a 💎💎💎 JACKPOT.','🎰 Ny Kartoffelautomat i 📜 Missioner ved siden af Lykkehjulet. Gratis at spille – små gevinster tit, store gevinster sjældent og en 💎💎💎 JACKPOT.'],
+    ['🎰 50 spins, then the slot machine cools down for 60 minutes.','🎰 50 spins, så køler automaten af i 60 minutter.'],
+    ['🛒 Every boost you buy makes the next one of that kind more expensive. Prices drop back one step every 10 minutes – also while you are away.','🛒 Hvert boost, du køber, gør det næste af samme slags dyrere. Priserne falder et trin igen hvert 10. minut – også mens du er væk.'],
+    ['🛒 The shop shows how much more expensive a boost has become and when it gets cheaper.','🛒 Butikken viser, hvor meget dyrere et boost er blevet, og hvornår det bliver billigere.'],
+    ['🛒 You can keep up to 10 of each boost from the shop in your bag. Free boosts do not count.','🛒 Du kan have op til 10 af hvert boost fra butikken i din taske. Gratis boosts tæller ikke med.'],
+    ['🛒 All boosts have new, higher prices. Time Skip can no longer be used to earn endless potatoes.','🛒 Alle boosts har nye, højere priser. Tidsspring kan ikke længere bruges til at tjene uendeligt mange kartofler.'],
+    ['🎁 Mystery Box now gives 1-3 boosts instead of 2-4. Gold Rain and Time Skip are rare, and a box never gives another box.','🎁 Mysterieboksen giver nu 1-3 boosts i stedet for 2-4. Guldregn og Tidsspring er sjældne, og en boks giver aldrig en ny boks.'],
+    ['🎧 The Headset now sits properly on the potato – band over the head, ear cups on the sides and a little microphone.','🎧 Headsettet sidder nu ordentligt på kartoflen – bøjle over hovedet, ørepuder på siderne og en lille mikrofon.'],
+    ['📏 The Level, Next goal and Bonus Level bars are slimmer, so the potato gets more room.','📏 Level-, Næste mål- og Bonus-level-barerne er smallere, så kartoflen får mere plads.'],
+    ['🔔 Notifications have a new see-through look and never cover golden potatoes or other things you can catch.','🔔 Beskeder er nu gennemsigtige og dækker aldrig gyldne kartofler eller andre ting, du kan fange.'],
+    ['📜 New Update changelog button so you can always see what is new.','📜 Ny Nyheder-knap, så du altid kan se, hvad der er nyt.']]},
+  {v:'1.2',date:'21 Oct 2026',t:['Discord & phones','Discord & mobiler'],items:[
+    ['Join the Potato Team Games Discord with the new button at the top.','Kom med på Potato Team Games’ Discord med den nye knap øverst.'],
+    ['Trains, bandits, golden potatoes and potato rain stay in the potato area and never cover the menus.','Tog, banditter, gyldne kartofler og kartoffelregn bliver ved kartoflen og dækker aldrig menuerne.'],
+    ['The potato fits above the menu on phones.','Kartoflen passer over menuen på mobiler.']]},
+  {v:'1.1',date:'19 Oct 2026',t:['Event chips','Begivenheds-mærker'],items:[
+    ['Active events are shown as chips above the potato, so the helping hands never cover them.','Aktive begivenheder vises som små mærker over kartoflen, så hjælpehænderne aldrig dækker dem.']]},
 ];
 const CL_KEY='potato_clicker_changelog_seen';
 function clSeen(){try{return localStorage.getItem(CL_KEY)}catch(e){return null}}
 function updClDot(){$('#clBtn').classList.toggle('new',clSeen()!==CHANGELOG[0].v)}
+const clDate=d=>LANG==='da'?d.replace('Oct','okt.'):d;
+function renderChangelog(){
+  $('#clList').innerHTML=CHANGELOG.map((c,i)=>`<div class="clv"><h4>v${c.v} – ${tx(c.t)}<small>${clDate(c.date)}</small>${i===0?`<span class="cln">${L('NEW','NY')}</span>`:''}</h4><ul>${c.items.map(x=>`<li>${tx(x)}</li>`).join('')}</ul></div>`).join('');
+}
 function openChangelog(){
-  $('#clList').innerHTML=CHANGELOG.map((c,i)=>`<div class="clv"><h4>v${c.v} – ${c.t}<small>${c.date}</small>${i===0?'<span class="cln">NEW</span>':''}</h4><ul>${c.items.map(x=>`<li>${x}</li>`).join('')}</ul></div>`).join('');
+  renderChangelog();
   $('#clog').classList.remove('hidden');
   try{localStorage.setItem(CL_KEY,CHANGELOG[0].v)}catch(e){}
   updClDot();
@@ -1230,18 +1263,19 @@ function importObj(o){
   // v4: the old soul formula ran away
   if(S.v<4){if((S.souls||0)>0||(S.tokens||0)>0)S.soulReset=1;S.v=4} // old souls stay until the next Rebirth, which resets them to the new curve
 }
-function save(loud){try{localStorage.setItem(KEY,JSON.stringify(S));if(loud)toast('💾 Saved!','Your progress is safe')}catch(e){if(loud)toast('😬 Could not save','Your browser is blocking storage')}}
+function save(loud){try{localStorage.setItem(KEY,JSON.stringify(S));if(loud)toast(L('💾 Saved!','💾 Gemt!'),L('Your progress is safe','Dit spil er i sikkerhed'))}catch(e){if(loud)toast(L('😬 Could not save','😬 Kunne ikke gemme'),L('Your browser is blocking storage','Din browser blokerer for at gemme'))}}
 
 /* endless machines */
-const EXN=['Super','Mega','Ultra','Giga','Turbo','Cosmic','Golden','Diamond','Quantum','Legendary'],BASE_N=MACHINES.length;
+const EXN=['Super','Mega','Ultra','Giga','Turbo','Cosmic','Golden','Diamond','Quantum','Legendary'],EXN_DA=['Super','Mega','Ultra','Giga','Turbo','Kosmos','Guld','Diamant','Kvante','Legende'],BASE_N=MACHINES.length;
 function addMachine(){
   const i=MACHINES.length,b=MACHINES[(i-BASE_N)%BASE_N],gen=Math.floor((i-BASE_N)/BASE_N),prev=MACHINES[i-1],px=EXN[gen%EXN.length];
-  const m={n:px+' '+b.n+(gen>=EXN.length?' '+(Math.floor(gen/EXN.length)+1):''),e:b.e,c:prev.c*12,p:prev.p*7.5,d:b.d+' — just way bigger 🚀'};
+  const sfx=gen>=EXN.length?' '+(Math.floor(gen/EXN.length)+1):'',pxDa=EXN_DA[gen%EXN.length];
+  const m=BI({n:()=>L(px+' '+b.n,pxDa+'-'+b.n.toLowerCase())+sfx,e:b.e,c:prev.c*12,p:prev.p*7.5,d:()=>b.d+L(' — just way bigger 🚀',' — bare meget større 🚀')},'n','d');
   MACHINES.push(m);machUpg(m,i);machAch(m,i);
   while(S.machines.length<MACHINES.length)S.machines.push(0);
   if(mEls.length){addMachEl(i);renderAch()}
 }
-function ensureMachines(){let added=false;while(S.machines[MACHINES.length-1]>0){addMachine();added=true}if(added)toast('🚀 NEW MACHINE UNLOCKED','The game never ends — check your ranch')}
+function ensureMachines(){let added=false;while(S.machines[MACHINES.length-1]>0){addMachine();added=true}if(added)toast(L('🚀 NEW MACHINE UNLOCKED','🚀 NY MASKINE LÅST OP'),L('The game never ends — check your ranch','Spillet slutter aldrig — tjek din ranch'))}
 const PK=id=>S.perks[id]||0;
 const totalMach=()=>S.machines.reduce((a,b)=>a+b,0);
 
@@ -1393,7 +1427,7 @@ function doClick(x,y,auto){
     return;
   }
   if(crit){
-    floatTxt(x,y-20,pick(CRITW)+' +'+fmt(v,1),'#ffd27a',34);
+    floatTxt(x,y-20,tx(pick(CRITW))+' +'+fmt(v,1),'#ffd27a',34);
     burst(x,y,26,null,1.4);emojis(x,y,4);ring(x,y,'#ffd27a',180);snd('crit');
     const m=$('#left');m.classList.remove('shake');void m.offsetWidth;m.classList.add('shake');
   }else{
@@ -1450,11 +1484,11 @@ function clickGolden(x,y){
   let r=Math.random(),t,s;
   // no stacking parties: if it's already running you get lucky potatoes instead
   if((r>=.45&&r<.75&&S.active.gfrenzy)||(r>=.75&&r<.88&&S.active.gclick))r=0;
-  if(r<.45){const v=Math.max(13,Math.min(S.potatoes*.15,D.base*900)+13);gain(v);t='🍀 LUCKY!';s='+'+fmt(v)+' potatoes'}
-  else if(r<.75){addActive('gfrenzy',77);t='🌟 GOLD PARTY!';s='x7 production for 77 sec'}
-  else if(r<.88){addActive('gclick',13);t='⚡ CLICK FRENZY!';s='x77 potatoes per click for 13 sec — click away!'}
+  if(r<.45){const v=Math.max(13,Math.min(S.potatoes*.15,D.base*900)+13);gain(v);t=L('🍀 LUCKY!','🍀 HELD!');s='+'+fmt(v)+L(' potatoes',' kartofler')}
+  else if(r<.75){addActive('gfrenzy',77);t=L('🌟 GOLD PARTY!','🌟 GULDFEST!');s=L('x7 production for 77 sec','x7 produktion i 77 sek.')}
+  else if(r<.88){addActive('gclick',13);t=L('⚡ CLICK FRENZY!','⚡ KLIKVANVID!');s=L('x77 potatoes per click for 13 sec — click away!','x77 kartofler pr. klik i 13 sek. — klik løs!')}
   else if(r<.96){const a=need(S.level)*.3;addXP(a/xpMult());t='📚 XP BONUS!';s='+'+fmt(a)+' XP'}
-  else{const b=pick(BOOSTS);S.bag[b.id]=(S.bag[b.id]||0)+1;renderBag();t='🎁 FREE BOOST!';s=b.e+' '+b.n+' added to your bag'}
+  else{const b=pick(BOOSTS);S.bag[b.id]=(S.bag[b.id]||0)+1;renderBag();t=L('🎁 FREE BOOST!','🎁 GRATIS BOOST!');s=b.e+' '+b.n+L(' added to your bag',' er lagt i din taske')}
   floatTxt(x,y-30,t,'#ffd27a',34);toast(t,s);addXP(25);
 }
 
@@ -1463,33 +1497,34 @@ let vibe=null,titleFlash=null;
 function startVibe(bot){
   if(vibe)return;
   vibe={bot};S.vibePending=true;
-  $('#vsub').textContent=bot?'You are clicking a bit too perfectly 🤖 — prove you are human':'The sheriff stops by about every 10 minutes. Are you still here? The game is paused ⏸️';
+  startVibeText();
   $('#vibe').classList.remove('hidden');$('#vmsg').textContent='';
   buildChallenge();snd('alert');
-  let f=0;clearInterval(titleFlash);titleFlash=setInterval(()=>{document.title=(f++%2)?'🤠 SHERIFF CHECK!':'Are you there? 🥔'},800);
+  let f=0;clearInterval(titleFlash);titleFlash=setInterval(()=>{document.title=(f++%2)?L('🤠 SHERIFF CHECK!','🤠 SHERIFTJEK!'):L('Are you there? 🥔','Er du der? 🥔')},800);
   save();
 }
+function startVibeText(){const bot=vibe&&vibe.bot;$('#vsub').textContent=bot?L('You are clicking a bit too perfectly 🤖 — prove you are human','Du klikker lidt for perfekt 🤖 — bevis, at du er et menneske'):L('The sheriff stops by about every 10 minutes. Are you still here? The game is paused ⏸️','Sheriffen kigger forbi cirka hvert 10. minut. Er du her stadig? Spillet er sat på pause ⏸️');}
 function vbtn(label,pos){const b=document.createElement('button');b.className='vb';b.textContent=label;b.style.left=pos[0]+'%';b.style.top=pos[1]+'%';$('#varea').appendChild(b);return b}
 function spots(n){const out=[];for(let i=0;i<n;i++){let p,tries=0;do{p=[rand(14,86),rand(18,82)];tries++}while(tries<80&&out.some(q=>Math.hypot(q[0]-p[0],(q[1]-p[1])*.6)<20));out.push(p)}return out}
 function buildChallenge(){
   const area=$('#varea'),q=$('#vq');area.innerHTML='';
   const type=pick(['order','find','math','hold']);
   if(type==='order'){
-    q.textContent='Tap the numbers in order: 1 → 2 → 3 → 4';let next=1;const ps=spots(4);
+    q.textContent=L('Tap the numbers in order: 1 → 2 → 3 → 4','Tryk på tallene i rækkefølge: 1 → 2 → 3 → 4');let next=1;const ps=spots(4);
     shuffle([1,2,3,4]).forEach((n,i)=>{const b=vbtn(n,ps[i]);b.addEventListener('pointerdown',e=>{if(!e.isTrusted||b.disabled)return;if(n===next){b.classList.add('ok');b.disabled=true;next++;snd('pop',n*15);if(next>4)passVibe()}else failVibe()})});
   }else if(type==='find'){
-    q.textContent='Find the real potato 🥔';
+    q.textContent=L('Find the real potato 🥔','Find den rigtige kartoffel 🥔');
     const opts=shuffle(['🥔',...shuffle(['🍠','🥖','🍞','🧅','🥚','🍋','🥥','🧄','🌰','🍪']).slice(0,6)]),ps=spots(opts.length);
     opts.forEach((o,i)=>{const b=vbtn(o,ps[i]);b.addEventListener('pointerdown',e=>{if(!e.isTrusted)return;o==='🥔'?passVibe():failVibe()})});
   }else if(type==='math'){
     const a=2+Math.floor(Math.random()*12),c=2+Math.floor(Math.random()*12),ans=a+c;
-    q.textContent=`Quick math: ${a} + ${c} = ?`;
+    q.textContent=L('Quick math: ','Hurtig hovedregning: ')+`${a} + ${c} = ?`;
     const set=new Set([ans]);while(set.size<4){const w=ans+Math.floor(rand(-6,7));if(w>0)set.add(w)}
     const opts=shuffle([...set]),ps=spots(4);
     opts.forEach((o,i)=>{const b=vbtn(o,ps[i]);b.addEventListener('pointerdown',e=>{if(!e.isTrusted)return;o===ans?passVibe():failVibe()})});
   }else{
-    q.textContent='Hold the button down for 2 seconds';
-    const b=vbtn('',spots(1)[0]);b.classList.add('hold');b.innerHTML='<i></i><span>HOLD ME 🥔</span>';
+    q.textContent=L('Hold the button down for 2 seconds','Hold knappen nede i 2 sekunder');
+    const b=vbtn('',spots(1)[0]);b.classList.add('hold');b.innerHTML='<i></i><span>'+L('HOLD ME 🥔','HOLD MIG 🥔')+'</span>';
     let st=0,raf=0;const bar=b.querySelector('i');
     const stop=()=>{st=0;cancelAnimationFrame(raf);bar.style.width='0'};
     const loop=()=>{if(!st)return;const k=(performance.now()-st)/2000;bar.style.width=Math.min(100,k*100)+'%';if(k>=1){st=0;passVibe()}else raf=requestAnimationFrame(loop)};
@@ -1497,12 +1532,12 @@ function buildChallenge(){
     ['pointerup','pointerleave','pointercancel'].forEach(ev=>b.addEventListener(ev,stop));
   }
 }
-function failVibe(){snd('no');$('#vmsg').textContent=pick(['Wrong — try again','Oops! One more try','Almost! Try again']);const bx=$('#vbox');bx.classList.remove('shake');void bx.offsetWidth;bx.classList.add('shake');setTimeout(buildChallenge,350)}
+function failVibe(){snd('no');$('#vmsg').textContent=pick(L(['Wrong — try again','Oops! One more try','Almost! Try again'],['Forkert — prøv igen','Ups! Et forsøg til','Næsten! Prøv igen']));const bx=$('#vbox');bx.classList.remove('shake');void bx.offsetWidth;bx.classList.add('shake');setTimeout(buildChallenge,350)}
 function passVibe(){
   vibe=null;S.vibePending=false;S.vibes++;addBonus(BONUS.vibe);S.nextVibe=S.playTime+vibeGap();
   $('#vibe').classList.add('hidden');clearInterval(titleFlash);
   const v=Math.max(100,D.base*120);gain(v);addXP(100);
-  snd('ach');confetti(80);toast('✅ Approved by the sheriff','Thanks for being here! Bonus: +'+fmt(v)+' potatoes and +100 XP');
+  snd('ach');confetti(80);toast(L('✅ Approved by the sheriff','✅ Godkendt af sheriffen'),L('Thanks for being here! Bonus: +'+fmt(v)+' potatoes and +100 XP','Tak fordi du er her! Bonus: +'+fmt(v)+' kartofler og +100 XP'));
   last=performance.now();save();
 }
 
@@ -1511,7 +1546,7 @@ function levelUp(){
   recalc();
   const v=Math.max(50*S.level,D.base*30);gain(v);
   snd('lvl');confetti(120);
-  bigBanner(`LEVEL ${S.level}!`,`${title(S.level)} · +1% production · +${fmt(v)} 🥔`);
+  bigBanner(`LEVEL ${S.level}!`,`${title(S.level)} · +1% ${L('production','produktion')} · +${fmt(v)} 🥔`);
 }
 function bigBanner(a,b){
   const el=document.createElement('div');el.id='lvlUp';
@@ -1548,7 +1583,7 @@ function restock(){
 }
 function checkRestock(){
   const now=Date.now();
-  if(!S.shopStock||!S.shopNext||now>=S.shopNext){const was=!!S.shopStock;restock();S.shopNext=now+RESTOCK_MS;buildShop();if(was){toast('🛒 New stock in the shop!','Fresh items and new prices');snd('ready')}}
+  if(!S.shopStock||!S.shopNext||now>=S.shopNext){const was=!!S.shopStock;restock();S.shopNext=now+RESTOCK_MS;buildShop();if(was){toast(L('🛒 New stock in the shop!','🛒 Nye varer i butikken!'),L('Fresh items and new prices','Friske varer og nye priser'));snd('ready')}}
 }
 const heatMult=b=>Math.pow(1+b.g,S.shopHeat[b.id]||0);
 const boostCost=b=>Math.max(b.min,D.base*b.k)*heatMult(b)*stockMult(b)*(1-.1*PK('boost'))*(S.active.sale?.5:1);
@@ -1560,22 +1595,22 @@ function coolShop(){
 }
 function buyBoost(b,el){
   if(vibe)return;const c=boostCost(b);if(S.potatoes<c){snd('no');return}
-  const st=S.shopStock&&S.shopStock[b.id];if(!st||st.q<=0){snd('no');toast('🚫 Sold out',b.e+' '+b.n+' is sold out – new stock soon');return}
-  if((S.bag[b.id]||0)>=SHOP_CAP){snd('no');toast('🎒 Bag full','You can keep '+SHOP_CAP+' '+b.e+' '+b.n+' at a time — use some first');return}
+  const st=S.shopStock&&S.shopStock[b.id];if(!st||st.q<=0){snd('no');toast(L('🚫 Sold out','🚫 Udsolgt'),b.e+' '+b.n+L(' is sold out – new stock soon',' er udsolgt – nye varer snart'));return}
+  if((S.bag[b.id]||0)>=SHOP_CAP){snd('no');toast(L('🎒 Bag full','🎒 Tasken er fuld'),L('You can keep '+SHOP_CAP+' '+b.e+' '+b.n+' at a time — use some first','Du kan have '+SHOP_CAP+' '+b.e+' '+b.n+' ad gangen — brug nogle først'));return}
   coolShop();if(!S.shopHeat[b.id]&&!Object.keys(S.shopHeat).length)S.shopT=Date.now();
-  S.potatoes-=c;st.q--;S.shopHeat[b.id]=(S.shopHeat[b.id]||0)+1;S.bag[b.id]=(S.bag[b.id]||0)+1;snd('buy');fxAt(el);const r=el.getBoundingClientRect();floatTxt(r.left+r.width/2,r.top+10,'+1 '+b.e+' in bag','#ffd27a',20);renderBag();
+  S.potatoes-=c;st.q--;S.shopHeat[b.id]=(S.shopHeat[b.id]||0)+1;S.bag[b.id]=(S.bag[b.id]||0)+1;snd('buy');fxAt(el);const r=el.getBoundingClientRect();floatTxt(r.left+r.width/2,r.top+10,'+1 '+b.e+L(' in bag',' i tasken'),'#ffd27a',20);renderBag();
 }
 function useBoost(id){
   if(vibe||!S.bag[id])return;const b=BOOSTS.find(x=>x.id===id);
-  if(id==='charge'&&S.active.chaos){snd('no');toast('🌀 Chaos is already running','Save your Chaos Charge for later');return}
-  if(BDUR[id]&&(S.active[id]||0)>activeCap(id)-BDUR[id]*(D.bd||1)){snd('no');toast('⏳ Already running',b.e+' '+b.n+' is at max time — wait a bit before using another');return}
+  if(id==='charge'&&S.active.chaos){snd('no');toast(L('🌀 Chaos is already running','🌀 Kaos kører allerede'),L('Save your Chaos Charge for later','Gem din Kaosladning til senere'));return}
+  if(BDUR[id]&&(S.active[id]||0)>activeCap(id)-BDUR[id]*(D.bd||1)){snd('no');toast(L('⏳ Already running','⏳ Kører allerede'),b.e+' '+b.n+L(' is at max time — wait a bit before using another',' har maks. tid — vent lidt, før du bruger en til'));return}
   S.bag[id]--;if(!S.bag[id])delete S.bag[id];S.boostsUsed++;b.use();snd('boost');
   const r=pot.getBoundingClientRect();emojis(r.left+r.width/2,r.top+r.height/2,10,b.e);ring(r.left+r.width/2,r.top+r.height/2,'#ffd27a',260);
-  toast(b.e+' '+b.n+' activated!',b.d);renderBag();
+  toast(b.e+' '+b.n+L(' activated!',' er sat i gang!'),b.d);renderBag();
 }
 function skinAction(s,el){
   if(vibe)return;
-  if(!S.skins[s.id]){if(S.potatoes<s.c){snd('no');return}S.potatoes-=s.c;S.skins[s.id]=1;recalc();snd('buy');fxAt(el,30);toast('🎨 New style: '+s.n,'+2% production forever')}
+  if(!S.skins[s.id]){if(S.potatoes<s.c){snd('no');return}S.potatoes-=s.c;S.skins[s.id]=1;recalc();snd('buy');fxAt(el,30);toast(L('🎨 New style: ','🎨 Ny stil: ')+s.n,L('+2% production forever','+2% produktion for altid'))}
   if(s.t==='pot')S.skin=s.id;else if(s.t==='acc')S.acc=s.id;else S.bg=s.id;
   applyLook();lookKey='';
 }
@@ -1608,12 +1643,12 @@ function updMachines(){
     const r=mEls[i];if(!r)return;const show=i<=hi+2,known=i<=hi+1||S.runEarned>=m.c*.5;
     r.el.style.display=show?'':'none';if(!show)return;
     r.el.classList.toggle('locked',!known);
-    if(!known){r.lv.textContent='';r.n.textContent='???';r.d.textContent='Earn more potatoes to unlock';r.c.textContent='🥔 '+fmt(m.c);r.o.textContent='';r.i.textContent='❓';return}
+    if(!known){r.lv.textContent='';r.n.textContent='???';r.d.textContent=L('Earn more potatoes to unlock','Tjen flere kartofler for at låse op');r.c.textContent='🥔 '+fmt(m.c);r.o.textContent='';r.i.textContent='❓';return}
     r.i.textContent=m.e;
     const a=amtFor(i),c=machCost(i,a),each=m.p*D.mm[i]*D.glob;
     r.n.textContent=m.n+(a>1?` (x${a})`:'');
-    const lv=D.mm[i]>1?'⬆️ x'+fmt(D.mm[i])+' upgraded':'';if(r.lv.textContent!==lv)r.lv.textContent=lv;
-    r.d.textContent=`${m.d} · +${fmt(each,1)}/s each${S.machines[i]?` · ${fmt(each*S.machines[i],1)}/s total`:''}`;
+    const lv=D.mm[i]>1?'⬆️ x'+fmt(D.mm[i])+L(' upgraded',' opgraderet'):'';if(r.lv.textContent!==lv)r.lv.textContent=lv;
+    r.d.textContent=`${m.d} · +${fmt(each,1)}/s ${L('each','hver')}${S.machines[i]?` · ${fmt(each*S.machines[i],1)}/s ${L('total','i alt')}`:''}`;
     r.c.textContent='🥔 '+fmt(c);r.o.textContent=S.machines[i]||'';
     r.el.classList.toggle('can',S.potatoes>=c);
   });
@@ -1622,27 +1657,28 @@ function renderHideout(){
   let h='';
   MACHINES.forEach((m,i)=>{const n=S.machines[i];if(!n)return;const k=Math.min(n,20);let s='';for(let j=0;j<k;j++)s+=`<span style="animation-delay:-${((j*.37)%1.6).toFixed(2)}s">${m.e}</span>`;
     h+=`<div class="hrow"><div class="hl">${m.n}</div><div class="hi">${s}${n>k?`<em>+${n-k}</em>`:''}</div></div>`});
-  $('#hideScene').innerHTML=h||'<div class="empty">Your ranch is empty 🌵 Buy your first machine below</div>';
+  $('#hideScene').innerHTML=h||L('<div class="empty">Your ranch is empty 🌵 Buy your first machine below</div>','<div class="empty">Din ranch er tom 🌵 Køb din første maskine herunder</div>');
 }
 
 /* =============== UPGRADES =============== */
-const UCAT={mach:['🏭 MACHINE','#8a5a2b'],click:['👆 CLICK','#c8473a'],flat:['👆 CLICK','#c8473a'],cpct:['👆 CLICK','#c8473a'],glob:['🌍 ALL MACHINES','#2f7a3a'],
-  crit:['💥 CRITICAL','#b0500a'],critx:['💥 CRITICAL','#b0500a'],gold:['🌟 GOLDEN','#a07c00'],combo:['🔥 COMBO','#c06010'],xp:['📚 XP','#3a5aa0'],bdur:['⏱️ BOOSTS','#6a3fa0']};
+const CK=['👆 CLICK','👆 KLIK'],CR=['💥 CRITICAL','💥 KRITISK'];
+const UCAT={mach:[['🏭 MACHINE','🏭 MASKINE'],'#8a5a2b'],click:[CK,'#c8473a'],flat:[CK,'#c8473a'],cpct:[CK,'#c8473a'],glob:[['🌍 ALL MACHINES','🌍 ALLE MASKINER'],'#2f7a3a'],
+  crit:[CR,'#b0500a'],critx:[CR,'#b0500a'],gold:[['🌟 GOLDEN','🌟 GYLDEN'],'#a07c00'],combo:[['🔥 COMBO','🔥 KOMBO'],'#c06010'],xp:['📚 XP','#3a5aa0'],bdur:['⏱️ BOOSTS','#6a3fa0']};
 // what the upgrade does to YOUR game right now, in real numbers
 function upgFx(u){
   const tm=totalMach(),clk=(1+D.flat*tm)*D.cm*D.bonus,pct=x=>Math.round(x*100)+'%';
   switch(u.t){
     case'mach':{const m=MACHINES[u.i],n=S.machines[u.i],each=m.p*D.mm[u.i]*D.glob;
-      return `➜ ${m.e} ${fmt(each,1)}/s → ${fmt(each*2,1)}/s each`+(n?` · you own ${n}: +${fmt(each*n,1)}/s`:'')}
-    case'click':return `➜ Base click ${fmt(clk,1)} → ${fmt(clk*2,1)}`;
-    case'flat':return `➜ +${fmt(u.v*tm*D.cm*D.bonus,1)} per click right now (${tm} machines)`;
-    case'cpct':return `➜ +${fmt(D.base*.01,1)} per click right now`;
-    case'glob':return `➜ +${fmt(D.base*(u.v-1),1)}/s in total`;
-    case'crit':return `➜ Crit chance ${pct(Math.min(.9,D.cc))} → ${pct(Math.min(.9,D.cc+.02))}`;
-    case'critx':return `➜ Crits give x${D.cx} → x${D.cx+5}`;
-    case'combo':return `➜ Max combo ${D.cmax} → ${D.cmax+25}`;
-    case'xp':return `➜ ${D.xpc} → ${D.xpc+1} XP per click`;
-    case'bdur':return `➜ Boosts last ${pct(D.bd)} → ${pct(D.bd+.2)}`;
+      return `➜ ${m.e} ${fmt(each,1)}/s → ${fmt(each*2,1)}/s ${L('each','hver')}`+(n?` · ${L('you own','du ejer')} ${n}: +${fmt(each*n,1)}/s`:'')}
+    case'click':return `➜ ${L('Base click','Grundklik')} ${fmt(clk,1)} → ${fmt(clk*2,1)}`;
+    case'flat':return `➜ +${fmt(u.v*tm*D.cm*D.bonus,1)} ${L('per click right now','pr. klik lige nu')} (${tm} ${L('machines','maskiner')})`;
+    case'cpct':return `➜ +${fmt(D.base*.01,1)} ${L('per click right now','pr. klik lige nu')}`;
+    case'glob':return `➜ +${fmt(D.base*(u.v-1),1)}/s ${L('in total','i alt')}`;
+    case'crit':return `➜ ${L('Crit chance','Kritisk chance')} ${pct(Math.min(.9,D.cc))} → ${pct(Math.min(.9,D.cc+.02))}`;
+    case'critx':return `➜ ${L('Crits give','Kritiske klik giver')} x${D.cx} → x${D.cx+5}`;
+    case'combo':return `➜ ${L('Max combo','Maks. kombo')} ${D.cmax} → ${D.cmax+25}`;
+    case'xp':return `➜ ${D.xpc} → ${D.xpc+1} ${L('XP per click','XP pr. klik')}`;
+    case'bdur':return `➜ ${L('Boosts last','Boosts varer')} ${pct(D.bd)} → ${pct(D.bd+.2)}`;
   }
   return '';
 }
@@ -1654,12 +1690,12 @@ function updUpgrades(){
   const av=availUpg(),key=av.map(u=>u.id).join()+'|'+S.level;
   if(key!==upgKey){
     upgKey=key;const box=$('#upgList');box.innerHTML='';upgEls=[];
-    if(!av.length)box.innerHTML='<div class="empty">No upgrades ready right now. Buy more machines and keep clicking 🥔</div>';
+    if(!av.length)box.innerHTML=L('<div class="empty">No upgrades ready right now. Buy more machines and keep clicking 🥔</div>','<div class="empty">Ingen opgraderinger klar lige nu. Køb flere maskiner og bliv ved med at klikke 🥔</div>');
     av.forEach(u=>{const el=document.createElement('div');el.className='row';
-      const [tl,tc]=UCAT[u.t]||['⭐ OTHER','#666'];
+      const [tl0,tc]=UCAT[u.t]||[['⭐ OTHER','⭐ ANDET'],'#666'],tl=tx(tl0);
       el.innerHTML=`<div class="ri">${u.e}</div><div class="rt"><div class="rn"><span class="utag" style="background:${tc}">${tl}</span>${u.n}</div><div class="rd">${u.d}</div><div class="rfx"></div><div class="rc">🥔 ${fmt(upgCost(u))}</div></div>`;
       el.addEventListener('click',()=>buyUpg(u,el));box.appendChild(el);upgEls.push({el,u,fx:el.querySelector('.rfx')})});
-    $('#upgNote').textContent=`${av.length} ready · ${Object.keys(S.upgrades).length} of ${UPG.length} bought`;
+    $('#upgNote').textContent=L(`${av.length} ready · ${Object.keys(S.upgrades).length} of ${UPG.length} bought`,`${av.length} klar · ${Object.keys(S.upgrades).length} af ${UPG.length} købt`);
   }
   let can=0;upgEls.forEach(({el,u,fx})=>{const ok=S.potatoes>=upgCost(u);el.classList.toggle('can',ok);if(ok)can++;const t=upgFx(u);if(fx.textContent!==t)fx.textContent=t});
   const b=$('#bUpg');b.style.display=can?'flex':'none';b.textContent=can;
@@ -1679,7 +1715,7 @@ function updShop(){
   checkRestock();coolShop();
   $('#restockT').textContent=fmtTime((S.shopNext-Date.now())/1000);
   shopEls.forEach(s=>{const c=boostCost(s.b),h=S.shopHeat[s.b.id]||0,full=(S.bag[s.b.id]||0)>=SHOP_CAP,st=S.shopStock[s.b.id],out=!st||st.q<=0,m=st?st.m:1;
-    const t=out?'🚫 SOLD OUT':'🥔 '+fmt(c)+' · 📦 '+st.q+' left'+(m<1?` · 🏷️ ${Math.round((1-m)*100)}% off`:m>1?` · 💸 +${Math.round((m-1)*100)}%`:'')+(h?` · 📈 x${heatMult(s.b).toFixed(1)}`:'');
+    const t=out?L('🚫 SOLD OUT','🚫 UDSOLGT'):'🥔 '+fmt(c)+' · 📦 '+st.q+L(' left',' tilbage')+(m<1?` · 🏷️ ${L('','-')}${Math.round((1-m)*100)}%${L(' off',' rabat')}`:m>1?` · 💸 +${Math.round((m-1)*100)}%`:'')+(h?` · 📈 x${heatMult(s.b).toFixed(1)}`:'');
     if(s.c.textContent!==t)s.c.textContent=t;
     s.el.classList.toggle('soldout',out);
     s.o.textContent=S.bag[s.b.id]?'🎒'+S.bag[s.b.id]+(full?' MAX':''):'';s.el.classList.toggle('can',S.potatoes>=c&&!full&&!out)})}
@@ -1694,7 +1730,7 @@ function updLooks(){
         const icon=t==='acc'?s.e:`<div class="sw" style="background:${t==='pot'?`radial-gradient(circle at 35% 30%,${s.col[0]},${s.col[1]} 60%,${s.col[2]})`:`linear-gradient(180deg,${s.col.join(',')})`}"></div>`;
         const on=S.skin===s.id||S.acc===s.id||S.bg===s.id,own=S.skins[s.id];
         const el=document.createElement('div');el.className='card'+(on?' equip':own?' owned':'');
-        el.innerHTML=`<div class="ce">${icon}</div><div class="cn">${s.n}</div><div class="cc">${on?'✅ In use':own?'Tap to use':'🥔 '+fmt(s.c)}</div>`;
+        el.innerHTML=`<div class="ce">${icon}</div><div class="cn">${s.n}</div><div class="cc">${on?L('✅ In use','✅ I brug'):own?L('Tap to use','Tryk for at bruge'):'🥔 '+fmt(s.c)}</div>`;
         el.addEventListener('click',()=>skinAction(s,el));box.appendChild(el);
         if(!own)lookEls.push({el,s});
       });
@@ -1708,20 +1744,20 @@ function renderBag(){
   const box=$('#bagList');box.innerHTML='';let tot=0;
   BOOSTS.forEach(b=>{const n=S.bag[b.id]||0;if(!n)return;tot+=n;
     const el=document.createElement('div');el.className='row static';
-    el.innerHTML=`<div class="ri">${b.e}</div><div class="rt"><div class="rn">${b.n} <span style="color:var(--red)">x${n}</span></div><div class="rd">${b.d}</div></div><button class="ubtn">USE</button>`;
+    el.innerHTML=`<div class="ri">${b.e}</div><div class="rt"><div class="rn">${b.n} <span style="color:var(--red)">x${n}</span></div><div class="rd">${b.d}</div></div><button class="ubtn">${L('USE','BRUG')}</button>`;
     el.querySelector('button').addEventListener('click',e=>{e.stopPropagation();useBoost(b.id)});box.appendChild(el)});
-  if(!tot)box.innerHTML='<div class="empty">Your bag is empty 🎒<br>Buy boosts in the 🛒 Shop</div>';
+  if(!tot)box.innerHTML=L('<div class="empty">Your bag is empty 🎒<br>Buy boosts in the 🛒 Shop</div>','<div class="empty">Din taske er tom 🎒<br>Køb boosts i 🛒 Butik</div>');
   const bd=$('#bBag');bd.style.display=tot?'flex':'none';bd.textContent=tot;
 }
 
 /* =============== TROPHIES =============== */
 function renderAch(){
   $('#achGrid').innerHTML=ACH.map(a=>{const g=S.ach[a.id];return `<div class="ach ${g?'got':'no'}" data-t="${g?a.n+' — '+a.d:'??? — '+a.d}">${g?a.e:'❓'}</div>`}).join('');
-  $('#achH').textContent=`🏆 Trophies ${Object.keys(S.ach).length}/${ACH.length}`;
+  $('#achH').textContent=`🏆 ${L('Trophies','Trofæer')} ${Object.keys(S.ach).length}/${ACH.length}`;
 }
 function checkAch(){
   let got=false;
-  for(const a of ACH)if(!S.ach[a.id]&&a.f()){S.ach[a.id]=1;got=true;toast('🏆 '+a.n,a.d+' · +1% production')}
+  for(const a of ACH)if(!S.ach[a.id]&&a.f()){S.ach[a.id]=1;got=true;toast('🏆 '+a.n,a.d+L(' · +1% production',' · +1% produktion'))}
   if(got){snd('ach');recalc();renderAch();confetti(40)}
 }
 
@@ -1735,44 +1771,44 @@ const soulsNeeded=()=>S.soulReset?1:Math.max(1,Math.ceil(S.souls*.1));
 const coinsFor=p=>p>0?Math.max(1,Math.floor(p/10)):0;
 function updStats(){
   const st=[
-    ['🥔 Potatoes (this run)',fmt(S.runEarned)],['🌍 Potatoes (all time)',fmt(S.allEarned)],
-    ['📈 Per second',fmt(cps(),1)],['👆 Clicks',fmt(S.clicks)],['👆 Potatoes from clicks',fmt(S.clickEarned)],
-    ['💥 Critical clicks',fmt(S.crits)+' ('+Math.round(critChance()*100)+'%, x'+D.cx+')'],['🔥 Best combo',S.maxCombo+' / '+D.cmax],
-    ['🌟 Golden potatoes',fmt(S.goldens)],['🤠 Sheriff checks passed',S.vibes],['⏰ Play time',fmtTime(S.playTime)],
-    ['⏳ Next sheriff check in','~'+fmtTime(S.nextVibe-S.playTime)],
-    ['⭐ Level',S.level+' — '+title(S.level)],['📚 XP per click',D.xpc],
-    ['⬆️ Upgrades bought',Object.keys(S.upgrades).length+' / '+UPG.length],
-    ['🏆 Trophy bonus','+'+Math.round(D.bAch*100)+'%'],['⭐ Level bonus','+'+Math.round(D.bLvl*100)+'%'],
-    ['🎨 Style bonus','+'+Math.round(D.bSkin*100)+'%'],['👻 Potato Souls ('+S.souls+')','+'+Math.round(D.bSoul*100)+'%'],
-    ['🥘 Recipes','x'+fmt(D.g,1)],['✨ Rebirths',S.rebirths],
+    [L('🥔 Potatoes (this run)','🥔 Kartofler (denne runde)'),fmt(S.runEarned)],[L('🌍 Potatoes (all time)','🌍 Kartofler (i alt)'),fmt(S.allEarned)],
+    [L('📈 Per second','📈 Pr. sekund'),fmt(cps(),1)],[L('👆 Clicks','👆 Klik'),fmt(S.clicks)],[L('👆 Potatoes from clicks','👆 Kartofler fra klik'),fmt(S.clickEarned)],
+    [L('💥 Critical clicks','💥 Kritiske klik'),fmt(S.crits)+' ('+Math.round(critChance()*100)+'%, x'+D.cx+')'],[L('🔥 Best combo','🔥 Bedste kombo'),S.maxCombo+' / '+D.cmax],
+    [L('🌟 Golden potatoes','🌟 Gyldne kartofler'),fmt(S.goldens)],[L('🤠 Sheriff checks passed','🤠 Sheriftjek bestået'),S.vibes],[L('⏰ Play time','⏰ Spilletid'),fmtTime(S.playTime)],
+    [L('⏳ Next sheriff check in','⏳ Næste sheriftjek om'),'~'+fmtTime(S.nextVibe-S.playTime)],
+    ['⭐ Level',S.level+' — '+title(S.level)],[L('📚 XP per click','📚 XP pr. klik'),D.xpc],
+    [L('⬆️ Upgrades bought','⬆️ Opgraderinger købt'),Object.keys(S.upgrades).length+' / '+UPG.length],
+    [L('🏆 Trophy bonus','🏆 Trofæbonus'),'+'+Math.round(D.bAch*100)+'%'],[L('⭐ Level bonus','⭐ Level-bonus'),'+'+Math.round(D.bLvl*100)+'%'],
+    [L('🎨 Style bonus','🎨 Stilbonus'),'+'+Math.round(D.bSkin*100)+'%'],['👻 Potato Souls ('+S.souls+')','+'+Math.round(D.bSoul*100)+'%'],
+    [L('🥘 Recipes','🥘 Opskrifter'),'x'+fmt(D.g,1)],['✨ Rebirths',S.rebirths],
   ];
   $('#statList').innerHTML=st.map(([a,b])=>`<div class="stat"><span>${a}</span><b>${b}</b></div>`).join('');
   const p=soulsPending();
   const pn=soulsNeeded(),ok=p>=pn;
-  $('#rebInfo').innerHTML=(S.soulReset?`<div style="color:var(--red);margin-bottom:4px">⚖️ Rebalance: at your next Rebirth your old ${fmt(S.souls)} souls and ${fmt(S.tokens)} 🪙 are reset. You start again with the souls from the new, fair formula.</div>`:'')+(ok?`You get <b style="color:var(--brass)">+${p} 👻 souls</b> (+${p*5}% forever) and +${coinsFor(p)} 🪙`:S.allEarned<1e10?`Earn more potatoes in total to get souls (first soul at ${fmt(1e10)} all time)`:`Souls ready: <b>${p}</b> / ${pn} needed (at least +10% of your ${S.souls} souls). Keep earning!`);
+  $('#rebInfo').innerHTML=(S.soulReset?`<div style="color:var(--red);margin-bottom:4px">${L(`⚖️ Rebalance: at your next Rebirth your old ${fmt(S.souls)} souls and ${fmt(S.tokens)} 🪙 are reset. You start again with the souls from the new, fair formula.`,`⚖️ Ny balance: ved din næste Rebirth nulstilles dine gamle ${fmt(S.souls)} souls og ${fmt(S.tokens)} 🪙. Du starter igen med de souls, du får efter den nye, fair formel.`)}</div>`:'')+(ok?L(`You get <b style="color:var(--brass)">+${p} 👻 souls</b> (+${p*5}% forever) and +${coinsFor(p)} 🪙`,`Du får <b style="color:var(--brass)">+${p} 👻 souls</b> (+${p*5}% for altid) og +${coinsFor(p)} 🪙`):S.allEarned<1e10?L(`Earn more potatoes in total to get souls (first soul at ${fmt(1e10)} all time)`,`Tjen flere kartofler i alt for at få souls (første soul ved ${fmt(1e10)} i alt)`):L(`Souls ready: <b>${p}</b> / ${pn} needed (at least +10% of your ${S.souls} souls). Keep earning!`,`Souls klar: <b>${p}</b> / ${pn} krævet (mindst +10% af dine ${S.souls} souls). Bliv ved med at tjene!`));
   $('#rebBtn').disabled=!ok;
   const mx=isMax();
   $('#worldPick').style.display=mx?'':'none';
   if(mx){
     if(pickWorld==null)pickWorld=S.world;
-    const pk=WORLDS.map((w,i)=>`<button class="wpick ${i===pickWorld?'on':''}" data-w="${i}">${w.e}<small>${w.n}${i===S.world?' (now)':''}</small></button>`).join('');
-    if($('#worldPick').dataset.k!==pk){$('#worldPick').dataset.k=pk;$('#worldPick').innerHTML='<div class="wpt">🏆 MAX – no more medals, but you can Rebirth to any world:</div>'+pk;$$('#worldPick .wpick').forEach(b=>b.onclick=()=>{pickWorld=+b.dataset.w;snd('tick');updStats()})}
+    const pk=WORLDS.map((w,i)=>`<button class="wpick ${i===pickWorld?'on':''}" data-w="${i}">${w.e}<small>${w.n}${i===S.world?L(' (now)',' (nu)'):''}</small></button>`).join('');
+    if($('#worldPick').dataset.k!==pk){$('#worldPick').dataset.k=pk;$('#worldPick').innerHTML='<div class="wpt">'+L('🏆 MAX – no more medals, but you can Rebirth to any world:','🏆 MAX – ikke flere medaljer, men du kan lave Rebirth til en hvilken som helst verden:')+'</div>'+pk;$$('#worldPick .wpick').forEach(b=>b.onclick=()=>{pickWorld=+b.dataset.w;snd('tick');updStats()})}
     const w=WORLDS[pickWorld],move=pickWorld!==S.world;
-    $('#rebInfo').innerHTML=(p>0?`You get <b style="color:var(--brass)">+${p} 👻 souls</b> and +${p} 🪙`:'No new souls yet')+(move?` · you travel to <b>${w.e} ${w.n}</b>`:'');
-    $('#rebBtn').disabled=p<1&&!move;$('#rebBtn').textContent='✨ REBIRTH'+(move?' to '+w.e+' '+w.n:'');
+    $('#rebInfo').innerHTML=(p>0?L(`You get <b style="color:var(--brass)">+${p} 👻 souls</b> and +${p} 🪙`,`Du får <b style="color:var(--brass)">+${p} 👻 souls</b> og +${p} 🪙`):L('No new souls yet','Ingen nye souls endnu'))+(move?L(` · you travel to <b>${w.e} ${w.n}</b>`,` · du rejser til <b>${w.e} ${w.n}</b>`):'');
+    $('#rebBtn').disabled=p<1&&!move;$('#rebBtn').textContent='✨ REBIRTH'+(move?L(' to ',' til ')+w.e+' '+w.n:'');
   }else $('#rebBtn').textContent='✨ REBIRTH';
 }
 
 /* =============== MISSIONS =============== */
 const MT={
-  click:{n:'Click {x} times',e:'👆',cur:()=>S.clicks},
-  earn:{n:'Earn {x} potatoes',e:'🥔',cur:()=>S.allEarned},
-  buy:{n:'Buy {x} machines',e:'🏭',cur:()=>S.bought},
-  gold:{n:'Click {x} golden potatoes',e:'🌟',cur:()=>S.goldens},
-  crit:{n:'Land {x} critical clicks',e:'💥',cur:()=>S.crits},
-  boost:{n:'Use {x} boosts',e:'⚡',cur:()=>S.boostsUsed},
-  combo:{n:'Reach a {x} combo',e:'🔥',cur:null},
-  drop:{n:'Catch {x} falling potatoes',e:'🌧️',cur:()=>S.drops},
+  click:{n:['Click {x} times','Klik {x} gange'],e:'👆',cur:()=>S.clicks},
+  earn:{n:['Earn {x} potatoes','Tjen {x} kartofler'],e:'🥔',cur:()=>S.allEarned},
+  buy:{n:['Buy {x} machines','Køb {x} maskiner'],e:'🏭',cur:()=>S.bought},
+  gold:{n:['Click {x} golden potatoes','Klik på {x} gyldne kartofler'],e:'🌟',cur:()=>S.goldens},
+  crit:{n:['Land {x} critical clicks','Lav {x} kritiske klik'],e:'💥',cur:()=>S.crits},
+  boost:{n:['Use {x} boosts','Brug {x} boosts'],e:'⚡',cur:()=>S.boostsUsed},
+  combo:{n:['Reach a {x} combo','Nå en kombo på {x}'],e:'🔥',cur:null},
+  drop:{n:['Catch {x} falling potatoes','Fang {x} faldende kartofler'],e:'🌧️',cur:()=>S.drops},
 };
 const nice=v=>{const p=Math.pow(10,Math.max(0,Math.floor(Math.log10(v))-1));return Math.ceil(v/p)*p};
 function newMission(){
@@ -1800,14 +1836,14 @@ function updMissions(){
   if(key!==misKey){
     misKey=key;const box=$('#misList');box.innerHTML='';misEls=[];
     S.missions.forEach(m=>{const el=document.createElement('div');el.className='mis';
-      el.innerHTML=`<div class="ri">${MT[m.t].e}</div><div class="rt"><div class="rn">${MT[m.t].n.replace('{x}',fmt(m.x))}</div><div class="bar"><div></div></div><div class="mp"></div></div><button class="ubtn">CLAIM</button>`;
+      el.innerHTML=`<div class="ri">${MT[m.t].e}</div><div class="rt"><div class="rn">${tx(MT[m.t].n).replace('{x}',fmt(m.x))}</div><div class="bar"><div></div></div><div class="mp"></div></div><button class="ubtn">${L('CLAIM','HENT')}</button>`;
       const b=el.querySelector('button');b.addEventListener('click',()=>claimMission(m,el));
       box.appendChild(el);misEls.push({m,el,b,bar:el.querySelector('.bar>div'),p:el.querySelector('.mp')})});
   }
   let ready=0;
   misEls.forEach(o=>{const pr=Math.min(o.m.x,mProg(o.m)),ok=pr>=o.m.x;o.bar.style.width=(pr/o.m.x*100)+'%';o.p.textContent=fmt(pr)+' / '+fmt(o.m.x);o.b.disabled=!ok;o.el.classList.toggle('done',ok);if(ok)ready++});
   const sr=spinReady()?1:0,bd=$('#bMis');bd.style.display=ready+sr?'flex':'none';bd.textContent=ready+sr;
-  $('#streakTxt').innerHTML=`🔥 Login streak: <b>${plural(S.streak,'day')}</b> · Missions completed: <b>${S.missionsDone}</b>`;
+  $('#streakTxt').innerHTML=L(`🔥 Login streak: <b>${days(S.streak)}</b> · Missions completed: <b>${S.missionsDone}</b>`,`🔥 Dage i træk: <b>${days(S.streak)}</b> · Missioner klaret: <b>${S.missionsDone}</b>`);
 }
 function claimMission(m,el){
   const k=S.missions.indexOf(m);if(k<0||vibe||mProg(m)<m.x)return;
@@ -1817,20 +1853,20 @@ function claimMission(m,el){
   gain(v);addXP(need(S.level)*.06/xpMult()); // Mission Master boosts the potato reward only
   let extra='';if(Math.random()<.08+Math.min(.12,S.missionsDone/1000)){const b=pick(BOOSTS);S.bag[b.id]=(S.bag[b.id]||0)+1;extra=' + '+b.e+' boost';renderBag()}
   S.missionsDone++;addBonus(BONUS.mission);S.missions.splice(k,1);fillMissions();
-  snd('ach');fxAt(el,40);confetti(35);toast('📜 Mission complete!','+'+fmt(v)+' 🥔 + XP'+extra);updMissions();
+  snd('ach');fxAt(el,40);confetti(35);toast(L('📜 Mission complete!','📜 Mission klaret!'),'+'+fmt(v)+' 🥔 + XP'+extra);updMissions();
 }
 
 /* =============== LUCKY WHEEL =============== */
 const WHEEL=[
-  {e:'💰',w:20,n:'10 min of production',f:()=>{const v=Math.max(1000,D.base*600);gain(v);return '+'+fmt(v)+' 🥔'}},
-  {e:'🔥',w:14,n:'Production Party',f:()=>{S.bag.frenzy=(S.bag.frenzy||0)+1;return '🔥 Production Party added to your bag'}},
+  {e:'💰',w:20,n:['10 min of production','10 min. produktion'],f:()=>{const v=Math.max(1000,D.base*600);gain(v);return '+'+fmt(v)+' 🥔'}},
+  {e:'🔥',w:14,n:['Production Party','Produktionsfest'],f:()=>{S.bag.frenzy=(S.bag.frenzy||0)+1;return L('🔥 Production Party added to your bag','🔥 Produktionsfest er lagt i din taske')}},
   {e:'📚',w:14,n:'XP',f:()=>{const a=need(S.level)*.5;addXP(a/xpMult());return '+'+fmt(a)+' XP'}},
-  {e:'🎁',w:10,n:'Mystery Box',f:()=>{S.bag.mystery=(S.bag.mystery||0)+1;return '🎁 Mystery Box added to your bag'}},
-  {e:'🤑',w:12,n:'30 min of production',f:()=>{const v=Math.max(3000,D.base*1800);gain(v);return '+'+fmt(v)+' 🥔'}},
-  {e:'👆',w:14,n:'Click Power',f:()=>{S.bag.clickrizz=(S.bag.clickrizz||0)+1;return '👆 Click Power added to your bag'}},
-  {e:'🌟',w:10,n:'Gold Rain',f:()=>{for(let i=0;i<5;i++)setTimeout(spawnGolden,i*450);return '5 golden potatoes — now!'}},
+  {e:'🎁',w:10,n:['Mystery Box','Mysterieboks'],f:()=>{S.bag.mystery=(S.bag.mystery||0)+1;return L('🎁 Mystery Box added to your bag','🎁 Mysterieboks er lagt i din taske')}},
+  {e:'🤑',w:12,n:['30 min of production','30 min. produktion'],f:()=>{const v=Math.max(3000,D.base*1800);gain(v);return '+'+fmt(v)+' 🥔'}},
+  {e:'👆',w:14,n:['Click Power','Klikkraft'],f:()=>{S.bag.clickrizz=(S.bag.clickrizz||0)+1;return L('👆 Click Power added to your bag','👆 Klikkraft er lagt i din taske')}},
+  {e:'🌟',w:10,n:['Gold Rain','Guldregn'],f:()=>{for(let i=0;i<5;i++)setTimeout(spawnGolden,i*450);return L('5 golden potatoes — now!','5 gyldne kartofler — nu!')}},
   {e:'💎',w:6,n:'JACKPOT',f:()=>{const v=Math.max(50000,D.base*7200);gain(v);confetti(250);return 'JACKPOT! +'+fmt(v)+' 🥔'}},
-];
+].map(w=>BI(w,'n'));
 $('#wheel').innerHTML=WHEEL.map((s,i)=>`<div class="wl" style="transform:rotate(${i*45+22.5}deg)">${s.e}</div>`).join('');
 let wheelRot=0,spinning=false,spinNotified=false;
 const spinReady=()=>!spinning&&S.playTime>=S.nextSpin;
@@ -1849,9 +1885,9 @@ function spin(){
 $('#spinBtn').addEventListener('click',spin);
 function updSpin(){
   const b=$('#spinBtn');
-  if(spinning){b.textContent='🎡 Spinning...';b.disabled=true}
-  else if(spinReady()){b.textContent='🎡 FREE SPIN!';b.disabled=false;if(!spinNotified){spinNotified=true;toast('🎡 Free spin ready!','Go to 📜 Missions and spin the wheel');snd('ready')}}
-  else{b.textContent='⏳ Next spin in '+fmtTime(S.nextSpin-S.playTime);b.disabled=true}
+  if(spinning){b.textContent=L('🎡 Spinning...','🎡 Drejer...');b.disabled=true}
+  else if(spinReady()){b.textContent=L('🎡 FREE SPIN!','🎡 GRATIS SPIN!');b.disabled=false;if(!spinNotified){spinNotified=true;toast(L('🎡 Free spin ready!','🎡 Gratis spin klar!'),L('Go to 📜 Missions and spin the wheel','Gå til 📜 Missioner og drej hjulet'));snd('ready')}}
+  else{b.textContent=L('⏳ Next spin in ','⏳ Næste spin om ')+fmtTime(S.nextSpin-S.playTime);b.disabled=true}
 }
 
 /* =============== POTATO SLOTS =============== */
@@ -1860,14 +1896,14 @@ const SLOT_MAX=50,SLOT_CD=3600000,SLOT_SYM=['🥔','🌽','🤠','⭐','🍀','�
 const prodWin=(sec,min)=>{const v=Math.max(min,D.base*sec);gain(v);return '+'+fmt(v)+' 🥔'};
 const SLOT_WIN=[
   {w:55,lose:1},
-  {w:25,pair:1,n:'Pair',f:()=>prodWin(15,10)},
-  {w:10,s:'🥔',n:'Three potatoes',f:()=>prodWin(60,40)},
-  {w:5,s:'🌽',n:'Three corn',f:()=>prodWin(180,120)},
-  {w:3,s:'🤠',n:'Three cowboys',f:()=>prodWin(240,200)+' + 👆 Click Power',bag:'clickrizz'},
-  {w:1.5,s:'⭐',n:'Three stars',f:()=>{for(let i=0;i<3;i++)setTimeout(spawnGolden,i*450);return '3 golden potatoes – catch them!'}},
-  {w:.4,s:'🍀',n:'Three clovers',f:()=>prodWin(1200,2000)+' + 🔥 Production Party',bag:'frenzy',big:1},
-  {w:.1,s:'💎',n:'JACKPOT',f:()=>{addBonus(25);return 'JACKPOT! '+prodWin(3600,25000)+' + 25% Bonus Level'},big:1},
-];
+  {w:25,pair:1,n:['Pair','Par'],f:()=>prodWin(15,10)},
+  {w:10,s:'🥔',n:['Three potatoes','Tre kartofler'],f:()=>prodWin(60,40)},
+  {w:5,s:'🌽',n:['Three corn','Tre majs'],f:()=>prodWin(180,120)},
+  {w:3,s:'🤠',n:['Three cowboys','Tre cowboys'],f:()=>prodWin(240,200)+L(' + 👆 Click Power',' + 👆 Klikkraft'),bag:'clickrizz'},
+  {w:1.5,s:'⭐',n:['Three stars','Tre stjerner'],f:()=>{for(let i=0;i<3;i++)setTimeout(spawnGolden,i*450);return L('3 golden potatoes – catch them!','3 gyldne kartofler – fang dem!')}},
+  {w:.4,s:'🍀',n:['Three clovers','Tre kløvere'],f:()=>prodWin(1200,2000)+L(' + 🔥 Production Party',' + 🔥 Produktionsfest'),bag:'frenzy',big:1},
+  {w:.1,s:'💎',n:'JACKPOT',f:()=>{addBonus(25);return 'JACKPOT! '+prodWin(3600,25000)+L(' + 25% Bonus Level',' + 25% Bonus-level')},big:1},
+].map(w=>BI(w,'n'));
 let slotSpinning=false;
 const slotCooling=()=>S.slotUntil&&Date.now()<S.slotUntil;
 function slotPlay(){
@@ -1887,7 +1923,7 @@ function slotPlay(){
   [550,850,1150].forEach((t,k)=>setTimeout(()=>{reels[k].classList.remove('spin');reels[k].textContent=face[k];snd('pop',k*20)},t));
   setTimeout(()=>{
     clearInterval(iv);slotSpinning=false;
-    if(res.lose){toast('🎰 No luck','Try again!');updSlot();return}
+    if(res.lose){toast(L('🎰 No luck','🎰 Intet held'),L('Try again!','Prøv igen!'));updSlot();return}
     if(res.bag){S.bag[res.bag]=(S.bag[res.bag]||0)+1;renderBag()}
     const txt=res.f();S.slotWins++;
     reels.forEach((e,k)=>{if(!res.pair||face[k]===face[(k+1)%3]||face[k]===face[(k+2)%3])e.classList.add('win')});
@@ -1903,14 +1939,14 @@ let slotAutoAt=0;
 $('#slotAuto').addEventListener('click',()=>{S.slotAuto=!S.slotAuto;snd('tick');slotAutoAt=0;updSlot()});
 function updSlot(){
   const b=$('#slotBtn'),l=$('#slotLeft'),ab=$('#slotAuto');
-  ab.textContent='🔁 Auto spin: '+(S.slotAuto?'ON':'OFF');ab.classList.toggle('on',!!S.slotAuto);
+  ab.textContent=L('🔁 Auto spin: ','🔁 Auto-spin: ')+(S.slotAuto?L('ON','TIL'):L('OFF','FRA'));ab.classList.toggle('on',!!S.slotAuto);
   // auto spin: keeps spinning by itself until the machine cools down (turn it off to play by hand)
   if(S.slotAuto&&!slotSpinning&&!slotCooling()&&!vibe&&!warping){if(!slotAutoAt)slotAutoAt=Date.now()+700;else if(Date.now()>=slotAutoAt){slotAutoAt=0;slotPlay()}}
-  if(S.slotUntil&&Date.now()>=S.slotUntil){S.slotUntil=0;S.slotN=0;toast('🎰 Potato Slots are ready!','50 new free spins in 📜 Missions');snd('ready')}
-  if(slotSpinning){b.textContent='🎰 Spinning...';b.disabled=true}
-  else if(slotCooling()){b.textContent='⏳ Cooling down '+fmtTime((S.slotUntil-Date.now())/1000);b.disabled=true}
+  if(S.slotUntil&&Date.now()>=S.slotUntil){S.slotUntil=0;S.slotN=0;toast(L('🎰 Potato Slots are ready!','🎰 Kartoffelautomaten er klar!'),L('50 new free spins in 📜 Missions','50 nye gratis spins i 📜 Missioner'));snd('ready')}
+  if(slotSpinning){b.textContent=L('🎰 Spinning...','🎰 Drejer...');b.disabled=true}
+  else if(slotCooling()){b.textContent=L('⏳ Cooling down ','⏳ Køler af ')+fmtTime((S.slotUntil-Date.now())/1000);b.disabled=true}
   else{b.textContent='🎰 SPIN';b.disabled=false}
-  l.textContent=slotCooling()?'The machine is cooling down – 50 new spins soon':`Spins left: ${SLOT_MAX-S.slotN}/${SLOT_MAX}`;
+  l.textContent=slotCooling()?L('The machine is cooling down – 50 new spins soon','Maskinen køler af – 50 nye spins snart'):L('Spins left: ','Spins tilbage: ')+`${SLOT_MAX-S.slotN}/${SLOT_MAX}`;
 }
 
 /* =============== DAILY CHEST =============== */
@@ -1923,8 +1959,8 @@ function checkDaily(){
 function showDaily(){
   if(!S.dailyPending)return;
   const c=(S.streak-1)%7+1;
-  $('#dStreak').innerHTML=`🔥 <b>${plural(S.streak,'day')}</b> in a row! Come back tomorrow for a bigger chest.`;
-  $('#dDays').innerHTML=[1,2,3,4,5,6,7].map(d=>`<div class="day ${d<c?'past':d===c?'now':''}"><i>${d===7?'💎':d<c?'✅':'🎁'}</i>Day ${d}</div>`).join('');
+  $('#dStreak').innerHTML=L(`🔥 <b>${days(S.streak)}</b> in a row! Come back tomorrow for a bigger chest.`,`🔥 <b>${days(S.streak)}</b> i træk! Kom igen i morgen og få en større kiste.`);
+  $('#dDays').innerHTML=[1,2,3,4,5,6,7].map(d=>`<div class="day ${d<c?'past':d===c?'now':''}"><i>${d===7?'💎':d<c?'✅':'🎁'}</i>${L('Day','Dag')} ${d}</div>`).join('');
   $('#daily').classList.remove('hidden');
 }
 $('#clBtn').addEventListener('click',()=>{snd('tick');openChangelog()});
@@ -1936,12 +1972,12 @@ $('#dOpen').addEventListener('click',e=>{
   const c=(S.streak-1)%7+1,n=c===7?5:1+Math.floor(c/2),v=Math.max(1000*S.streak,D.base*300*c),got=[];
   for(let i=0;i<n;i++){const b=pick(BOOSTS);S.bag[b.id]=(S.bag[b.id]||0)+1;got.push(b.e)}
   gain(v);S.dailyPending=false;$('#daily').classList.add('hidden');renderBag();
-  snd('lvl');confetti(160);bigBanner('DAY '+S.streak+' 🔥','+'+fmt(v)+' 🥔 · '+got.join(' '));save();
+  snd('lvl');confetti(160);bigBanner(L('DAY ','DAG ')+S.streak+' 🔥','+'+fmt(v)+' 🥔 · '+got.join(' '));save();
 });
 
 /* =============== POTATO RAIN =============== */
 function potatoRain(){
-  toast('🌧️ POTATO RAIN!','Click the falling potatoes — fast!');snd('alert');
+  toast(L('🌧️ POTATO RAIN!','🌧️ KARTOFFELREGN!'),L('Click the falling potatoes — fast!','Klik på de faldende kartofler — hurtigt!'));snd('alert');
   for(let i=0;i<15;i++)setTimeout(()=>spawnDrop(),i*420);
 }
 function spawnDrop(e){
@@ -1956,14 +1992,15 @@ function spawnDrop(e){
 
 /* =============== WEATHER + RANDOM EVENTS =============== */
 const WEATHER={
-  rain:{e:'🌧️',n:'Rain Shower',d:'The fields love rain — production x2',t:60,prod:2},
-  heat:{e:'☀️',n:'Heatwave',d:'Hot potato! Clicks give x3',t:45,click:3},
-  storm:{e:'⛈️',n:'Thunderstorm',d:'Lightning strikes the potato for big bonuses ⚡',t:50},
-  snow:{e:'❄️',n:'Snowfall',d:'Catch the falling snowflakes for potatoes!',t:45},
-  dust:{e:'🌪️',n:'Dust Storm',d:'Production x0.5 — click the potato to blow the dust away!',t:40,prod:.5},
-  moon:{e:'🌕',n:'Full Moon',d:'Spooky night — +25% critical click chance',t:60,crit:.25},
-  rainbow:{e:'🌈',n:'Rainbow',d:'x2 production, x2 clicks and golden potatoes 3x as often',t:40,prod:2,click:2},
+  rain:{e:'🌧️',n:['Rain Shower','Regnbyge'],d:['The fields love rain — production x2','Markerne elsker regn — produktion x2'],t:60,prod:2},
+  heat:{e:'☀️',n:['Heatwave','Hedebølge'],d:['Hot potato! Clicks give x3','Varm kartoffel! Klik giver x3'],t:45,click:3},
+  storm:{e:'⛈️',n:['Thunderstorm','Tordenvejr'],d:['Lightning strikes the potato for big bonuses ⚡','Lynet slår ned i kartoflen og giver store bonusser ⚡'],t:50},
+  snow:{e:'❄️',n:['Snowfall','Snevejr'],d:['Catch the falling snowflakes for potatoes!','Fang de faldende snefnug og få kartofler!'],t:45},
+  dust:{e:'🌪️',n:['Dust Storm','Støvstorm'],d:['Production x0.5 — click the potato to blow the dust away!','Produktion x0.5 — klik på kartoflen for at blæse støvet væk!'],t:40,prod:.5},
+  moon:{e:'🌕',n:['Full Moon','Fuldmåne'],d:['Spooky night — +25% critical click chance','Uhyggelig nat — +25% chance for kritisk klik'],t:60,crit:.25},
+  rainbow:{e:'🌈',n:['Rainbow','Regnbue'],d:['x2 production, x2 clicks and golden potatoes 3x as often','x2 produktion, x2 klik og gyldne kartofler 3x så tit'],t:40,prod:2,click:2},
 };
+for(const k in WEATHER)BI(WEATHER[k],'n','d');
 let wTimer=0;
 function setWeatherFx(){
   const w=$('#weather');
@@ -1976,7 +2013,7 @@ function startWeather(id){
 }
 function endWeather(){
   const id=S.weather.id;S.weather=null;setWeatherFx();
-  toast('🌤️ The sky clears up',WEATHER[id].n+' is over');
+  toast(L('🌤️ The sky clears up','🌤️ Himlen klarer op'),WEATHER[id].n+L(' is over',' er forbi'));
   if(id==='rain'&&Math.random()<.45)setTimeout(()=>{if(!S.weather&&!vibe)startWeather('rainbow')},2500);
 }
 function lightning(){
@@ -1984,7 +2021,7 @@ function lightning(){
   const r=pot.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height*.35,v=Math.max(50,D.base*15+clickBase()*10);
   gain(v);squish=1;tilt=rand(-8,8);mouthOpen=1;
   burst(x,y,30,['#fff','#fff7a0','#9ad8ff'],1.5);ring(x,y,'#bfe6ff',200);emojis(x,y,3,'⚡');
-  floatTxt(x,y-30,'⚡ ZAP! +'+fmt(v),'#fff7a0',32);snd('crit');
+  floatTxt(x,y-30,L('⚡ ZAP! +','⚡ BZZT! +')+fmt(v),'#fff7a0',32);snd('crit');
   const m=$('#left');m.classList.remove('shake');void m.offsetWidth;m.classList.add('shake');
 }
 function weatherTick(dt){
@@ -2009,29 +2046,29 @@ function runner(o){
     el.classList.remove('hit');void el.offsetWidth;el.classList.add('hit');
     const b=el.querySelector('.rhp');if(b)b.textContent=left;
     if(left<=0){done=true;el.remove();o.win&&o.win(ev.clientX,ev.clientY)}
-    else floatTxt(ev.clientX,ev.clientY-20,left+' more!','#fff',22);
+    else floatTxt(ev.clientX,ev.clientY-20,left+L(' more!',' mere!'),'#fff',22);
   });
   el.addEventListener('animationend',ev=>{if(ev.animationName!=='runL')return;if(!done){done=true;if(!vibe&&o.lose)o.lose()}el.remove()});
   lay.appendChild(el);
 }
 const EVENTS=[
-  {w:3,f:()=>{toast('🚂 TRAIN INCOMING!','Click the train to grab its cargo');snd('alert');
+  {w:3,f:()=>{toast(L('🚂 TRAIN INCOMING!','🚂 TOGET KOMMER!'),L('Click the train to grab its cargo','Klik på toget og snup lasten'));snd('alert');
     runner({e:'🚂🚃🚃',dur:6,size:46,y:rand(50,68),win:(x,y)=>{const v=Math.max(500,D.base*90+clickBase()*40);gain(v);S.trains++;
       floatTxt(x,y,'🚂 +'+fmt(v),'#ffd27a',32);emojis(x,y,6,'📦');snd('gold')}})}},
-  {w:3,f:()=>{toast('🚨 BANDIT!','He is running off with your potatoes — click him 5 times!');snd('alert');
+  {w:3,f:()=>{toast('🚨 BANDIT!',L('He is running off with your potatoes — click him 5 times!','Han stikker af med dine kartofler — klik på ham 5 gange!'));snd('alert');
     runner({e:'🏇💰',hp:5,dur:8,size:54,
-      win:(x,y)=>{const v=Math.max(1000,D.base*150);gain(v);S.bandits++;floatTxt(x,y,'⭐ GOT HIM! +'+fmt(v),'#ffd27a',32);confetti(80);snd('lvl');
-        toast('⭐ Bandit caught!','The sheriff pays you a reward: +'+fmt(v)+' 🥔')},
-      lose:()=>{const v=Math.min(S.potatoes*.03,D.base*30);S.potatoes-=v;snd('no');toast('😩 The bandit got away','He stole '+fmt(v)+' potatoes')}})}},
-  {w:2,f:()=>{toast('🛸 UFO SIGHTING!','Click it 3 times — aliens love potatoes');snd('alert');
+      win:(x,y)=>{const v=Math.max(1000,D.base*150);gain(v);S.bandits++;floatTxt(x,y,L('⭐ GOT HIM! +','⭐ FANGET! +')+fmt(v),'#ffd27a',32);confetti(80);snd('lvl');
+        toast(L('⭐ Bandit caught!','⭐ Banditten er fanget!'),L('The sheriff pays you a reward: +','Sheriffen giver dig en dusør: +')+fmt(v)+' 🥔')},
+      lose:()=>{const v=Math.min(S.potatoes*.03,D.base*30);S.potatoes-=v;snd('no');toast(L('😩 The bandit got away','😩 Banditten slap væk'),L('He stole '+fmt(v)+' potatoes','Han stjal '+fmt(v)+' kartofler'))}})}},
+  {w:2,f:()=>{toast(L('🛸 UFO SIGHTING!','🛸 UFO I SIGTE!'),L('Click it 3 times — aliens love potatoes','Klik på den 3 gange — rumvæsner elsker kartofler'));snd('alert');
     runner({e:'🛸',hp:3,dur:9,size:58,cls:'ufo',y:rand(14,36),win:(x,y)=>{const b=pick(BOOSTS),v=Math.max(500,D.base*60);
       S.bag[b.id]=(S.bag[b.id]||0)+1;gain(v);renderBag();floatTxt(x,y,'👽 +'+fmt(v),'#c8f5a8',30);emojis(x,y,5,'👽');snd('gold');
-      toast('👽 The aliens left a gift',b.e+' '+b.n+' is in your bag + '+fmt(v)+' 🥔')}})}},
-  {w:2,f:()=>{toast('🐂 STAMPEDE!','Click the cows for potatoes!');snd('alert');
+      toast(L('👽 The aliens left a gift','👽 Rumvæsnerne efterlod en gave'),b.e+' '+b.n+L(' is in your bag + ',' er i din taske + ')+fmt(v)+' 🥔')}})}},
+  {w:2,f:()=>{toast(L('🐂 STAMPEDE!','🐂 KVÆGFLUGT!'),L('Click the cows for potatoes!','Klik på køerne og få kartofler!'));snd('alert');
     for(let i=0;i<8;i++)setTimeout(()=>runner({e:pick(['🐂','🐄','🐃']),dur:rand(4,6),size:44,y:rand(40,72),
       win:(x,y)=>{const v=Math.max(50,D.base*8+clickBase()*4);gain(v);floatTxt(x,y,'+'+fmt(v),'#c8f5a8',26)}}),i*550)}},
-  {w:2,f:()=>{addActive('sale',60);toast('🛒 TRAVELING MERCHANT!','Everything in the 🛒 Shop is half price for 60 sec');snd('ready')}},
-  {w:2,f:()=>{toast('🦅 EAGLE!','It is carrying a golden potato — catch it!');snd('alert');
+  {w:2,f:()=>{addActive('sale',60);toast(L('🛒 TRAVELING MERCHANT!','🛒 OMREJSENDE KØBMAND!'),L('Everything in the 🛒 Shop is half price for 60 sec','Alt i 🛒 Butik er til halv pris i 60 sek.'));snd('ready')}},
+  {w:2,f:()=>{toast(L('🦅 EAGLE!','🦅 ØRN!'),L('It is carrying a golden potato — catch it!','Den har en gylden kartoffel — fang den!'));snd('alert');
     runner({e:'🦅',dur:3.8,size:52,y:rand(12,32),win:(x,y)=>clickGolden(x,y)})}},
 ];
 function randomEvent(){
@@ -2045,7 +2082,7 @@ function randomEvent(){
 function checkMilestone(){
   const pw=Math.floor(Math.log10(S.allEarned||1));
   if(pw>S.bestPow){const show=S.bestPow>0&&pw>=3;S.bestPow=pw;
-    if(show){bigBanner(fmt(Math.pow(10,pw))+' 🥔!',pick(HYPE));confetti(120);snd('lvl')}}
+    if(show){bigBanner(fmt(Math.pow(10,pw))+' 🥔!',tx(pick(HYPE)));confetti(120);snd('lvl')}}
 }
 function updGoal(){
   let best=null;const hi=S.machines.reduce((h,n,i)=>n>0?i:h,-1);
@@ -2062,26 +2099,26 @@ function updGoal(){
 
 /* =============== SOUL SHOP =============== */
 const PERKS=[
-  {id:'start',e:'🚀',n:'Quick Start',d:'Start every rebirth with more potatoes (x10 per level)',max:10,c:1},
-  {id:'click',e:'👆',n:'Soul Click',d:'+100% potatoes per click per level',max:10,c:1},
-  {id:'gold',e:'🌟',n:'Golden Soul',d:'Golden potatoes appear 20% more often per level',max:5,c:2},
-  {id:'boost',e:'🏷️',n:'Boost Discount',d:'Boosts cost 10% less per level',max:5,c:2},
-  {id:'mission',e:'📜',n:'Mission Master',d:'+50% potatoes from missions per level',max:5,c:2},
-  {id:'combo',e:'🔥',n:'Tough Combo',d:'Combo drops 25% slower per level',max:3,c:3},
-  {id:'auto',e:'🤖',n:'Auto Buyer',d:'Automatically buys the cheapest machine every second',max:1,c:5},
-];
+  {id:'start',e:'🚀',n:['Quick Start','Hurtig start'],d:['Start every rebirth with more potatoes (x10 per level)','Start hver Rebirth med flere kartofler (x10 pr. trin)'],max:10,c:1},
+  {id:'click',e:'👆',n:['Soul Click','Soul-klik'],d:['+100% potatoes per click per level','+100% kartofler pr. klik pr. trin'],max:10,c:1},
+  {id:'gold',e:'🌟',n:['Golden Soul','Gylden soul'],d:['Golden potatoes appear 20% more often per level','Gyldne kartofler dukker op 20% oftere pr. trin'],max:5,c:2},
+  {id:'boost',e:'🏷️',n:['Boost Discount','Boost-rabat'],d:['Boosts cost 10% less per level','Boosts koster 10% mindre pr. trin'],max:5,c:2},
+  {id:'mission',e:'📜',n:['Mission Master','Missionsmester'],d:['+50% potatoes from missions per level','+50% kartofler fra missioner pr. trin'],max:5,c:2},
+  {id:'combo',e:'🔥',n:['Tough Combo','Sej kombo'],d:['Combo drops 25% slower per level','Komboen falder 25% langsommere pr. trin'],max:3,c:3},
+  {id:'auto',e:'🤖',n:['Auto Buyer','Autokøber'],d:['Automatically buys the cheapest machine every second','Køber automatisk den billigste maskine hvert sekund'],max:1,c:5},
+].map(p=>BI(p,'n','d'));
 let perkKey='';
 function renderPerks(){
   const key=S.tokens+JSON.stringify(S.perks)+S.autoBuy;if(key===perkKey)return;perkKey=key;
-  $('#tokTxt').innerHTML=`You have <b>${S.tokens} 🪙</b>`;
+  $('#tokTxt').innerHTML=`${L('You have','Du har')} <b>${S.tokens} 🪙</b>`;
   const box=$('#perkList');box.innerHTML='';
   PERKS.forEach(p=>{const l=PK(p.id),c=p.c*(l+1),max=l>=p.max;
     const el=document.createElement('div');el.className='row static';
     el.innerHTML=`<div class="ri">${p.e}</div><div class="rt"><div class="rn">${p.n} <span style="color:var(--red)">${l}/${p.max}</span></div><div class="rd">${p.d}</div></div><button class="ubtn">${max?'MAX':c+' 🪙'}</button>`;
     const b=el.querySelector('button');b.disabled=max||S.tokens<c;
-    b.addEventListener('click',()=>{if(S.tokens<c||max)return;S.tokens-=c;S.perks[p.id]=l+1;recalc();snd('buy');fxAt(el,30);toast('🪙 '+p.n+' level '+(l+1),p.d);renderPerks()});
+    b.addEventListener('click',()=>{if(S.tokens<c||max)return;S.tokens-=c;S.perks[p.id]=l+1;recalc();snd('buy');fxAt(el,30);toast('🪙 '+p.n+L(' level ',' trin ')+(l+1),p.d);renderPerks()});
     box.appendChild(el);
-    if(p.id==='auto'&&l){const t=document.createElement('button');t.className='sbtn';t.style.margin='-2px 0 8px';t.textContent=S.autoBuy?'🤖 Auto Buyer: ON':'🤖 Auto Buyer: OFF';t.addEventListener('click',()=>{S.autoBuy=!S.autoBuy;renderPerks()});box.appendChild(t)}
+    if(p.id==='auto'&&l){const t=document.createElement('button');t.className='sbtn';t.style.margin='-2px 0 8px';t.textContent=L('🤖 Auto Buyer: ','🤖 Autokøber: ')+(S.autoBuy?L('ON','TIL'):L('OFF','FRA'));t.addEventListener('click',()=>{S.autoBuy=!S.autoBuy;renderPerks()});box.appendChild(t)}
   });
 }
 function autoBuy(){
@@ -2097,11 +2134,11 @@ function updLeft(){
   const lv=need(S.level);
   $('#lvlNum').textContent='Level '+S.level;$('#lvlTitle').textContent=title(S.level);
   $('#xpBar').style.width=(S.aura/lv*100)+'%';
-  $('.levelbox').title=`📚 XP ${fmt(S.aura)} / ${fmt(lv)} · clicks, purchases and missions give XP${xpMult()>1?' (x3!)':''}`;
-  $('#pps').textContent=`${fmt(cps(),1)} per second${prodBoost()!==1?(prodBoost()>1?' 🔥 x':' 🌪️ x')+fmt(prodBoost(),1):''}`;
-  $('#chips').innerHTML=(S.weather?`<div class="chip wchip">${wx().e} ${wx().n} · ${Math.ceil(S.weather.t)}s</div>`:'')+Object.entries(S.active).map(([k,t])=>`<div class="chip">${ACTIVE_LBL[k]||k} · ${Math.ceil(t)}s</div>`).join('');
-  $('#clickInfo').textContent=`👆 ${fmt(clickBase()*comboMult(),1)} per click · 💥 ${Math.round(critChance()*100)}% critical`;
-  if(!vibe)document.title=S.clicks?`${fmt(S.potatoes)} potatoes – Potato Clicker`:'Potato Clicker – Free Idle Clicker Game | Play Online, No Download';
+  $('.levelbox').title=`📚 XP ${fmt(S.aura)} / ${fmt(lv)} · ${L('clicks, purchases and missions give XP','klik, køb og missioner giver XP')}${xpMult()>1?' (x3!)':''}`;
+  $('#pps').textContent=`${fmt(cps(),1)} ${L('per second','pr. sekund')}${prodBoost()!==1?(prodBoost()>1?' 🔥 x':' 🌪️ x')+fmt(prodBoost(),1):''}`;
+  $('#chips').innerHTML=(S.weather?`<div class="chip wchip">${wx().e} ${wx().n} · ${Math.ceil(S.weather.t)}s</div>`:'')+Object.entries(S.active).map(([k,t])=>`<div class="chip">${activeLbl(k)} · ${Math.ceil(t)}s</div>`).join('');
+  $('#clickInfo').textContent=`👆 ${fmt(clickBase()*comboMult(),1)} ${L('per click','pr. klik')} · 💥 ${Math.round(critChance()*100)}% ${L('critical','kritisk')}`;
+  if(!vibe)document.title=S.clicks?`${fmt(S.potatoes)} ${L('potatoes','kartofler')} – Potato Clicker`:LANG==='da'?'Potato Clicker – Gratis klikspil':'Potato Clicker – Free Idle Clicker Game | Play Online, No Download';
 }
 
 /* =============== LOOPS =============== */
@@ -2110,7 +2147,7 @@ function logic(){
   const now=performance.now();let dt=Math.min(120,(now-last)/1000);last=now;
   if(vibe)return;
   S.playTime+=dt;
-  for(const k in S.active){S.active[k]-=dt;if(S.active[k]<=0){delete S.active[k];toast('⌛ Boost ended',(ACTIVE_LBL[k]||k)+' has run out')}}
+  for(const k in S.active){S.active[k]-=dt;if(S.active[k]<=0){delete S.active[k];toast(L('⌛ Boost ended','⌛ Boost slut'),activeLbl(k)+L(' has run out',' er brugt op'))}}
   addBonus(BONUS.idle*dt);chaosTick(dt);
   gain(cps()*dt); // no passive XP — level only goes up when you do something
   if(S.active.turbo){turboAcc+=dt*20;const r=pot.getBoundingClientRect();while(turboAcc>=1){turboAcc--;doClick(r.left+r.width*rand(.25,.75),r.top+r.height*rand(.25,.75),true)}}else turboAcc=0;
@@ -2118,7 +2155,7 @@ function logic(){
   if(S.playTime>=S.nextRain){S.nextRain=S.playTime+rand(240,480);potatoRain()}
   if(S.weather){S.weather.t-=dt;weatherTick(dt);if(S.weather.t<=0)endWeather()}
   if(S.playTime>=S.nextEvent){S.nextEvent=S.playTime+rand(100,200);randomEvent()}
-  if(S.playTime>=S.nextWater){S.nextWater=S.playTime+7200;toast('💧 Break time?',"You've played for 2 hours. Drink some water and stretch — the potato will wait 🥔")}
+  if(S.playTime>=S.nextWater){S.nextWater=S.playTime+7200;toast(L('💧 Break time?','💧 Tid til en pause?'),L("You've played for 2 hours. Drink some water and stretch — the potato will wait 🥔",'Du har spillet i 2 timer. Drik lidt vand og stræk dig — kartoflen venter 🥔'))}
   if(S.playTime>=S.nextVibe)startVibe(false);
 }
 let lastF=performance.now();
@@ -2138,7 +2175,7 @@ function frame(t){
   disp+=(S.potatoes-disp)*Math.min(1,dt*14);if(Math.abs(S.potatoes-disp)<1)disp=S.potatoes;
   $('#count').textContent=fmt(Math.max(0,disp));
   const cb=$('#comboBox');cb.style.opacity=combo>=3?1:0;
-  if(combo>=3){const c=Math.floor(combo);$('#comboTxt').textContent=(c>=D.cmax?'🔥 MAX COMBO ':c>=50?'⚡ WILD COMBO ':c>=25?'🤠 YEEHAW ':c>=10?'🔥 NICE ':'COMBO ')+'x'+comboMult().toFixed(2);$('#comboBar').style.width=(combo/D.cmax*100)+'%'}
+  if(combo>=3){const c=Math.floor(combo);$('#comboTxt').textContent=(c>=D.cmax?L('🔥 MAX COMBO ','🔥 MAKS KOMBO '):c>=50?L('⚡ WILD COMBO ','⚡ VILD KOMBO '):c>=25?'🤠 YEEHAW ':c>=10?L('🔥 NICE ','🔥 SEJT '):L('COMBO ','KOMBO '))+'x'+comboMult().toFixed(2);$('#comboBar').style.width=(combo/D.cmax*100)+'%'}
   drawFX(dt);
   requestAnimationFrame(frame);
 }
@@ -2147,17 +2184,18 @@ function frame(t){
 $('#rebBtn').addEventListener('click',()=>{
   let p=soulsPending();const mx=isMax(),to=mx?pickWorld:S.world,move=mx&&to!==S.world;if(p<soulsNeeded()){if(!move)return;p=0}if(vibe)return;const cn=coinsFor(p);
   const w=WORLDS[to];
-  if(!confirm(`✨ REBIRTH${mx?' to '+w.e+' '+w.n:''}\n\nYou lose: potatoes, level, machines, upgrades and active boosts.\nYou keep: style, trophies, bag and medals.\n${S.soulReset?'⚖️ Your old souls and Soul Coins are reset (rebalance).\n':''}You get: +${p} Potato Souls (+${p*5}% forever) and +${cn} 🪙 Soul Coins.${mx?'\nYou travel to '+w.e+' '+w.n+' (no new medal).':''}\n\nRebirth now?`))return;
-  worldWarp({head:'✨ REBIRTH…',w,sub:(p?`+${p} 👻 souls · +${p*5}% forever`:'A fresh start')+(move?' · new world!':'')},()=>{
+  if(!confirm(L(`✨ REBIRTH${mx?' to '+w.e+' '+w.n:''}\n\nYou lose: potatoes, level, machines, upgrades and active boosts.\nYou keep: style, trophies, bag and medals.\n${S.soulReset?'⚖️ Your old souls and Soul Coins are reset (rebalance).\n':''}You get: +${p} Potato Souls (+${p*5}% forever) and +${cn} 🪙 Soul Coins.${mx?'\nYou travel to '+w.e+' '+w.n+' (no new medal).':''}\n\nRebirth now?`,
+    `✨ REBIRTH${mx?' til '+w.e+' '+w.n:''}\n\nDu mister: kartofler, level, maskiner, opgraderinger og aktive boosts.\nDu beholder: stil, trofæer, taske og medaljer.\n${S.soulReset?'⚖️ Dine gamle souls og Soul Coins nulstilles (ny balance).\n':''}Du får: +${p} Potato Souls (+${p*5}% for altid) og +${cn} 🪙 Soul Coins.${mx?'\nDu rejser til '+w.e+' '+w.n+' (ingen ny medalje).':''}\n\nVil du lave Rebirth nu?`)))return;
+  worldWarp({head:'✨ REBIRTH…',w,sub:(p?`+${p} 👻 souls · +${p*5}% ${L('forever','for altid')}`:L('A fresh start','En frisk start'))+(move?L(' · new world!',' · ny verden!'):'')},()=>{
     if(mx){S.world=to;applyLook()}
     if(S.soulReset){S.souls=0;S.tokens=0;S.soulReset=0}
     S.souls+=p;S.tokens+=cn;S.rebirths++;S.level=1;S.aura=0;S.exPopup=0;S.potatoes=PK('start')?Math.pow(10,2+PK('start')):0;S.runEarned=0;S.machines=MACHINES.map(()=>0);S.upgrades={};S.active={};disp=0;
     recalc();renderHideout();upgKey='';S.missions=[];fillMissions();misKey='';save();
-  },()=>toast('✨ REBORN!',(p?'+'+p+' souls. ':'')+(mx?'Welcome to '+WORLDS[S.world].e+' '+WORLDS[S.world].n+'!':'Start over — but stronger 💪')));
+  },()=>toast(L('✨ REBORN!','✨ GENFØDT!'),(p?'+'+p+' souls. ':'')+(mx?L('Welcome to ','Velkommen til ')+WORLDS[S.world].e+' '+WORLDS[S.world].n+'!':L('Start over — but stronger 💪','Start forfra — men stærkere 💪'))));
 });
-$('#expBtn').addEventListener('click',()=>{try{const s=btoa(unescape(encodeURIComponent(JSON.stringify(S))));prompt('Copy your save:',s)}catch(e){}});
-$('#impBtn').addEventListener('click',()=>{const s=prompt('Paste your save:');if(!s)return;try{importObj(JSON.parse(decodeURIComponent(escape(atob(s.trim())))));fullRefresh();save();toast('📥 Save imported','Welcome back, cowboy')}catch(e){toast('😬 Invalid save','That code does not work')}});
-$('#resetBtn').addEventListener('click',()=>{if(confirm('Delete EVERYTHING? This cannot be undone.')&&confirm('Are you really sure? Your potato will be sad 😢')){S=defState();try{localStorage.removeItem(KEY)}catch(e){}fullRefresh();toast('🗑️ Everything deleted','A brand new start')}});
+$('#expBtn').addEventListener('click',()=>{try{const s=btoa(unescape(encodeURIComponent(JSON.stringify(S))));prompt(L('Copy your save:','Kopiér dit gemte spil:'),s)}catch(e){}});
+$('#impBtn').addEventListener('click',()=>{const s=prompt(L('Paste your save:','Indsæt dit gemte spil:'));if(!s)return;try{importObj(JSON.parse(decodeURIComponent(escape(atob(s.trim())))));fullRefresh();save();toast(L('📥 Save imported','📥 Spil indlæst'),L('Welcome back, cowboy','Velkommen tilbage, cowboy'))}catch(e){toast(L('😬 Invalid save','😬 Ugyldigt spil'),L('That code does not work','Den kode virker ikke'))}});
+$('#resetBtn').addEventListener('click',()=>{if(confirm(L('Delete EVERYTHING? This cannot be undone.','Slet ALT? Det kan ikke fortrydes.'))&&confirm(L('Are you really sure? Your potato will be sad 😢','Er du helt sikker? Din kartoffel bliver ked af det 😢'))){S=defState();try{localStorage.removeItem(KEY)}catch(e){}fullRefresh();toast(L('🗑️ Everything deleted','🗑️ Alt er slettet'),L('A brand new start','En helt ny start'))}});
 $('#sndBtn').addEventListener('click',()=>{S.sound=!S.sound;$('#sndBtn').textContent=S.sound?'🔊':'🔇';if(S.sound)snd('buy')});
 $('#saveBtn').addEventListener('click',()=>save(true));
 $$('.tabs button[data-t]').forEach(b=>b.addEventListener('click',()=>{$$('.tabs button[data-t]').forEach(x=>x.classList.toggle('on',x===b));$$('.tabc').forEach(x=>x.classList.toggle('on',x.id==='t-'+b.dataset.t))}));
@@ -2172,14 +2210,80 @@ function fullRefresh(){
   if(S.vibePending&&!vibe)startVibe(false);
 }
 function nextTicker(){
-  const dyn=[`You have ${fmt(S.potatoes)} potatoes. The sheriff is impressed 🤠`,`You've clicked ${fmt(S.clicks)} times. The potato says thanks.`,`${title(S.level)} spotted in town!`];
-  const el=$('#tick');el.textContent=Math.random()<.25?pick(dyn):pick(TICK);el.style.animation='none';void el.offsetWidth;el.style.animation='';
+  const dyn=L([`You have ${fmt(S.potatoes)} potatoes. The sheriff is impressed 🤠`,`You've clicked ${fmt(S.clicks)} times. The potato says thanks.`,`${title(S.level)} spotted in town!`],
+    [`Du har ${fmt(S.potatoes)} kartofler. Sheriffen er imponeret 🤠`,`Du har klikket ${fmt(S.clicks)} gange. Kartoflen siger tak.`,`${title(S.level)} er set i byen!`]);
+  const el=$('#tick');el.textContent=Math.random()<.25?pick(dyn):tx(pick(TICK));el.style.animation='none';void el.offsetWidth;el.style.animation='';
 }
 
+/* =============== LANGUAGE SWITCH =============== */
+// Danish for the fixed page texts; the English stays in the HTML (read once from the page, so search engines and no-JS see English)
+const DA_UI={
+  hAll:'Alle spil',hHome:'Hjem',tick0:'Velkommen til Potato Clicker 🥔 — det vildeste kartoffelspil i Vesten.',clBtn:' Nyheder',
+  lbl:'KARTOFLER',goal:'🎯 Næste mål',bonus:'🌀 Bonus-level',
+  tMach:'Maskiner',tUpg:'Opgradér',tShop:'Butik',tBag:'Taske',tMis:'Missioner',tLook:'Stil',tAch:'Trofæer',tStats:'Statistik',
+  hMach:'🏭 Din ranch',tUpgH:'⬆️ Opgraderinger',
+  upgNote:'Maskiner laver kartofler. Opgraderinger gør de ting, du allerede har, <b>stærkere</b>. Hver opgradering købes én gang. Det farvede mærke viser, hvad den opgraderer:',
+  uhelp:'<span><b>🏭 MASKINE</b> = én slags maskine laver x2</span><span><b>🌍 ALLE MASKINER</b> = alle maskiner +25%</span><span><b>👆 KLIK</b> = flere kartofler pr. klik</span><span><b>💥 🔥 🌟 📚 ⏱️</b> = kritiske klik, kombo, gyldne, XP, boosts</span>',
+  tShopH:'🛒 Butik',shopNote:'Nye varer, priser og lager hvert 20. minut. Hvert køb gør varen lidt dyrere i et stykke tid. Højst 10 af hver i din taske.',restock:'🔄 Nye varer om',
+  soulNote:'Varige fordele, der bliver for altid. 👻 Souls samles op af alle de kartofler, du nogensinde har tjent (første soul ved 10 B). Du får dem, når du laver ✨ Rebirth – hver 10. soul giver også 1 🪙 Soul Coin (mindst 1 pr. Rebirth). Brug Soul Coins her.',
+  tBagH:'🎒 Din taske',bagNote:'Dine gemte boosts. Tryk på BRUG, når du har lyst.',
+  tMisH:'📜 Missioner',wheelH:'🎡 Lykkehjul',wheelNote:'Gratis spin for hvert 20. minut, du spiller',
+  slotH:'🎰 Kartoffelautomaten',slotNote:'Gratis at spille! Små gevinster tit, store gevinster sjældent. 50 spins, så køler maskinen af i 60 minutter.',
+  slotPay:'🥔🥔 et par · 🥔🥔🥔 · 🌽🌽🌽 · 🤠🤠🤠 · ⭐⭐⭐ · 🍀🍀🍀 · 💎💎💎 JACKPOT',
+  tLookH:'🎨 Stil',lookNote:'Hver ting, du køber, giver +2% produktion for altid.',lookPot:'🥔 Kartoffel-skins',lookAcc:'🤠 Tilbehør',lookBg:'🌄 Baggrunde',
+  achNote:'Hvert trofæ giver +1% produktion for altid.',
+  tStatsH:'📊 Statistik',setH:'⚙️ Indstillinger',langL:'🌐 Sprog',exp:'📤 Eksportér spil',imp:'📥 Importér spil',reset:'🗑️ Slet alt',
+  aboutH:'🥔 Om Potato Clicker',
+  ab1:'<b>Potato Clicker</b> er et gratis idle-klikspil i Det Vilde Vesten. Klik på den kæmpestore kartoffel, tjen kartofler og byg et kartoffelimperium — fra en lille skræller til damptog, guldminer og galaksefarme. Ingen download og ingen konto: det kører direkte i din browser på PC, Mac, Chromebook, iPhone og Android.',
+  ab2:'Sådan spiller du',
+  ab3:'<li><b>Klik på kartoflen</b> for at tjene kartofler. Hurtige klik giver en kombobonus.</li><li><b>Køb maskiner</b>, der laver kartofler for dig, også når du ikke klikker.</li><li><b>Lås 300+ opgraderinger op</b>, der ganger dine klik og din produktion.</li><li><b>Fang gyldne kartofler</b> og faldende kartoffelregn for store bonusser.</li><li><b>Hold øje med vejret</b> — regn, tordenvejr, sne, hedebølger og støvstorme ændrer spillet, og nogle gange dukker tog, banditter og UFO\'er op.</li><li><b>Klar missioner</b>, drej lykkehjulet og åbn din daglige kiste.</li><li><b>Stig i level</b>, saml 350+ trofæer og lav <b>Rebirth</b> for at blive stærkere for altid.</li>',
+  ab4:'Det får du',ab5:'Uendeligt mange maskiner, skins, hatte og baggrunde, boosts du kan gemme til senere, en Soul Shop med fordele og automatisk gemning. Ligesom Cookie Clicker — bare med kartofler og cowboys.',
+  ab6:'Er det gratis?',ab7:'Ja. Potato Clicker er 100% gratis at spille, uden reklamer og uden køb i spillet. Dit spil gemmes i din browser.',
+  ab8:'🎮 Flere gratis spil fra Potato Team Games →',dc:'Kom med på vores Discord<small>Snak med andre spillere i Potato Team Games-fællesskabet</small>',
+  vTitle:'🤠 SHERIFTJEK!',
+  exNew:'🎉 Du har nået level 100 – Extract er låst op! Saml kartofler nok og lav Extract til en ny verden.',
+  exD1:'<b>🧭 Extract</b> = tag til <b>NÆSTE VERDEN</b> og vind en <b>medalje</b>. Kræver level 100. Alt starter forfra fra nul. Kun 4 gange – én pr. verden.',
+  exD2:'<b>✨ Rebirth</b> = start forfra i <b>SAMME VERDEN</b> og saml <b>souls</b> (de samles op af alle de kartofler, du nogensinde har tjent). Du beholder souls, stil, trofæer og taske. Gør det så tit, du vil, for at blive stærkere.',
+  exH:'🧭 Extract – næste verden',
+  exNote:'Nå <b>level 100</b> og betal en stor bunke kartofler for at lave Extract. Du vinder en <b>medalje</b> og rejser til en <b>helt ny verden</b> med et nyt udseende – men alt andet starter forfra fra nul. Hver medalje giver <b>x2 produktion og klik</b> for altid. 4 medaljer at samle!',
+  rbH:'✨ Rebirth – samme verden',
+  rbNote:'👻 <b>Potato Souls</b> samles op af <b>alle de kartofler, du nogensinde har tjent</b> (første soul ved 10 B). Du får dem, når du laver Rebirth: du starter forfra med kartofler, maskiner og opgraderinger, og dit level går tilbage til 1 – men hver soul giver <b>+5%</b> til alt for altid. Hver 10. soul giver også 1 🪙 Soul Coin (mindst 1 pr. Rebirth). Du beholder din stil, dine trofæer og din taske. Brug Soul Coins i 🪙 Soul Shop nederst i 🛒 Butik.',
+  close:'Luk',scrT:'🎫 SKRABELOD',scrNote:'Skrab felterne – find <b>3 ens</b> for at vinde den præmie!',
+  scrPay:'🥔 5 min. produktion · 🔥 Produktionsfest · 👆 Klikkraft · ☕ Cowboykaffe · 🎟️ Spillemønter · 🌟 Guldregn',scrAll:'✨ Vis alle',
+  clT:'📜 NYHEDER',clClose:'FORSTÅET 🤠',dT:'🎁 DAGLIG KISTE',dOpen:'ÅBN KISTEN 🔓',
+};
+const DA_TITLE={home:'Tilbage til Potato Team Games',clBtn:'Nyheder i spillet',discord:'Kom med på Potato Team Games’ Discord',snd:'Lyd til/fra',save:'Gem spil',
+  world:'Din verden – tryk for at se Extract og medaljer',bonus:'Bonus-level: fyldes langsomt, mens du spiller. Ved 100% starter BONUSKAOS i 1 minut!',pot:'Klik på kartoflen'};
+const EN_UI=new Map();
+function applyLang(){
+  document.documentElement.lang=LANG;
+  $$('[data-i18n]').forEach(el=>{if(!EN_UI.has(el))EN_UI.set(el,el.innerHTML);const d=DA_UI[el.dataset.i18n];el.innerHTML=LANG==='da'&&d!=null?d:EN_UI.get(el)});
+  $$('[data-i18n-t]').forEach(el=>{if(!EN_UI.has(el))EN_UI.set(el,{t:el.getAttribute('title'),a:el.getAttribute('aria-label')});const en=EN_UI.get(el),d=LANG==='da'?DA_TITLE[el.dataset.i18nT]:null;
+    if(en.t!=null)el.setAttribute('title',d||en.t);if(en.a!=null)el.setAttribute('aria-label',d||en.a)});
+  // the header button shows the flag of the language you switch TO
+  const lb=$('#langBtn');lb.textContent=LANG==='da'?'🇬🇧':'🇩🇰';const lt=LANG==='da'?'Play in English':'Spil på dansk';lb.title=lt;lb.setAttribute('aria-label',lt);
+  $$('#langSeg button').forEach(b=>b.classList.toggle('on',b.dataset.l===LANG));
+}
+function setLang(l){
+  if(l===LANG)return;LANG=l;try{localStorage.setItem(LANG_KEY,l)}catch(e){}
+  snd('tick');applyLang();
+  // rebuild everything that was rendered with the old language (progress is untouched)
+  buildShop();fullRefresh();updExtractTag();updBonus();updSlot();updSpin();updGoal();nextTicker();
+  $('#worldPick').dataset.k='';updStats();
+  if(!$('#exm').classList.contains('hidden'))openExtract($('.exbox').classList.contains('first'));
+  if(!$('#clog').classList.contains('hidden'))renderChangelog();
+  if(!$('#daily').classList.contains('hidden'))showDaily();
+  if(vibe){startVibeText();buildChallenge()}
+  if(scrCard&&!scrCard.done&&!$('#scr').classList.contains('hidden'))$('#scrMsg').textContent=L('Hold down and drag the 🪙 coin to scratch','Hold nede og træk 🪙-mønten for at skrabe');
+}
+$('#langBtn').addEventListener('click',()=>setLang(LANG==='da'?'en':'da'));
+$$('#langSeg button').forEach(b=>b.addEventListener('click',()=>setLang(b.dataset.l)));
+
 /* =============== START =============== */
+applyLang();
 load();
 // one-time gift: everyone gets 2 free Scratch Cards to try them
-if(!S.scratchGift){S.scratchGift=1;S.bag.scratch=(S.bag.scratch||0)+2;setTimeout(()=>{toast('🎁 2 free Scratch Cards!','Find them in 🎒 Bag and scratch away 🎫');snd('ready')},4000);save()}
+if(!S.scratchGift){S.scratchGift=1;S.bag.scratch=(S.bag.scratch||0)+2;setTimeout(()=>{toast(L('🎁 2 free Scratch Cards!','🎁 2 gratis skrabelodder!'),L('Find them in 🎒 Bag and scratch away 🎫','Find dem i 🎒 Taske og skrab løs 🎫'));snd('ready')},4000);save()}
 checkRestock();buildShop();fullRefresh();clampActive();if(S.weather&&!WEATHER[S.weather.id])S.weather=null;if(S.weather)setWeatherFx();checkDaily();showDaily();
 setInterval(logic,50);
 setInterval(()=>{updExtractTag();updBonus();updSlot();updLeft();updMachines();updUpgrades();updShop();updLooks();updMissions();updSpin();updGoal();checkMilestone()},200);
@@ -2190,7 +2294,7 @@ setInterval(nextTicker,18000);setTimeout(nextTicker,500);
 addEventListener('beforeunload',()=>save(false));
 document.addEventListener('visibilitychange',()=>{if(document.hidden)save(false)});
 requestAnimationFrame(frame);
-if(S.clicks===0)setTimeout(()=>toast('🤠 Howdy, partner!','Click the big potato to start your potato ranch 🥔'),600);
+if(S.clicks===0)setTimeout(()=>toast(L('🤠 Howdy, partner!','🤠 Howdy, makker!'),L('Click the big potato to start your potato ranch 🥔','Klik på den store kartoffel for at starte din kartoffelranch 🥔')),600);
 </script>
 <script>/* local file fallback: open index.html inside folders */if(location.protocol==="file:")document.addEventListener("click",e=>{const a=e.target.closest("a[href]");if(a&&/\/$/.test(a.getAttribute("href"))){e.preventDefault();location.href=a.getAttribute("href")+"index.html"}});</script>
 </body>
