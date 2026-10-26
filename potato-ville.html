@@ -2703,7 +2703,7 @@ function useItem(it){
   if(f.use==='coffee'){drinkCoffee(it);return}
   if(f.use==='bowlF'||f.use==='bowlW'){fillBowl(it);return}
   if(f.use==='egg'){openIncubator(it);return}
-  if(f.use==='eat'){if(own)openFood();return}
+  if(f.use==='eat'){if(own)openFridge(it);else toast(L('That belongs to your host 🙂','Det tilhører værten 🙂'));return}
   if(f.use==='store'){if(own)openStorage(it);else toast(L('That belongs to your host 🙂','Det tilhører værten 🙂'));return}
   if(f.use==='ward'){if(own)openWardrobe();return}
   if(f.use==='mirror'){if(own)openCreator(true);return}
@@ -3439,11 +3439,28 @@ function openBag(onlyFood,startTab){
     };draw();}});
 }
 const openFood=()=>openBag(true);
-function consume(id){const f=FOOD[id];if(!S.food[id])return;
+function consume(id,src){src=src||S.food;const f=FOOD[id];if(!src[id])return;
   const k='use_'+id;if((id==='ball'||id==='kite')&&S.cd[k]&&Date.now()<S.cd[k]){toast(L('Your pet is a bit tired of that toy. Try again soon!','Dit kæledyr er lidt træt af det legetøj. Prøv igen snart!'));return}
-  if(id==='ball'||id==='kite')S.cd[k]=Date.now()+3*60000;else{S.food[id]--;if(!S.food[id])delete S.food[id]}
+  if(id==='ball'||id==='kite')S.cd[k]=Date.now()+3*60000;else{src[id]--;if(!src[id])delete src[id]}
   if(f.h){addStat('hunger',f.h);bump('fed');SFX.eat()}if(f.c){addStat('clean',f.c);bump('washed');SFX.splash()}if(f.f){addStat('fun',f.f);SFX.pop()}
   ME.say=f.e+' '+pick([L('Yum!','Mums!'),L('Lovely!','Dejligt!'),L('Wheee!','Wiii!')]);ME.sayT=2.5;addXP(1);save()}
+
+// the fridge is its own storage: you choose which food and drinks to put in it, and eat straight from it
+const FRIDGE_CAP=30;
+const fridgeable=id=>FOOD[id]&&FOOD[id].h>0;
+function openFridge(it){
+  closeDlg();it.box=it.box||{food:{},sup:{},inv:{}};const B=it.box;B.food=B.food||{};
+  panel({title:'🧊 '+L('Fridge','Køleskab'),render:b=>{const draw=()=>{
+    const inF=sumObj(B.food),bagF=Object.entries(S.food).filter(([id,n])=>n>0&&fridgeable(id)),frF=Object.entries(B.food).filter(([id,n])=>n>0&&FOOD[id]);
+    const row=(id,n,btns)=>`<div class="pp"><div style="font-size:26px;width:34px;text-align:center">${FOOD[id].e}</div><div class="tx">${esc(nm(FOOD[id]))} <b>×${n}</b><small class="hint">🍎+${FOOD[id].h}</small></div>${btns}</div>`;
+    b.innerHTML=`<p class="hint" style="margin:0 0 8px">${L('You decide what goes in the fridge: put food and drinks in from your bag, and eat straight from the fridge.','Du bestemmer selv, hvad der skal i køleskabet: læg mad og drikke ind fra din taske, og spis direkte fra køleskabet.')}</p>
+      <div class="split" style="grid-template-columns:1fr 1fr"><div><h3 style="margin:0 0 6px">🧊 ${L('In the fridge','I køleskabet')} <small class="hint">${inF}/${FRIDGE_CAP}</small></h3><div class="ppl">${frF.map(([id,n])=>row(id,n,`<button class="btn sm ok" data-eat="${id}">${L('Eat','Spis')}</button><button class="btn sm" data-out="${id}">🎒</button>`)).join('')||`<p class="hint">${L('Empty – put some food in from your bag →','Tomt – læg noget mad ind fra din taske →')}</p>`}</div></div>
+      <div><h3 style="margin:0 0 6px">🎒 ${L('Food in your bag','Mad i din taske')}</h3><div class="ppl">${bagF.map(([id,n])=>row(id,n,`<button class="btn sm go" data-in="${id}">🧊 ${L('Put in','Læg ind')}</button>`)).join('')||`<p class="hint">${L('No food in your bag. Buy food at Tater Market in town.','Ingen mad i din taske. Køb mad i Kartoffelmarkedet i byen.')}</p>`}</div></div></div>`;
+    $$('[data-eat]',b).forEach(x=>x.onclick=()=>{consume(x.dataset.eat,B.food);draw()});
+    $$('[data-in]',b).forEach(x=>x.onclick=()=>{const id=x.dataset.in;if(sumObj(B.food)>=FRIDGE_CAP){toast(L('The fridge is full!','Køleskabet er fuldt!'));SFX.bad();return}S.food[id]--;if(!S.food[id])delete S.food[id];B.food[id]=(B.food[id]||0)+1;SFX.click();save();draw()});
+    $$('[data-out]',b).forEach(x=>x.onclick=()=>{const id=x.dataset.out;if(bagFull())return;B.food[id]--;if(!B.food[id])delete B.food[id];S.food[id]=(S.food[id]||0)+1;SFX.click();save();draw()});
+  };draw()}});
+}
 
 /* ---------------- goals & daily ---------------- */
 function openGoals(){
