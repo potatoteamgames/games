@@ -531,7 +531,7 @@ body.chaos .toast b{color:#4dfcff}
 .scrwrap{position:relative;width:min(300px,78vw);aspect-ratio:1;margin:10px auto;border:4px solid var(--ink);border-radius:14px;overflow:hidden;background:#fff8e6;box-shadow:0 4px 0 #2a1708,inset 0 0 0 3px #ffd84a}
 .scrgrid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr)}
 #scrCan{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:none;transition:opacity .6s}
-#scrCoinIco{position:absolute;left:-99px;top:0;font-size:34px;pointer-events:none;transform:translate(-50%,-50%) rotate(-20deg);filter:drop-shadow(0 3px 3px #0006);transition:transform .1s}
+#scrCoinIco{position:absolute;left:-99px;top:0;font-size:34px;line-height:1;width:34px;height:34px;display:flex;align-items:center;justify-content:center;pointer-events:none;transform:translate(-50%,-50%) rotate(-20deg);filter:drop-shadow(0 3px 3px #0006);transition:transform .1s}
 .scrwrap.scratching #scrCoinIco{transform:translate(-50%,-50%) rotate(15deg) scale(.9)}
 .scell{position:relative;display:flex;align-items:center;justify-content:center;font-size:44px;border:1px dashed rgba(59,36,18,.25);user-select:none}
 .scell.win{background:#fff1a8;box-shadow:inset 0 0 0 3px #ffd84a,inset 0 0 18px #ffd84a;animation:reelWin .5s ease-in-out 3}
@@ -1077,7 +1077,7 @@ function openScratch(){
 // the silver coating is one big canvas over all 9 fields; hold the mouse/finger down and drag to scratch it off with a coin
 let scrCtx=null,scrDown=false,scrLast=null,scrCheckT=0,scrSndT=0;
 function scrCoat(){
-  const c=$('#scrCan'),w=$('#scrWrap'),r=w.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);
+  const c=$('#scrCan'),w=$('#scrWrap'),r={width:c.offsetWidth,height:c.offsetHeight},dpr=Math.min(2,window.devicePixelRatio||1);
   c.width=r.width*dpr;c.height=r.height*dpr;c.style.opacity='1';
   const g=c.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);scrCtx=g;
   g.globalCompositeOperation='source-over';
@@ -1090,7 +1090,7 @@ function scrCoat(){
   for(let i=0;i<9;i++)g.fillText('?',r.width*((i%3)+.5)/3,r.height*(Math.floor(i/3)+.5)/3);
   g.font='900 13px Nunito,sans-serif';g.fillStyle='rgba(60,66,80,.7)';g.fillText('SCRATCH HERE',r.width/2,r.height/2+24);
 }
-function scrPos(e){const r=$('#scrCan').getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
+function scrPos(e){const c=$('#scrCan'),r=c.getBoundingClientRect();return{x:(e.clientX-r.left)*c.offsetWidth/r.width,y:(e.clientY-r.top)*c.offsetHeight/r.height}}
 function scrScratch(p){
   if(!scrCtx||scrCard.done)return;const g=scrCtx;
   g.globalCompositeOperation='destination-out';g.lineCap='round';g.lineJoin='round';g.lineWidth=26;
@@ -1107,7 +1107,7 @@ function scrCheck(){
     if(clr/n>.6)scrCard.open[i]=true}
   if(scrCard.open.every(x=>x))scrFinish();
 }
-function scrCoin(e){const k=$('#scrCoinIco'),r=$('#scrWrap').getBoundingClientRect();k.style.left=(e.clientX-r.left)+'px';k.style.top=(e.clientY-r.top)+'px'}
+function scrCoin(e){const p=scrPos(e),k=$('#scrCoinIco');k.style.left=p.x+'px';k.style.top=p.y+'px'}
 (()=>{const c=$('#scrCan');
   c.addEventListener('pointerdown',e=>{if(!scrCard||scrCard.done)return;e.preventDefault();scrDown=true;scrLast=null;try{c.setPointerCapture(e.pointerId)}catch(x){}$('#scrWrap').classList.add('scratching');scrCoin(e);scrScratch(scrPos(e))});
   c.addEventListener('pointermove',e=>{scrCoin(e);if(scrDown)scrScratch(scrPos(e))});
@@ -1130,6 +1130,8 @@ $('#scrClose').addEventListener('click',()=>$('#scr').classList.add('hidden'));
 /* =============== CHANGELOG =============== */
 // newest first – add a new entry at the top every time the game is updated
 const CHANGELOG=[
+  {v:'1.9.3',date:'26 Oct 2026',t:'Fix',items:[
+    '🐛 Scratch Cards: the coating is now scratched exactly where the 🪙 coin is.']},
   {v:'1.9.2',date:'26 Oct 2026',t:'Real scratching',items:[
     '🪙 Scratch Cards are now scratched for real: hold the mouse or your finger down and drag the coin over the big silver field to scratch it away, slowly and calmly.']},
   {v:'1.9.1',date:'26 Oct 2026',t:'Free Scratch Cards',items:[
