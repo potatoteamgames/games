@@ -263,6 +263,14 @@ h1.logo{margin:0;font-weight:400}
 .dcBtn{display:flex;align-items:center;justify-content:center;gap:10px;background:#5865f2;color:#fff!important;text-decoration:none!important;border-radius:14px;padding:9px 16px;font-family:inherit;font-weight:800;font-size:15px;line-height:1.15;text-align:left;box-shadow:0 4px 0 #3c45a5;transition:transform .12s}
 .dcBtn:hover{transform:translateY(-2px)}.dcBtn:active{transform:translateY(2px);box-shadow:none}
 .dcBtn svg{width:30px;height:24px;flex:none}.dcBtn small{display:block;font-size:11px;font-weight:700;opacity:.85}
+.scrwrap{position:relative;width:min(280px,72vw);aspect-ratio:1;margin:10px auto;border:4px solid #3b2412;border-radius:14px;overflow:hidden;background:#fff8e6;box-shadow:0 4px 0 #2a1708,inset 0 0 0 3px #ffd84a}
+.scrgrid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr)}
+.scell{display:flex;align-items:center;justify-content:center;font-size:42px;border:1px dashed rgba(59,36,18,.25);user-select:none}
+.scell.win{background:#fff1a8;box-shadow:inset 0 0 0 3px #ffd84a,inset 0 0 18px #ffd84a}
+#scrCan{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:none;transition:opacity .6s}
+#scrCoin{position:absolute;left:-99px;top:0;font-size:34px;line-height:1;width:34px;height:34px;display:flex;align-items:center;justify-content:center;pointer-events:none;transform:translate(-50%,-50%) rotate(-20deg);filter:drop-shadow(0 3px 3px #0006)}
+.scrpay{font-size:11px;text-align:center;opacity:.8;line-height:1.5}
+#scrMsg{min-height:22px;margin:8px 0;text-align:center;font-size:15px}
 </style>
 </head>
 <body>
@@ -659,9 +667,9 @@ const CLOTH_RAW=[
  ['sh_boots','shoes','Boots','Støvler',90,2,'#7c4a1e'],['sh_roll','shoes','Roller Skates','Rulleskøjter',250,5,'#a855f7'],
  ['gl_round','glasses','Round Glasses','Runde briller',60,1,'#222'],['gl_sun','glasses','Sunglasses','Solbriller',90,2,'#111'],['gl_heart','glasses','Heart Glasses','Hjertebriller',120,3,'#ff4d8d'],['gl_mono','glasses','Monocle','Monokel',200,6,'#ffc93c'],
  ['ac_daisy','acc','Daisy','Margerit',30,1,'#fff'],['ac_bowtie','acc','Bow Tie','Butterfly',60,1,'#e8304a'],['ac_scarf','acc','Scarf','Halstørklæde',80,2,'#3fa0ff'],
- ['ac_backpack','acc','Backpack','Rygsæk',140,3,'#f97316'],['ac_necklace','acc','Pearl Necklace','Perlekæde',150,4,'#fff']];
+ ['ac_backpack','acc','Backpack','Rygsæk',140,3,'#f97316'],['ac_necklace','acc','Pearl Necklace','Perlekæde',150,4,'#fff'],['ac_tie','acc','Necktie','Slips',90,2,'#2563eb'],['ac_lei','acc','Flower Garland','Blomsterkrans',120,3,'#ff6fae'],['ac_medal','acc','Gold Medal','Guldmedalje',260,5,'#ffcc33']];
 const SEASON_CLOTH=['hat_witch','hat_santa','hat_antlers','hat_hearts'];const CLOTH={};CLOTH_RAW.forEach(([id,slot,en,da,price,lvl,col])=>CLOTH[id]={id,slot,en,da,price,lvl,col});
-const SLOTS=[['hat','🎩','Hats','Hatte'],['top','👕','Tops','Overdele'],['bottom','👖','Bottoms','Underdele'],['shoes','👟','Shoes','Sko'],['glasses','🕶️','Glasses','Briller'],['acc','🎀','Extras','Tilbehør']];
+const SLOTS=[['hat','🎩','Hats','Hatte'],['top','👕','Tops','Overdele'],['bottom','👖','Bottoms','Underdele'],['shoes','👟','Shoes','Sko'],['glasses','🕶️','Glasses','Briller'],['acc','🎀','Accessories','Tilbehør']];
 
 // food & supplies: [id, en, da, price, level, hunger, clean, fun, emoji]
 const FOOD_RAW=[
@@ -1012,6 +1020,9 @@ function drawGlasses(c,id){
 function drawAcc(c,id){
   if(!id)return;
   if(id==='ac_daisy'){c.save();c.translate(-34,-104);for(let i=0;i<8;i++){c.rotate(Math.PI/4);ell(c,0,-8,4,7,'#fff',1.5)}ell(c,0,0,5,5,'#ffc93c',1.5);c.restore()}
+  if(id==='ac_tie'){poly(c,[-6,-56,6,-56,4,-48,-4,-48],'#1e40af',2);poly(c,[-4,-48,4,-48,8,-20,0,-12,-8,-20],'#2563eb',2);c.strokeStyle='rgba(255,255,255,.45)';c.lineWidth=2;c.beginPath();c.moveTo(-5,-38);c.lineTo(5,-34);c.moveTo(-6,-28);c.lineTo(6,-24);c.stroke()}
+  if(id==='ac_lei'){const cols=['#ff6fae','#ffd84a','#fff','#ff9a3c'];for(let i=0;i<11;i++){const a=Math.PI*(.12+.76*i/10);ell(c,Math.cos(a)*-30,-50+Math.sin(a)*13,6,6,cols[i%4],1.5)}}
+  if(id==='ac_medal'){poly(c,[-10,-58,-2,-58,4,-34,-4,-34],'#2563eb',1.5);poly(c,[10,-58,2,-58,-4,-34,4,-34],'#e8304a',1.5);ell(c,0,-26,10,10,'#ffcc33',2);ell(c,0,-26,5,5,'#ffe08a',1)}
   if(id==='ac_bowtie'){poly(c,[0,-52,-14,-60,-14,-44],'#e8304a',2);poly(c,[0,-52,14,-60,14,-44],'#e8304a',2);ell(c,0,-52,4,4,'#b91c1c',2)}
   if(id==='ac_scarf'){c.save();bodyPath(c);c.clip();c.fillStyle='#3fa0ff';c.fillRect(-60,-60,120,12);c.restore();box(c,14,-52,12,26,4,'#3fa0ff',2);line(c,16,-30,24,-30,'#fff',2)}
   if(id==='ac_necklace'){for(let i=-4;i<=4;i++)ell(c,i*6,-52+Math.abs(i)*-1.2+6,3,3,'#fff',1.2)}
@@ -2692,7 +2703,7 @@ function useItem(it){
   if(f.use==='coffee'){drinkCoffee(it);return}
   if(f.use==='bowlF'||f.use==='bowlW'){fillBowl(it);return}
   if(f.use==='egg'){openIncubator(it);return}
-  if(f.use==='eat'){if(own)openFood();return}
+  if(f.use==='eat'){if(own)openFridge(it);else toast(L('That belongs to your host 🙂','Det tilhører værten 🙂'));return}
   if(f.use==='store'){if(own)openStorage(it);else toast(L('That belongs to your host 🙂','Det tilhører værten 🙂'));return}
   if(f.use==='ward'){if(own)openWardrobe();return}
   if(f.use==='mirror'){if(own)openCreator(true);return}
@@ -3281,6 +3292,7 @@ function openWardrobe(){
       b.innerHTML=`<div class="split"><div><div class="preview"><canvas id="wPrev" width="400" height="440" style="width:200px;height:220px"></canvas></div>
         <div class="row" style="margin-top:8px;justify-content:center"><button class="btn sm" id="wMake">✂️ ${L('Makeover','Makeover')}</button><button class="btn sm" id="wHair">💇 ${L('Hair','Hår')}</button></div></div>
         <div><div class="tabs">${SLOTS.map(s=>`<button data-t="${s[0]}" class="${s[0]===tab?'on':''}">${s[1]} ${L(s[2],s[3])}</button>`).join('')}</div>
+        ${tab==='acc'?`<p class="hint" style="margin:0 0 6px">🎀 ${L('Accessories go on top of your outfit – flowers, bow ties, ties, scarves, backpacks, garlands, medals and necklaces. Buy them at Peel & Co. in town.','Tilbehør bæres oven på dit tøj – blomster, butterflies, slips, halstørklæder, rygsække, blomsterkranse, medaljer og halskæder. Køb dem hos Peel & Co. i byen.')}</p>`:''}
         <div class="grid">${S.outfit[tab]&&!['top','bottom','shoes'].includes(tab)?`<div class="card" data-off="1"><div class="nm" style="min-height:86px;font-size:30px">🚫</div><div class="nm">${L('Nothing','Ingenting')}</div><button class="btn sm">${L('Take off','Tag af')}</button></div>`:''}
         ${items.map(it=>`<div class="card ${S.outfit[tab]===it.id?'sel':''}" data-id="${it.id}"><div class="cv"></div><div class="nm">${esc(nm(it))}</div><button class="btn sm ${S.outfit[tab]===it.id?'':'ok'}">${S.outfit[tab]===it.id?L('Wearing','Har på'):L('Wear','Tag på')}</button></div>`).join('')||`<p class="hint">${L('Nothing here yet – visit Peel & Co. in town!','Intet her endnu – besøg Peel & Co. i byen!')}</p>`}</div></div></div>`;
       $$('.card[data-id]',b).forEach(cd=>{$('.cv',cd).appendChild(thumb('cloth',cd.dataset.id));cd.onclick=()=>{S.outfit[tab]=cd.dataset.id;SFX.pop();save();net.me();goalsCheck();draw()}});
@@ -3332,13 +3344,73 @@ function openCreator(edit){
 function THUMB_CLEAR(){for(const k in THUMB)if(k.startsWith('cloth:'))delete THUMB[k]}
 
 /* ---------------- bag & food ---------------- */
+/* ---------------- daily scratch card: one free card in your bag every day you visit (they can't be bought) ---------------- */
+function scratchDaily(){if(S.scratchDay===today())return false;S.scratchDay=today();S.scratch=Math.min(9,(S.scratch||0)+3);save();return true}
+function scratchGiftMsg(){
+  panel({title:'🎁 '+L('A gift for visiting!','En gave for at kigge forbi!'),sm:true,html:`<div style="text-align:center;font-size:64px;line-height:1.1">🎫</div><p style="text-align:center">${L('Thanks for visiting Potato Ville today! <b>3 scratch cards</b> have been put in your 🎒 bag. You get 3 new ones every day you play.','Tak fordi du kigger forbi Potato Ville i dag! Der er lagt <b>3 skrabelodder</b> i din 🎒 taske. Du får 3 nye hver dag, du spiller.')}</p>`,
+    buttons:[{label:L('Later','Senere'),v:0},{label:'🪙 '+L('Scratch now!','Skrab nu!'),cls:'go',v:1}]}).then(v=>{if(v)openScratch()});SFX.lvl();
+}
+function scrFromBag(btn){const o=btn.closest('.ov');if(o&&o._close)o._close(null);setTimeout(openScratch,220)}
+// prizes: coins or items – mostly small, sometimes nice
+const SCR_P={
+  '🪙':{w:30,en:'Coins',da:'Mønter',f:()=>{const c=40+S.lvl*8;addCoins(c);return`${c} 🪙`}},
+  '🍰':{w:22,en:'A treat',da:'En godbid',f:()=>{const f=pick(['cake','cookie','pizza','icecream','pancakes'].filter(k=>FOOD[k]));if(bagFull())return null;S.food[f]=(S.food[f]||0)+2;return'2× '+FOOD[f].e+' '+nm(FOOD[f])}},
+  '🌱':{w:18,en:'Seeds',da:'Frø',f:()=>{const sd=pick(Object.keys(SEEDS).filter(k=>SUP[k].lvl<=S.lvl+1));if(bagFull())return null;S.sup[sd]=(S.sup[sd]||0)+3;return'3× '+SUP[sd].e+' '+nm(SUP[sd])}},
+  '📦':{w:15,en:'Furniture',da:'Et møbel',f:()=>{const it=pick(listCat('small').filter(id=>FURN[id].lvl<=S.lvl+1));if(bagFull())return null;S.inv[it]=(S.inv[it]||0)+1;return'📦 '+nm(FURN[it])}},
+  '💰':{w:10,en:'Big coin prize',da:'Stor møntgevinst',f:()=>{const c=200+S.lvl*30;addCoins(c);return`${c} 🪙`}},
+  '⭐':{w:5,en:'Special item',da:'Fin genstand',f:()=>{const l=Object.values(FURN).filter(f=>f.price>=250&&f.price<=900&&f.lvl<=S.lvl+2&&!f.lux);const it=l.length?pick(l).id:null;if(!it||bagFull())return null;S.inv[it]=(S.inv[it]||0)+1;return'⭐ '+nm(FURN[it])}}};
+const SCR_WIN=.5;
+let SCR=null;
+function openScratch(){
+  if(!(S.scratch>0)){toast(L('🎫 No scratch cards – you get 3 new ones every day you visit!','🎫 Ingen skrabelodder – du får 3 nye hver dag, du kigger forbi!'));return}
+  S.scratch--;save();
+  const syms=Object.keys(SCR_P);let win=null;
+  if(Math.random()<SCR_WIN){let r=Math.random()*syms.reduce((a,k)=>a+SCR_P[k].w,0);for(const k of syms){r-=SCR_P[k].w;if(r<0){win=k;break}}win=win||syms[0]}
+  let cells=[];const cnt={};if(win){cells=[win,win,win];cnt[win]=3}
+  while(cells.length<9){const k=pick(syms);if(k===win||(cnt[k]||0)>=2)continue;cnt[k]=(cnt[k]||0)+1;cells.push(k)}
+  for(let i=cells.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cells[i],cells[j]]=[cells[j],cells[i]]}
+  SCR={cells,open:Array(9).fill(false),win,done:false,ctx:null,down:false,last:null,chk:0,snd:0};
+  panel({title:'🎫 '+L('Scratch card','Skrabelod'),sm:true,cls:'scrpn',html:`<p class="hint" style="text-align:center;margin:0">${L('Hold down and drag the 🪙 coin to scratch – find <b>3 of the same</b> to win!','Hold nede og træk 🪙 mønten for at skrabe – find <b>3 ens</b> for at vinde!')}</p>
+    <div class="scrwrap" id="scrWrap"><div class="scrgrid">${cells.map(k=>`<div class="scell">${k}</div>`).join('')}</div><canvas id="scrCan"></canvas><div id="scrCoin">🪙</div></div>
+    <div class="scrpay">${Object.entries(SCR_P).map(([k,p])=>`${k} ${L(p.en,p.da)}`).join(' · ')}</div><div id="scrMsg"></div>
+    <div style="display:flex;gap:8px;justify-content:center"><button class="btn" id="scrAll">✨ ${L('Reveal all','Vis alle')}</button></div>`,
+    render:(b,close,ov)=>{
+      const c=$('#scrCan',b);
+      const coat=()=>{const w=c.offsetWidth,h=c.offsetHeight;if(!w){requestAnimationFrame(coat);return}const dpr=Math.min(2,devicePixelRatio||1);c.width=w*dpr;c.height=h*dpr;const g=c.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);SCR.ctx=g;
+        const gr=g.createLinearGradient(0,0,w,h);gr.addColorStop(0,'#e3e6ec');gr.addColorStop(.5,'#b3b9c4');gr.addColorStop(1,'#d5d9e0');g.fillStyle=gr;g.fillRect(0,0,w,h);
+        g.globalAlpha=.18;g.fillStyle='#fff';for(let i=-h;i<w;i+=14){g.beginPath();g.moveTo(i,0);g.lineTo(i+6,0);g.lineTo(i+6+h,h);g.lineTo(i+h,h);g.fill()}g.globalAlpha=1;
+        g.strokeStyle='rgba(90,96,110,.35)';g.lineWidth=2;for(let k=1;k<3;k++){g.beginPath();g.moveTo(w*k/3,6);g.lineTo(w*k/3,h-6);g.stroke();g.beginPath();g.moveTo(6,h*k/3);g.lineTo(w-6,h*k/3);g.stroke()}
+        g.fillStyle='rgba(80,86,100,.45)';g.font='900 30px Nunito,sans-serif';g.textAlign='center';g.textBaseline='middle';for(let i=0;i<9;i++)g.fillText('?',w*((i%3)+.5)/3,h*(Math.floor(i/3)+.5)/3);
+        g.font='900 13px Nunito,sans-serif';g.fillStyle='rgba(60,66,80,.7)';g.fillText(L('SCRATCH HERE','SKRAB HER'),w/2,h/2+24)};
+      requestAnimationFrame(coat);
+      const pos=e=>{const r=c.getBoundingClientRect();return{x:(e.clientX-r.left)*c.offsetWidth/r.width,y:(e.clientY-r.top)*c.offsetHeight/r.height}};
+      const coin=e=>{const p=pos(e),k=$('#scrCoin',b);k.style.left=p.x+'px';k.style.top=p.y+'px'};
+      const check=()=>{const d=SCR.ctx.getImageData(0,0,c.width,c.height).data,cw=c.width/3,ch=c.height/3;
+        for(let i=0;i<9;i++){if(SCR.open[i])continue;let n=0,cl=0;const x0=Math.floor((i%3)*cw),y0=Math.floor(Math.floor(i/3)*ch);
+          for(let y=y0+4;y<y0+ch-4;y+=6)for(let x=x0+4;x<x0+cw-4;x+=6){n++;if(d[(y*c.width+x)*4+3]<60)cl++}if(cl/n>.6)SCR.open[i]=true}
+        if(SCR.open.every(x=>x))finish()};
+      const scratch=p=>{if(!SCR.ctx||SCR.done)return;const g=SCR.ctx;g.globalCompositeOperation='destination-out';g.lineCap='round';g.lineJoin='round';g.lineWidth=26;
+        g.beginPath();g.moveTo((SCR.last||p).x,(SCR.last||p).y);g.lineTo(p.x,p.y);g.stroke();g.beginPath();g.arc(p.x,p.y,13,0,7);g.fill();SCR.last=p;
+        const now=performance.now();if(now-SCR.snd>90){SCR.snd=now;SFX.tone(1400+Math.random()*200,.03,'square',.025)}if(now-SCR.chk>200){SCR.chk=now;check()}};
+      const finish=()=>{if(SCR.done)return;SCR.done=true;c.style.opacity='0';$('#scrAll',b).disabled=true;
+        const w=SCR.win;if(!w){$('#scrMsg',b).innerHTML=S.scratch>0?L(`😅 No 3 of the same this time. You have ${S.scratch} more in your bag!`,`😅 Ingen 3 ens denne gang. Du har ${S.scratch} mere i din taske!`):L('😅 No 3 of the same this time. Come back tomorrow for 3 new cards!','😅 Ingen 3 ens denne gang. Kom tilbage i morgen efter 3 nye lodder!');SFX.bad();save();return}
+        $$('.scell',b).forEach((x,i)=>{if(SCR.cells[i]===w)x.classList.add('win')});
+        let txt=SCR_P[w].f();if(txt==null){const cc=60+S.lvl*10;addCoins(cc);txt=`${cc} 🪙 `+L('(your bag was full)','(din taske var fuld)')}
+        $('#scrMsg',b).innerHTML=`🎉 <b>3 × ${w}!</b> ${L('You win','Du vinder')}: <b>${esc(txt)}</b>`;SFX.buy();toast('🎫 '+L('Scratch card win: ','Gevinst på skrabelod: ')+txt,3200);save()};
+      c.addEventListener('pointerdown',e=>{if(SCR.done)return;e.preventDefault();SCR.down=true;SCR.last=null;try{c.setPointerCapture(e.pointerId)}catch(x){}coin(e);scratch(pos(e))});
+      c.addEventListener('pointermove',e=>{coin(e);if(SCR.down)scratch(pos(e))});
+      const up=()=>{if(!SCR.down)return;SCR.down=false;SCR.last=null;if(!SCR.done)check()};
+      c.addEventListener('pointerup',up);c.addEventListener('pointercancel',up);c.addEventListener('pointerleave',()=>{$('#scrCoin',b).style.left='-99px'});
+      $('#scrAll',b).onclick=()=>{SFX.click();finish()};
+    }});
+}
 function openBag(onlyFood,startTab){
   closeDlg();let tab=onlyFood?'food':startTab||'food';
   panel({title:onlyFood?L('🧊 Fridge','🧊 Køleskab'):L('🎒 Your bag','🎒 Din taske'),render:(b,close)=>{
     const draw=()=>{
       const nx=BAG_UP.find(u=>u[0]===bagCap());
       const cap=onlyFood?'':`<div class="goal" style="margin-bottom:8px"><div class="ic">🎒</div><div class="tx">${L('Bag space','Plads i tasken')}: <b>${bagCount()}/${bagCap()}</b><div class="prog"><b style="width:${Math.min(100,bagCount()/bagCap()*100)}%;background:${bagCount()>=bagCap()?'#ef4444':'#43c46b'}"></b></div><small>${L('Store extra things in cabinets and chests at home.','Gem ekstra ting i skabe og kister derhjemme.')}</small></div>${nx?`<button class="btn sm go" id="bagUp" ${S.coins<nx[2]?'disabled':''}>+${nx[1]-nx[0]} · ${N(nx[2])} 🪙</button>`:''}</div>`;
-      const tabs=onlyFood?'':cap+`<div class="tabs">${[['food','🍎',L('Food','Mad')],['sup','🧰',L('Supplies','Forsyninger')],['furn','📦',L('Furniture','Møbler')],['eggs','🥚',L('Eggs','Æg')],['pets','🐾',L('Pets','Kæledyr')]].map(([k,i,t])=>`<button data-t="${k}" class="${tab===k?'on':''}">${i} ${t}</button>`).join('')}</div>`;
+      const tabs=onlyFood?'':cap+`<div class="tabs">${[['food','🍎',L('Food','Mad')],['sup','🧰',L('Supplies','Forsyninger')],['furn','📦',L('Furniture','Møbler')],['scr','🎫',L('Scratch','Skrabelod')+(S.scratch>0?' ('+S.scratch+')':'')],['eggs','🥚',L('Eggs','Æg')],['pets','🐾',L('Pets','Kæledyr')]].map(([k,i,t])=>`<button data-t="${k}" class="${tab===k?'on':''}">${i} ${t}</button>`).join('')}</div>`;
       let h='';
       if(tab==='food'){const list=Object.entries(S.food).filter(([id,n])=>n>0&&FOOD[id]&&(!onlyFood||FOOD[id].h>0));
         h=`<div class="grid">${list.map(([id,n])=>{const f=FOOD[id];return`<div class="card" data-id="${id}"><span class="own">×${n}</span><div class="cv"></div><div class="nm">${esc(nm(f))}</div><div class="hint">${f.h?'🍎+'+f.h+' ':''}${f.c?'🧼+'+f.c+' ':''}${f.f?'🎈+'+f.f:''}</div><button class="btn sm ok">${f.h?L('Eat','Spis'):f.c?L('Use','Brug'):L('Play','Leg')}</button></div>`}).join('')||`<p class="hint">${L('Empty! Buy food and supplies at Tater Market in town.','Tom! Køb mad og ting i Kartoffelmarkedet i byen.')}</p>`}</div>`}
@@ -3346,6 +3418,7 @@ function openBag(onlyFood,startTab){
         h=`<div class="grid">${list.map(([id,n])=>`<div class="card"><span class="own">×${n}</span><div style="font-size:40px">${supIcon(id,52)}</div><div class="nm">${esc(nm(SUP[id]))}</div><div class="hint">${esc(itemDesc('sup',id))}</div></div>`).join('')||`<p class="hint">${L('No seeds or pet food yet.','Ingen frø eller dyrefoder endnu.')}</p>`}</div>`}
       else if(tab==='furn'){const furn=Object.entries(S.inv).filter(([,n])=>n>0);
         h=furn.length?`<div class="grid">${furn.map(([id,n])=>`<div class="card" data-f="${id}" title="${esc(itemDesc('furn',id))}"><span class="own">×${n}</span><div class="cv"></div><div class="nm">${esc(nm(FURN[id]))}</div><div class="hint">${esc(itemDesc('furn',id))}</div></div>`).join('')}</div><p class="hint">${L('Go home and press 🔨 Build to place them.','Gå hjem og tryk 🔨 Byg for at placere dem.')}</p>`:`<p class="hint">${L('No furniture waiting. Buy some at Spud & Sofa!','Ingen møbler venter. Køb nogle hos Spud & Sofa!')}</p>`}
+      else if(tab==='scr'){h=`<div class="goal"><div class="ic" style="font-size:34px">🎫</div><div class="tx"><b>${L('Scratch cards','Skrabelodder')}: ${S.scratch||0}</b><small>${L('You get 3 free scratch cards every day you visit. They can not be bought. Win coins or items!','Du får 3 gratis skrabelodder hver dag, du kigger forbi. De kan ikke købes. Vind mønter eller ting!')}</small></div>${S.scratch>0?`<button class="btn go" onclick="scrFromBag(this)">🪙 ${L('Scratch','Skrab')}</button>`:''}</div>`}
       else if(tab==='eggs'){h=`<div class="grid">${S.eggs.map((g,i)=>`<div class="card" data-eg="${i}"><canvas width="120" height="110" style="width:60px;height:55px"></canvas><div class="nm">${esc(nm(EGGS[g.r]))}</div><div class="hint">⏱️ ${EGGS[g.r].h} ${L('hours','timer')}</div></div>`).join('')||''}</div><p class="hint">${L('Put eggs in an 🥚 incubator at home (tap it). Eggs can also be sold at Paws & Peels.','Læg æg i en 🥚 rugemaskine derhjemme (tryk på den). Æg kan også sælges hos Poter & Skræller.')}</p>`}
       else{const home=SCENE.type==='home'&&SCENE.owner==='me',here=SCENE.yard?'yard':SCENE.room;
         h=S.pets.map((p,i)=>`<div class="goal"><div class="ic"><canvas data-p="${i}" width="96" height="96" style="width:48px;height:48px"></canvas></div><div class="tx">${esc(p.name)} <button class="btn sm" data-rn="${i}" style="padding:2px 6px">✏️</button><small>${esc(nm(PET_T[p.type]))} · ${'❤'.repeat(Math.min(10,p.love||0))}${'♡'.repeat(10-Math.min(10,p.love||0))}</small><small>${p.where==='bag'?'🎒 '+L('In your bag','I din taske'):'🏠 '+(p.room==='yard'?roomName({n:'yard'}):roomName(S.rooms[p.room]))}</small></div>
@@ -3366,11 +3439,28 @@ function openBag(onlyFood,startTab){
     };draw();}});
 }
 const openFood=()=>openBag(true);
-function consume(id){const f=FOOD[id];if(!S.food[id])return;
+function consume(id,src){src=src||S.food;const f=FOOD[id];if(!src[id])return;
   const k='use_'+id;if((id==='ball'||id==='kite')&&S.cd[k]&&Date.now()<S.cd[k]){toast(L('Your pet is a bit tired of that toy. Try again soon!','Dit kæledyr er lidt træt af det legetøj. Prøv igen snart!'));return}
-  if(id==='ball'||id==='kite')S.cd[k]=Date.now()+3*60000;else{S.food[id]--;if(!S.food[id])delete S.food[id]}
+  if(id==='ball'||id==='kite')S.cd[k]=Date.now()+3*60000;else{src[id]--;if(!src[id])delete src[id]}
   if(f.h){addStat('hunger',f.h);bump('fed');SFX.eat()}if(f.c){addStat('clean',f.c);bump('washed');SFX.splash()}if(f.f){addStat('fun',f.f);SFX.pop()}
   ME.say=f.e+' '+pick([L('Yum!','Mums!'),L('Lovely!','Dejligt!'),L('Wheee!','Wiii!')]);ME.sayT=2.5;addXP(1);save()}
+
+// the fridge is its own storage: you choose which food and drinks to put in it, and eat straight from it
+const FRIDGE_CAP=30;
+const fridgeable=id=>FOOD[id]&&FOOD[id].h>0;
+function openFridge(it){
+  closeDlg();it.box=it.box||{food:{},sup:{},inv:{}};const B=it.box;B.food=B.food||{};
+  panel({title:'🧊 '+L('Fridge','Køleskab'),render:b=>{const draw=()=>{
+    const inF=sumObj(B.food),bagF=Object.entries(S.food).filter(([id,n])=>n>0&&fridgeable(id)),frF=Object.entries(B.food).filter(([id,n])=>n>0&&FOOD[id]);
+    const row=(id,n,btns)=>`<div class="pp"><div style="font-size:26px;width:34px;text-align:center">${FOOD[id].e}</div><div class="tx">${esc(nm(FOOD[id]))} <b>×${n}</b><small class="hint">🍎+${FOOD[id].h}</small></div>${btns}</div>`;
+    b.innerHTML=`<p class="hint" style="margin:0 0 8px">${L('You decide what goes in the fridge: put food and drinks in from your bag, and eat straight from the fridge.','Du bestemmer selv, hvad der skal i køleskabet: læg mad og drikke ind fra din taske, og spis direkte fra køleskabet.')}</p>
+      <div class="split" style="grid-template-columns:1fr 1fr"><div><h3 style="margin:0 0 6px">🧊 ${L('In the fridge','I køleskabet')} <small class="hint">${inF}/${FRIDGE_CAP}</small></h3><div class="ppl">${frF.map(([id,n])=>row(id,n,`<button class="btn sm ok" data-eat="${id}">${L('Eat','Spis')}</button><button class="btn sm" data-out="${id}">🎒</button>`)).join('')||`<p class="hint">${L('Empty – put some food in from your bag →','Tomt – læg noget mad ind fra din taske →')}</p>`}</div></div>
+      <div><h3 style="margin:0 0 6px">🎒 ${L('Food in your bag','Mad i din taske')}</h3><div class="ppl">${bagF.map(([id,n])=>row(id,n,`<button class="btn sm go" data-in="${id}">🧊 ${L('Put in','Læg ind')}</button>`)).join('')||`<p class="hint">${L('No food in your bag. Buy food at Tater Market in town.','Ingen mad i din taske. Køb mad i Kartoffelmarkedet i byen.')}</p>`}</div></div></div>`;
+    $$('[data-eat]',b).forEach(x=>x.onclick=()=>{consume(x.dataset.eat,B.food);draw()});
+    $$('[data-in]',b).forEach(x=>x.onclick=()=>{const id=x.dataset.in;if(sumObj(B.food)>=FRIDGE_CAP){toast(L('The fridge is full!','Køleskabet er fuldt!'));SFX.bad();return}S.food[id]--;if(!S.food[id])delete S.food[id];B.food[id]=(B.food[id]||0)+1;SFX.click();save();draw()});
+    $$('[data-out]',b).forEach(x=>x.onclick=()=>{const id=x.dataset.out;if(bagFull())return;B.food[id]--;if(!B.food[id])delete B.food[id];S.food[id]=(S.food[id]||0)+1;SFX.click();save();draw()});
+  };draw()}});
+}
 
 /* ---------------- goals & daily ---------------- */
 function openGoals(){
@@ -3577,7 +3667,7 @@ function itemDesc(k,id){const o=[];
     if(f.kind==='wp')o.push(L('Wallpaper/paint for a room. Apply it in 🔨 Build mode.','Tapet/maling til et rum. Sæt det op i 🔨 byggetilstand.'));
     else if(f.kind==='fl')o.push(L('A floor for a room. Lay it in 🔨 Build mode.','Et gulv til et rum. Læg det i 🔨 byggetilstand.'));
     else if(f.kind==='dr')o.push(L('A style for your front door. In 🔨 Build mode, tap your front door to pick it.','Et udseende til din hoveddør. I 🔨 byggetilstand trykker du på hoveddøren for at vælge den.'));
-    else{if(f.use&&USE_TXT[f.use])o.push(L(...USE_TXT[f.use]));else if(f.cat==='dish')o.push(L('Tableware to decorate tables, counters and shelves.','Service til at pynte borde, køkkenborde og hylder.'));else o.push(L('Decoration – makes your home prettier.','Pynt – gør dit hjem pænere.'));
+    else{if(f.use==='lamp'&&lampW(id)===0)o.push(L('A real flame – tap it to light it or blow it out. Cozy at night and uses no power.','En rigtig flamme – tryk for at tænde eller puste den ud. Hyggelig om natten og bruger ingen strøm.'));else if(f.use&&USE_TXT[f.use])o.push(L(...USE_TXT[f.use]));else if(f.cat==='dish')o.push(L('Tableware to decorate tables, counters and shelves.','Service til at pynte borde, køkkenborde og hylder.'));else o.push(L('Decoration – makes your home prettier.','Pynt – gør dit hjem pænere.'));
       if(f.store)o.push(L(`Holds ${f.store} things.`,`Kan rumme ${f.store} ting.`));if(f.kind==='wall')o.push(f.ceil?L('Hangs from the ceiling.','Hænger fra loftet.'):L('Hangs on the wall.','Hænger på væggen.'));
       if(f.surf)o.push(L('Little things can stand on top.','Småting kan stå ovenpå.'));if(isSmall(f))o.push(L('Can stand on tables and shelves.','Kan stå på borde og hylder.'));if(f.out)o.push(L('Garden only.','Kun til haven.'));if(f.lux)o.push('💎 '+L('Luxury!','Luksus!'))}
     if(f.style)o.push('⭐ '+L(`+${f.style} home style`,`+${f.style} stilpoint`))}
@@ -4316,11 +4406,13 @@ function startGame(first){
   itemsAll().forEach(i=>{delete i.held});ME.hold=null;
   if(S.yard&&!S.mig4){S.mig4=1;if(!S.yard.items.some(i=>i.id==='watering_can')&&!S.inv.watering_can)S.yard.items.push(mk('watering_can',570,640));if(!S.yard.items.some(i=>i.id==='garden_tap'))S.yard.items.push(mk('garden_tap',380,600))}
   ensureDaily();initBills();goHome(0);hud();goalsCheck();qTick();applyStatic();
+  const gotScr=scratchDaily();
   if(!first)setTimeout(billReminder,1300);
+  if(gotScr&&!first)setTimeout(()=>{if(!anyPanel())scratchGiftMsg();else toast(L('🎫 3 free scratch cards are in your 🎒 bag – a gift for visiting today!','🎫 Der ligger 3 gratis skrabelodder i din 🎒 taske – en gave for at kigge forbi i dag!'),4500)},2600);
   if(first){setTimeout(()=>panel({title:L(`👋 Welcome to Potato Ville, ${esc(S.name)}!`,`👋 Velkommen til Potato Ville, ${esc(S.name)}!`),sm:true,html:`<p>${L('This is your new home! A few tips to get started:','Dette er dit nye hjem! Et par tips til at komme i gang:')}</p>
     <div class="goal"><div class="ic">🧊</div><div class="tx">${L('Tap the fridge to eat a snack.','Tryk på køleskabet for at få en snack.')}</div></div>
     <div class="goal"><div class="ic">🗺️</div><div class="tx">${L('Go to town to meet neighbours, shop and work jobs.','Gå til byen for at møde naboer, shoppe og tage jobs.')}</div></div>
-    <div class="goal"><div class="ic">🎯</div><div class="tx">${L('Check Goals for rewards every day.','Tjek Mål for belønninger hver dag.')}</div></div>`,buttons:[{label:L("Let's play!",'Lad os spille!'),cls:'go'}]}).then(()=>{if(JOIN_CODE)openNet(JOIN_CODE)}),400)}
+    <div class="goal"><div class="ic">🎯</div><div class="tx">${L('Check Goals for rewards every day.','Tjek Mål for belønninger hver dag.')}</div></div>`,buttons:[{label:L("Let's play!",'Lad os spille!'),cls:'go'}]}).then(()=>{if(gotScr)setTimeout(scratchGiftMsg,400);if(JOIN_CODE)openNet(JOIN_CODE)}),400)}
   else if(JOIN_CODE)setTimeout(()=>openNet(JOIN_CODE),500);
   else if(canClaimStreak())setTimeout(()=>{toast(L('🎁 Your daily reward is ready in 🎯 Goals!','🎁 Din daglige belønning venter i 🎯 Mål!'),3500)},900);
 }
