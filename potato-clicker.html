@@ -527,6 +527,17 @@ body.chaos .toast b{color:#4dfcff}
 .tabs .exTab small{font-size:11px;font-weight:800;opacity:.85}
 .tabs .exTab.ready{animation:pulse 1.2s infinite;box-shadow:0 0 0 3px #ffd84a,0 0 18px #ffd84a}
 @media (max-width:900px){.tabs .exTab{font-size:12px;padding:4px}.tabs .exTab small{font-size:10px}}
+.scrbox{max-width:360px}
+.scrgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px auto;width:min(270px,100%);touch-action:none}
+.scell{position:relative;aspect-ratio:1;border-radius:10px;background:#fff8e6;border:3px solid var(--ink);display:flex;align-items:center;justify-content:center;font-size:38px;overflow:hidden;cursor:pointer;user-select:none}
+.scell i{position:absolute;inset:0;background:repeating-linear-gradient(45deg,#c9ced6 0 6px,#aeb4bf 6px 12px);display:flex;align-items:center;justify-content:center;transition:opacity .35s,transform .35s}
+.scell i::after{content:'?';font-style:normal;font-size:26px;color:#7a808c;font-weight:900}
+.scell.open i{opacity:0;transform:scale(1.3);pointer-events:none}
+.scell.win{background:#fff1a8;box-shadow:0 0 0 3px #ffd84a,0 0 16px #ffd84a;animation:reelWin .5s ease-in-out 3}
+.scrpay{font-size:11px;color:var(--ink2);line-height:1.5}
+#scrMsg{min-height:22px;margin:8px 0;font-size:15px}
+.scrbox .row2{display:flex;gap:8px;justify-content:center}
+#slotAuto.on{background:linear-gradient(#7cc35a,var(--green));color:#fff}
 </style>
 </head>
 <body>
@@ -667,6 +678,7 @@ body.chaos .toast b{color:#4dfcff}
           <div class="slotm"><div class="reel" id="reel0">🥔</div><div class="reel" id="reel1">🌽</div><div class="reel" id="reel2">🤠</div></div>
           <div class="slotpay">🥔🥔 any pair · 🥔🥔🥔 · 🌽🌽🌽 · 🤠🤠🤠 · ⭐⭐⭐ · 🍀🍀🍀 · 💎💎💎 JACKPOT</div>
           <button class="sbtn big" id="slotBtn">🎰 SPIN</button>
+          <button class="sbtn" id="slotAuto" style="margin-top:6px">🔁 Auto spin: OFF</button>
           <div class="slotleft" id="slotLeft"></div>
         </div>
       </div>
@@ -727,15 +739,15 @@ body.chaos .toast b{color:#4dfcff}
 </div>
 <div id="exm" class="modal hidden">
   <div class="mbox exbox">
-    <div class="exnew" id="exNew">🎉 You reached level 200 – Extract is unlocked! Collect enough potatoes and Extract to a new world.</div>
+    <div class="exnew" id="exNew">🎉 You reached level 100 – Extract is unlocked! Collect enough potatoes and Extract to a new world.</div>
     <div class="vtitle" id="exTitle">🧭 EXTRACT & ✨ REBIRTH</div>
     <div class="exworld" id="exWorld"></div>
     <div class="exdiff">
-      <div><b>🧭 Extract</b> = go to the <b>NEXT WORLD</b> and win a <b>medal</b>. Needs level 200. Everything starts over from zero. Only 4 times – one per world.</div>
+      <div><b>🧭 Extract</b> = go to the <b>NEXT WORLD</b> and win a <b>medal</b>. Needs level 100. Everything starts over from zero. Only 4 times – one per world.</div>
       <div><b>✨ Rebirth</b> = start over in the <b>SAME WORLD</b> and earn <b>souls</b>. You keep souls, style, trophies and bag. Do it as often as you like to get stronger.</div>
     </div>
     <h3 class="exh">🧭 Extract – next world</h3>
-          <div class="note" style="margin:0">Reach <b>level 200</b> and pay a big pile of potatoes to Extract. You win a <b>medal</b> and travel to a <b>brand new world</b> with a new look – but everything else starts over from zero. Each medal gives <b>x2 production and clicks</b> forever. 4 medals to collect!</div>
+          <div class="note" style="margin:0">Reach <b>level 100</b> and pay a big pile of potatoes to Extract. You win a <b>medal</b> and travel to a <b>brand new world</b> with a new look – but everything else starts over from zero. Each medal gives <b>x2 production and clicks</b> forever. 4 medals to collect!</div>
           <div class="medals" id="medalRow"></div>
           <div class="exinfo" id="exInfo"></div>
           <button class="sbtn big" id="extractBtn">🧭 EXTRACT</button>
@@ -747,6 +759,16 @@ body.chaos .toast b{color:#4dfcff}
       <button class="sbtn big" id="rebBtn">✨ REBIRTH</button>
     </div>
     <button class="sbtn" id="exClose" style="margin-top:8px">Close</button>
+  </div>
+</div>
+<div id="scr" class="modal hidden">
+  <div class="mbox scrbox">
+    <div class="vtitle">🎫 SCRATCH CARD</div>
+    <div class="note" style="color:var(--ink2)">Scratch the fields – find <b>3 of the same</b> to win that prize!</div>
+    <div class="scrgrid" id="scrGrid"></div>
+    <div class="scrpay">🥔 5 min of production · 🔥 Production Party · 👆 Click Power · ☕ Cowboy Coffee · 🎟️ Slot Tokens · 🌟 Gold Rain</div>
+    <div id="scrMsg"></div>
+    <div class="row2"><button class="sbtn" id="scrAll">✨ Reveal all</button><button class="sbtn" id="scrClose" disabled>Close</button></div>
   </div>
 </div>
 <div id="clog" class="modal hidden">
@@ -837,6 +859,7 @@ const BOOSTS=[
   {id:'coffee',e:'☕',n:'Cowboy Coffee',d:'x3 production for 3 minutes',k:300,min:800,g:.3,use:()=>addActive('coffee',180)},
   {id:'charge',e:'🌀',n:'Chaos Charge',d:'+15% on the Bonus Level bar',k:1500,min:6000,g:.6,use:()=>addBonus(15)},
   {id:'tokens',e:'🎟️',n:'Slot Tokens',d:'10 extra Potato Slots spins – also works while the machine cools down',k:600,min:2500,g:.5,use:()=>{if(slotCooling()){S.slotUntil=0;S.slotN=SLOT_MAX-10}else S.slotN=Math.max(0,S.slotN-10);updSlot()}},
+  {id:'scratch',e:'🎫',n:'Scratch Card',d:'Scratch 9 fields – 3 of the same wins that prize',k:400,min:1500,g:.4,use:()=>openScratch()},
   {id:'mystery',e:'🎁',n:'Mystery Box',d:'1-3 random boosts straight to your bag (Time Skip and Gold Rain are rare)',k:1000,min:3000,g:.6,use:()=>{const n=1+Math.floor(Math.random()*3),got=[];for(let i=0;i<n;i++){const b=boxPick();S.bag[b.id]=(S.bag[b.id]||0)+1;got.push(b.e)}toast('🎁 Mystery Box!','You got: '+got.join(' '));renderBag()}},
 ];
 // what a Mystery Box can give: small boosts often, the big ones rarely, never another box
@@ -875,7 +898,7 @@ const SKINS=[
 
 const TITLES=[[1,'Greenhorn 🥔'],[5,'Field Hand 🌱'],[10,'Potato Picker 🧺'],[15,'Cowboy 🤠'],[20,'Rancher 🐎'],[25,'Sheriff ⭐'],[30,'Prospector ⛏️'],[40,'Potato Baron 🎩'],[50,'Railroad Tycoon 🚂'],[65,'Potato King 👑'],[80,'Legend 🏆'],[100,'Hero of the West 🌵'],[150,'Potato God ✨'],[200,'Potato of the Universe 🌌']];
 const title=l=>{let t=TITLES[0][1];for(const [n,s] of TITLES)if(l>=n)t=s;return t};
-const need=l=>Math.floor(25*Math.pow(l,1.55));
+const need=l=>Math.floor(30*Math.pow(l,1.65));
 
 /* ---- TROPHIES ---- */
 const ACH=[];
@@ -974,8 +997,8 @@ const WORLDS=[
   {e:'🚀',n:'Space Colony',deco:['🪐','🛸','☄️'],bg:['#272c66','#11143a','#05061a']},
 ];
 const MEDALS=[{e:'🥉',n:'Bronze'},{e:'🥈',n:'Silver'},{e:'🥇',n:'Gold'},{e:'💎',n:'Diamond'}];
-const EXTRACT_LVL=200;
-const extractCost=()=>1e18*Math.pow(1000,S.medals||0);
+const EXTRACT_LVL=100;
+const extractCost=()=>1e15*Math.pow(1000,S.medals||0);
 const isMax=()=>(S.medals||0)>=MEDALS.length;
 let pickWorld=null;
 const canExtract=()=>(S.medals||0)<MEDALS.length&&S.level>=EXTRACT_LVL&&S.potatoes>=extractCost();
@@ -1031,9 +1054,53 @@ function updExtractTag(){
   if(S.level>=EXTRACT_LVL&&!S.exPopup&&(S.medals||0)<MEDALS.length&&!vibe&&$('#daily').classList.contains('hidden')&&$('#clog').classList.contains('hidden')){S.exPopup=1;save();snd('lvl');confetti(120);openExtract(true)}
 const r=canExtract();$('#worldTag').classList.toggle('ready',r);$('#exTabBtn').classList.toggle('ready',r);$('#exTabSub').textContent=isMax()?'· 🏆 MAX':r?'· READY!':S.level<EXTRACT_LVL?`· level ${S.level}/${EXTRACT_LVL}`:'· need more 🥔';if(r&&!exReadyNote){exReadyNote=true;toast('🧭 You can Extract!','Tap the 🧭 EXTRACT & ✨ REBIRTH button under the menu');snd('ready')}if(!r)exReadyNote=false;if(!$('#exm').classList.contains('hidden'))updExtract()}
 
+/* =============== SCRATCH CARDS =============== */
+// a small, fair prize: about 1 in 3 cards wins, never more than the card is roughly worth
+const SCR_SYM={'🥔':{w:30,n:'5 min of production',f:()=>{const v=Math.max(500,D.base*300);gain(v);return '+'+fmt(v)+' 🥔'}},
+  '🔥':{w:20,n:'Production Party',bag:'frenzy'},'👆':{w:20,n:'Click Power',bag:'clickrizz'},'☕':{w:15,n:'Cowboy Coffee',bag:'coffee'},
+  '🎟️':{w:10,n:'Slot Tokens',bag:'tokens'},'🌟':{w:5,n:'Gold Rain',bag:'goldrain'}};
+const SCR_WIN=.33;
+let scrCard=null;
+function openScratch(){
+  const syms=Object.keys(SCR_SYM);let win=null;
+  if(Math.random()<SCR_WIN){let r=Math.random()*syms.reduce((a,k)=>a+SCR_SYM[k].w,0);for(const k of syms){r-=SCR_SYM[k].w;if(r<0){win=k;break}}win=win||syms[0]}
+  // build 9 fields: the winning symbol 3 times, every other symbol at most twice
+  let cells=[];const cnt={};if(win){cells=[win,win,win];cnt[win]=3}
+  while(cells.length<9){const k=pick(syms);if(k===win||(cnt[k]||0)>=2)continue;cnt[k]=(cnt[k]||0)+1;cells.push(k)}
+  scrCard={cells:shuffle(cells),open:Array(9).fill(false),win,done:false};
+  $('#scrGrid').innerHTML=scrCard.cells.map((k,i)=>`<div class="scell" data-i="${i}"><span>${k}</span><i></i></div>`).join('');
+  $$('#scrGrid .scell').forEach(c=>{const f=()=>scrOpen(+c.dataset.i);c.addEventListener('pointerdown',f);c.addEventListener('pointerenter',e=>{if(e.buttons)f()})});
+  $('#scrMsg').textContent='';$('#scrClose').disabled=true;$('#scrAll').disabled=false;
+  $('#scr').classList.remove('hidden');
+}
+function scrOpen(i){
+  if(!scrCard||scrCard.open[i])return;scrCard.open[i]=true;snd('tick');
+  $$('#scrGrid .scell')[i].classList.add('open');
+  if(scrCard.open.every(x=>x))scrFinish();
+}
+function scrFinish(){
+  if(scrCard.done)return;scrCard.done=true;$('#scrAll').disabled=true;$('#scrClose').disabled=false;
+  const w=scrCard.win;
+  if(!w){$('#scrMsg').innerHTML='😅 No 3 of the same this time. Better luck next card!';snd('no');return}
+  $$('#scrGrid .scell').forEach((c,i)=>{if(scrCard.cells[i]===w)c.classList.add('win')});
+  const p=SCR_SYM[w];let txt;
+  if(p.bag){S.bag[p.bag]=(S.bag[p.bag]||0)+1;renderBag();txt='+1 '+w+' '+p.n+' in your bag'}else txt=p.f();
+  $('#scrMsg').innerHTML=`🎉 <b>3 × ${w}!</b> You win ${p.n}: ${txt}`;snd('ach');confetti(70);toast('🎫 Scratch card win!',txt);
+}
+$('#scrAll').addEventListener('click',()=>{for(let i=0;i<9;i++)scrOpen(i)});
+$('#scrClose').addEventListener('click',()=>$('#scr').classList.add('hidden'));
+
 /* =============== CHANGELOG =============== */
 // newest first – add a new entry at the top every time the game is updated
 const CHANGELOG=[
+  {v:'1.9',date:'24 Oct 2026',t:'Scratch cards, auto spin & Extract at level 100',items:[
+    '🎫 New Scratch Cards – sometimes for sale in the 🛒 Shop. Scratch 9 fields and find 3 of the same to win: potatoes, a boost, Slot Tokens or Gold Rain. About 1 in 3 cards wins.',
+    '🔁 Potato Slots has an Auto spin button. Turn it on and the machine spins by itself until it cools down – turn it off to spin by hand.',
+    '🧭 Extract now unlocks at level 100 instead of 200, and costs less (first Extract 1 Qa).',
+    '⬆️ Upgrades cost 2% more for every level you have, so they get more expensive the higher your level.']},
+  {v:'1.8.2',date:'24 Oct 2026',t:'Slower levels',items:[
+    '⚖️ Levels go up slower: each level needs a bit more XP, and missions give 6% of a level instead of 12% (Mission Master now only boosts the potato reward).',
+    '⚖️ After a Rebirth you get fresh missions, and "Earn potatoes" missions grow with how much you have earned this run – so they are no longer finished in seconds.']},
   {v:'1.8.1',date:'24 Oct 2026',t:'Soul Shop moved',items:[
     '🪙 The Soul Shop has moved from 📊 Stats to the bottom of 🛒 Shop.']},
   {v:'1.8',date:'24 Oct 2026',t:'Rebirth balance',items:[
@@ -1420,14 +1487,14 @@ function buyMachine(i,el){
   S.potatoes-=c;S.machines[i]+=a;S.bought+=a;addXP(Math.min(2*a,need(S.level)*.1));recalc();snd('buy');fxAt(el);ensureMachines();renderHideout();updMachines();
 }
 function buyUpg(u,el){
-  if(vibe||S.upgrades[u.id])return;if(S.potatoes<u.c){snd('no');return}
-  S.potatoes-=u.c;S.upgrades[u.id]=1;addXP(10);recalc();snd('buy');fxAt(el,30);toast('⬆️ '+u.n,u.d);upgKey='';
+  if(vibe||S.upgrades[u.id])return;const uc=upgCost(u);if(S.potatoes<uc){snd('no');return}
+  S.potatoes-=uc;S.upgrades[u.id]=1;addXP(10);recalc();snd('buy');fxAt(el,30);toast('⬆️ '+u.n,u.d);upgKey='';
 }
 // every boost you buy makes the next one of that kind dearer; the price cools back down by one step every 10 minutes (also while away)
 const HEAT_MS=600000,SHOP_CAP=10;
 // the shop restocks every 20 minutes (real time) with 5 random items, each with its own stock and price
 const RESTOCK_MS=1200000,STOCK_N=5;
-const STOCK_RULE={frenzy:[10,3,6],clickrizz:[10,3,6],mewing:[9,2,5],turbo:[8,2,5],coffee:[9,3,6],aura:[6,2,4],goldrain:[4,1,3],tokens:[4,1,2],mystery:[4,1,3],fanum:[3,1,2],charge:[2,1,1]}; // weight, min, max stock
+const STOCK_RULE={frenzy:[10,3,6],clickrizz:[10,3,6],mewing:[9,2,5],turbo:[8,2,5],coffee:[9,3,6],aura:[6,2,4],goldrain:[4,1,3],tokens:[4,1,2],mystery:[4,1,3],fanum:[3,1,2],charge:[2,1,1],scratch:[3,1,2]}; // weight, min, max stock
 const PRICE_MULTS=[.6,.75,.85,1,1,1,1.15,1.3,1.5];
 const stockMult=b=>(S.shopStock&&S.shopStock[b.id]?S.shopStock[b.id].m:1);
 function restock(){
@@ -1537,19 +1604,21 @@ function upgFx(u){
   return '';
 }
 let upgKey='',upgEls=[],prevCan=0;
+// upgrades cost 2% more for every level you have (x7 at level 100)
+const upgCost=u=>u.c*Math.pow(1.02,Math.max(0,S.level-1));
 const availUpg=()=>UPG.filter(u=>!S.upgrades[u.id]&&u.req()&&(u.t==='mach'||S.runEarned>=u.c*.1)).sort((a,b)=>a.c-b.c);
 function updUpgrades(){
-  const av=availUpg(),key=av.map(u=>u.id).join();
+  const av=availUpg(),key=av.map(u=>u.id).join()+'|'+S.level;
   if(key!==upgKey){
     upgKey=key;const box=$('#upgList');box.innerHTML='';upgEls=[];
     if(!av.length)box.innerHTML='<div class="empty">No upgrades ready right now. Buy more machines and keep clicking 🥔</div>';
     av.forEach(u=>{const el=document.createElement('div');el.className='row';
       const [tl,tc]=UCAT[u.t]||['⭐ OTHER','#666'];
-      el.innerHTML=`<div class="ri">${u.e}</div><div class="rt"><div class="rn"><span class="utag" style="background:${tc}">${tl}</span>${u.n}</div><div class="rd">${u.d}</div><div class="rfx"></div><div class="rc">🥔 ${fmt(u.c)}</div></div>`;
+      el.innerHTML=`<div class="ri">${u.e}</div><div class="rt"><div class="rn"><span class="utag" style="background:${tc}">${tl}</span>${u.n}</div><div class="rd">${u.d}</div><div class="rfx"></div><div class="rc">🥔 ${fmt(upgCost(u))}</div></div>`;
       el.addEventListener('click',()=>buyUpg(u,el));box.appendChild(el);upgEls.push({el,u,fx:el.querySelector('.rfx')})});
     $('#upgNote').textContent=`${av.length} ready · ${Object.keys(S.upgrades).length} of ${UPG.length} bought`;
   }
-  let can=0;upgEls.forEach(({el,u,fx})=>{const ok=S.potatoes>=u.c;el.classList.toggle('can',ok);if(ok)can++;const t=upgFx(u);if(fx.textContent!==t)fx.textContent=t});
+  let can=0;upgEls.forEach(({el,u,fx})=>{const ok=S.potatoes>=upgCost(u);el.classList.toggle('can',ok);if(ok)can++;const t=upgFx(u);if(fx.textContent!==t)fx.textContent=t});
   const b=$('#bUpg');b.style.display=can?'flex':'none';b.textContent=can;
   if(can>0&&prevCan===0)snd('ready');prevCan=can;
 }
@@ -1669,7 +1738,7 @@ function newMission(){
   const t=pick(types);let x;
   switch(t){
     case'click':x=Math.round((50+d*12)*rand(.8,1.3)/10)*10;break;
-    case'earn':x=nice(Math.max(500,D.base*rand(300,900)));break;
+    case'earn':x=nice(Math.max(500,D.base*rand(300,900),S.runEarned*rand(.6,1.2)));break;
     case'buy':x=Math.min(5+Math.floor(d/3),40);break;
     case'gold':x=Math.min(3,1+Math.floor(d/20));break;
     case'crit':x=Math.round(5+d*1.5);break;
@@ -1702,7 +1771,7 @@ function claimMission(m,el){
   // small rewards at first — they grow slowly the more missions you complete (up to x3 after 200)
   const grind=1+Math.min(2,S.missionsDone/100),mult=(1+.5*PK('mission'))*grind;
   const v=(m.t==='earn'?m.x*.05:Math.max(100,D.base*rand(20,45)))*mult;
-  gain(v);addXP(need(S.level)*.12*(1+.5*PK('mission'))/xpMult());
+  gain(v);addXP(need(S.level)*.06/xpMult()); // Mission Master boosts the potato reward only
   let extra='';if(Math.random()<.08+Math.min(.12,S.missionsDone/1000)){const b=pick(BOOSTS);S.bag[b.id]=(S.bag[b.id]||0)+1;extra=' + '+b.e+' boost';renderBag()}
   S.missionsDone++;addBonus(BONUS.mission);S.missions.splice(k,1);fillMissions();
   snd('ach');fxAt(el,40);confetti(35);toast('📜 Mission complete!','+'+fmt(v)+' 🥔 + XP'+extra);updMissions();
@@ -1787,8 +1856,13 @@ function slotPlay(){
   updSlot();
 }
 $('#slotBtn').addEventListener('click',slotPlay);
+let slotAutoAt=0;
+$('#slotAuto').addEventListener('click',()=>{S.slotAuto=!S.slotAuto;snd('tick');slotAutoAt=0;updSlot()});
 function updSlot(){
-  const b=$('#slotBtn'),l=$('#slotLeft');
+  const b=$('#slotBtn'),l=$('#slotLeft'),ab=$('#slotAuto');
+  ab.textContent='🔁 Auto spin: '+(S.slotAuto?'ON':'OFF');ab.classList.toggle('on',!!S.slotAuto);
+  // auto spin: keeps spinning by itself until the machine cools down (turn it off to play by hand)
+  if(S.slotAuto&&!slotSpinning&&!slotCooling()&&!vibe&&!warping){if(!slotAutoAt)slotAutoAt=Date.now()+700;else if(Date.now()>=slotAutoAt){slotAutoAt=0;slotPlay()}}
   if(S.slotUntil&&Date.now()>=S.slotUntil){S.slotUntil=0;S.slotN=0;toast('🎰 Potato Slots are ready!','50 new free spins in 📜 Missions');snd('ready')}
   if(slotSpinning){b.textContent='🎰 Spinning...';b.disabled=true}
   else if(slotCooling()){b.textContent='⏳ Cooling down '+fmtTime((S.slotUntil-Date.now())/1000);b.disabled=true}
@@ -1934,7 +2008,7 @@ function updGoal(){
   let best=null;const hi=S.machines.reduce((h,n,i)=>n>0?i:h,-1);
   const consider=(e,n,c)=>{if(c>S.potatoes&&(!best||c<best.c))best={e,n,c}};
   MACHINES.forEach((m,i)=>{if(i<=hi+1)consider(m.e,m.n,machCost(i,1))});
-  availUpg().slice(0,15).forEach(u=>consider(u.e,u.n,u.c));
+  availUpg().slice(0,15).forEach(u=>consider(u.e,u.n,upgCost(u)));
   SKINS.forEach(s=>{if(!S.skins[s.id])consider('🎨',s.n,s.c)});
   if(!best){$('#goal').style.visibility='hidden';return}
   $('#goal').style.visibility='';
@@ -1949,7 +2023,7 @@ const PERKS=[
   {id:'click',e:'👆',n:'Soul Click',d:'+100% potatoes per click per level',max:10,c:1},
   {id:'gold',e:'🌟',n:'Golden Soul',d:'Golden potatoes appear 20% more often per level',max:5,c:2},
   {id:'boost',e:'🏷️',n:'Boost Discount',d:'Boosts cost 10% less per level',max:5,c:2},
-  {id:'mission',e:'📜',n:'Mission Master',d:'+50% mission rewards per level',max:5,c:2},
+  {id:'mission',e:'📜',n:'Mission Master',d:'+50% potatoes from missions per level',max:5,c:2},
   {id:'combo',e:'🔥',n:'Tough Combo',d:'Combo drops 25% slower per level',max:3,c:3},
   {id:'auto',e:'🤖',n:'Auto Buyer',d:'Automatically buys the cheapest machine every second',max:1,c:5},
 ];
@@ -2035,7 +2109,7 @@ $('#rebBtn').addEventListener('click',()=>{
     if(mx){S.world=to;applyLook()}
     if(S.soulReset){S.souls=0;S.tokens=0;S.soulReset=0}
     S.souls+=p;S.tokens+=cn;S.rebirths++;S.level=1;S.aura=0;S.exPopup=0;S.potatoes=PK('start')?Math.pow(10,2+PK('start')):0;S.runEarned=0;S.machines=MACHINES.map(()=>0);S.upgrades={};S.active={};disp=0;
-    recalc();renderHideout();upgKey='';save();
+    recalc();renderHideout();upgKey='';S.missions=[];fillMissions();misKey='';save();
   },()=>toast('✨ REBORN!',(p?'+'+p+' souls. ':'')+(mx?'Welcome to '+WORLDS[S.world].e+' '+WORLDS[S.world].n+'!':'Start over — but stronger 💪')));
 });
 $('#expBtn').addEventListener('click',()=>{try{const s=btoa(unescape(encodeURIComponent(JSON.stringify(S))));prompt('Copy your save:',s)}catch(e){}});
