@@ -652,7 +652,7 @@ const hexRgb=h=>{const v=parseInt(h.slice(1),16);return[v>>16&255,v>>8&255,v&255
 let BSET=BALLSETS[0];
 function ballRGB(n){if(n===0)return hexRgb(BSET.cue);return hexRgb(BSET.c[(n>8?n-8:n)-1])}
 const SPR={};let SPRV=1;
-const LX=-.36,LY=-.56,LZ=.75,HX=LX/1.58,HY=LY/1.58,HZ=(LZ+1)/1.58; // light + half vector (approx normalised)
+const LX=-.36,LY=-.56,LZ=.75,HN=Math.hypot(LX,LY,LZ+1),HX=LX/HN,HY=LY/HN,HZ=(LZ+1)/HN; // light + half vector (normalised, so the gloss stays a small glint)
 function ballSprite(b,rpx){
   const sz=Math.ceil(rpx*2)+2;let s=SPR[b.n];
   if(!s||s.sz!==sz){const c=document.createElement('canvas');c.width=c.height=sz;s=SPR[b.n]={c,g:c.getContext('2d'),sz,ver:-1,gv:-1};s.img=s.g.createImageData(sz,sz)}
