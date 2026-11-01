@@ -454,7 +454,7 @@ const MIS_POOL=[
   ['matches',30,'Make {n} matches','Lav {n} kombinationer','✨'],
   ['specials',5,'Make {n} special candies','Lav {n} specialslik','💥'],
   ['kills',8,'Defeat {n} monsters','Besejr {n} monstre','👾'],
-  ['skills',4,'Use {n} hero skills','Brug {n} helteevner','⚡'],
+  ['skills',4,'Use {n} hero attacks','Brug {n} helteangreb','⚡'],
   ['levels',2,'Win {n} levels','Vind {n} baner','🏁'],
   ['dmg',3000,'Deal {n} damage','Giv {n} skade','⚔️'],
   ['cascades',8,'Make {n} cascades','Lav {n} kædereaktioner','⛓️'],
@@ -481,8 +481,8 @@ const QUESTS=[
   ['q10','👑','Defeat 1 boss','Besejr 1 boss','bosses',1,500],
   ['q11','👑','Defeat 5 bosses','Besejr 5 bosser','bosses',5,1500],
   ['q12','👑','Defeat 10 bosses','Besejr 10 bosser','bosses',10,4000],
-  ['q13','⚡','Use 15 hero skills','Brug 15 helteevner','skills',15,400],
-  ['q14','⚡','Use 80 hero skills','Brug 80 helteevner','skills',80,1300],
+  ['q13','⚡','Use 15 hero attacks','Brug 15 helteangreb','skills',15,400],
+  ['q14','⚡','Use 80 hero attacks','Brug 80 helteangreb','skills',80,1300],
   ['q15','💥','Make 25 special candies','Lav 25 specialslik','specials',25,450],
   ['q16','💥','Make 120 special candies','Lav 120 specialslik','specials',120,1400],
   ['q17','⛓️','Make 60 cascades','Lav 60 kædereaktioner','cascades',60,500],
@@ -514,7 +514,7 @@ const ACH=[
   ['a5','🐉','Boss breaker','Bossknuser','Defeat a boss','Besejr en boss',()=>S.cnt.bosses>=1],
   ['a6','🔥','Boss hunter','Bossjæger','Defeat 10 bosses','Besejr 10 bosser',()=>S.cnt.bosses>=10],
   ['a7','👾','Monster mash','Monstermos','Defeat 100 monsters','Besejr 100 monstre',()=>S.cnt.kills>=100],
-  ['a8','⚡','Skill master','Evnemester','Use 25 hero skills','Brug 25 helteevner',()=>S.cnt.skills>=25],
+  ['a8','⚡','Skill master','Evnemester','Use 25 hero attacks','Brug 25 helteangreb',()=>S.cnt.skills>=25],
   ['a9','🥔','Full squad','Fuldt hold','Own all 8 heroes','Ej alle 8 helte',()=>S.cnt.heroes>=8],
   ['a10','💪','Super spud','Superkartoffel','Upgrade a hero to level 10','Opgradér en helt til level 10',()=>Object.values(S.heroes).some(h=>h.lvl>=10)],
   ['a11','♾️','Never give up','Giv aldrig op','Reach wave 10 in endless','Nå bølge 10 i endeløs',()=>S.bestWave>=10],
@@ -549,15 +549,17 @@ const HEROES=[
   {id:'king',  en:'Royal Spud',       da:'Kongekartoflen',   c:1,hp:210,arm:16,atk:20,ch:14,ab:'royal',  price:6000,unlock:45,hat:'crown',  wpn:'scepter',legend:true}
 ];
 const HERO=id=>HEROES.find(h=>h.id===id);
+// when a hero is fully charged it gets HITS attacks: drag the hero onto a monster for each one
+const HITS=3;
 const ABIL={
-  heal:   ['💖','Sugar heal','Sukkerhelbred','Heals every hero for 35% of their health.','Heler alle helte med 35 % af deres liv.'],
-  slash:  ['🗡️','Mighty slash','Kæmpehug','A huge hit on the target monster (4.5× attack).','Et kæmpe hug på det valgte monster (4,5× angreb).'],
-  frost:  ['❄️','Frost spell','Frostformular','Hits every monster (1.2×) and freezes them: their attacks come 2 turns later.','Rammer alle monstre (1,2×) og fryser dem: deres angreb kommer 2 ture senere.'],
-  arrows: ['🏹','Lemon arrows','Citronpile','Shoots 6 arrows at random monsters (1.1× each).','Skyder 6 pile mod tilfældige monstre (1,1× hver).'],
-  barrage:['💣','Cannon barrage','Kanonsalve','Blasts every monster (2.2× attack).','Skyder på alle monstre (2,2× angreb).'],
-  shield: ['🛡️','Candy shield','Slikskjold','Every hero gets a shield worth 35% of their health.','Alle helte får et skjold på 35 % af deres liv.'],
-  storm:  ['🌪️','Candy storm','Sliktorm','Turns 6 candies on the board into special candies.','Gør 6 slik på brættet til specialslik.'],
-  royal:  ['👑','Royal strike','Kongeslag','7× attack on the target and heals the team by 15%.','7× angreb på målet og heler holdet med 15 %.']
+  heal:   ['💖','Sugar heal','Sukkerhelbred','Hits the monster (2×) and heals every hero for 15%.','Rammer monsteret (2×) og heler alle helte med 15 %.'],
+  slash:  ['🗡️','Mighty slash','Kæmpehug','A huge hit on the monster (2.8× attack).','Et kæmpe hug på monsteret (2,8× angreb).'],
+  frost:  ['❄️','Frost spell','Frostformular','Hits the monster (2×) and freezes it: its attack comes 2 turns later.','Rammer monsteret (2×) og fryser det: dets angreb kommer 2 ture senere.'],
+  arrows: ['🏹','Lemon arrows','Citronpile','Hits the monster (2×) and shoots 2 extra arrows at random monsters.','Rammer monsteret (2×) og skyder 2 ekstra pile mod tilfældige monstre.'],
+  barrage:['💣','Cannon barrage','Kanonsalve','Hits the monster (2×) and blasts every other monster too (1.2×).','Rammer monsteret (2×) og skyder også på alle andre monstre (1,2×).'],
+  shield: ['🛡️','Candy shield','Slikskjold','Hits the monster (2×) and gives every hero a shield worth 15% of their health.','Rammer monsteret (2×) og giver alle helte et skjold på 15 % af deres liv.'],
+  storm:  ['🌪️','Candy storm','Sliktorm','Hits the monster (2×) and turns 2 candies into special candies.','Rammer monsteret (2×) og gør 2 slik til specialslik.'],
+  royal:  ['👑','Royal strike','Kongeslag','A mighty royal hit (3×) that also heals the team by 6%.','Et mægtigt kongeslag (3×), der også heler holdet med 6 %.']
 };
 const HERO_MAX=25;
 const heroStat=(h,lvl)=>{const m=1+.1*(lvl-1);return{hp:Math.round(h.hp*m),atk:h.atk*m,arm:h.arm+Math.floor((lvl-1)*.8)}};
@@ -605,7 +607,7 @@ const tierFor=n=>Math.min(4,Math.floor((n-1)/20));
 const CAMPAIGN=100;
 
 /* ---- levels are built from the level number (and how many times you have gone round) ---- */
-const HP_BASE=125,ATK_BASE=21,DMG_K=.12;
+const HP_BASE=135,ATK_BASE=25,DMG_K=.12;
 function mkEnemy(def,n,r,cyc,boss){
   const f=(1+.037*(n-1))*(1+.35*cyc),af=(1+.033*(n-1))*(1+.3*cyc),wob=.9+r()*.2;
   const hp=Math.round(HP_BASE*(boss?5:def.hp)*f*wob);
@@ -926,7 +928,7 @@ function startBattle(lv){
   show('scGame');requestAnimationFrame(()=>{layout();nextWave(true)});
   MUSIC.battle=true;
   bhead();
-  if(!S.cnt.swaps)setTimeout(()=>toast(L('👆 Tap a candy, then the one next to it. Candies in your heroes\' colours charge them up ⚡. All the other colours hit the monster! When a hero glows, tap it for its super attack.','👆 Tryk på et slik og så på det ved siden af. Slik i dine heltes farver lader dem op ⚡. Alle de andre farver rammer monsteret! Når en helt lyser, så tryk på den for dens superangreb.'),8000),1400);
+  if(!S.cnt.swaps)setTimeout(()=>toast(L('👆 Tap a candy, then the one next to it. Candies in your heroes\' colours charge them up ⚡. All the other colours hit the monster! When a hero glows, drag it onto a monster to attack.','👆 Tryk på et slik og så på det ved siden af. Slik i dine heltes farver lader dem op ⚡. Alle de andre farver rammer monsteret! Når en helt lyser, så træk den op på et monster for at angribe.'),8000),1400);
 }
 function makeBoard(){
   const g=[];for(let i=0;i<COLS*ROWS;i++)g.push(newCell());B.g=g;
@@ -1085,7 +1087,7 @@ async function clearSet(set,place){
   per.forEach((cnt,col)=>{if(!cnt)return;
     const hs=alive.filter(h=>h.def.c===col);
     if(!hs.length){const t=curTarget();if(t)shoot({from:centre(col),to:t,dmg:cnt*perCandy*mult,kind:'spark',col});return}
-    hs.forEach(h=>{const before=h.charge;h.charge=Math.min(h.chMax,h.charge+cnt);if(before<h.chMax&&h.charge>=h.chMax){SFX.ready();h.readyT=1}
+    hs.forEach(h=>{h.charge=Math.min(h.chMax,h.charge+cnt);if(!h.active&&h.charge>=h.chMax){h.active=true;SFX.ready();h.readyT=1;if(!S.cnt.skills)toast(L(`⚡ ${nm(h.def)} is charged! Drag the hero up onto a monster to attack.`,`⚡ ${nm(h.def)} er ladet op! Træk helten op på et monster for at angribe.`),4000)}
       shoot({from:centre(col),to:h,dmg:0,kind:'charge',col})})});
   await tween(150,p=>set.forEach(i=>{const c=B.g[i];if(c&&!keep.has(i))c.sc=1-easeOut(p)}));
   set.forEach(i=>{const c=B.g[i];if(!c)return;if(keep.has(i)){c.sc=1;return}
@@ -1145,7 +1147,7 @@ function hurtHero(h,dmg,src){
   if(h.shield>0){const a=Math.min(h.shield,dmg);h.shield-=a;dmg-=a;if(a)floatText(...heroPos(h),'🛡️-'+a,'#9be7ff',18)}
   if(dmg>0){h.hp=Math.max(0,h.hp-dmg);floatText(heroPos(h)[0],heroPos(h)[1]-10,'-'+dmg,'#ff6b81',22)}
   h.flash=1;h.hurt=1;B.shake=.5;SFX.hurt();
-  if(h.hp<=0&&!h.dead){h.dead=true;h.charge=0;h.shield=0;toast(L(`💔 ${nm(h.def)} has fallen!`,`💔 ${nm(h.def)} er faldet!`))}
+  if(h.hp<=0&&!h.dead){h.dead=true;h.charge=0;h.active=false;h.shield=0;toast(L(`💔 ${nm(h.def)} has fallen!`,`💔 ${nm(h.def)} er faldet!`))}
 }
 
 /* ---- the monsters' turn ---- */
@@ -1170,22 +1172,25 @@ async function enemyTurn(){
   }
 }
 
-/* ---- hero skills ---- */
-async function useSkill(h){
-  if(!B||B.busy||B.over||h.dead||h.charge<h.chMax)return;
-  B.busy=true;h.charge=0;bump('skills');SFX.skill();
-  const ab=ABIL[h.def.ab];banner(ab[0]+' '+L(ab[1],ab[2]));
-  const al=()=>B.enemies.filter(e=>!e.dead);
+/* ---- hero attacks ---- */
+const hitsLeft=h=>h.active?Math.max(0,Math.round(h.charge/(h.chMax/HITS))):0;
+async function heroAttack(h,e){
+  if(!B||B.busy||B.over||h.dead||!h.active||!e||e.dead)return;
+  B.busy=true;B.target=B.enemies.indexOf(e);
+  h.charge=Math.max(0,h.charge-h.chMax/HITS);if(h.charge<h.chMax/HITS-.01){h.active=false}
+  bump('skills');SFX.skill();
+  const al=()=>B.enemies.filter(o=>!o.dead),hit=(m,o)=>heroShot(h,h.atk*m,Object.assign({to:e,big:true},o||{}));
+  const healAll=f=>{B.heroes.forEach(o=>{if(o.dead)return;const v=Math.round(o.maxHp*f);o.hp=Math.min(o.maxHp,o.hp+v);floatText(...heroPos(o),'+'+v,'#7dffb0',20)});SFX.heal()};
   switch(h.def.ab){
-    case'heal':B.heroes.forEach(o=>{if(o.dead)return;const v=Math.round(o.maxHp*.35);o.hp=Math.min(o.maxHp,o.hp+v);floatText(...heroPos(o),'+'+v,'#7dffb0',22)});SFX.heal();heroShot(h,h.atk*2,{big:true});break;
-    case'slash':heroShot(h,h.atk*4.5,{big:true});break;
-    case'frost':al().forEach(e=>{heroShot(h,h.atk*1.2,{to:e});e.cdLeft+=2;e.frozen=2});break;
-    case'arrows':for(let k=0;k<6;k++){const a=al();if(!a.length)break;heroShot(h,h.atk*1.1,{to:pick(a)});await sleep(90)}break;
-    case'barrage':al().forEach(e=>heroShot(h,h.atk*2.2,{to:e,big:true}));break;
-    case'shield':B.heroes.forEach(o=>{if(!o.dead)o.shield+=Math.round(o.maxHp*.35)});SFX.shield();heroShot(h,h.atk*2,{big:true});break;
-    case'storm':{al().forEach(e=>heroShot(h,h.atk*1.2,{to:e}));const spots=[];let g=60;while(spots.length<6&&g--){const i=rnd(B.g.length);if(B.g[i]&&!B.g[i].sp&&!spots.includes(i))spots.push(i)}
+    case'heal':hit(2);healAll(.15);break;
+    case'slash':hit(2.8);break;
+    case'frost':hit(2);e.cdLeft+=2;e.frozen=2;break;
+    case'arrows':hit(2);for(let k=0;k<2;k++){await sleep(90);const a=al();if(a.length)heroShot(h,h.atk*.9,{to:pick(a)})}break;
+    case'barrage':hit(2);al().forEach(o=>{if(o!==e)heroShot(h,h.atk*1.2,{to:o})});break;
+    case'shield':hit(2);B.heroes.forEach(o=>{if(!o.dead)o.shield+=Math.round(o.maxHp*.15)});SFX.shield();break;
+    case'storm':{hit(2);const spots=[];let g=60;while(spots.length<2&&g--){const i=rnd(B.g.length);if(B.g[i]&&!B.g[i].sp&&!spots.includes(i))spots.push(i)}
       spots.forEach(i=>{B.g[i].sp=pick(['row','col','bomb']);B.g[i].sc=0});await tween(260,p=>spots.forEach(i=>{if(B.g[i])B.g[i].sc=easeBack(p)}));break}
-    case'royal':heroShot(h,h.atk*7,{big:true});B.heroes.forEach(o=>{if(o.dead)return;const v=Math.round(o.maxHp*.15);o.hp=Math.min(o.maxHp,o.hp+v);floatText(...heroPos(o),'+'+v,'#7dffb0',20)});SFX.heal();break;
+    case'royal':hit(3);healAll(.06);break;
   }
   await waitShots();
   if(!(await waveCheck())){B.busy=false;B.idleT=performance.now();findHint()}
@@ -1334,7 +1339,7 @@ function drawStage(dt){
   // heroes
   g.fillStyle='rgba(20,8,48,.55)';g.fillRect(0,HY,W,HH);
   B.heroes.forEach((h,i)=>{
-    const s=heroSlot(i),col=PIECES[h.def.c].c,ready=!h.dead&&h.charge>=h.chMax;
+    const s=heroSlot(i),col=PIECES[h.def.c].c,ready=!h.dead&&h.active,dragging=B.hdrag&&B.hdrag.h===h&&B.hdrag.moved;
     h.flash=Math.max(0,h.flash-dt*3);h.hurt=Math.max(0,h.hurt-dt*2);h.atkT=Math.max(0,(h.atkT||0)-dt*3);h.glowT=Math.max(0,(h.glowT||0)-dt*3);
     roundRect(g,s.x,s.y,s.w,s.h,14);
     gr=g.createLinearGradient(0,s.y,0,s.y+s.h);gr.addColorStop(0,h.dead?'#555':shade(col,.15));gr.addColorStop(1,h.dead?'#333':shade(col,-.45));g.fillStyle=gr;g.fill();
@@ -1342,7 +1347,7 @@ function drawStage(dt){
     if(h.flash>0){g.globalAlpha=h.flash*.5;g.fillStyle='#ff3b4e';g.fill();g.globalAlpha=1}
     if(h.glowT>0){g.globalAlpha=h.glowT*.35;g.fillStyle='#fff';g.fill();g.globalAlpha=1}
     const hs=Math.min(s.w*.8,s.h*.62);
-    drawHero(g,h.def,s.x+s.w/2+(h.hurt?Math.sin(t*50)*3:0),s.y+hs*.5+2-Math.sin((h.atkT||0)*Math.PI)*hs*.22,hs,{dead:h.dead,ph:h.ph});
+    if(!dragging)drawHero(g,h.def,s.x+s.w/2+(h.hurt?Math.sin(t*50)*3:0),s.y+hs*.5+2-Math.sin((h.atkT||0)*Math.PI)*hs*.22,hs,{dead:h.dead,ph:h.ph});
     if(h.shield>0){g.globalAlpha=.3+.1*Math.sin(t*4);g.strokeStyle='#9be7ff';g.lineWidth=3;g.beginPath();g.arc(s.x+s.w/2,s.y+hs*.5+2,hs*.48,0,7);g.stroke();g.globalAlpha=1}
     // bars
     const bx=s.x+5,bw2=s.w-10;let by=s.y+s.h-27;
@@ -1352,13 +1357,15 @@ function drawStage(dt){
     g.fillStyle='#fff';g.font=`900 ${s.w<80?8.5:10}px Nunito,sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText(h.dead?'💀':Math.ceil(h.hp)+'/'+h.maxHp,s.x+s.w/2,by+6);
     by+=13;roundRect(g,bx,by,bw2,11,5);g.fillStyle='#2a1159';g.fill();
     if(h.charge>0){roundRect(g,bx+1.5,by+1.5,(bw2-3)*Math.min(1,h.charge/h.chMax),8,4);g.fillStyle=ready?'#ffd54a':col;g.fill()}
-    if(!h.dead){g.fillStyle='#fff';g.font=`900 ${s.w<80?8:9.5}px Nunito,sans-serif`;g.textAlign='center';g.fillText('⚡'+Math.min(h.charge,h.chMax)+'/'+h.chMax,s.x+s.w/2,by+6)}
+    if(ready){for(let k=1;k<HITS;k++){const x=bx+1.5+(bw2-3)*k/HITS;g.fillStyle='#2a1159';g.fillRect(x-1,by+1,2,9)}}
+    if(!h.dead){g.fillStyle=ready?'#2a1159':'#fff';g.font=`900 ${s.w<80?8:9.5}px Nunito,sans-serif`;g.textAlign='center';
+      g.fillText(ready?'⚔️×'+hitsLeft(h):'⚡'+Math.floor(Math.min(h.charge,h.chMax))+'/'+h.chMax,s.x+s.w/2,by+6)}
     // armour + level
     g.font='900 10px Nunito,sans-serif';g.textAlign='left';g.fillStyle='#fff';g.fillText('🛡️'+h.arm,s.x+4,s.y+10);
     g.textAlign='right';g.fillText('Lv'+h.lvl,s.x+s.w-4,s.y+10);
     {const cs=Math.min(22,s.w*.24);g.drawImage(candySprite(h.def.c,cs),s.x+1,s.y+16,cs*1.3,cs*1.3)}
     if(ready){g.textAlign='center';g.font=`900 ${s.w<80?10:12}px Nunito,sans-serif`;g.fillStyle='#ffd54a';g.strokeStyle='#2a1159';g.lineWidth=3;
-      const tx=ABIL[h.def.ab][0]+' '+L('TAP!','TRYK!');g.strokeText(tx,s.x+s.w/2,s.y+s.h*.5);g.fillText(tx,s.x+s.w/2,s.y+s.h*.5)}
+      const tx=dragging?'':'⬆ '+L('DRAG!','TRÆK!');g.strokeText(tx,s.x+s.w/2,s.y+s.h*.5);g.fillText(tx,s.x+s.w/2,s.y+s.h*.5)}
   });
   for(let i=B.heroes.length;i<4;i++){const s=heroSlot(i);roundRect(g,s.x,s.y,s.w,s.h,14);g.setLineDash([6,6]);g.strokeStyle='rgba(255,255,255,.25)';g.lineWidth=2;g.stroke();g.setLineDash([])}
   // beams + rings
@@ -1367,6 +1374,11 @@ function drawStage(dt){
   B.beams=(B.beams||[]).filter(b=>b.t<1);
   (B.rings||[]).forEach(r=>{r.t+=dt*2.5;g.globalAlpha=Math.max(0,1-r.t);g.strokeStyle=r.col;g.lineWidth=6;g.beginPath();g.arc(r.x,r.y,CELL*(r.big?4:1.6)*r.t,0,7);g.stroke()});
   B.rings=(B.rings||[]).filter(r=>r.t<1);g.globalAlpha=1;
+  // a hero being dragged onto a monster
+  if(B.hdrag&&B.hdrag.moved){const d=B.hdrag,h=d.h,[hx,hy]=heroPos(h),e=enemyAt(d.x,d.y);
+    g.setLineDash([8,8]);g.lineWidth=4;g.strokeStyle='rgba(255,213,74,.8)';g.beginPath();g.moveTo(hx,hy);g.lineTo(d.x,d.y);g.stroke();g.setLineDash([]);
+    if(e){g.strokeStyle='#ffd54a';g.lineWidth=5;g.shadowColor='#ffd54a';g.shadowBlur=16;g.beginPath();g.arc(e.x,e.y,e.sz*.5+Math.sin(t*10)*3,0,7);g.stroke();g.shadowBlur=0}
+    const hs=Math.min(heroSlot(0).w*.8,HH*.6)*1.1;drawHero(g,h.def,d.x,d.y-hs*.25,hs,{ph:h.ph})}
   // shots
   for(let k=B.proj.length-1;k>=0;k--){const p=B.proj[k];p.t+=dt/p.dur;
     const to=p.kind==='enemy'||p.kind==='charge'?heroPos(p.to):[p.to.x,p.to.y],q=Math.min(1,p.t),e=p.kind==='enemy'||p.kind==='charge'?q*q:easeOut(q);
@@ -1400,8 +1412,8 @@ cv.addEventListener('pointerdown',e=>{
     if(best>=0&&best!==B.target){B.target=best;SFX.pick()}return}
   if(py>=HY){const i=B.heroes.findIndex((h,k)=>{const s=heroSlot(k);return px>=s.x&&px<=s.x+s.w});
     const h=B.heroes[i];if(!h)return;
-    if(!h.dead&&h.charge>=h.chMax){useSkill(h);return}
-    const ab=ABIL[h.def.ab];toast(`${ab[0]} <b>${nm(h.def)}</b>: ${L(ab[3],ab[4])}<br><small>${L(`Charges from ${nm(PIECES[h.def.c])} candies (${h.charge}/${h.chMax}).`,`Lader op af ${nm(PIECES[h.def.c]).toLowerCase()} (${h.charge}/${h.chMax}).`)}</small>`,3000);return}
+    if(!h.dead&&h.active){if(B.busy)return;B.hdrag={h,x:px,y:py,sx:px,sy:py,moved:false};B.sel=null;try{cv.setPointerCapture(e.pointerId)}catch(_){}return}
+    const ab=ABIL[h.def.ab];toast(`${ab[0]} <b>${nm(h.def)}</b>: ${L(ab[3],ab[4])}<br><small>${L(`Charges from ${nm(PIECES[h.def.c])} candies (${Math.floor(h.charge)}/${h.chMax}). When full: ${HITS} attacks – drag the hero onto a monster.`,`Lader op af ${nm(PIECES[h.def.c]).toLowerCase()} (${Math.floor(h.charge)}/${h.chMax}). Når den er fuld: ${HITS} angreb – træk helten op på et monster.`)}</small>`,3500);return}
   if(B.busy)return;
   const i=cellAt(px,py);if(i<0){B.sel=null;return}
   if(B.tool==='hammer'){useHammer(i);return}
@@ -1411,14 +1423,22 @@ cv.addEventListener('pointerdown',e=>{
   B.sel=i;SFX.pick();B.drag={i,x:px,y:py};
   try{cv.setPointerCapture(e.pointerId)}catch(_){}
 });
+function enemyAt(px,py){let best=null,bd=1e9;
+  if(!B)return null;B.enemies.forEach(m=>{if(m.dead)return;const d=Math.hypot(m.x-px,m.y-py);if(d<bd){bd=d;best=m}});
+  return best&&(bd<best.sz*.75||py<EH)?best:null}
 cv.addEventListener('pointermove',e=>{
+  if(B&&B.hdrag){const[px,py]=evPos(e),d=B.hdrag;d.x=px;d.y=py;if(Math.hypot(px-d.sx,py-d.sy)>12)d.moved=true;return}
   if(!B||!B.drag||B.busy)return;const[px,py]=evPos(e),dx=px-B.drag.x,dy=py-B.drag.y;
   if(Math.max(Math.abs(dx),Math.abs(dy))<CELL*.38)return;
   const[x,y]=XY(B.drag.i);let nx=x,ny=y;if(Math.abs(dx)>Math.abs(dy))nx+=Math.sign(dx);else ny+=Math.sign(dy);
   const from=B.drag.i;B.drag=null;
   if(nx>=0&&ny>=0&&nx<COLS&&ny<ROWS)trySwap(from,ny*COLS+nx);
 });
-addEventListener('pointerup',()=>{if(B)B.drag=null});
+addEventListener('pointerup',e=>{if(!B)return;B.drag=null;
+  const d=B.hdrag;if(!d)return;B.hdrag=null;
+  if(!d.moved){toast(L(`⬆ Drag ${nm(d.h.def)} up onto a monster to attack! (${hitsLeft(d.h)} left)`,`⬆ Træk ${nm(d.h.def)} op på et monster for at angribe! (${hitsLeft(d.h)} tilbage)`),2600);return}
+  const m=enemyAt(d.x,d.y);if(m)heroAttack(d.h,m);else SFX.no()});
+addEventListener('pointercancel',()=>{if(B){B.drag=null;B.hdrag=null}});
 
 /* ---- boosters ---- */
 async function useHammer(i){
@@ -1529,7 +1549,7 @@ function drawTeam(el){el.innerHTML='';for(let i=0;i<4;i++){const s=document.crea
 function openHeroes(){
   return panel({title:'🥔 '+L('Potato heroes','Kartoffelhelte'),render:(b)=>{
     const draw=()=>{
-      b.innerHTML=`<p class="hint" style="margin-top:0">${L('Up to 4 heroes fight. Candies in a hero\'s colour charge its super attack. All other colours hit the monsters – the stronger your team, the harder they hit.','Op til 4 helte kæmper. Slik i en helts farve lader dens superangreb op. Alle andre farver rammer monstrene – jo stærkere hold, jo hårdere slag.')}</p>
+      b.innerHTML=`<p class="hint" style="margin-top:0">${L('Up to 4 heroes fight. Candies in a hero\'s colour charge it up. When it is full, drag the hero onto a monster – it gets 3 attacks. All other colours hit the monsters – the stronger your team, the harder they hit.','Op til 4 helte kæmper. Slik i en helts farve lader den op. Når den er fuld, så træk helten op på et monster – den får 3 angreb. Alle andre farver rammer monstrene – jo stærkere hold, jo hårdere slag.')}</p>
         <div class="teambar" id="hTeam"></div><div id="hList"></div>`;
       drawTeam($('#hTeam',b));
       HEROES.forEach(d=>{
@@ -1597,12 +1617,12 @@ $('#mTro').onclick=()=>{SFX.click();panel({title:'🏆 '+L('Trophies','Trofæer'
 $('#mStats').onclick=()=>{SFX.click();const c=S.cnt,row=(e,en,da,v)=>`<div class="task"><span class="ic">${e}</span><span class="tx"><b>${L(en,da)}</b></span><b>${v}</b></div>`;
   panel({title:'📊 '+L('Stats','Statistik'),html:[row('🏁','Highest level','Højeste bane',S.maxLevel-1),row('🔁','Campaign round','Kampagnerunde',S.cycle+1),row('⭐','Stars','Stjerner',c.stars),
     row('♾️','Best endless wave','Bedste endeløse bølge',S.bestWave),row('👾','Monsters defeated','Monstre besejret',N(c.kills)),row('👑','Bosses defeated','Bosser besejret',c.bosses),
-    row('⚔️','Damage dealt','Skade givet',N(c.dmg)),row('⚡','Hero skills used','Helteevner brugt',c.skills),row('🍬','Candies cleared','Slik fjernet',N(c.cleared)),
+    row('⚔️','Damage dealt','Skade givet',N(c.dmg)),row('⚡','Hero attacks made','Helteevner brugt',c.skills),row('🍬','Candies cleared','Slik fjernet',N(c.cleared)),
     row('💥','Special candies','Specialslik',c.specials),row('⛓️','Cascades','Kædereaktioner',c.cascades),row('🥔','Heroes','Helte',Object.keys(S.heroes).length+'/'+HEROES.length),row('🪙','Coins earned','Mønter tjent',N(c.coins))].join('')})};
 $('#mHelp').onclick=()=>{SFX.click();panel({title:'❓ '+L('How to play','Sådan spiller du'),html:[
   ['👆',L('Tap a candy, then tap the one next to it to swap them (or just drag). If it makes a line of 3 or more they pop – if not, they slide back. You have unlimited moves.','Tryk på et slik og så på det ved siden af for at bytte dem (eller træk). Giver det 3 eller flere på stribe, popper de – ellers glider de tilbage. Du har uendelig mange træk.')],
   ['🥔',L('Your potato heroes stand under the board. Candies in a hero\'s colour do not hurt the monsters – they charge that hero ⚡. All the other colours fly up and hit the monster, powered by your team.','Dine kartoffelhelte står under brættet. Slik i en helts farve skader ikke monstrene – de lader helten op ⚡. Alle de andre farver flyver op og rammer monsteret med dit holds styrke.')],
-  ['⚡',L('When a hero glows, tap them to use their skill – healing, big hits, freezing and more.','Når en helt lyser, så tryk på den for at bruge dens evne – heling, kæmpeslag, frost og mere.')],
+  ['⚡',L(`When a hero is fully charged it glows and gets ${HITS} attacks. Grab the hero and drop it on a monster to attack – each attack uses a third of the energy. Every hero has its own extra effect: healing, big hits, freezing and more.`,`Når en helt er ladet helt op, lyser den og får ${HITS} angreb. Tag fat i helten og slip den på et monster for at angribe – hvert angreb bruger en tredjedel af energien. Hver helt har sin egen ekstra effekt: heling, kæmpeslag, frost og mere.`)],
   ['👾',L('Monsters count down with every move. At 0 they attack a hero. Armour 🛡️ lowers the damage. Bosses hit everyone! Tap a monster to choose who to attack.','Monstrene tæller ned for hvert træk. Ved 0 angriber de en helt. Rustning 🛡️ mindsker skaden. Bosser rammer alle! Tryk på et monster for at vælge, hvem du angriber.')],
   ['💔',L('If all your heroes fall, the level starts over. Kill every monster in every wave to win.','Falder alle dine helte, starter banen forfra. Dræb alle monstre i alle bølger for at vinde.')],
   ['💥',L('4 in a line = striped candy (clears a row or column). L or T shape = bomb. 5 in a line = floss cloud: swap it with a candy to clear that whole colour.','4 på stribe = stribet slik (rydder en række eller søjle). L- eller T-form = bombe. 5 på stribe = spindsky: byt den med et slik for at rydde hele den farve.')],
@@ -1612,9 +1632,13 @@ $('#mHelp').onclick=()=>{SFX.click();panel({title:'❓ '+L('How to play','Sådan
 
 /* ---- what's new ---- */
 const CHANGELOG=[
+  {v:'2.1',d:['1 Nov 2026','1. nov. 2026'],t:['Drag heroes to attack','Træk helte for at angribe'],i:[
+    ['✋ When a hero is fully charged, grab it and drop it on a monster to attack!','✋ Når en helt er ladet op, så tag fat i den og slip den på et monster for at angribe!'],
+    ['⚔️ A full charge gives 3 attacks. Each attack uses a third of the energy – the bar shows how many are left.','⚔️ En fuld opladning giver 3 angreb. Hvert angreb bruger en tredjedel af energien – bjælken viser, hvor mange der er tilbage.'],
+    ['💖 Every hero still has its own extra effect on each attack: healing, shields, frost, arrows and more.','💖 Hver helt har stadig sin egen ekstra effekt ved hvert angreb: heling, skjold, frost, pile og mere.']]},
   {v:'2.0.1',d:['1 Nov 2026','1. nov. 2026'],t:['Charge or attack','Lad op eller angrib'],i:[
     ['⚡ Candies in your heroes\' colours now only charge the heroes and no longer hurt the monsters. All the other colours fly up and hit the monster.','⚡ Slik i dine heltes farver lader nu kun heltene op og skader ikke længere monstrene. Alle de andre farver flyver op og rammer monsteret.'],
-    ['⚔️ Every hero skill hits the monster – even heal and shield – and heroes jump when they attack.','⚔️ Alle helteevner rammer monsteret – selv heling og skjold – og heltene hopper, når de angriber.'],
+    ['⚔️ Every hero skill hits the monster – even heal and shield – and heroes jump when they attack.','⚔️ Alle helteangreb rammer monsteret – selv heling og skjold – og heltene hopper, når de angriber.'],
     ['🍬 Each hero card shows which candy to match, and the ⚡ bar shows how close the super attack is.','🍬 Hvert heltekort viser, hvilket slik du skal matche, og ⚡-bjælken viser, hvor tæt superangrebet er.'],
     ['👆 A short tip in the first battle explains how it works.','👆 Et kort tip i første kamp forklarer, hvordan det virker.']]},
   {v:'2.0',d:['1 Nov 2026','1. nov. 2026'],t:['Candy battle!','Slikkamp!'],i:[
