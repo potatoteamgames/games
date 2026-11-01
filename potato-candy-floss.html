@@ -88,6 +88,7 @@ h1,h2,h3{font-family:'Lilita One',sans-serif;font-weight:400;margin:0}
 .mbig.play{background:linear-gradient(#ff9ed2,var(--pinkD))}
 .mbig.heroes{background:linear-gradient(#ffd77a,var(--orangeD));color:#4a2600}
 .mbig.heroes b{text-shadow:none}
+.mbig.classic{background:linear-gradient(#8ef0b8,#159a5a)}
 .mbig.endless{background:linear-gradient(#7fd6ff,#2c7fe0)}
 .m4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .m4 button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 2px;font-size:11.5px;border-radius:14px;border:3px solid var(--deep2);box-shadow:0 4px 0 var(--deep2);background:linear-gradient(#fff,#efe6ff);position:relative}
@@ -226,6 +227,7 @@ h1,h2,h3{font-family:'Lilita One',sans-serif;font-weight:400;margin:0}
     </div>
     <div class="menu">
       <button class="mbig play" id="mPlay"><span class="ic">⚔️</span><span class="tx"><b id="mPlayT">Campaign</b><small id="mPlayS">Level 1 of 100</small></span></button>
+      <button class="mbig classic" id="mClassic"><span class="ic">🍬</span><span class="tx"><b id="mClassicT">Classic candy</b><small id="mClassicS">Level 1 of 100</small></span></button>
       <button class="mbig heroes" id="mHeroes"><span class="ic">🥔</span><span class="tx"><b id="mHeroT">Heroes</b><small id="mHeroS">Buy and upgrade your team</small></span><span class="dot" id="heroDot" style="display:none">!</span></button>
       <button class="mbig endless" id="mEndless"><span class="ic">♾️</span><span class="tx"><b id="mEndT">Endless battle</b><small id="mEndS">Best: wave 0</small></span></button>
       <div class="m4">
@@ -382,10 +384,10 @@ const MUSIC={
 
 /* ---------------- save ---------------- */
 const KEY='potato_floss_v1';
-function defCnt(){return{cleared:0,matches:0,specials:0,levels:0,swaps:0,cascades:0,endless:0,stars:0,coins:0,kills:0,bosses:0,skills:0,dmg:0,heroes:2,upgrades:0,waves:0}}
+function defCnt(){return{cleared:0,matches:0,specials:0,levels:0,swaps:0,cascades:0,endless:0,stars:0,coins:0,kills:0,bosses:0,skills:0,dmg:0,heroes:2,upgrades:0,waves:0,clevels:0}}
 function defState(){return{
   v:2,coins:300,xp:0,lvl:1,
-  maxLevel:1,stars:{},cycle:0,campaignDone:false,bestWave:0,
+  maxLevel:1,stars:{},cycle:0,campaignDone:false,bestWave:0,cmax:1,cstars:{},
   heroes:{knight:{lvl:1},medic:{lvl:1}},team:['knight','medic'],
   items:{hammer:2,shuffle:2,potion:1},
   cnt:defCnt(),daily:null,quests:[],qDone:[],ach:{},seenLog:'',newV2:false
@@ -399,6 +401,7 @@ function load(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(!d)
 }catch(e){}}
 const today=()=>{const d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate()};
 
+const sumObj=o=>Object.values(o||{}).reduce((a,b)=>a+b,0),totalStars=()=>sumObj(S.stars)+sumObj(S.cstars);
 /* ---------------- tiny UI helpers ---------------- */
 function toast(msg,ms){const el=document.createElement('div');el.className='toast';el.innerHTML=msg;$('#toasts').appendChild(el);
   const all=$('#toasts').children;while(all.length>3)all[0].remove();
@@ -552,14 +555,14 @@ const HERO=id=>HEROES.find(h=>h.id===id);
 // when a hero is fully charged it gets HITS attacks: drag the hero onto a monster for each one
 const HITS=3;
 const ABIL={
-  heal:   ['💖','Sugar heal','Sukkerhelbred','Hits the monster (2×) and heals every hero for 15%.','Rammer monsteret (2×) og heler alle helte med 15 %.'],
+  heal:   ['💉','Sugar shot','Sukkersprøjte','Hits the monster (2×) and gives the other heroes +3 energy.','Rammer monsteret (2×) og giver de andre helte +3 energi.'],
   slash:  ['🗡️','Mighty slash','Kæmpehug','A huge hit on the monster (2.8× attack).','Et kæmpe hug på monsteret (2,8× angreb).'],
   frost:  ['❄️','Frost spell','Frostformular','Hits the monster (2×) and freezes it: its attack comes 2 turns later.','Rammer monsteret (2×) og fryser det: dets angreb kommer 2 ture senere.'],
   arrows: ['🏹','Lemon arrows','Citronpile','Hits the monster (2×) and shoots 2 extra arrows at random monsters.','Rammer monsteret (2×) og skyder 2 ekstra pile mod tilfældige monstre.'],
   barrage:['💣','Cannon barrage','Kanonsalve','Hits the monster (2×) and blasts every other monster too (1.2×).','Rammer monsteret (2×) og skyder også på alle andre monstre (1,2×).'],
   shield: ['🛡️','Candy shield','Slikskjold','Hits the monster (2×) and gives every hero a shield worth 15% of their health.','Rammer monsteret (2×) og giver alle helte et skjold på 15 % af deres liv.'],
   storm:  ['🌪️','Candy storm','Sliktorm','Hits the monster (2×) and turns 2 candies into special candies.','Rammer monsteret (2×) og gør 2 slik til specialslik.'],
-  royal:  ['👑','Royal strike','Kongeslag','A mighty royal hit (3×) that also heals the team by 6%.','Et mægtigt kongeslag (3×), der også heler holdet med 6 %.']
+  royal:  ['👑','Royal strike','Kongeslag','A mighty royal hit (3.5× attack).','Et mægtigt kongeslag (3,5× angreb).']
 };
 const HERO_MAX=25;
 const heroStat=(h,lvl)=>{const m=1+.1*(lvl-1);return{hp:Math.round(h.hp*m),atk:h.atk*m,arm:h.arm+Math.floor((lvl-1)*.8)}};
@@ -902,10 +905,11 @@ function layout(){
   W=r.width;H=r.height;DPR=Math.min(2,devicePixelRatio||1);
   cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0);
   COLW=Math.min(W-12,640);COLX=(W-COLW)/2;
-  EH=clamp(H*.25,112,230);HH=clamp(H*.19,96,165);
+  EH=B&&B.classic?clamp(H*.17,104,150):clamp(H*.25,112,230);HH=B&&B.classic?0:clamp(H*.19,96,165);
   const availH=H-EH-HH-14;
   CELL=Math.max(26,Math.floor(Math.min(COLW/COLS,availH/ROWS)));
-  BX=Math.round((W-CELL*COLS)/2);BY=Math.round(EH+(availH-CELL*ROWS)/2+7);HY=H-HH;
+  if(B&&B.classic){EH=clamp(H-CELL*ROWS-24,104,200)}
+  BX=Math.round((W-CELL*COLS)/2);BY=B&&B.classic?Math.round(EH+(H-EH-CELL*ROWS)/2):Math.round(EH+(availH-CELL*ROWS)/2+7);HY=H-HH;
   SPR={};placeEnemies();
 }
 function placeEnemies(){
@@ -932,6 +936,7 @@ function startBattle(lv){
 }
 function makeBoard(){
   const g=[];for(let i=0;i<COLS*ROWS;i++)g.push(newCell());B.g=g;
+  B.glaze=Array(COLS*ROWS).fill(0);if(B.classic)clSetup();
   for(let k=0;k<80;k++){const m=findMatches();if(!m.all.size)break;m.all.forEach(i=>{B.g[i].c=rnd(NC)})}
   if(!hasMove())reshuffle();
 }
@@ -949,6 +954,9 @@ async function nextWave(first){
 }
 function bhead(){
   if(!B)return;
+  $('#bPotion').style.display=B.classic?'none':'';
+  if(B.classic){$('#bTitle').textContent=L('Classic · Level ','Klassisk · Bane ')+B.lv.n;$('#bWave').textContent=L('Score ','Point ')+N(B.score);
+    [['bHammer','hammer'],['bShuffle','shuffle']].forEach(([id,k])=>{const b=$('#'+id);$('.num',b).textContent=S.items[k]||0;b.disabled=!(S.items[k]>0);b.classList.toggle('on',B.tool===k)});return}
   $('#bTitle').textContent=B.endless?L('Endless battle','Endeløs kamp'):(L('Level ','Bane ')+B.lv.n+(B.lv.boss?' 👑':''));
   $('#bWave').textContent=B.endless?L(`Wave ${B.wave}`,`Bølge ${B.wave}`):L(`Wave ${B.wave}/${B.waves.length}`,`Bølge ${B.wave}/${B.waves.length}`);
   [['bHammer','hammer'],['bShuffle','shuffle'],['bPotion','potion']].forEach(([id,k])=>{const b=$('#'+id);$('.num',b).textContent=S.items[k]||0;
@@ -958,16 +966,18 @@ function bhead(){
 /* ---- the match-3 board ---- */
 const XY=i=>[i%COLS,Math.floor(i/COLS)];
 const at=(x,y)=>(x<0||y<0||x>=COLS||y>=ROWS)?null:B.g[y*COLS+x];
+const mt=c=>!!c&&c.c>=0&&!c.fixed&&c.sp!=='cloud';   // can be part of a line
+const swp=c=>!!c&&!c.fixed;                           // can be swapped
 function findMatches(){
   const all=new Set(),runs=[];
   for(let y=0;y<ROWS;y++){let run=[];
     for(let x=0;x<=COLS;x++){const c=at(x,y),p=run.length?B.g[run[run.length-1]]:null;
-      if(c&&p&&c.c===p.c&&c.sp!=='cloud'&&p.sp!=='cloud')run.push(y*COLS+x);
-      else{if(run.length>=3){runs.push({cells:[...run],dir:'h'});run.forEach(i=>all.add(i))}run=c&&c.sp!=='cloud'?[y*COLS+x]:[]}}}
+      if(mt(c)&&mt(p)&&c.c===p.c)run.push(y*COLS+x);
+      else{if(run.length>=3){runs.push({cells:[...run],dir:'h'});run.forEach(i=>all.add(i))}run=mt(c)?[y*COLS+x]:[]}}}
   for(let x=0;x<COLS;x++){let run=[];
     for(let y=0;y<=ROWS;y++){const c=at(x,y),p=run.length?B.g[run[run.length-1]]:null;
-      if(c&&p&&c.c===p.c&&c.sp!=='cloud'&&p.sp!=='cloud')run.push(y*COLS+x);
-      else{if(run.length>=3){runs.push({cells:[...run],dir:'v'});run.forEach(i=>all.add(i))}run=c&&c.sp!=='cloud'?[y*COLS+x]:[]}}}
+      if(mt(c)&&mt(p)&&c.c===p.c)run.push(y*COLS+x);
+      else{if(run.length>=3){runs.push({cells:[...run],dir:'v'});run.forEach(i=>all.add(i))}run=mt(c)?[y*COLS+x]:[]}}}
   return{all,runs};
 }
 function swapCells(a,b){const t=B.g[a];B.g[a]=B.g[b];B.g[b]=t}
@@ -975,24 +985,27 @@ const adjacent=(a,b)=>{const[ax,ay]=XY(a),[bx,by]=XY(b);return Math.abs(ax-bx)+M
 function hasMove(){
   for(let i=0;i<B.g.length;i++){const[x,y]=XY(i);
     if(B.g[i]&&B.g[i].sp==='cloud')return true;
-    for(const j of[x<COLS-1?i+1:-1,y<ROWS-1?i+COLS:-1]){if(j<0)continue;
+    for(const j of[x<COLS-1?i+1:-1,y<ROWS-1?i+COLS:-1]){if(j<0||!swp(B.g[i])||!swp(B.g[j]))continue;
       swapCells(i,j);const ok=findMatches().all.size>0;swapCells(i,j);if(ok)return true}}
   return false;
 }
 function findHint(){
   B.hint=null;let best=null,bs=-1;
   for(let i=0;i<B.g.length;i++){const[x,y]=XY(i);
-    for(const j of[x<COLS-1?i+1:-1,y<ROWS-1?i+COLS:-1]){if(j<0)continue;
+    for(const j of[x<COLS-1?i+1:-1,y<ROWS-1?i+COLS:-1]){if(j<0||!swp(B.g[i])||!swp(B.g[j]))continue;
       swapCells(i,j);const m=findMatches();swapCells(i,j);
       if(!m.all.size)continue;
       // a good tip feeds a hero who is alive
-      let sc=m.all.size;m.all.forEach(k=>{const c=B.g[k===i?j:k===j?i:k];if(c&&B.heroes.some(h=>!h.dead&&h.def.c===c.c))sc+=.6});
+      let sc=m.all.size;
+      if(B.classic)sc+=clHintScore(m.all,i,j);
+      else m.all.forEach(k=>{const c=B.g[k===i?j:k===j?i:k];if(c&&B.heroes.some(h=>!h.dead&&h.def.c===c.c))sc+=.6});
       sc+=Math.random()*.5;if(sc>bs){bs=sc;best=[i,j]}}}
+  if(B.classic)B.g.forEach((c,i)=>{if(c&&c.ing){const j=i+COLS;if(j<B.g.length&&swp(B.g[j])&&3.5+Math.random()>bs){bs=3.5;best=[i,j]}}});
   B.hint=best;return!!best;
 }
 function reshuffle(){
   let guard=40;
-  do{const cs=B.g.filter(c=>c&&!c.sp);for(let i=cs.length-1;i>0;i--){const j=rnd(i+1);const t=cs[i].c;cs[i].c=cs[j].c;cs[j].c=t}}
+  do{const cs=B.g.filter(c=>mt(c)&&!c.sp);for(let i=cs.length-1;i>0;i--){const j=rnd(i+1);const t=cs[i].c;cs[i].c=cs[j].c;cs[j].c=t}}
   while(guard--&&(findMatches().all.size||!hasMove()));
 }
 
@@ -1008,7 +1021,7 @@ function animSwap(a,b){
   return tween(150,p=>{const e=easeOut(p);ca.dx=dx*e;ca.dy=dy*e;cb.dx=-dx*e;cb.dy=-dy*e}).then(()=>{ca.dx=ca.dy=cb.dx=cb.dy=0});
 }
 async function trySwap(a,b){
-  if(!B||B.busy||B.over)return;
+  if(!B||B.busy||B.over||!swp(B.g[a])||!swp(B.g[b]))return;
   B.busy=true;B.sel=null;B.showHint=false;B.idleT=performance.now();
   await animSwap(a,b);swapCells(a,b);
   const ca=B.g[a],cb=B.g[b];
@@ -1016,15 +1029,17 @@ async function trySwap(a,b){
   // floss cloud: swap it with a candy to clear every candy of that colour
   if(ca.sp==='cloud'||cb.sp==='cloud'){
     const cloud=ca.sp==='cloud'?a:b,other=cloud===a?b:a,oc=B.g[other],set=new Set([cloud]);
-    if(oc.sp==='cloud')B.g.forEach((c,i)=>set.add(i));
-    else{B.g.forEach((c,i)=>{if(c&&c.c===oc.c)set.add(i)});}
-    B.g[cloud].sp=null;pre=set;cloudFx(cloud);
+    if(oc.sp==='cloud'){B.g.forEach((c,i)=>{if(c)set.add(i)});B.g[cloud].sp=null;pre=set;cloudFx(cloud)}
+    else if(oc.c>=0){B.g.forEach((c,i)=>{if(mt(c)&&c.c===oc.c)set.add(i)});B.g[cloud].sp=null;pre=set;cloudFx(cloud)}
   }else if(ca.sp&&cb.sp){ // two specials together go off at once
     pre=new Set([a,b]);
   }
-  if(!pre&&!findMatches().all.size){
+  // a potato may always be pushed one step down (costs a move)
+  const spudDown=B.classic&&!pre&&((B.g[b].ing&&XY(b)[1]>XY(a)[1])||(B.g[a].ing&&XY(a)[1]>XY(b)[1]));
+  if(!pre&&!spudDown&&!findMatches().all.size){
     SFX.no();await animSwap(a,b);swapCells(a,b);B.busy=false;return;
   }
+  if(spudDown&&!findMatches().all.size){SFX.swap();bump('swaps');B.turn++;await gravity();await resolve(null);await afterPlayer();return}
   SFX.swap();bump('swaps');B.turn++;B.last=[a,b];
   await resolve(pre);
   await afterPlayer();
@@ -1032,6 +1047,7 @@ async function trySwap(a,b){
 async function afterPlayer(){
   await waitShots();
   if(B.over)return;
+  if(B.classic)return clAfter();
   if(await waveCheck())return;
   await enemyTurn();
   if(B.over)return;
@@ -1075,9 +1091,12 @@ async function clearSet(set,place){
   const keep=new Set(place.map(p=>p.i)),extra=new Set();
   set.forEach(i=>{const c=B.g[i];if(c&&c.sp&&!keep.has(i))burst(i,extra)});
   extra.forEach(i=>set.add(i));
+  if(B.classic)clPre(set,keep);
   const per=Array(NC).fill(0);let n=0;
   set.forEach(i=>{const c=B.g[i];if(!c||keep.has(i))return;per[c.c]++;n++});
   bump('cleared',n);SFX.pop(n);
+  if(B.classic)clScore(per,n,set,keep);
+  else{
   // candies in a hero's colour only charge that hero (no damage);
   // all the other colours fly up and hit the monster with the team's power
   const mult=1+.25*(B.combo-1),alive=B.heroes.filter(h=>!h.dead);
@@ -1089,23 +1108,39 @@ async function clearSet(set,place){
     if(!hs.length){const t=curTarget();if(t)shoot({from:centre(col),to:t,dmg:cnt*perCandy*mult,kind:'spark',col});return}
     hs.forEach(h=>{h.charge=Math.min(h.chMax,h.charge+cnt);if(!h.active&&h.charge>=h.chMax){h.active=true;SFX.ready();h.readyT=1;if(!S.cnt.skills)toast(L(`⚡ ${nm(h.def)} is charged! Drag the hero up onto a monster to attack.`,`⚡ ${nm(h.def)} er ladet op! Træk helten op på et monster for at angribe.`),4000)}
       shoot({from:centre(col),to:h,dmg:0,kind:'charge',col})})});
+  }
   await tween(150,p=>set.forEach(i=>{const c=B.g[i];if(c&&!keep.has(i))c.sc=1-easeOut(p)}));
   set.forEach(i=>{const c=B.g[i];if(!c)return;if(keep.has(i)){c.sc=1;return}
     const[x,y]=XY(i);popFx(BX+x*CELL+CELL/2,BY+y*CELL+CELL/2,PIECES[c.c].c);B.g[i]=null});
   place.forEach(pl=>{const c=B.g[pl.i];if(!c)return;c.sp=pl.sp;c.c=pl.c;c.sc=0;bump('specials')});
   if(place.length){SFX.spec();await tween(200,p=>place.forEach(pl=>{const c=B.g[pl.i];if(c)c.sc=easeBack(p)}))}
 }
+function spawnCell(){
+  if(B.classic&&B.ingNeed>0){const on=B.g.filter(c=>c&&c.ing).length;
+    if(on<Math.min(2,B.ingNeed)&&Math.random()<.6)return{c:-1,ing:true,sp:null,sc:1,dx:0,dy:0}}
+  return newCell();
+}
 async function gravity(){
-  const falls=[];
-  for(let x=0;x<COLS;x++){
-    let write=ROWS-1;
-    for(let y=ROWS-1;y>=0;y--){const i=y*COLS+x;if(B.g[i]){if(write!==y){const ni=write*COLS+x;B.g[ni]=B.g[i];B.g[i]=null;B.g[ni].dy=-(write-y)*CELL;falls.push(B.g[ni])}write--}}
-    for(let y=write;y>=0;y--){const c=newCell();c.dy=-(write+1)*CELL-CELL*.4;B.g[y*COLS+x]=c;falls.push(c)}
+  let changed=true,guard=0;const moved=new Set();
+  const mv=(from,to)=>{const c=B.g[from],[fx,fy]=XY(from),[tx,ty]=XY(to);c.dx=(c.dx||0)+(fx-tx)*CELL;c.dy=(c.dy||0)+(fy-ty)*CELL;B.g[to]=c;B.g[from]=null;moved.add(c)};
+  while(changed&&guard++<80){changed=false;
+    for(let x=0;x<COLS;x++){
+      for(let y=ROWS-1;y>=0;y--){const i=y*COLS+x;if(B.g[i])continue;
+        for(let y2=y-1;y2>=0;y2--){const c=B.g[y2*COLS+x];if(!c)continue;if(c.fixed)break;mv(y2*COLS+x,i);changed=true;break}}
+      let top=0;while(top<ROWS&&!B.g[top*COLS+x])top++;
+      for(let y=top-1;y>=0;y--){const c=spawnCell();c.dy=-top*CELL;B.g[y*COLS+x]=c;moved.add(c);changed=true}
+    }
+    // holes under sugar blocks are filled from the side
+    for(let y=ROWS-1;y>0&&!changed;y--)for(let x=0;x<COLS&&!changed;x++){const i=y*COLS+x;if(B.g[i])continue;
+      for(const sx of[x-1,x+1]){if(sx<0||sx>=COLS)continue;const src=at(sx,y-1),below=at(sx,y);
+        if(swp(src)&&below){mv((y-1)*COLS+sx,i);changed=true;break}}}
   }
-  if(!falls.length)return;
-  falls.forEach(c=>c.dy0=c.dy);
-  await tween(190,p=>falls.forEach(c=>{c.dy=c.dy0*(1-easeOut(p))}));
-  falls.forEach(c=>{c.dy=0;delete c.dy0});SFX.land();
+  if(moved.size){
+    moved.forEach(c=>{c.dx0=c.dx||0;c.dy0=c.dy||0});
+    await tween(200,p=>{const e=easeOut(p);moved.forEach(c=>{c.dx=c.dx0*(1-e);c.dy=c.dy0*(1-e)})});
+    moved.forEach(c=>{c.dx=0;c.dy=0;delete c.dx0;delete c.dy0});SFX.land();
+  }
+  if(B.classic&&clIngredients())await gravity();
 }
 
 /* ---- shots: heroes fire candy at the monsters, monsters fire their weapons back ---- */
@@ -1182,7 +1217,7 @@ async function heroAttack(h,e){
   const al=()=>B.enemies.filter(o=>!o.dead),hit=(m,o)=>heroShot(h,h.atk*m,Object.assign({to:e,big:true},o||{}));
   const healAll=f=>{B.heroes.forEach(o=>{if(o.dead)return;const v=Math.round(o.maxHp*f);o.hp=Math.min(o.maxHp,o.hp+v);floatText(...heroPos(o),'+'+v,'#7dffb0',20)});SFX.heal()};
   switch(h.def.ab){
-    case'heal':hit(2);healAll(.15);break;
+    case'heal':hit(2);B.heroes.forEach(o=>{if(o!==h&&!o.dead&&!o.active){o.charge=Math.min(o.chMax,o.charge+3);floatText(...heroPos(o),'⚡+3','#ffd54a',18);if(o.charge>=o.chMax){o.active=true;SFX.ready()}}});break;
     case'slash':hit(2.8);break;
     case'frost':hit(2);e.cdLeft+=2;e.frozen=2;break;
     case'arrows':hit(2);for(let k=0;k<2;k++){await sleep(90);const a=al();if(a.length)heroShot(h,h.atk*.9,{to:pick(a)})}break;
@@ -1190,7 +1225,7 @@ async function heroAttack(h,e){
     case'shield':hit(2);B.heroes.forEach(o=>{if(!o.dead)o.shield+=Math.round(o.maxHp*.15)});SFX.shield();break;
     case'storm':{hit(2);const spots=[];let g=60;while(spots.length<2&&g--){const i=rnd(B.g.length);if(B.g[i]&&!B.g[i].sp&&!spots.includes(i))spots.push(i)}
       spots.forEach(i=>{B.g[i].sp=pick(['row','col','bomb']);B.g[i].sc=0});await tween(260,p=>spots.forEach(i=>{if(B.g[i])B.g[i].sc=easeBack(p)}));break}
-    case'royal':hit(3);healAll(.06);break;
+    case'royal':hit(3.5);break;
   }
   await waitShots();
   if(!(await waveCheck())){B.busy=false;B.idleT=performance.now();findHint()}
@@ -1199,12 +1234,12 @@ async function heroAttack(h,e){
 /* ---- waves, winning and losing ---- */
 async function waveCheck(){
   if(B.over)return true;
+  if(B.classic){if(clDone()){await clWin();return true}return false}
   if(B.enemies.some(e=>!e.dead))return false;
   B.busy=true;await sleep(450);
   if(B.endless){
     B.endWave=B.wave;bump('waves');addCoins(20+B.wave*6);
-    B.heroes.forEach(h=>{if(!h.dead)h.hp=Math.min(h.maxHp,h.hp+Math.round(h.maxHp*.15))});
-    toast(L(`♾️ Wave ${B.wave} cleared! Your heroes rest a little.`,`♾️ Bølge ${B.wave} klaret! Dine helte hviler lidt.`));
+    toast(L(`♾️ Wave ${B.wave} cleared! +${20+B.wave*6} 🪙`,`♾️ Bølge ${B.wave} klaret! +${20+B.wave*6} 🪙`));
     await nextWave();return true;
   }
   if(B.wave<B.waves.length){await nextWave();return true}
@@ -1218,7 +1253,7 @@ async function winBattle(){
   B.over=true;MUSIC.battle=false;
   const n=B.lv.n,st=starsFor(),prev=S.stars[n]||0,first=n>=S.maxLevel;
   const coins=Math.round((40+n*6+(B.lv.boss?150+n*3:0))*(first?1:.5)*(1+.25*S.cycle)),xp=25+n*3;
-  S.stars[n]=Math.max(prev,st);S.cnt.stars=Object.values(S.stars).reduce((a,b)=>a+b,0);
+  S.stars[n]=Math.max(prev,st);S.cnt.stars=totalStars();
   if(first)S.maxLevel=n+1;
   bump('levels');addXP(xp);addCoins(coins);
   SFX.win();confetti(160);
@@ -1231,7 +1266,7 @@ async function winBattle(){
       <p style="text-align:center;margin:6px 0">🪙 +${N(coins)} &nbsp; ✨ +${xp} XP</p>
       <p class="hint" style="text-align:center">${st<3?L('Keep more health on your heroes for more stars.','Hold dine helte mere i live for flere stjerner.'):L('Perfect battle!','Perfekt kamp!')}</p>`,
     buttons:[{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'🥔 '+L('Heroes','Helte'),v:'heroes',cls:'sun'},{label:'▶ '+L('Next','Næste'),v:'next',cls:'go'}]});
-  if(v==='next')preBattle(nxt);else if(v==='heroes'){openMap();openHeroes()}else openMap();
+  if(v==='next')preBattle(nxt);else if(v==='heroes'){openMap('battle');openHeroes()}else openMap('battle');
 }
 async function campaignDone(){
   confetti(260);SFX.win();
@@ -1242,7 +1277,7 @@ async function campaignDone(){
       <div class="task"><span class="ic">🔁</span><span class="tx"><b>${L('Start over','Start forfra')}</b><small>${L('Play levels 1–100 again with stronger monsters and more coins. You keep your heroes and coins.','Spil bane 1–100 igen med stærkere monstre og flere mønter. Du beholder dine helte og mønter.')}</small></span></div>
       <div class="task"><span class="ic">♾️</span><span class="tx"><b>${L('Endless battle','Endeløs kamp')}</b><small>${L('Fight wave after wave. You can always pick it in the menu.','Kæmp bølge efter bølge. Du kan altid vælge den i menuen.')}</small></span></div>`,
     buttons:[{label:'🔁 '+L('Start over','Start forfra'),v:'reset',cls:'pink'},{label:'♾️ '+L('Endless','Endeløs'),v:'end',cls:'sun'},{label:'➡️ '+L('Keep going','Fortsæt'),v:'go',cls:'go'}]});
-  if(v==='reset'){S.cycle++;S.maxLevel=1;S.stars={};S.campaignDone=false;save();toast(L(`🔁 Round ${S.cycle+1} – the monsters are tougher now!`,`🔁 Runde ${S.cycle+1} – monstrene er stærkere nu!`),3200);openMap()}
+  if(v==='reset'){S.cycle++;S.maxLevel=1;S.stars={};S.campaignDone=false;save();toast(L(`🔁 Round ${S.cycle+1} – the monsters are tougher now!`,`🔁 Runde ${S.cycle+1} – monstrene er stærkere nu!`),3200);openMap('battle')}
   else if(v==='end')startEndless();
   else preBattle(CAMPAIGN+1);
 }
@@ -1264,7 +1299,7 @@ async function loseBattle(){
       <p style="text-align:center">${L('Level ','Bane ')+n+L(' starts over.',' starter forfra.')}<br>🪙 +${c}</p>
       <p class="hint" style="text-align:center">${L('Tip: upgrade or buy heroes, and match the colours of the heroes you have.','Tip: opgradér eller køb helte, og match farverne på de helte, du har.')}</p>`,
     buttons:[{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'🥔 '+L('Heroes','Helte'),v:'heroes',cls:'sun'},{label:'🔁 '+L('Try again','Prøv igen'),v:'again',cls:'go'}]});
-  if(v==='again')startBattle(genLevel(n));else if(v==='heroes'){openMap();openHeroes()}else openMap();
+  if(v==='again')startBattle(genLevel(n));else if(v==='heroes'){openMap('battle');openHeroes()}else openMap('battle');
 }
 
 /* ---- little effects on the stage ---- */
@@ -1290,6 +1325,7 @@ function drawStage(dt){
   hill(EH*.72,'#7b3fd1',8,0);hill(EH*.84,'#ff7ac2',6,2);
   g.fillStyle='#e05aa8';g.fillRect(0,EH*.9,W,EH*.1+2);
   // monsters
+  if(B.classic)drawClassicTop(g,t);
   const alive=B.enemies.filter(e=>!e.dead).length;
   B.enemies.forEach((e,i)=>{
     e.flash=Math.max(0,e.flash-dt*4);e.shake=Math.max(0,e.shake-dt*3);if(e.attackT)e.attackT=Math.max(0,e.attackT-dt*2.5);
@@ -1321,7 +1357,8 @@ function drawStage(dt){
   roundRect(g,BX-8,BY-8,bw+16,bh+16,18);gr=g.createLinearGradient(0,BY,0,BY+bh);gr.addColorStop(0,'#2c4fc9');gr.addColorStop(1,'#1a2c86');g.fillStyle=gr;g.fill();
   g.lineWidth=4;g.strokeStyle='#9fb6ff';g.stroke();
   for(let i=0;i<COLS*ROWS;i++){const[x,y]=XY(i);g.fillStyle=(x+y)%2?'rgba(10,20,70,.45)':'rgba(10,20,70,.3)';
-    g.beginPath();g.arc(BX+x*CELL+CELL/2,BY+y*CELL+CELL/2,CELL*.44,0,7);g.fill()}
+    g.beginPath();g.arc(BX+x*CELL+CELL/2,BY+y*CELL+CELL/2,CELL*.44,0,7);g.fill();
+    if(B.glaze[i])drawGlaze(g,BX+x*CELL,BY+y*CELL,CELL,B.glaze[i])}
   // hint after a while
   const idle=!B.busy&&performance.now()-B.idleT>6000;
   if(idle&&B.hint){B.hint.forEach(i=>{const[x,y]=XY(i);g.globalAlpha=.35+.3*Math.sin(t*6);g.fillStyle='#fff';g.beginPath();g.arc(BX+x*CELL+CELL/2,BY+y*CELL+CELL/2,CELL*.47,0,7);g.fill()});g.globalAlpha=1}
@@ -1330,6 +1367,8 @@ function drawStage(dt){
   g.save();g.beginPath();g.rect(BX-8,BY-8,bw+16,bh+16);g.clip();
   B.g.forEach((c,i)=>{if(!c)return;const[x,y]=XY(i),cx=BX+x*CELL+CELL/2+(c.dx||0),cy=BY+y*CELL+CELL/2+(c.dy||0);
     let sc=c.sc==null?1:c.sc;if(B.sel===i)sc*=1.08+.04*Math.sin(t*8);if(sc<=.01)return;
+    if(c.fixed){drawBlock(g,cx,cy,CELL,c);return}
+    if(c.ing){drawSpud(g,cx,cy,CELL*sc);return}
     if(c.sp==='cloud'){drawSpecial(g,'cloud',c.c,cx,cy,CELL,sc);return}
     const spr=candySprite(c.c,CELL),s2=CELL*1.3*sc;g.drawImage(spr,cx-s2/2,cy-s2/2,s2,s2);
     if(c.sp)drawSpecial(g,c.sp,c.c,cx,cy,CELL,sc)});
@@ -1337,7 +1376,7 @@ function drawStage(dt){
   // tool hint
   if(B.tool==='hammer'){g.fillStyle='rgba(255,213,74,.95)';g.font='900 13px Nunito,sans-serif';g.textAlign='center';g.fillText('🔨 '+L('Tap a candy to smash it','Tryk på et slik for at smadre det'),W/2,BY-14)}
   // heroes
-  g.fillStyle='rgba(20,8,48,.55)';g.fillRect(0,HY,W,HH);
+  if(!B.classic)g.fillStyle='rgba(20,8,48,.55)',g.fillRect(0,HY,W,HH);
   B.heroes.forEach((h,i)=>{
     const s=heroSlot(i),col=PIECES[h.def.c].c,ready=!h.dead&&h.active,dragging=B.hdrag&&B.hdrag.h===h&&B.hdrag.moved;
     h.flash=Math.max(0,h.flash-dt*3);h.hurt=Math.max(0,h.hurt-dt*2);h.atkT=Math.max(0,(h.atkT||0)-dt*3);h.glowT=Math.max(0,(h.glowT||0)-dt*3);
@@ -1367,7 +1406,7 @@ function drawStage(dt){
     if(ready){g.textAlign='center';g.font=`900 ${s.w<80?10:12}px Nunito,sans-serif`;g.fillStyle='#ffd54a';g.strokeStyle='#2a1159';g.lineWidth=3;
       const tx=dragging?'':'⬆ '+L('DRAG!','TRÆK!');g.strokeText(tx,s.x+s.w/2,s.y+s.h*.5);g.fillText(tx,s.x+s.w/2,s.y+s.h*.5)}
   });
-  for(let i=B.heroes.length;i<4;i++){const s=heroSlot(i);roundRect(g,s.x,s.y,s.w,s.h,14);g.setLineDash([6,6]);g.strokeStyle='rgba(255,255,255,.25)';g.lineWidth=2;g.stroke();g.setLineDash([])}
+  for(let i=B.heroes.length;i<(B.classic?0:4);i++){const s=heroSlot(i);roundRect(g,s.x,s.y,s.w,s.h,14);g.setLineDash([6,6]);g.strokeStyle='rgba(255,255,255,.25)';g.lineWidth=2;g.stroke();g.setLineDash([])}
   // beams + rings
   (B.beams||[]).forEach(b=>{b.t+=dt*3;g.globalAlpha=Math.max(0,1-b.t);g.strokeStyle='#fff';g.lineWidth=CELL*.5*(1-b.t);g.shadowColor='#fff';g.shadowBlur=20;
     g.beginPath();g.moveTo(b.x1,b.y1);g.lineTo(b.x2,b.y2);g.stroke();g.shadowBlur=0});
@@ -1407,6 +1446,7 @@ function cellAt(px,py){const x=Math.floor((px-BX)/CELL),y=Math.floor((py-BY)/CEL
 function evPos(e){const r=cv.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]}
 cv.addEventListener('pointerdown',e=>{
   if(!B||B.over)return;const[px,py]=evPos(e);
+  if(py<EH&&B.classic)return;
   if(py<EH){ // pick which monster to attack
     let best=-1,bd=1e9;B.enemies.forEach((m,i)=>{if(m.dead)return;const d=Math.abs(m.x-px);if(d<bd){bd=d;best=i}});
     if(best>=0&&best!==B.target){B.target=best;SFX.pick()}return}
@@ -1417,6 +1457,7 @@ cv.addEventListener('pointerdown',e=>{
   if(B.busy)return;
   const i=cellAt(px,py);if(i<0){B.sel=null;return}
   if(B.tool==='hammer'){useHammer(i);return}
+  if(!swp(B.g[i])){SFX.no();B.sel=null;return}
   B.idleT=performance.now();
   if(B.sel!=null&&B.sel!==i&&adjacent(B.sel,i)){trySwap(B.sel,i);return}
   if(B.sel===i){B.sel=null;return}
@@ -1445,17 +1486,232 @@ async function useHammer(i){
   if(!(S.items.hammer>0)){B.tool=null;bhead();return}
   S.items.hammer--;save();B.tool=null;B.busy=true;B.sel=null;bhead();SFX.hit();
   B.last=[i];B.combo=1;await clearSet(new Set([i]),[]);await gravity();await resolve(null);
-  await waitShots();if(await waveCheck())return;
+  await waitShots();if(await waveCheck())return;if(B.classic)bhead();
   B.busy=false;B.idleT=performance.now();findHint();
 }
 $('#bHammer').onclick=()=>{if(!B||B.over||B.busy)return;SFX.click();B.tool=B.tool==='hammer'?null:'hammer';bhead()};
 $('#bShuffle').onclick=()=>{if(!B||B.over||B.busy||!(S.items.shuffle>0))return;S.items.shuffle--;save();SFX.swap();B.sel=null;reshuffle();findHint();bhead();toast('🔀 '+L('Shuffled!','Blandet!'))};
-$('#bPotion').onclick=()=>{if(!B||B.over||B.busy||!(S.items.potion>0))return;S.items.potion--;save();SFX.heal();
-  B.heroes.forEach(h=>{if(h.dead){h.dead=false;h.hp=Math.round(h.maxHp*.3)}else h.hp=Math.min(h.maxHp,h.hp+Math.round(h.maxHp*.4));floatText(...heroPos(h),'💖','#7dffb0',24)});bhead()};
+$('#bPotion').onclick=()=>{if(!B||B.over||B.busy||B.classic||!(S.items.potion>0))return;S.items.potion--;save();SFX.heal();
+  B.heroes.forEach(h=>{if(h.dead){h.dead=false;h.hp=Math.round(h.maxHp*.4)}else h.hp=Math.min(h.maxHp,h.hp+Math.round(h.maxHp*.5));floatText(...heroPos(h),'💖','#7dffb0',24)});bhead()};
 $('#gQuit').onclick=async()=>{if(!B||B.over)return;SFX.click();
   const v=await panel({title:'⏸ '+L('Paused','Pause'),sm:true,html:`<p style="text-align:center">${L('Leave this battle? The level starts over next time.','Forlad kampen? Banen starter forfra næste gang.')}</p>`,
     buttons:[{label:'🏳️ '+L('Give up','Giv op'),v:'quit',cls:'pink'},{label:'▶ '+L('Keep playing','Spil videre'),v:'go',cls:'go'}]});
-  if(v==='quit'&&B&&!B.over){B.over=true;MUSIC.battle=false;if(B.endless){const w=B.wave-1;if(w>S.bestWave)S.bestWave=w;save();show('scMenu')}else openMap()}};
+  if(v==='quit'&&B&&!B.over){B.over=true;MUSIC.battle=false;if(B.classic)openMap('classic');else if(B.endless){const w=B.wave-1;if(w>S.bestWave)S.bestWave=w;save();show('scMenu')}else openMap('battle')}};
+
+/* =====================================================================
+   CLASSIC MODE – no heroes, no monsters: reach the goals before the
+   moves run out. Sugar glaze to clean, sugar blocks to smash, potatoes
+   to bring down, colours to collect and scores to beat.
+   ===================================================================== */
+const CL_MAX=100;
+function genClassic(n){
+  const r=seeded(n*4813+77),tr=k=>Math.floor(r()*k),d=Math.min(1,(n-1)/90);
+  const lv={n,classic:true,goals:[],glaze:[],blk:[],ing:0,moves:0};
+  const pool=['score'];if(n>=2)pool.push('col');if(n>=4)pool.push('glaze');if(n>=7)pool.push('blk');if(n>=10)pool.push('ing');
+  let types;
+  if(n<=3&&n!==2)types=['score'];
+  else{const main=n===2?'col':n===4?'glaze':n===7?'blk':n===10?'ing':pool[1+tr(pool.length-1)];types=[main];
+    if(n>=15&&r()<.45){const o=pool.filter(t=>t!=='score'&&t!==main);if(o.length)types.push(o[tr(o.length)])}}
+  let moves=Math.round(25+r()*4-d*5);
+  types.forEach(t=>{
+    if(t==='score')lv.goals.push({k:'score',n:Math.round((2400+n*150)/100)*100});
+    if(t==='col'){const cols=n<20?1:r()<.5?1:2,used=[];
+      for(let k=0;k<cols;k++){let c;do c=tr(NC);while(used.includes(c));used.push(c);lv.goals.push({k:'col',c,n:Math.round((cols===1?14:10)+d*8+tr(4))})}}
+    if(t==='glaze'){const cnt=Math.round(7+d*12),cells=new Set(),pat=tr(3);let g=400;
+      while(cells.size<cnt&&g--){let x,y;if(pat===0){x=tr(COLS);y=ROWS-1-tr(3+Math.round(d*3))}else if(pat===1){x=tr(COLS);y=1+tr(ROWS-1)}else{x=1+tr(COLS-2);y=1+tr(ROWS-2)}cells.add(y*COLS+x)}
+      const dbl=n>=20&&r()<.55;lv.glaze=[...cells].map(i=>[i,dbl&&r()<.6?2:1]);lv.goals.push({k:'glaze'});moves+=6}
+    if(t==='blk'){const cnt=Math.round(4+d*7),cells=new Set();let g=300;
+      while(cells.size<cnt&&g--){const x=tr(COLS),y=2+tr(ROWS-3);cells.add(y*COLS+x)}
+      const top=n<25?1:n<55?2:3;lv.blk=[...cells].map(i=>[i,1+tr(top)]);lv.goals.push({k:'blk'})}
+    if(t==='ing'){const cnt=Math.min(3,1+Math.floor(d*2.6));lv.ing=cnt;lv.goals.push({k:'ing',n:cnt});moves+=6}
+  });
+  if(types.length>1)moves+=5;
+  lv.moves=Math.max(15,moves);
+  const sg=lv.goals.find(g=>g.k==='score'),base=sg?sg.n:2600+n*110;
+  lv.t2=Math.round(base*(sg?1.35:1)/100)*100;lv.t3=Math.round(base*(sg?1.8:1.6)/100)*100;
+  return lv;
+}
+const GOAL_IC={score:'⭐',glaze:'🩷',blk:'🧊',ing:'🥔'};
+const goalIcon=g=>g.k==='col'?PIECES[g.c].e:GOAL_IC[g.k];
+function goalText(g){switch(g.k){
+  case'score':return L(`Score ${N(g.n)} points`,`Få ${N(g.n)} point`);
+  case'col':return L(`Collect ${g.n} × ${nm(PIECES[g.c])}`,`Saml ${g.n} × ${nm(PIECES[g.c]).toLowerCase()}`);
+  case'glaze':return L('Clean all the sugar glaze','Fjern al sukkerglasuren');
+  case'blk':return L('Smash all the sugar blocks','Smadr alle sukkerklodserne');
+  case'ing':return L(`Bring ${g.n} potatoes to the bottom`,`Bring ${g.n} kartofler ned til bunden`);}}
+function goalLeft(g){switch(g.k){
+  case'score':return Math.max(0,g.n-B.score);
+  case'col':return g.left;
+  case'glaze':return B.glaze.reduce((a,b)=>a+b,0);
+  case'blk':return B.g.filter(c=>c&&c.fixed).length;
+  case'ing':return Math.max(0,B.ingNeed);}}
+const clDone=()=>B.goals.every(g=>goalLeft(g)<=0);
+
+function startClassic(lv){
+  closePanels();
+  B={classic:true,lv,endless:false,wave:1,waves:[[]],enemies:[],heroes:[],g:[],target:0,busy:true,over:false,sel:null,drag:null,combo:0,turn:0,
+     proj:[],floats:[],shake:0,tool:null,hint:null,idleT:performance.now(),moves:lv.moves,score:0,extra:0,ingNeed:lv.ing,
+     goals:lv.goals.map(g=>Object.assign({},g,{left:g.n||0}))};
+  makeBoard();
+  show('scGame');MUSIC.battle=false;
+  requestAnimationFrame(()=>{layout();banner(L('LEVEL ','BANE ')+lv.n);B.busy=false;B.idleT=performance.now();findHint()});
+  bhead();
+  if(!S.cnt.clevels)setTimeout(()=>toast(L('🍬 Classic: reach the goals at the top before you run out of moves. Swap two candies next to each other to make lines of 3.','🍬 Klassisk: nå målene øverst, før du løber tør for træk. Byt to slik ved siden af hinanden for at lave 3 på stribe.'),6500),1200);
+}
+// tips in classic mode go for the goals
+function clHintScore(all,i,j){
+  let sc=0;const col=new Set(B.goals.filter(g=>g.k==='col'&&g.left>0).map(g=>g.c)),cell=k=>B.g[k===i?j:k===j?i:k];
+  all.forEach(k=>{const c=cell(k),[x,y]=XY(k);if(B.glaze[k])sc+=2.5;if(c&&col.has(c.c))sc+=1.2;
+    for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const o=at(x+dx,y+dy);if(o&&o.fixed)sc+=2}
+    for(let yy=y-1;yy>=0;yy--){const o=at(x,yy);if(o&&o.ing){sc+=5;break}}});
+  for(const[a,b]of[[i,j],[j,i]]){const c=B.g[a];if(c&&c.ing&&XY(b)[1]>XY(a)[1])sc+=4}
+  return sc;
+}
+function clSetup(){
+  const lv=B.lv;
+  lv.blk.forEach(([i,hp])=>{B.g[i]={c:-1,fixed:true,blk:hp,sc:1,dx:0,dy:0,hitT:0}});
+  lv.glaze.forEach(([i,l])=>{B.glaze[i]=l});
+  const cols=[...Array(COLS).keys()].sort(()=>Math.random()-.5);
+  for(let k=0;k<Math.min(2,lv.ing);k++)B.g[2*COLS+cols[k]]={c:-1,ing:true,sp:null,sc:1,dx:0,dy:0};
+}
+// sugar blocks next to a match (or hit by a blast) lose a layer; glaze under cleared candies melts
+function clPre(set,keep){
+  const hit=new Set();
+  [...set].forEach(i=>{const c=B.g[i];if(!c){set.delete(i);return}if(c.fixed){hit.add(i);set.delete(i)}else if(c.ing)set.delete(i)});
+  set.forEach(i=>{const[x,y]=XY(i);for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const o=at(x+dx,y+dy);if(o&&o.fixed)hit.add((y+dy)*COLS+x+dx)}});
+  hit.forEach(i=>{const c=B.g[i];if(!c)return;c.blk--;c.hitT=1;B.score+=150;const[x,y]=XY(i);sparkleStage(BX+x*CELL+CELL/2,BY+y*CELL+CELL/2,'#fff',9);
+    if(c.blk<=0){B.g[i]=null;B.score+=250}});
+  if(hit.size)SFX.hit();
+  set.forEach(i=>{if(B.glaze[i]>0){B.glaze[i]--;B.score+=120;const[x,y]=XY(i);sparkleStage(BX+x*CELL+CELL/2,BY+y*CELL+CELL/2,'#ff7ac2',6)}});
+}
+function clScore(per,n,set,keep){
+  const pts=n*60*B.combo;B.score+=pts;
+  if(pts){let sx=0,sy=0,k=0;set.forEach(i=>{const[x,y]=XY(i);sx+=BX+x*CELL+CELL/2;sy+=BY+y*CELL+CELL/2;k++});if(k)floatText(sx/k,sy/k,'+'+pts,'#fff',B.combo>1?24:19)}
+  B.goals.forEach(g=>{if(g.k==='col'&&per[g.c])g.left=Math.max(0,g.left-per[g.c])});
+  bhead();
+}
+// potatoes that reach the bottom row are saved
+function clIngredients(){
+  let got=false;
+  for(let x=0;x<COLS;x++){const i=(ROWS-1)*COLS+x,c=B.g[i];if(c&&c.ing){B.g[i]=null;B.ingNeed--;B.score+=1000;got=true;
+    SFX.coin();sparkleStage(BX+x*CELL+CELL/2,BY+(ROWS-1)*CELL+CELL/2,'#ffd54a',18);floatText(BX+x*CELL+CELL/2,BY+(ROWS-1)*CELL,'🥔 +1000','#ffd54a',22)}}
+  return got;
+}
+async function clAfter(){
+  B.moves--;bhead();
+  if(clDone()){await clWin();return}
+  if(B.moves<=0){await clOut();return}
+  B.busy=false;B.idleT=performance.now();findHint();
+}
+async function clWin(){
+  if(B.over||B.won)return;B.won=true;B.busy=true;B.sel=null;B.tool=null;
+  SFX.win();banner('🎉 '+L('GOALS DONE!','MÅL NÅET!'));await sleep(700);
+  // leftover moves become striped candies that go off – a sugar rush!
+  if(B.moves>0){banner('🍭 '+L('SUGAR RUSH!','SUKKERRUS!'));
+    const bonus=Math.min(B.moves,15);
+    for(let k=0;k<bonus;k++){const cand=[];B.g.forEach((c,i)=>{if(mt(c)&&!c.sp)cand.push(i)});if(!cand.length)break;
+      const i=pick(cand);B.g[i].sp=pick(['row','col']);B.moves--;B.score+=250;SFX.pick();bhead();await sleep(70)}
+    for(let guard=0;guard<6;guard++){const sp=[];B.g.forEach((c,i)=>{if(c&&c.sp)sp.push(i)});if(!sp.length)break;
+      B.combo=1;await clearSet(new Set(sp),[]);await gravity();await resolve(null)}}
+  B.over=true;
+  const n=B.lv.n,sc=B.score,st=sc>=B.lv.t3?3:sc>=B.lv.t2?2:1,first=n>=S.cmax;
+  S.cstars[n]=Math.max(S.cstars[n]||0,st);S.cnt.stars=totalStars();if(first)S.cmax=n+1;
+  const coins=Math.round((30+n*4+st*10)*(first?1:.5)),xp=20+n*2;
+  bump('levels');bump('clevels');addXP(xp);addCoins(coins);confetti(160);
+  if(n===CL_MAX&&first)setTimeout(()=>toast(L('👑 You beat all 100 classic levels! The levels keep going – how far can you get?','👑 Du har klaret alle 100 klassiske baner! Banerne fortsætter – hvor langt kan du nå?'),5000),900);
+  const v=await panel({title:'🎉 '+L('Level complete!','Banen er klaret!'),sm:true,noX:true,
+    html:`<div class="starsBig">${[1,2,3].map(k=>`<span class="${k<=st?'':'off'}">⭐</span>`).join('')}</div>
+      <div class="big1">${N(sc)} ${L('points','point')}</div>
+      <p style="text-align:center;margin:6px 0">🪙 +${N(coins)} &nbsp; ✨ +${xp} XP</p>
+      <p class="hint" style="text-align:center">${st<3?L(`${N(st<2?B.lv.t2:B.lv.t3)} points for the next star.`,`${N(st<2?B.lv.t2:B.lv.t3)} point til næste stjerne.`):L('Perfect!','Perfekt!')}</p>`,
+    buttons:[{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'▶ '+L('Next','Næste'),v:'next',cls:'go'}]});
+  if(v==='next')preClassic(Math.min(n+1,S.cmax));else openMap('classic');
+}
+async function clOut(){
+  B.busy=true;
+  const n=B.lv.n,price=Math.round((90+n*3)*(1+B.extra*.5));
+  const left=B.goals.filter(g=>goalLeft(g)>0).map(g=>`<div class="task"><span class="ic">${goalIcon(g)}</span><span class="tx"><b>${goalText(g)}</b><small>${L('Left: ','Mangler: ')+N(goalLeft(g))}</small></span></div>`).join('');
+  const v=await panel({title:'😮 '+L('Out of moves!','Ingen træk tilbage!'),sm:true,noX:true,
+    html:`<p style="text-align:center;margin-top:0">${L('So close! This is what is left:','Så tæt på! Det her mangler:')}</p>${left}`,
+    buttons:[{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'🔁 '+L('Try again','Prøv igen'),v:'again',cls:'pink'},{label:`+5 ${L('moves','træk')} 🪙${price}`,v:'buy',cls:'go',dis:S.coins<price}]});
+  if(v==='buy'&&S.coins>=price){S.coins-=price;save();hud();B.moves+=5;B.extra++;bhead();SFX.coin();B.busy=false;B.idleT=performance.now();findHint();return}
+  B.over=true;SFX.lose();
+  if(v==='again')startClassic(genClassic(n));else openMap('classic');
+}
+async function preClassic(n){
+  const lv=genClassic(n);
+  if(!$('#scMap').classList.contains('on')||MAPMODE!=='classic')openMap('classic');
+  const v=await panel({title:'🍬 '+L('Level ','Bane ')+n,sm:true,
+    html:`<p style="text-align:center;margin:0 0 8px"><b style="font-size:20px">👣 ${lv.moves} ${L('moves','træk')}</b></p>
+      ${lv.goals.map(g=>`<div class="task"><span class="ic">${goalIcon(g)}</span><span class="tx"><b>${goalText(g)}</b></span></div>`).join('')}
+      <p class="hint" style="text-align:center">⭐⭐ ${N(lv.t2)} · ⭐⭐⭐ ${N(lv.t3)} ${L('points','point')}</p>`,
+    buttons:[{label:'▶ '+L('Play','Spil'),v:'go',cls:'go'}]});
+  if(v==='go')startClassic(lv);
+}
+
+/* ---- classic art ---- */
+function drawGlaze(g,x,y,s,l){
+  roundRect(g,x+2.5,y+2.5,s-5,s-5,s*.22);
+  g.fillStyle=l>=2?'rgba(255,70,165,.72)':'rgba(255,150,210,.5)';g.fill();
+  g.strokeStyle='rgba(255,255,255,.55)';g.lineWidth=2;g.stroke();
+  g.fillStyle='rgba(255,255,255,.35)';roundRect(g,x+s*.18,y+s*.12,s*.4,s*.1,s*.05);g.fill();
+}
+function drawBlock(g,cx,cy,s,c){
+  c.hitT=Math.max(0,(c.hitT||0)-.06);
+  const R=s*.43,sh=c.hitT?Math.sin(performance.now()/20)*c.hitT*3:0;
+  g.save();g.translate(cx+sh,cy);
+  const cols=[['#ffffff','#e9d8ff'],['#ffe0ef','#ff9dcb'],['#ffd0f0','#d86bd0']][Math.min(2,c.blk-1)];
+  const gr=g.createLinearGradient(0,-R,0,R);gr.addColorStop(0,cols[0]);gr.addColorStop(1,cols[1]);
+  roundRect(g,-R,-R,R*2,R*2,R*.3);g.fillStyle=gr;g.fill();g.strokeStyle='#7a4fb8';g.lineWidth=2.5;g.stroke();
+  g.fillStyle='rgba(255,255,255,.9)';for(let k=0;k<7;k++){const a=k*2.4,rr=R*.55*((k*37%10)/10);g.fillRect(Math.cos(a)*rr-1.5,Math.sin(a)*rr-1.5,3,3)}
+  g.fillStyle='rgba(255,255,255,.6)';roundRect(g,-R*.75,-R*.8,R*.9,R*.22,R*.1);g.fill();
+  if(c.blk>1){g.fillStyle='#7a4fb8';g.beginPath();g.arc(R*.58,R*.58,R*.36,0,7);g.fill();g.fillStyle='#fff';g.font=`900 ${Math.round(R*.5)}px Nunito,sans-serif`;
+    g.textAlign='center';g.textBaseline='middle';g.fillText(c.blk,R*.58,R*.6)}
+  if(c.hitT>0){g.globalAlpha=c.hitT*.6;g.fillStyle='#fff';roundRect(g,-R,-R,R*2,R*2,R*.3);g.fill()}
+  g.restore();
+}
+function drawSpud(g,cx,cy,s){
+  const R=s*.4,t=performance.now()/1000;
+  g.save();g.translate(cx,cy+Math.sin(t*3+cx)*1.5);
+  g.fillStyle='#3d9b3a';for(const a of[-.5,.5]){g.save();g.rotate(a);g.beginPath();g.ellipse(0,-R*.95,R*.14,R*.32,0,0,7);g.fill();g.restore()}
+  const gr=g.createRadialGradient(-R*.3,-R*.3,R*.1,0,0,R*1.1);gr.addColorStop(0,'#f1c98a');gr.addColorStop(1,'#a8692b');
+  g.fillStyle=gr;g.strokeStyle='#6b3d12';g.lineWidth=2;g.beginPath();g.ellipse(0,0,R*.82,R*.95,.15,0,7);g.fill();g.stroke();
+  g.fillStyle='rgba(107,61,18,.5)';[[-.4,.35],[.35,-.45],[.45,.4]].forEach(([x,y])=>{g.beginPath();g.arc(x*R,y*R,R*.07,0,7);g.fill()});
+  g.fillStyle='#2a1159';for(const sx of[-1,1]){g.beginPath();g.arc(sx*R*.27,-R*.1,R*.1,0,7);g.fill()}
+  g.fillStyle='#fff';for(const sx of[-1,1]){g.beginPath();g.arc(sx*R*.27-R*.03,-R*.14,R*.035,0,7);g.fill()}
+  g.strokeStyle='#2a1159';g.lineWidth=2;g.beginPath();g.arc(0,R*.1,R*.2,.2,Math.PI-.2);g.stroke();
+  g.fillStyle='#ff8fb8';for(const sx of[-1,1]){g.globalAlpha=.6;g.beginPath();g.arc(sx*R*.5,R*.1,R*.1,0,7);g.fill()}
+  g.globalAlpha=1;g.restore();
+}
+function drawClassicTop(g,t){
+  const cx=COLX+Math.min(48,EH*.42),cy=EH*.47,r=Math.min(40,EH*.36);
+  // moves badge (round, orange – like the picture)
+  let gr=g.createRadialGradient(cx-r*.3,cy-r*.4,r*.1,cx,cy,r);gr.addColorStop(0,'#ffd36e');gr.addColorStop(1,'#f07a12');
+  g.beginPath();g.arc(cx,cy,r,0,7);g.fillStyle=gr;g.fill();g.lineWidth=4;g.strokeStyle='#fff';g.stroke();
+  const low=B.moves<=5;g.fillStyle=low?'#c4162f':'#fff';g.strokeStyle='#7a3304';g.lineWidth=4;g.textAlign='center';g.textBaseline='middle';
+  g.font=`900 ${Math.round(r*.85)}px 'Lilita One',Nunito,sans-serif`;g.strokeText(B.moves,cx,cy-r*.1);g.fillText(B.moves,cx,cy-r*.1);
+  g.font=`900 ${Math.round(r*.28)}px Nunito,sans-serif`;g.fillStyle='#fff';g.fillText(L('MOVES','TRÆK'),cx,cy+r*.52);
+  // score + star bar
+  const x0=cx+r+12,x1=COLX+COLW-6,bw=x1-x0,yb=EH*.2;
+  g.textAlign='left';g.font=`900 ${Math.round(Math.min(18,EH*.14))}px 'Lilita One',Nunito,sans-serif`;g.fillStyle='#fff';g.fillText(N(B.score)+' '+L('pts','point'),x0,yb);
+  const by=EH*.33,bh=12,p=Math.min(1,B.score/B.lv.t3);
+  roundRect(g,x0,by,bw,bh,6);g.fillStyle='rgba(20,8,48,.6)';g.fill();
+  if(p>0){roundRect(g,x0+2,by+2,(bw-4)*p,bh-4,4);gr=g.createLinearGradient(x0,0,x1,0);gr.addColorStop(0,'#ff9ed2');gr.addColorStop(1,'#ffd54a');g.fillStyle=gr;g.fill()}
+  [[.25,0],[B.lv.t2/B.lv.t3,B.lv.t2],[1,B.lv.t3]].forEach(([f,need],k)=>{const sx=x0+bw*f-(k===2?8:0),on=k===0?B.won||clDone():B.score>=need;
+    g.fillStyle=on?'#ffd54a':'#8b7bb0';g.strokeStyle='#2a1159';g.lineWidth=2;star(g,sx,by+bh/2,9,4);g.fill();g.stroke()});
+  // goals
+  const gy=EH*.72,gs=Math.min(30,EH*.24);let gx=x0;
+  B.goals.forEach(goal=>{const left=goalLeft(goal),done=left<=0,w=gs+(done?18:Math.max(18,String(N(left)).length*9+6));
+    roundRect(g,gx,gy-gs/2-3,w+8,gs+6,10);g.fillStyle=done?'rgba(46,200,120,.9)':'rgba(255,255,255,.92)';g.fill();
+    const ix=gx+4+gs/2;
+    if(goal.k==='col')g.drawImage(candySprite(goal.c,gs*.9),ix-gs*.58,gy-gs*.58,gs*1.17,gs*1.17);
+    else if(goal.k==='glaze')drawGlaze(g,ix-gs/2,gy-gs/2,gs,1);
+    else if(goal.k==='blk')drawBlock(g,ix,gy,gs*1.1,{blk:1});
+    else if(goal.k==='ing')drawSpud(g,ix,gy,gs*1.1);
+    else{g.fillStyle='#ffd54a';g.strokeStyle='#2a1159';g.lineWidth=2;star(g,ix,gy,gs*.42,gs*.2);g.fill();g.stroke()}
+    g.fillStyle=done?'#fff':'#2a1159';g.font=`900 ${Math.round(gs*.52)}px Nunito,sans-serif`;g.textAlign='left';g.textBaseline='middle';
+    g.fillText(done?'✓':N(left),gx+gs+8,gy+1);gx+=w+14});
+}
 
 /* =====================================================================
    SCREENS
@@ -1469,9 +1725,9 @@ function hud(){
   $('#queDot').style.display=qd?'':'none';$('#queDot').textContent=qd;
   $('#logDot').style.display=S.seenLog===CHANGELOG[0].v?'none':'';
   $('#heroDot').style.display=heroNews()?'':'none';
-  $('#totStars').textContent=Object.values(S.stars).reduce((a,b)=>a+b,0);
   const lv=S.maxLevel;
   $('#mPlayS').textContent=lv>CAMPAIGN?L(`Level ${lv} – beyond the campaign!`,`Bane ${lv} – efter kampagnen!`):L(`Level ${lv} of ${CAMPAIGN}`,`Bane ${lv} af ${CAMPAIGN}`)+(S.cycle?` · 🔁${S.cycle+1}`:'');
+  $('#mClassicS').textContent=S.cmax>CL_MAX?L(`Level ${S.cmax} – beyond 100!`,`Bane ${S.cmax} – over 100!`):L(`Level ${S.cmax} of ${CL_MAX} · moves & goals`,`Bane ${S.cmax} af ${CL_MAX} · træk & mål`);
   $('#mEndS').textContent=L('Best: wave ','Bedst: bølge ')+S.bestWave;
   $('#mHeroS').textContent=L(`${Object.keys(S.heroes).length}/${HEROES.length} heroes · buy and upgrade`,`${Object.keys(S.heroes).length}/${HEROES.length} helte · køb og opgradér`);
 }
@@ -1495,7 +1751,8 @@ function drawMenuArt(){
 }
 
 /* ---- campaign map ---- */
-$('#mPlay').onclick=()=>{SFX.click();openMap()};
+$('#mPlay').onclick=()=>{SFX.click();openMap('battle')};
+$('#mClassic').onclick=()=>{SFX.click();openMap('classic')};
 $('#mapBack').onclick=()=>{SFX.click();show('scMenu')};
 $('#mapHeroes').onclick=()=>{SFX.click();openHeroes()};
 $('#mHeroes').onclick=()=>{SFX.click();openHeroes()};
@@ -1507,14 +1764,19 @@ function lvlDesc(n){const lv=genLevel(n),last=lv.waves[lv.waves.length-1];
   return(lv.waves.length>1?L(`${lv.waves.length} waves · `,`${lv.waves.length} bølger · `):'')+kinds.slice(0,2).join(', ')+(kinds.length>2?'…':'')}
 const CHAP=[['Gummy Meadow','Vingummi-engen'],['Licorice Woods','Lakridsskoven'],['Toast Canyon','Toastkløften'],['Broccoli Keep','Broccoliborgen'],['Chili Volcano','Chilivulkanen'],
   ['Onion Swamp','Løgsumpen'],['Carrot Fortress','Gulerodsfæstningen'],['Lemon Desert','Citronørkenen'],['Gumball Factory','Tyggegummifabrikken'],["Dragon's Sugar Peak","Dragens Sukkertop"]];
-function openMap(){
+let MAPMODE='battle';
+function clDesc(n){return genClassic(n).goals.map(g=>goalIcon(g)+' '+goalText(g)).join(' · ')}
+function openMap(mode){
+  if(typeof mode==='string')MAPMODE=mode;const cl=MAPMODE==='classic';
   show('scMap');
-  const top=Math.max(CAMPAIGN,S.maxLevel+4),cur=S.maxLevel;let html='';
+  $('#mapHeroes').style.display=cl?'none':'';
+  $('#totStars').textContent=sumObj(cl?S.cstars:S.stars);
+  const top=cl?Math.max(CL_MAX,S.cmax+4):Math.max(CAMPAIGN,S.maxLevel+4),cur=cl?S.cmax:S.maxLevel,STARS=cl?S.cstars:S.stars;let html='';
   for(let n=1;n<=top;n++){
-    if((n-1)%10===0){const c=Math.floor((n-1)/10);html+=`<div class="chapter">${n>CAMPAIGN?'🌌 '+L('Beyond','Hinsides')+' '+(c-9):'📍 '+L(...CHAP[c]).replace(/^/,(c+1)+'. ')}</div>`}
-    const lock=n>cur,boss=n%10===0,st=S.stars[n]||0,done=n<cur;
+    if((n-1)%10===0){const c=Math.floor((n-1)/10);html+=`<div class="chapter">${cl?(n>CL_MAX?'🌌 '+L('Beyond','Hinsides')+' '+(c-9):'🍬 '+L('Classic','Klassisk')+' '+(n)+'–'+(n+9)):n>CAMPAIGN?'🌌 '+L('Beyond','Hinsides')+' '+(c-9):'📍 '+L(...CHAP[c]).replace(/^/,(c+1)+'. ')}</div>`}
+    const lock=n>cur,boss=!cl&&n%10===0,st=STARS[n]||0,done=n<cur;
     html+=`<div class="node ${lock?'lock':''} ${n===cur?'cur':''} ${boss?'boss':''} ${done?'done':''}" data-n="${n}">
-      <span class="n">${lock?'🔒':n}</span><span class="tx"><b>${boss?'👑 ':''}${L('Level ','Bane ')+n}</b><small>${lock?L('Win the level before to unlock','Vind banen før for at låse op'):esc(lvlDesc(n))}</small></span>
+      <span class="n">${lock?'🔒':n}</span><span class="tx"><b>${boss?'👑 ':''}${L('Level ','Bane ')+n}</b><small>${lock?L('Win the level before to unlock','Vind banen før for at låse op'):esc(cl?clDesc(n):lvlDesc(n))}</small></span>
       <span class="stars">${done?[1,2,3].map(k=>`<span class="${k<=st?'':'off'}">⭐</span>`).join(''):n===cur?'▶':''}</span></div>`;
   }
   // column-reverse puts level 1 at the bottom, so add the chapter labels after their nodes
@@ -1522,12 +1784,12 @@ function openMap(){
   const tmp=document.createElement('div');tmp.innerHTML=html;
   let group=[];[...tmp.children].forEach(el=>{if(el.classList.contains('chapter')){flush();group=[el]}else group.push(el)});flush();
   function flush(){if(!group.length)return;const[h,...rest]=group;rest.forEach(x=>path.appendChild(x));path.appendChild(h);group=[]}
-  $$('.node',path).forEach(el=>el.onclick=()=>{const n=+el.dataset.n;if(n>cur){SFX.no();toast(L('🔒 Locked – win the level before first.','🔒 Låst – vind banen før først.'));return}SFX.click();preBattle(n)});
+  $$('.node',path).forEach(el=>el.onclick=()=>{const n=+el.dataset.n;if(n>cur){SFX.no();toast(L('🔒 Locked – win the level before first.','🔒 Låst – vind banen før først.'));return}SFX.click();cl?preClassic(n):preBattle(n)});
   const c=$('.node.cur',path);if(c)setTimeout(()=>c.scrollIntoView({block:'center'}),30);
 }
 async function preBattle(n){
   const lv=genLevel(n),tier=tierFor(n);
-  if(!$('#scMap').classList.contains('on'))openMap();
+  if(!$('#scMap').classList.contains('on')||MAPMODE!=='battle')openMap('battle');
   const kinds={};lv.waves.flat().forEach(e=>{const k=e.def.id;kinds[k]=kinds[k]||{e,c:0};kinds[k].c++});
   const v=await panel({title:(lv.boss?'👑 ':'⚔️ ')+L('Level ','Bane ')+n,
     html:`<p class="hint" style="margin-top:0">${lv.waves.length>1?L(`${lv.waves.length} waves of monsters.`,`${lv.waves.length} bølger med monstre.`):L('One wave of monsters.','Én bølge med monstre.')}
@@ -1584,7 +1846,7 @@ function openHeroes(){
 /* ---- booster shop ---- */
 const SHOP=[['hammer','🔨',150,'Hammer','Hammer','Smash any candy. No monster turn.','Smadr et slik. Monstrene får ikke en tur.'],
   ['shuffle','🔀',90,'Shuffle','Bland','Mix the whole board.','Bland hele brættet.'],
-  ['potion','🧪',260,'Potion','Trylledrik','Brings fallen heroes back and heals everyone.','Vækker faldne helte og heler alle.']];
+  ['potion','🧪',260,'Potion','Trylledrik','The only way to heal in battle: heals every hero by 50% and brings fallen heroes back.','Den eneste måde at hele i kamp: heler alle helte med 50 % og vækker faldne helte.']];
 $('#mShop').onclick=()=>{SFX.click();panel({title:'🛒 '+L('Shop','Butik'),render:b=>{const draw=()=>{
   b.innerHTML=`<p class="hint" style="margin-top:0">${L('Boosters are used during battle from the buttons at the top. Heroes are bought in the hero shop.','Boosters bruges i kampen fra knapperne øverst. Helte købes i heltebutikken.')}</p><div class="shopg"></div>
     <div style="text-align:center;margin-top:10px"><button class="btn sun" id="toHeroes">🥔 ${L('Hero shop','Heltebutik')}</button></div>`;
@@ -1615,23 +1877,29 @@ $('#mQue').onclick=()=>{SFX.click();fillQuests();panel({title:'📜 '+L('Quests'
 $('#mTro').onclick=()=>{SFX.click();panel({title:'🏆 '+L('Trophies','Trofæer'),html:`<p class="hint" style="margin-top:0">${L('Every trophy gives 250 coins.','Hvert trofæ giver 250 mønter.')} ${Object.keys(S.ach).length}/${ACH.length}</p>`+
   ACH.map(a=>`<div class="task ${S.ach[a[0]]?'rdy':''}"><span class="ic ${S.ach[a[0]]?'':'off'}">${a[1]}</span><span class="tx"><b>${L(a[2],a[3])}</b><small>${L(a[4],a[5])}</small></span>${S.ach[a[0]]?'✅':''}</div>`).join('')})};
 $('#mStats').onclick=()=>{SFX.click();const c=S.cnt,row=(e,en,da,v)=>`<div class="task"><span class="ic">${e}</span><span class="tx"><b>${L(en,da)}</b></span><b>${v}</b></div>`;
-  panel({title:'📊 '+L('Stats','Statistik'),html:[row('🏁','Highest level','Højeste bane',S.maxLevel-1),row('🔁','Campaign round','Kampagnerunde',S.cycle+1),row('⭐','Stars','Stjerner',c.stars),
+  panel({title:'📊 '+L('Stats','Statistik'),html:[row('🏁','Highest battle level','Højeste kampbane',S.maxLevel-1),row('🍬','Highest classic level','Højeste klassiske bane',S.cmax-1),row('🔁','Campaign round','Kampagnerunde',S.cycle+1),row('⭐','Stars','Stjerner',c.stars),
     row('♾️','Best endless wave','Bedste endeløse bølge',S.bestWave),row('👾','Monsters defeated','Monstre besejret',N(c.kills)),row('👑','Bosses defeated','Bosser besejret',c.bosses),
     row('⚔️','Damage dealt','Skade givet',N(c.dmg)),row('⚡','Hero attacks made','Helteevner brugt',c.skills),row('🍬','Candies cleared','Slik fjernet',N(c.cleared)),
     row('💥','Special candies','Specialslik',c.specials),row('⛓️','Cascades','Kædereaktioner',c.cascades),row('🥔','Heroes','Helte',Object.keys(S.heroes).length+'/'+HEROES.length),row('🪙','Coins earned','Mønter tjent',N(c.coins))].join('')})};
 $('#mHelp').onclick=()=>{SFX.click();panel({title:'❓ '+L('How to play','Sådan spiller du'),html:[
   ['👆',L('Tap a candy, then tap the one next to it to swap them (or just drag). If it makes a line of 3 or more they pop – if not, they slide back. You have unlimited moves.','Tryk på et slik og så på det ved siden af for at bytte dem (eller træk). Giver det 3 eller flere på stribe, popper de – ellers glider de tilbage. Du har uendelig mange træk.')],
   ['🥔',L('Your potato heroes stand under the board. Candies in a hero\'s colour do not hurt the monsters – they charge that hero ⚡. All the other colours fly up and hit the monster, powered by your team.','Dine kartoffelhelte står under brættet. Slik i en helts farve skader ikke monstrene – de lader helten op ⚡. Alle de andre farver flyver op og rammer monsteret med dit holds styrke.')],
-  ['⚡',L(`When a hero is fully charged it glows and gets ${HITS} attacks. Grab the hero and drop it on a monster to attack – each attack uses a third of the energy. Every hero has its own extra effect: healing, big hits, freezing and more.`,`Når en helt er ladet helt op, lyser den og får ${HITS} angreb. Tag fat i helten og slip den på et monster for at angribe – hvert angreb bruger en tredjedel af energien. Hver helt har sin egen ekstra effekt: heling, kæmpeslag, frost og mere.`)],
+  ['⚡',L(`When a hero is fully charged it glows and gets ${HITS} attacks. Grab the hero and drop it on a monster to attack – each attack uses a third of the energy. Every hero has its own extra effect: energy, big hits, freezing and more. Heroes only get health back from potions 🧪, which you buy in the shop.`,`Når en helt er ladet helt op, lyser den og får ${HITS} angreb. Tag fat i helten og slip den på et monster for at angribe – hvert angreb bruger en tredjedel af energien. Hver helt har sin egen ekstra effekt: energi, kæmpeslag, frost og mere. Helte får kun liv igen med trylledrikke 🧪, som du køber i butikken.`)],
   ['👾',L('Monsters count down with every move. At 0 they attack a hero. Armour 🛡️ lowers the damage. Bosses hit everyone! Tap a monster to choose who to attack.','Monstrene tæller ned for hvert træk. Ved 0 angriber de en helt. Rustning 🛡️ mindsker skaden. Bosser rammer alle! Tryk på et monster for at vælge, hvem du angriber.')],
   ['💔',L('If all your heroes fall, the level starts over. Kill every monster in every wave to win.','Falder alle dine helte, starter banen forfra. Dræb alle monstre i alle bølger for at vinde.')],
   ['💥',L('4 in a line = striped candy (clears a row or column). L or T shape = bomb. 5 in a line = floss cloud: swap it with a candy to clear that whole colour.','4 på stribe = stribet slik (rydder en række eller søjle). L- eller T-form = bombe. 5 på stribe = spindsky: byt den med et slik for at rydde hele den farve.')],
+  ['🍬',L('Classic candy (menu): no heroes or monsters. Reach the goals at the top before the moves run out – collect colours, clean pink sugar glaze, smash sugar blocks (match next to them), and bring potatoes to the bottom. A potato can always be pushed one step down, even without a match.','Klassisk slik (menu): ingen helte eller monstre. Nå målene øverst, før trækkene slipper op – saml farver, fjern lyserød sukkerglasur, smadr sukkerklodser (match ved siden af dem) og bring kartofler ned til bunden. En kartoffel kan altid skubbes et felt ned, også uden match.')],
   ['🗺️',L('100 campaign levels with a boss every 10 levels. New monsters and stronger weapons as you go. After level 100 you can keep going, start over, or play endless mode.','100 kampagnebaner med en boss hver 10. bane. Nye monstre og stærkere våben undervejs. Efter bane 100 kan du fortsætte, starte forfra eller spille endeløs.')],
   ['🪙',L('Win coins to buy new heroes and upgrade them between levels.','Vind mønter til at købe nye helte og opgradere dem mellem banerne.')]
   ].map(([e,t])=>`<div class="task"><span class="ic">${e}</span><span class="tx">${t}</span></div>`).join('')})};
 
 /* ---- what's new ---- */
 const CHANGELOG=[
+  {v:'2.2',d:['1 Nov 2026','1. nov. 2026'],t:['Classic mode!','Klassisk tilstand!'],i:[
+    ['🍬 New in the menu: Classic candy – 100 levels (and more) without heroes or monsters, but with a limited number of moves.','🍬 Nyt i menuen: Klassisk slik – 100 baner (og flere) uden helte og monstre, men med et begrænset antal træk.'],
+    ['🎯 Goals: score points, collect colours, clean sugar glaze, smash sugar blocks and bring potatoes to the bottom (a potato can always be pushed one step down).','🎯 Mål: få point, saml farver, fjern sukkerglasur, smadr sukkerklodser og bring kartofler ned til bunden (en kartoffel kan altid skubbes et felt ned).'],
+    ['🍭 Leftover moves turn into a sugar rush for extra points. Out of moves? Buy 5 more or try again.','🍭 Træk, du har tilbage, bliver til sukkerrus med ekstra point. Løbet tør? Køb 5 mere eller prøv igen.'],
+    ['🧪 Battle mode: heroes no longer heal for free. Potions from the shop are the only way to get health back (now 50%). Doctor Pinky gives the other heroes energy instead.','🧪 Kamptilstand: heltene heler ikke længere gratis. Trylledrikke fra butikken er den eneste måde at få liv igen (nu 50 %). Doktor Pinky giver i stedet de andre helte energi.']]},
   {v:'2.1',d:['1 Nov 2026','1. nov. 2026'],t:['Drag heroes to attack','Træk helte for at angribe'],i:[
     ['✋ When a hero is fully charged, grab it and drop it on a monster to attack!','✋ Når en helt er ladet op, så tag fat i den og slip den på et monster for at angribe!'],
     ['⚔️ A full charge gives 3 attacks. Each attack uses a third of the energy – the bar shows how many are left.','⚔️ En fuld opladning giver 3 angreb. Hvert angreb bruger en tredjedel af energien – bjælken viser, hvor mange der er tilbage.'],
@@ -1664,18 +1932,18 @@ $('#mDisc').onclick=()=>{SFX.click();open('https://discord.gg/kZa6F4s5f9','_blan
 
 /* ---- language + sound ---- */
 const STATIC=[
-  ['#mPlayT','Campaign','Kampagne'],['#mHeroT','Heroes','Helte'],['#mEndT','Endless battle','Endeløs kamp'],
+  ['#mPlayT','Battle campaign','Kampkampagne'],['#mClassicT','Classic candy','Klassisk slik'],['#mHeroT','Heroes','Helte'],['#mEndT','Endless battle','Endeløs kamp'],
   ['#mMisT','Missions','Missioner'],['#mQueT','Quests','Opgaver'],['#mShopT','Shop','Butik'],['#mHelpT','How to play','Sådan spiller du'],
   ['#mTroT','Trophies','Trofæer'],['#mStatsT','Stats','Statistik'],['#mLogT',"What's new",'Nyheder'],
   ['#mapBackT','Menu','Menu'],['#mapHeroT','Heroes','Helte'],
-  ['#heroTxt','Swap candies so your potato heroes fight the sour monsters!','Byt slik, så dine kartoffelhelte kæmper mod de sure monstre!']
+  ['#heroTxt','Battle sour monsters with potato heroes – or play classic candy with moves and goals!','Kæmp mod sure monstre med kartoffelhelte – eller spil klassisk slik med træk og mål!']
 ];
 function applyLang(){
   document.documentElement.lang=LANG;
   STATIC.forEach(([sel,en,da])=>{const el=$(sel);if(el)el.textContent=L(en,da)});
   $('#langBtn').textContent=LANG==='da'?'🇬🇧':'🇩🇰';$('#langBtn').title=LANG==='da'?'English':'Dansk';
   $('#bHammer').title=L('Hammer','Hammer');$('#bShuffle').title=L('Shuffle','Bland');$('#bPotion').title=L('Potion','Trylledrik');
-  if($('#scMap').classList.contains('on'))openMap();
+  if($('#scMap').classList.contains('on'))openMap(MAPMODE);
   if(B&&!B.over)bhead();
   hud();
 }
