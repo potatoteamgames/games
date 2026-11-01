@@ -544,12 +544,12 @@ const NC=PIECES.length;
 const HEROES=[
   {id:'medic', en:'Doctor Pinky',     da:'Doktor Pinky',     c:0,hp:120,arm:6, atk:10,ch:10,ab:'heal',   price:0,   unlock:1, hat:'nurse',  wpn:'staff'},
   {id:'knight',en:'Spud Knight',      da:'Kartoffelridder',  c:1,hp:150,arm:12,atk:14,ch:11,ab:'slash',  price:0,   unlock:1, hat:'helmet', wpn:'sword'},
-  {id:'mage',  en:'Blueberry Mage',   da:'Blåbærtroldmand',  c:3,hp:105,arm:5, atk:15,ch:12,ab:'frost',  price:500, unlock:3, hat:'wizard', wpn:'wand'},
-  {id:'ranger',en:'Lemon Ranger',     da:'Citronbueskytte',  c:4,hp:115,arm:7, atk:14,ch:11,ab:'arrows', price:800, unlock:6, hat:'hood',   wpn:'bow'},
-  {id:'gunner',en:'Orange Cannoneer', da:'Appelsinkanonér',  c:2,hp:125,arm:8, atk:13,ch:13,ab:'barrage',price:1200,unlock:10,hat:'bandana',wpn:'cannon'},
-  {id:'guard', en:'Mint Guard',       da:'Mintvagten',       c:5,hp:190,arm:20,atk:9, ch:12,ab:'shield', price:1600,unlock:15,hat:'viking', wpn:'buckler'},
-  {id:'wizard',en:'Candy Wizard',     da:'Sliktroldmanden',  c:0,hp:140,arm:8, atk:18,ch:13,ab:'storm',  price:4000,unlock:30,hat:'star',   wpn:'orb',    legend:true},
-  {id:'king',  en:'Royal Spud',       da:'Kongekartoflen',   c:1,hp:210,arm:16,atk:20,ch:14,ab:'royal',  price:6000,unlock:45,hat:'crown',  wpn:'scepter',legend:true}
+  {id:'mage',  en:'Blueberry Mage',   da:'Blåbærtroldmand',  c:3,hp:105,arm:5, atk:15,ch:12,ab:'frost',  price:1300,unlock:3, hat:'wizard', wpn:'wand'},
+  {id:'ranger',en:'Lemon Ranger',     da:'Citronbueskytte',  c:4,hp:115,arm:7, atk:14,ch:11,ab:'arrows', price:2000,unlock:6, hat:'hood',   wpn:'bow'},
+  {id:'gunner',en:'Orange Cannoneer', da:'Appelsinkanonér',  c:2,hp:125,arm:8, atk:13,ch:13,ab:'barrage',price:3000,unlock:10,hat:'bandana',wpn:'cannon'},
+  {id:'guard', en:'Mint Guard',       da:'Mintvagten',       c:5,hp:190,arm:20,atk:9, ch:12,ab:'shield', price:4000,unlock:15,hat:'viking', wpn:'buckler'},
+  {id:'wizard',en:'Candy Wizard',     da:'Sliktroldmanden',  c:0,hp:140,arm:8, atk:18,ch:13,ab:'storm',  price:10000,unlock:30,hat:'star',   wpn:'orb',    legend:true},
+  {id:'king',  en:'Royal Spud',       da:'Kongekartoflen',   c:1,hp:210,arm:16,atk:20,ch:14,ab:'royal',  price:15000,unlock:45,hat:'crown',  wpn:'scepter',legend:true}
 ];
 const HERO=id=>HEROES.find(h=>h.id===id);
 // when a hero is fully charged it gets HITS attacks: drag the hero onto a monster for each one
@@ -566,7 +566,7 @@ const ABIL={
 };
 const HERO_MAX=25;
 const heroStat=(h,lvl)=>{const m=1+.1*(lvl-1);return{hp:Math.round(h.hp*m),atk:h.atk*m,arm:h.arm+Math.floor((lvl-1)*.8)}};
-const upCost=(h,lvl)=>Math.round((h.legend?280:160)*Math.pow(1.3,lvl-1));
+const upCost=(h,lvl)=>Math.round((h.legend?420:260)*Math.pow(1.25,lvl-1)/10)*10;
 
 // sour monsters – new kinds join as you get further, each with its own weapon
 const MONSTERS=[
@@ -1645,7 +1645,7 @@ async function clWin(){
 }
 async function clOut(){
   B.busy=true;
-  const n=B.lv.n,price=Math.round((90+n*3)*(1+B.extra*.5));
+  const n=B.lv.n,price=Math.round((250+n*8)*(1+B.extra*.6)/10)*10;
   const left=B.goals.filter(g=>goalLeft(g)>0).map(g=>`<div class="task"><span class="ic">${goalIcon(g)}</span><span class="tx"><b>${goalText(g)}</b><small>${L('Left: ','Mangler: ')+N(goalLeft(g))}</small></span></div>`).join('');
   const v=await panel({title:'😮 '+L('Out of moves!','Ingen træk tilbage!'),sm:true,noX:true,
     html:`<p style="text-align:center;margin-top:0">${L('So close! This is what is left:','Så tæt på! Det her mangler:')}</p>${left}`,
@@ -1870,13 +1870,15 @@ function openHeroes(){
 }
 
 /* ---- booster shop ---- */
-const SHOP=[['hammer','🔨',150,'Hammer','Hammer','Smash any candy. No monster turn.','Smadr et slik. Monstrene får ikke en tur.'],
-  ['shuffle','🔀',90,'Shuffle','Bland','Mix the whole board.','Bland hele brættet.'],
-  ['potion','🧪',260,'Potion','Trylledrik','The only way to heal in battle: heals every hero by 50% and brings fallen heroes back.','Den eneste måde at hele i kamp: heler alle helte med 50 % og vækker faldne helte.']];
+const SHOP=[['hammer','🔨',450,'Hammer','Hammer','Smash any candy. No monster turn.','Smadr et slik. Monstrene får ikke en tur.'],
+  ['shuffle','🔀',300,'Shuffle','Bland','Mix the whole board.','Bland hele brættet.'],
+  ['potion','🧪',750,'Potion','Trylledrik','The only way to heal in battle: heals every hero by 50% and brings fallen heroes back.','Den eneste måde at hele i kamp: heler alle helte med 50 % og vækker faldne helte.']];
+// boosters cost more the more of them you are already holding
+const shopPrice=(p,k)=>Math.round(p*Math.pow(1.2,S.items[k]||0)/10)*10;
 $('#mShop').onclick=()=>{SFX.click();panel({title:'🛒 '+L('Shop','Butik'),render:b=>{const draw=()=>{
-  b.innerHTML=`<p class="hint" style="margin-top:0">${L('Boosters are used during battle from the buttons at the top. Heroes are bought in the hero shop.','Boosters bruges i kampen fra knapperne øverst. Helte købes i heltebutikken.')}</p><div class="shopg"></div>
+  b.innerHTML=`<p class="hint" style="margin-top:0">${L('Boosters are used during a level from the buttons at the top. The more of one you hold, the more the next one costs. Heroes are bought in the hero shop.','Boosters bruges under en bane fra knapperne øverst. Jo flere du har af en slags, jo dyrere bliver den næste. Helte købes i heltebutikken.')}</p><div class="shopg"></div>
     <div style="text-align:center;margin-top:10px"><button class="btn sun" id="toHeroes">🥔 ${L('Hero shop','Heltebutik')}</button></div>`;
-  SHOP.forEach(([k,e,p,en,da,den,dda])=>{const d=document.createElement('div');d.className='sitem';
+  SHOP.forEach(([k,e,p0,en,da,den,dda])=>{const p=shopPrice(p0,k),d=document.createElement('div');d.className='sitem';
     d.innerHTML=`<div class="e">${e}</div><b>${L(en,da)} (${S.items[k]||0})</b><small>${L(den,dda)}</small><button class="btn sm go">🪙 ${p}</button>`;
     const bt=$('button',d);bt.disabled=S.coins<p;bt.onclick=()=>{if(S.coins<p)return;S.coins-=p;S.items[k]=(S.items[k]||0)+1;SFX.coin();save();hud();draw()};$('.shopg',b).appendChild(d)});
   $('#toHeroes',b).onclick=()=>{closePanels();openHeroes()}};draw()}})};
@@ -1921,6 +1923,10 @@ $('#mHelp').onclick=()=>{SFX.click();panel({title:'❓ '+L('How to play','Sådan
 
 /* ---- what's new ---- */
 const CHANGELOG=[
+  {v:'2.3.1',d:['1 Nov 2026','1. nov. 2026'],t:['New prices','Nye priser'],i:[
+    ['🛒 Boosters cost more: hammer 450, shuffle 300, potion 750 – and each one gets 20% dearer for every one you already hold.','🛒 Boosters koster mere: hammer 450, bland 300, trylledrik 750 – og hver bliver 20 % dyrere for hver, du allerede har.'],
+    ['🥔 Heroes cost more: from 1,300 up to 15,000 coins for the Royal Spud, and upgrades cost more too.','🥔 Helte koster mere: fra 1.300 op til 15.000 mønter for Kongekartoflen, og opgraderinger koster også mere.'],
+    ['😮 +5 moves in classic mode costs more too.','😮 +5 træk i klassisk tilstand koster også mere.']]},
   {v:'2.3',d:['1 Nov 2026','1. nov. 2026'],t:['Endless classic','Endeløs klassisk'],i:[
     ['♾️ The Endless button now lets you pick Endless battle or the new Endless classic.','♾️ Endeløs-knappen lader dig nu vælge mellem Endeløs kamp og den nye Endeløs klassisk.'],
     ['🍬 Endless classic: start with 30 moves and score as much as you can. Every special candy you make and every 3× combo gives moves back.','🍬 Endeløs klassisk: start med 30 træk og få så mange point som muligt. Hvert specialslik, du laver, og hver 3× kombo giver træk tilbage.']]},
@@ -2023,7 +2029,7 @@ async function boot(){
   await until(8000);
   const ld=$('#load');ld.classList.add('out');setTimeout(()=>ld.remove(),500);
   if(S.newV2){S.newV2=false;save();setTimeout(()=>panel({title:'🎉 '+L('Candy Floss 2.0!','Candy Floss 2.0!'),sm:true,
-    html:`<p>${L('The game has become a candy battle! Your coins and player level came along – plus 300 bonus coins to buy your first new hero.','Spillet er blevet til en slikkamp! Dine mønter og dit spillerlevel er med – plus 300 bonusmønter til at købe din første nye helt.')}</p>`,
+    html:`<p>${L('The game has become a candy battle! Your coins and player level came along – plus 300 bonus coins to start saving for your next hero.','Spillet er blevet til en slikkamp! Dine mønter og dit spillerlevel er med – plus 300 bonusmønter, så du kan begynde at spare op til din næste helt.')}</p>`,
     buttons:[{label:'📖 '+L("What's new","Nyheder"),cls:'go'}]}).then(v=>{if(v)openLog()}),600)}
   else if(S.seenLog!==CHANGELOG[0].v)setTimeout(openLog,600);
 }
