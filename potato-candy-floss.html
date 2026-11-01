@@ -76,7 +76,7 @@ h1,h2,h3{font-family:'Lilita One',sans-serif;font-weight:400;margin:0}
 
 /* menu */
 .hero{text-align:center;padding:10px 0 4px}
-.hero h1{font-size:clamp(34px,9vw,60px);color:var(--pinkD);text-shadow:3px 3px 0 #fff,6px 6px 0 rgba(214,79,153,.25);line-height:1}
+.hero h1{font-size:clamp(34px,9vw,60px);color:var(--pinkD);text-shadow:2px 2px 0 #fff,0 4px 10px rgba(214,79,153,.35);line-height:1.05}
 .hero h1 span{color:var(--grapeD)}
 .hero .cone{font-size:clamp(54px,16vw,100px);line-height:1;filter:drop-shadow(0 8px 10px rgba(214,79,153,.35));animation:bob 2.6s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(-10px) rotate(-5deg)}}
@@ -161,7 +161,7 @@ h1,h2,h3{font-family:'Lilita One',sans-serif;font-weight:400;margin:0}
 .sitem small{display:block;color:var(--ink2);font-size:11.5px;font-weight:700;min-height:28px;line-height:1.25;margin:2px 0 5px}
 .big1{text-align:center;font-family:'Lilita One',sans-serif;font-size:30px;color:var(--pinkD)}
 .starsBig{font-size:44px;text-align:center;letter-spacing:4px;line-height:1.1}
-.starsBig .off{opacity:.25}
+.off{opacity:.3;filter:grayscale(1)}
 
 /* toast + banner */
 #toasts{position:fixed;left:50%;transform:translateX(-50%);top:62px;display:flex;flex-direction:column;gap:6px;z-index:80;pointer-events:none;width:min(92vw,380px)}
@@ -492,9 +492,9 @@ const OBJ_ICON={score:'🏆',color:null,glaze:'🧁',ing:'🥔',spec:'💥'};
 function genLevel(n){
   const r=seeded(n*7919+13),d=Math.min(1,(n-1)/60); // d = how hard, 0..1
   const cols=n<4?7:(n<12?7:8),rows=n<4?7:8;
-  const nc=n<6?4:n<14?5:n<30?6:7;                   // how many candy colours
-  const moves=Math.round(28-10*d+(r()<.5?2:0));
-  const base=Math.round(moves*230+n*120);   // about 20 good moves to reach 1 star
+  const nc=n<6?4:n<16?5:6;                          // how many candy colours
+  let moves=Math.round(28-8*d+(r()<.5?2:0));
+  const base=Math.round(moves*200+n*60);    // about 20 good moves to reach 1 star
   const obj=[];
   const kinds=[];
   if(n>=3)kinds.push('color');
@@ -509,15 +509,15 @@ function genLevel(n){
     let t=kinds[Math.floor(r()*kinds.length)];let guard=6;
     while(used.includes(t)&&guard--)t=kinds[Math.floor(r()*kinds.length)];
     if(used.includes(t))break;used.push(t);
-    if(t==='color')obj.push({t:'color',c:Math.floor(r()*nc),n:Math.round(22+38*d+r()*10)});
-    else if(t==='glaze')obj.push({t:'glaze',n:Math.round(8+24*d+r()*6)});
-    else if(t==='ing')obj.push({t:'ing',n:Math.round(2+4*d+(r()<.5?1:0))});
-    else obj.push({t:'spec',n:Math.round(2+4*d)});
+    if(t==='color')obj.push({t:'color',c:Math.floor(r()*nc),n:Math.round(moves*4.2/nc*(1+d*.25))});
+    else if(t==='glaze')obj.push({t:'glaze',n:Math.round(moves*.38+2+r()*3)});
+    else if(t==='ing'){obj.push({t:'ing',n:2+Math.round(d)});moves+=8}     // potatoes need time to fall
+    else obj.push({t:'spec',n:Math.round(2+2*d)});
   }
   const glazeN=obj.some(o=>o.t==='glaze')?obj.find(o=>o.t==='glaze').n:Math.round(r()*6*d);
   return{n,cols,rows,nc,moves,obj,glazeN,double:n>=25&&r()<.4,seed:n*7919+13};
 }
-const starFor=(lv,score)=>{const t=lv.obj[0].n;return score>=t*2.4?3:score>=t*1.6?2:score>=t?1:0};
+const starFor=(lv,score)=>{const t=lv.obj[0].n;return score>=t*2.1?3:score>=t*1.5?2:score>=t?1:0};
 
 /* =====================================================================
    BOARD ENGINE
@@ -598,6 +598,16 @@ function drawPiece(g,c,cx,cy,sz){
     g.globalAlpha=1;g.rotate(-t);g.font=`${Math.round(sz*.38)}px serif`;g.fillText('🍥',0,sz*.02)}
   g.restore();
 }
+function glazeTop(x,y,lvl){
+  const gx=x*CELL,gy=y*CELL;ctx.save();
+  ctx.globalAlpha=.42;ctx.fillStyle=lvl>1?'#ff8fd0':'#ffffff';
+  roundRect(ctx,gx+2,gy+2,CELL-4,CELL-4,CELL*.22);ctx.fill();
+  ctx.globalAlpha=.95;ctx.strokeStyle=lvl>1?'#d64f99':'#7cc9ff';ctx.lineWidth=Math.max(3,CELL*.08);
+  ctx.setLineDash([CELL*.16,CELL*.11]);ctx.stroke();ctx.setLineDash([]);
+  ctx.globalAlpha=.85;ctx.fillStyle='#fff';
+  for(let k=0;k<3;k++)ctx.fillRect(gx+CELL*(.18+k*.28),gy+CELL*.1,CELL*.07,CELL*.12);
+  ctx.restore();
+}
 function shade(hex,f){const n=parseInt(hex.slice(1),16),r=n>>16,gg=(n>>8)&255,b=n&255;
   const k=v=>clamp(Math.round(f<0?v*(1+f):v+(255-v)*f),0,255);
   return`rgb(${k(r)},${k(gg)},${k(b)})`}
@@ -615,16 +625,17 @@ function draw(){
     ctx.fillStyle=c.glaze>1?'rgba(255,170,220,.92)':'rgba(255,255,255,.85)';
     roundRect(ctx,gx+2,gy+2,CELL-4,CELL-4,CELL*.22);ctx.fill();
     ctx.strokeStyle=c.glaze>1?'#d64f99':'#ffb3dd';ctx.lineWidth=3;ctx.stroke();
-    ctx.fillStyle=c.glaze>1?'rgba(214,79,153,.35)':'rgba(255,160,215,.35)';
-    for(let k=0;k<3;k++)ctx.fillRect(gx+5+k*CELL*.3,gy+CELL*.18,CELL*.1,CELL*.64)}
+    }
   // the candies
   for(let y=0;y<B.rows;y++)for(let x=0;x<B.cols;x++){const c=at(B,x,y);if(!c)continue;
     const cx=x*CELL+CELL/2+(c.dx||0),cy=y*CELL+CELL/2+(c.dy||0);
+    if(c.glaze)glazeTop(x,y,c.glaze);
     if(c.ing){ctx.save();ctx.translate(cx,cy);ctx.scale(c.sc||1,c.sc||1);
       ctx.font=`${Math.round(CELL*.62)}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
       ctx.shadowColor='rgba(74,31,61,.4)';ctx.shadowBlur=8;ctx.fillText('🥔',0,CELL*.03);ctx.restore();continue}
     drawPiece(ctx,c,cx,cy,CELL);
   }
+  for(let y=0;y<B.rows;y++)for(let x=0;x<B.cols;x++){const c=at(B,x,y);if(c&&c.glaze&&!c.ing)glazeTop(x,y,c.glaze)}
   // hint ring
   if(G.hint&&!G.busy){const t=(performance.now()%1200)/1200,[hx,hy]=G.hint;
     ctx.strokeStyle='rgba(255,207,74,'+(.4+.5*Math.sin(t*6.28))+')';ctx.lineWidth=5;
@@ -657,7 +668,7 @@ function startGame(lv,endless){
     const i=rnd(G.B.g.length);G.B.g[i].sp='cloud';S.items.cloud--;save();toast(L('🍥 You started with a floss cloud!','🍥 Du startede med en spindsky!'))}
   show('scGame');layout();objBar();gameHud();drawBoosters();
   banner(endless?L('ENDLESS!','ENDELØS!'):L('LEVEL ','BANE ')+lv.n);
-  if(G.ingNeed)spawnIng(true);
+  if(G.ingNeed)spawnIng(Math.min(2,G.ingNeed),4);
 }
 function gameHud(){
   $('#moves').textContent=G.endless?G.moves:G.moves;
@@ -693,12 +704,9 @@ async function doTwist(x,y,silent){
   B.g[idx[1]]=cells[0];B.g[idx[2]]=cells[1];B.g[idx[3]]=cells[2];B.g[idx[0]]=cells[3];
   idx.forEach(i=>{B.g[i].dx=0;B.g[i].dy=0;B.g[i].rot=0});
   const m=findMatches(B);
-  if(!m.all.size){ // nothing happened – twist back, and it costs you nothing
-    await animTwist(idx,true);
-    const c2=idx.map(i=>B.g[i]);
-    B.g[idx[0]]=c2[1];B.g[idx[1]]=c2[2];B.g[idx[2]]=c2[3];B.g[idx[3]]=c2[0];
-    idx.forEach(i=>{B.g[i].dx=0;B.g[i].dy=0;B.g[i].rot=0});
-    SFX.no();shake(idx);G.busy=false;return;
+  if(!m.all.size){ // no match: the candies simply stay turned and it costs you nothing,
+    SFX.click();   // so you can keep twisting to line something up
+    bump('twists');G.busy=false;findHint();return;
   }
   SFX.twist();bump('twists');G.moves--;G.combo=0;G.last=idx;
   gameHud();
@@ -792,9 +800,7 @@ async function gravity(){
       // new candies drop in from above
       const r=Math.random;
       for(const y of empty){const i=y*B.cols+x;
-        const spawnIngNow=G.ingNeed&&G.ingOut<Math.min(2,G.ingNeed-G.got.ing)&&y===0&&Math.random()<.14;
         B.g[i]=newCell(B.nc,r);
-        if(spawnIngNow){B.g[i].ing=true;B.g[i].sp=null;G.ingOut++}
         B.g[i].dy=-(B.rows)*CELL*.5-CELL;falls.push(B.g[i]);moved=true}
     }
     if(falls.length){falls.forEach(c=>c.dy0=c.dy);
@@ -803,13 +809,18 @@ async function gravity(){
     // potatoes reaching the bottom row are collected
     let got=false;
     for(let x=0;x<B.cols;x++){const i=(B.rows-1)*B.cols+x,c=B.g[i];
-      if(c&&c.ing){G.got.ing++;G.ingOut=Math.max(0,G.ingOut-1);B.g[i]=null;got=true;
-        sparkleAt(i,'#c98a4b',24);scorePop(i,500);G.score+=500;SFX.coin();floatBoard('🥔 +500','#ffcf4a')}}
+      if(c&&c.ing){G.got.ing++;B.g[i]=null;got=true;
+        sparkleAt(i,'#c98a4b',24);scorePop(i,500);G.score+=500;SFX.coin();floatBoard('🥔 +500','#ffcf4a');
+        // send the next potato in, a few rows up, so there is always one to work on
+        if(G.got.ing+ingOnBoard()<G.ingNeed)spawnIng(1,3)}}
     if(got){moved=true;objBar()}
   }
 }
-function spawnIng(first){const B=G.B;if(!G.ingNeed)return;
-  for(let k=0;k<Math.min(2,G.ingNeed);k++){const x=rnd(B.cols),i=x;if(B.g[i]&&!B.g[i].ing){B.g[i].ing=true;B.g[i].sp=null;G.ingOut++}}
+const ingOnBoard=()=>G.B.g.filter(c=>c&&c.ing).length;
+function spawnIng(n,lowRow){const B=G.B;if(!G.ingNeed)return;
+  const cols=[...Array(B.cols).keys()].sort(()=>Math.random()-.5);
+  for(let k=0;k<n;k++){const x=cols[k%B.cols],y=(lowRow||4)+rnd(2),i=Math.min(B.g.length-1,y*B.cols+x);
+    if(B.g[i]&&!B.g[i].ing){B.g[i].ing=true;B.g[i].sp=null}}
 }
 async function flossSpin(){
   SFX.floss();banner(L('FLOSS SPIN!','SPINDSNURR!'));confetti(80);
@@ -831,18 +842,32 @@ function lineFx(x1,y1,x2,y2){const r=cv.getBoundingClientRect();
 /* ---- is there a twist that works? (hint + shuffle check) ---- */
 function findHint(){
   const B=G.B;G.hint=null;
+  const wantC=G.lv.obj.find(o=>o.t==='color'),wantI=G.lv.obj.find(o=>o.t==='ing'),wantG=G.lv.obj.find(o=>o.t==='glaze');
+  // where is there a potato, and in which column?
+  const ingRow={};B.g.forEach((c,i)=>{if(c&&c.ing){const x=i%B.cols,y=Math.floor(i/B.cols);if(ingRow[x]==null||y>ingRow[x])ingRow[x]=y}});
+  const found=[];
   for(let y=0;y<B.rows-1;y++)for(let x=0;x<B.cols-1;x++){
     const idx=[y*B.cols+x,y*B.cols+x+1,(y+1)*B.cols+x+1,(y+1)*B.cols+x];
     if(idx.some(i=>!B.g[i]||B.g[i].ing))continue;
-    const keep=idx.map(i=>B.g[i]);
-    for(let t=0;t<3;t++){
+    const keep=idx.map(i=>B.g[i]);let hit=0;
+    for(let t=0;t<3&&!hit;t++){
       const c=idx.map(i=>B.g[i]);
       B.g[idx[1]]=c[0];B.g[idx[2]]=c[1];B.g[idx[3]]=c[2];B.g[idx[0]]=c[3];
-      if(findMatches(B).all.size){idx.forEach((i,k)=>B.g[i]=keep[k]);G.hint=[x,y];return true}
+      const m=findMatches(B);if(m.all.size)hit=m.all.size;
     }
     idx.forEach((i,k)=>B.g[i]=keep[k]);
+    if(!hit)continue;
+    // a good tip helps with the job this level asks for
+    let sc=1+Math.min(4,hit/3);
+    if(wantI&&(ingRow[x]!=null&&y+1>ingRow[x]||ingRow[x+1]!=null&&y+1>ingRow[x+1]))sc+=6;
+    if(wantG&&idx.some(i=>B.g[i].glaze))sc+=4;
+    if(wantC&&idx.some(i=>B.g[i].c===wantC.c))sc+=2;
+    found.push({x,y,sc:sc+Math.random()});
   }
-  return false;
+  if(!found.length)return false;
+  found.sort((a,b)=>b.sc-a.sc);
+  G.hint=[found[0].x,found[0].y];
+  return true;
 }
 async function shuffleBoard(quiet){
   const B=G.B;let guard=30;
@@ -1098,14 +1123,14 @@ $('#mHelp').onclick=()=>{SFX.click();openHelp()};
 function openHelp(){
   panel({title:'❓ '+L('How to play','Sådan spiller du'),html:L(`
     <div class="task"><div class="ic">🔄</div><div class="tx"><b>Twist, don't swap!</b><small>Tap between four candies and they all spin one step clockwise. That is the big difference from other match-3 games.</small></div></div>
-    <div class="task"><div class="ic">✅</div><div class="tx"><b>Free tries</b><small>A twist that makes no match simply spins back and costs you nothing. Only twists that match cost a move.</small></div></div>
+    <div class="task"><div class="ic">✅</div><div class="tx"><b>Free tries</b><small>Keep twisting the same spot to turn the candies further. Only a twist that makes a match costs a move – all the others are free.</small></div></div>
     <div class="task"><div class="ic">💥</div><div class="tx"><b>Special candies</b><small>Match 4 in a line for a candy stick (clears a row or column), match 5 for a floss cloud (clears a whole colour), and make an L or T shape for a sugar bomb.</small></div></div>
     <div class="task"><div class="ic">🍥</div><div class="tx"><b>The floss meter</b><small>Every candy you clear fills the meter at the top. When it is full the floss machine spins two free specials onto the board.</small></div></div>
     <div class="task"><div class="ic">🧁</div><div class="tx"><b>Sugar glaze</b><small>Match on top of a glazed tile to clean it. Pink glaze needs two matches.</small></div></div>
     <div class="task"><div class="ic">🥔</div><div class="tx"><b>Potatoes</b><small>Some levels ask you to bring potatoes all the way down to the bottom row. You cannot twist a potato, so clear the candies under it.</small></div></div>
     <div class="task"><div class="ic">⭐</div><div class="tx"><b>Stars</b><small>Beat the target score for 1 star, and score much more for 2 and 3 stars. Levels never run out!</small></div></div>`,`
     <div class="task"><div class="ic">🔄</div><div class="tx"><b>Drej i stedet for at bytte!</b><small>Tryk mellem fire slik, så drejer de alle ét trin med uret. Det er den store forskel fra andre match-3-spil.</small></div></div>
-    <div class="task"><div class="ic">✅</div><div class="tx"><b>Gratis forsøg</b><small>En drejning, der ikke giver tre ens, drejer bare tilbage og koster ingenting. Kun drejninger, der rammer, koster et træk.</small></div></div>
+    <div class="task"><div class="ic">✅</div><div class="tx"><b>Gratis forsøg</b><small>Bliv ved med at dreje samme sted for at dreje slikkene videre rundt. Kun en drejning, der giver tre ens, koster et træk – alle de andre er gratis.</small></div></div>
     <div class="task"><div class="ic">💥</div><div class="tx"><b>Specialslik</b><small>Fire på stribe giver en slikstang (rydder en række eller kolonne), fem giver en spindsky (rydder en hel farve), og en L- eller T-form giver en sukkerbombe.</small></div></div>
     <div class="task"><div class="ic">🍥</div><div class="tx"><b>Spindmåleren</b><small>Hvert slik, du fjerner, fylder måleren øverst. Når den er fuld, snurrer spindmaskinen to gratis specialslik frem.</small></div></div>
     <div class="task"><div class="ic">🧁</div><div class="tx"><b>Sukkerglasur</b><small>Lav tre ens oven på et glaseret felt for at rense det. Lyserød glasur skal rammes to gange.</small></div></div>
@@ -1114,7 +1139,7 @@ function openHelp(){
 }
 const CHANGELOG=[
   {v:'1.0',d:['1 Nov 2026','1. nov. 2026'],t:['Welcome to Potato Candy Floss!','Velkommen til Potato Candy Floss!'],i:[
-    ['🔄 A brand new match-3 twist: tap between four candies to spin them around instead of swapping two.','🔄 En helt ny match-3-drejning: tryk mellem fire slik for at dreje dem rundt i stedet for at bytte to.'],
+    ['🔄 A brand new match-3 twist: tap between four candies to spin them around instead of swapping two. Twisting is free – only a twist that makes a match costs a move.','🔄 En helt ny match-3-drejning: tryk mellem fire slik for at dreje dem rundt i stedet for at bytte to. Det er gratis at dreje – kun en drejning, der rammer, koster et træk.'],
     ['🗺️ Endless levels with score targets, candy colours to collect, sugar glaze to clean and potatoes to rescue.','🗺️ Uendeligt mange baner med målscore, slikfarver at samle, sukkerglasur at rense og kartofler at redde.'],
     ['♾️ Endless mode where big matches give your moves back.','♾️ Endeløs tilstand, hvor store kombinationer giver træk tilbage.'],
     ['📋 Daily missions, 📜 quests, 🏆 trophies, a 🛒 booster shop and your own player level.','📋 Daglige missioner, 📜 opgaver, 🏆 trofæer, en 🛒 butik med boosters og dit eget spillerlevel.'],
@@ -1155,7 +1180,7 @@ $('#sndBtn').onclick=()=>{SFX.on=!SFX.on;$('#sndBtn').textContent=SFX.on?'🔊':
    BOOT
    ===================================================================== */
 const TIPS=[
-  ['Tip: a twist that does not match is free – try as many as you like!','Tip: en drejning, der ikke rammer, er gratis – prøv løs!'],
+  ['Tip: twisting is free – only a twist that makes a match costs a move.','Tip: det er gratis at dreje – kun en drejning, der rammer, koster et træk.'],
   ['Tip: match 5 in a line for a floss cloud that clears a whole colour.','Tip: fem på stribe giver en spindsky, der rydder en hel farve.'],
   ['Tip: two specials next to each other make a huge mess. The good kind!','Tip: to specialslik ved siden af hinanden giver et kæmpe rod. Det gode slags!'],
   ['Tip: leftover moves turn into free specials when you win.','Tip: træk, du har tilbage, bliver til gratis specialslik, når du vinder.'],
