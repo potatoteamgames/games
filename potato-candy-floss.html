@@ -112,30 +112,42 @@ h1,h2,h3{font-family:'Lilita One',sans-serif;font-weight:400;margin:0}
 .node .tx small{display:block;color:var(--ink2);font-size:12px;font-weight:700}
 .stars{font-size:15px;letter-spacing:1px;white-space:nowrap}
 
-/* game screen */
-#gtop{display:flex;align-items:center;gap:7px;padding:7px 10px;background:linear-gradient(180deg,#fff,#ffeaf6);border-bottom:3px solid var(--ink);flex:0 0 auto;flex-wrap:wrap}
-.obj{display:flex;align-items:center;gap:4px;background:#fff;border:2px solid var(--ink);border-radius:12px;padding:2px 8px;font-size:14px}
-.obj.done{background:#c8f7e3;border-color:var(--mintD)}
-.obj i{font-style:normal;font-size:18px}
-#moves{font-family:'Lilita One',sans-serif;font-size:26px;line-height:1}
-#movesW{display:flex;flex-direction:column;align-items:center;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:1px 11px;box-shadow:0 3px 0 rgba(74,31,61,.2)}
-#movesW small{font-size:9.5px;letter-spacing:1px;color:var(--ink2)}
-#movesW.low{background:#ffe0e6;border-color:var(--red)}
-#boardWrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;position:relative;padding:8px}
-#board{touch-action:none;border-radius:22px;box-shadow:0 10px 0 rgba(74,31,61,.18),0 14px 34px rgba(74,31,61,.25);border:4px solid var(--ink);background:linear-gradient(160deg,#fff0f8,#ffe2f1)}
-#gbot{flex:0 0 auto;display:flex;gap:8px;align-items:center;justify-content:center;padding:7px 10px 10px;background:linear-gradient(0deg,#fff,#ffeaf6);border-top:3px solid var(--ink);flex-wrap:wrap}
-.boost{position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;padding:5px 11px;font-size:10.5px;border-radius:14px;border:3px solid var(--ink);box-shadow:0 4px 0 var(--ink);background:linear-gradient(#fff,#ffe9f6)}
-.boost i{font-style:normal;font-size:21px}
-.boost:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
-.boost.on{background:linear-gradient(#ffe08a,var(--sunD));animation:pulse .9s infinite}
-.boost .num{position:absolute;top:-7px;right:-6px;min-width:20px;height:20px;border-radius:999px;background:var(--grapeD);color:#fff;font-size:11px;line-height:20px;border:2px solid var(--ink)}
-.boost:disabled .num{background:#aaa}
-/* floss meter */
-#flossW{display:flex;align-items:center;gap:5px;background:#fff;border:3px solid var(--ink);border-radius:999px;padding:2px 9px 2px 5px;box-shadow:0 3px 0 rgba(74,31,61,.2)}
-#flossBar{width:72px;height:10px;border-radius:999px;background:#f0d6e6;overflow:hidden;border:1px solid rgba(74,31,61,.2)}
+/* game screen – deep candy-board look */
+#gtop{display:flex;align-items:center;gap:8px;padding:8px 10px;background:linear-gradient(180deg,#6a3cc4,#4b2596);border-bottom:4px solid #2a1159;flex:0 0 auto}
+#movesW{display:flex;flex-direction:column;align-items:center;justify-content:center;width:62px;height:62px;flex:0 0 auto;border-radius:50%;
+  background:radial-gradient(circle at 35% 28%,#ffe9a8,#ffb224 55%,#e07e0a);border:4px solid #7a3c00;box-shadow:0 4px 0 #52280a,inset 0 -5px 0 rgba(0,0,0,.18)}
+#moves{font-family:'Lilita One',sans-serif;font-size:27px;line-height:1;color:#fff;text-shadow:2px 2px 0 #b35c00}
+#movesW small{font-size:9px;letter-spacing:1px;color:#fff6e0;text-shadow:1px 1px 0 #b35c00}
+#movesW.low{background:radial-gradient(circle at 35% 28%,#ffd0d8,#ff5a7a 55%,#c42a46);border-color:#6d0f22;box-shadow:0 4px 0 #4d0a18,inset 0 -5px 0 rgba(0,0,0,.18)}
+#objs{flex:1;display:flex;gap:6px;align-items:center;justify-content:center;flex-wrap:wrap}
+.obj{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.35);border-radius:14px;padding:3px 9px 3px 4px;font-size:14px;color:#fff;text-shadow:1px 1px 0 rgba(0,0,0,.35)}
+.obj canvas{width:26px;height:26px;display:block}
+.obj i{font-style:normal;font-size:20px}
+.obj.done{background:rgba(95,227,176,.3);border-color:#5fe3b0}
+.ibtn.round{border-radius:50%;background:radial-gradient(circle at 35% 28%,#ffe9a8,#ffb224 55%,#e07e0a);border:4px solid #7a3c00;box-shadow:0 4px 0 #52280a;color:#fff;width:46px;height:46px;font-size:18px}
+#starRow{display:flex;align-items:center;gap:8px;padding:7px 12px;background:linear-gradient(180deg,#5b2fb0,#4b2596);border-bottom:4px solid #2a1159;flex:0 0 auto}
+#starBar{position:relative;flex:1;height:18px;border-radius:999px;background:#35176e;border:3px solid #2a1159;box-shadow:inset 0 3px 6px rgba(0,0,0,.45)}
+#starFill{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#ff9ed2,#ffd36e,#9be7ff);transition:width .3s}
+#starBar .st{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:22px;color:rgba(255,255,255,.4);line-height:1;text-shadow:0 2px 3px rgba(0,0,0,.6)}
+#starBar .st.on{color:#ffd54a;text-shadow:0 0 10px #ffcf4a,0 2px 3px rgba(0,0,0,.5);transform:translate(-50%,-50%) scale(1.15)}
+#starBar .s1{left:48%}#starBar .s2{left:71%}#starBar .s3{left:97%}
+#flossW{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.35);border-radius:999px;padding:2px 9px 2px 5px;flex:0 0 auto}
+#flossW span{font-size:16px}
+#flossBar{width:62px;height:10px;border-radius:999px;background:#35176e;overflow:hidden}
 #flossBar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff9ed2,#fff0a8,#9be7ff);transition:width .25s}
-#flossW.full{animation:pulse .7s infinite;background:#fff6c9}
-
+#flossW.full{animation:pulse .7s infinite;background:rgba(255,246,201,.55)}
+#boardWrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;position:relative;padding:10px;
+  background:radial-gradient(circle at 50% 0,#6a3cc4,#3c1b85 65%,#2a1159)}
+#board{touch-action:none;border-radius:20px;border:5px solid #2a1159;box-shadow:0 10px 0 #22104a,0 16px 34px rgba(0,0,0,.45);background:#3a1a80}
+#gbot{flex:0 0 auto;display:flex;gap:10px;align-items:center;justify-content:center;padding:9px 10px 12px;
+  background:linear-gradient(180deg,#6a3cc4,#4b2596);border-top:5px solid #2a1159;flex-wrap:wrap}
+.boost{position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;padding:5px 12px;font-size:10.5px;color:#fff;text-shadow:1px 1px 0 rgba(0,0,0,.4);
+  border-radius:16px;border:3px solid #2a1159;box-shadow:0 4px 0 #22104a;background:linear-gradient(180deg,#8f5cf0,#6a33c8)}
+.boost i{font-style:normal;font-size:23px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35))}
+.boost:active{transform:translateY(3px);box-shadow:0 1px 0 #22104a}
+.boost.on{background:linear-gradient(180deg,#ffd76e,#e09a12);color:#4a2f00;text-shadow:none;animation:pulse .9s infinite}
+.boost .num{position:absolute;top:-8px;right:-7px;min-width:22px;height:22px;border-radius:999px;background:radial-gradient(circle at 35% 30%,#ffe9a8,#ffb224);color:#5a2a00;font-size:12px;line-height:20px;border:3px solid #2a1159}
+.boost:disabled{filter:grayscale(.7);opacity:.75}
 /* panels */
 .ov{position:fixed;inset:0;background:rgba(74,31,61,.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:14px;z-index:60;opacity:0;transition:opacity .18s}
 .ov.in{opacity:1}
@@ -186,12 +198,14 @@ h1,h2,h3{font-family:'Lilita One',sans-serif;font-weight:400;margin:0}
   .pill{font-size:13px;padding:2px 8px;border-width:2px}
   .ibtn{width:34px;height:34px;font-size:16px;border-width:2px}
   .lvlbox{min-width:92px}
-  .obj{font-size:12.5px;padding:1px 6px}
-  .obj i{font-size:16px}
-  #moves{font-size:22px}
-  .boost{padding:4px 8px;font-size:9.5px}
-  .boost i{font-size:19px}
-  #flossBar{width:56px}
+  .obj{font-size:12.5px;padding:2px 7px 2px 3px}
+  .obj canvas{width:22px;height:22px}
+  #movesW{width:54px;height:54px}
+  #moves{font-size:23px}
+  .boost{padding:4px 9px;font-size:9.5px}
+  .boost i{font-size:20px}
+  #flossBar{width:46px}
+  #starBar{height:15px}#starBar .st{font-size:18px}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
@@ -256,10 +270,13 @@ h1,h2,h3{font-family:'Lilita One',sans-serif;font-weight:400;margin:0}
   <!-- GAME -->
   <section class="screen" id="scGame">
     <div id="gtop">
-      <button class="ibtn" id="gQuit">✖</button>
       <div id="movesW"><b id="moves">20</b><small id="movesL">MOVES</small></div>
-      <div id="objs" class="row" style="gap:5px;flex:1"></div>
-      <div id="flossW" title="Floss meter">🍥<div id="flossBar"><i></i></div></div>
+      <div id="objs"></div>
+      <button class="ibtn round" id="gQuit" title="Pause">⏸</button>
+    </div>
+    <div id="starRow">
+      <div id="starBar"><i id="starFill"></i><b class="st s1">★</b><b class="st s2">★</b><b class="st s3">★</b></div>
+      <div id="flossW" title="Floss meter"><span>🍥</span><div id="flossBar"><i></i></div></div>
     </div>
     <div id="boardWrap"><canvas id="board"></canvas></div>
     <div id="gbot"></div>
@@ -321,13 +338,13 @@ const SFX={
 /* ---------------- candy pieces ---------------- */
 // 7 candy colours; easy levels only use the first few
 const PIECES=[
-  {e:'🍬',en:'Pink floss',da:'Lyserødt spind',c:'#ff7ec2'},
-  {e:'🍭',en:'Lollipop',da:'Slikkepind',c:'#ff5a7a'},
+  {e:'🍬',en:'Pink floss',da:'Lyserødt spind',c:'#ff5fb4'},
+  {e:'🌹',en:'Rose drop',da:'Rosendrop',c:'#e1273f'},
   {e:'🥔',en:'Potato drop',da:'Kartoffeldrop',c:'#c98a4b'},
-  {e:'🫐',en:'Blueberry',da:'Blåbær',c:'#6c8cff'},
-  {e:'🍋',en:'Lemon drop',da:'Citrondrop',c:'#ffcf4a'},
-  {e:'🍏',en:'Green apple',da:'Grønt æble',c:'#7ddc6a'},
-  {e:'🍇',en:'Grape',da:'Drue',c:'#b07cff'}
+  {e:'🫐',en:'Blueberry',da:'Blåbær',c:'#3f7bff'},
+  {e:'🍋',en:'Lemon drop',da:'Citrondrop',c:'#ffc21f'},
+  {e:'🍏',en:'Green apple',da:'Grønt æble',c:'#2fcf63'},
+  {e:'🍇',en:'Grape',da:'Drue',c:'#a24bff'}
 ];
 // specials you build by matching more than three
 const SPEC={
@@ -575,27 +592,74 @@ function layout(){
   ctx.setTransform(DPR,0,0,DPR,0,0);
 }
 function roundRect(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath()}
+// every candy is a glossy ball with its own pattern on top
+function candyBall(g,R,col){
+  const gr=g.createRadialGradient(-R*.34,-R*.4,R*.08,0,0,R*1.15);
+  gr.addColorStop(0,'#ffffff');gr.addColorStop(.22,shade(col,.45));gr.addColorStop(.62,col);gr.addColorStop(1,shade(col,-.45));
+  g.fillStyle=gr;g.beginPath();g.arc(0,0,R,0,7);g.fill();
+  g.strokeStyle=shade(col,-.55);g.lineWidth=Math.max(1.5,R*.09);g.stroke();
+}
+function candyGloss(g,R){
+  g.save();g.globalAlpha=.75;g.fillStyle='#fff';
+  g.beginPath();g.ellipse(-R*.32,-R*.44,R*.33,R*.2,-.5,0,7);g.fill();
+  g.globalAlpha=.3;g.beginPath();g.ellipse(R*.3,R*.42,R*.26,R*.12,-.5,0,7);g.fill();g.restore();
+}
+function drawCandy(g,type,cx,cy,sz,rot,scale){
+  const R=sz*.42,p=PIECES[type],col=p.c;
+  g.save();g.translate(cx,cy);if(rot)g.rotate(rot);if(scale!=null)g.scale(scale,scale);
+  if(type===2){ // the potato drop keeps its potato shape
+    const gr=g.createRadialGradient(-R*.3,-R*.4,R*.1,0,0,R*1.2);
+    gr.addColorStop(0,'#f2d6ac');gr.addColorStop(.45,col);gr.addColorStop(1,shade(col,-.45));
+    g.fillStyle=gr;g.strokeStyle=shade(col,-.55);g.lineWidth=Math.max(1.5,R*.09);
+    g.beginPath();g.ellipse(0,0,R,R*.84,-.25,0,7);g.fill();g.stroke();
+    g.fillStyle=shade(col,-.4);[[-.35,-.2],[.25,-.35],[.3,.28],[-.2,.35]].forEach(([a,b2])=>{
+      g.beginPath();g.ellipse(R*a,R*b2,R*.11,R*.08,.4,0,7);g.fill()});
+    candyGloss(g,R);g.restore();return;
+  }
+  candyBall(g,R,col);
+  g.save();g.beginPath();g.arc(0,0,R*.97,0,7);g.clip();
+  if(type===0){ // pink lollipop swirl
+    g.strokeStyle='rgba(255,255,255,.92)';g.lineWidth=R*.2;g.lineCap='round';g.beginPath();
+    for(let a=0;a<7.6;a+=.14){const rr=R*.12+a*R*.11;g.lineTo(Math.cos(a)*rr,Math.sin(a)*rr)}g.stroke();
+  }else if(type===1){ // rose candy
+    g.strokeStyle='rgba(255,255,255,.85)';g.lineWidth=R*.13;
+    for(const k of[.3,.58,.86]){g.beginPath();g.arc(0,0,R*k,k*3,k*3+4.6);g.stroke()}
+    g.fillStyle='rgba(255,255,255,.9)';g.beginPath();g.arc(0,0,R*.14,0,7);g.fill();
+  }else if(type===3){ // dotted berry
+    g.fillStyle=shade(col,-.4);
+    for(let k=0;k<13;k++){const a=k*2.4,rr=R*(.2+.65*((k*37)%10)/10);g.beginPath();g.arc(Math.cos(a)*rr,Math.sin(a)*rr,R*.1,0,7);g.fill()}
+  }else if(type===4){ // saturn candy with a ring
+    g.strokeStyle='rgba(255,255,255,.9)';g.lineWidth=R*.19;
+    g.beginPath();g.ellipse(0,R*.06,R*1.15,R*.3,-.22,0,7);g.stroke();
+    g.strokeStyle=shade(col,-.35);g.lineWidth=R*.07;g.beginPath();g.ellipse(0,R*.06,R*1.15,R*.3,-.22,0,7);g.stroke();
+  }else if(type===5){ // striped ball
+    g.fillStyle='rgba(255,255,255,.9)';
+    for(const o of[-.62,-.12,.38])g.fillRect(R*o,-R,R*.26,R*2);
+  }else{ // star candy
+    g.fillStyle='rgba(255,255,255,.95)';g.beginPath();
+    for(let k=0;k<10;k++){const a=-Math.PI/2+k*Math.PI/5,rr=k%2?R*.3:R*.72;g.lineTo(Math.cos(a)*rr,Math.sin(a)*rr)}
+    g.closePath();g.fill();
+  }
+  g.restore();candyGloss(g,R);g.restore();
+}
 function drawPiece(g,c,cx,cy,sz){
-  const p=PIECES[c.c],R=sz*.44;
-  g.save();g.translate(cx,cy);g.rotate(c.rot||0);g.scale(c.sc||1,c.sc||1);
-  // candy body: bright gradient + shine
-  const gr=g.createRadialGradient(-R*.3,-R*.4,R*.15,0,0,R*1.25);
-  gr.addColorStop(0,'#ffffff');gr.addColorStop(.35,p.c);gr.addColorStop(1,shade(p.c,-.35));
-  g.fillStyle=gr;g.strokeStyle='rgba(74,31,61,.75)';g.lineWidth=Math.max(2,sz*.055);
-  roundRect(g,-R,-R,R*2,R*2,R*.5);g.fill();g.stroke();
-  g.globalAlpha=.5;g.fillStyle='#fff';roundRect(g,-R*.62,-R*.74,R*.85,R*.5,R*.25);g.fill();g.globalAlpha=1;
-  g.font=`${Math.round(sz*.46)}px serif`;g.textAlign='center';g.textBaseline='middle';
-  g.fillText(p.e,0,sz*.03);
-  // special markers
-  if(c.sp==='row'||c.sp==='col'){g.strokeStyle='#fff';g.lineWidth=Math.max(2,sz*.07);g.globalAlpha=.95;
-    for(const o of[-R*.45,0,R*.45]){g.beginPath();if(c.sp==='row'){g.moveTo(-R*.8,o);g.lineTo(R*.8,o)}else{g.moveTo(o,-R*.8);g.lineTo(o,R*.8)}g.stroke()}
-    g.globalAlpha=1;g.font=`${Math.round(sz*.3)}px serif`;g.fillText(c.sp==='row'?'↔️':'↕️',0,-R*.02)}
-  if(c.sp==='bomb'){g.fillStyle='rgba(255,255,255,.9)';g.beginPath();g.arc(0,0,R*.62,0,7);g.fill();
-    g.font=`${Math.round(sz*.42)}px serif`;g.fillText('💥',0,sz*.02)}
-  if(c.sp==='cloud'){const t=performance.now()/360;g.rotate(t);
-    for(let i=0;i<7;i++){g.rotate(Math.PI*2/7);g.fillStyle=PIECES[i%PIECES.length].c;g.globalAlpha=.9;
-      g.beginPath();g.arc(0,-R*.55,R*.3,0,7);g.fill()}
-    g.globalAlpha=1;g.rotate(-t);g.font=`${Math.round(sz*.38)}px serif`;g.fillText('🍥',0,sz*.02)}
+  drawCandy(g,c.c,cx,cy,sz,c.rot||0,c.sc==null?1:c.sc);
+  const R=sz*.42,sp=c.sp;if(!sp)return;
+  g.save();g.translate(cx,cy);g.scale(c.sc==null?1:c.sc,c.sc==null?1:c.sc);
+  if(sp==='row'||sp==='col'){
+    g.save();g.beginPath();g.arc(0,0,R*.97,0,7);g.clip();
+    g.strokeStyle='rgba(255,255,255,.95)';g.lineWidth=R*.17;
+    for(const o of[-R*.5,0,R*.5]){g.beginPath();if(sp==='row'){g.moveTo(-R,o);g.lineTo(R,o)}else{g.moveTo(o,-R);g.lineTo(o,R)}g.stroke()}
+    g.restore();
+    g.fillStyle='#fff';g.strokeStyle='rgba(0,0,0,.45)';g.lineWidth=R*.08;g.font=`900 ${Math.round(R*.95)}px Nunito,sans-serif`;
+    g.textAlign='center';g.textBaseline='middle';g.strokeText(sp==='row'?'↔':'↕',0,0);g.fillText(sp==='row'?'↔':'↕',0,0);
+  }
+  if(sp==='bomb'){g.fillStyle='rgba(0,0,0,.72)';g.beginPath();g.arc(0,0,R*.66,0,7);g.fill();
+    g.strokeStyle='#ffcf4a';g.lineWidth=R*.12;g.stroke();
+    g.font=`${Math.round(R*.78)}px serif`;g.textAlign='center';g.textBaseline='middle';g.fillText('💥',0,R*.04)}
+  if(sp==='cloud'){const t=performance.now()/340;g.rotate(t);
+    for(let i=0;i<7;i++){g.rotate(Math.PI*2/7);g.fillStyle=PIECES[i].c;g.beginPath();g.arc(0,-R*.58,R*.3,0,7);g.fill()}
+    g.rotate(-t);g.fillStyle='#fff';g.beginPath();g.arc(0,0,R*.3,0,7);g.fill()}
   g.restore();
 }
 function glazeTop(x,y,lvl){
@@ -615,38 +679,42 @@ function draw(){
   const B=G&&G.B;if(!B)return;
   const w=CELL*B.cols,h=CELL*B.rows;
   ctx.clearRect(0,0,w,h);
-  // checker background
+  // deep candy board with a socket under every candy
+  const bg=ctx.createLinearGradient(0,0,0,h);bg.addColorStop(0,'#5b2fb0');bg.addColorStop(1,'#3a1a80');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
   for(let y=0;y<B.rows;y++)for(let x=0;x<B.cols;x++){
-    ctx.fillStyle=(x+y)%2?'rgba(255,255,255,.55)':'rgba(255,214,238,.55)';
-    ctx.fillRect(x*CELL,y*CELL,CELL,CELL)}
+    ctx.fillStyle=(x+y)%2?'rgba(255,255,255,.07)':'rgba(0,0,0,.12)';
+    roundRect(ctx,x*CELL+2,y*CELL+2,CELL-4,CELL-4,CELL*.26);ctx.fill()}
   // glaze under the candies
   for(let y=0;y<B.rows;y++)for(let x=0;x<B.cols;x++){const c=at(B,x,y);if(!c||!c.glaze)continue;
     const gx=x*CELL,gy=y*CELL;
-    ctx.fillStyle=c.glaze>1?'rgba(255,170,220,.92)':'rgba(255,255,255,.85)';
-    roundRect(ctx,gx+2,gy+2,CELL-4,CELL-4,CELL*.22);ctx.fill();
-    ctx.strokeStyle=c.glaze>1?'#d64f99':'#ffb3dd';ctx.lineWidth=3;ctx.stroke();
-    }
+    ctx.fillStyle=c.glaze>1?'rgba(255,150,210,.75)':'rgba(255,255,255,.7)';
+    roundRect(ctx,gx+2,gy+2,CELL-4,CELL-4,CELL*.26);ctx.fill()}
   // the candies
   for(let y=0;y<B.rows;y++)for(let x=0;x<B.cols;x++){const c=at(B,x,y);if(!c)continue;
     const cx=x*CELL+CELL/2+(c.dx||0),cy=y*CELL+CELL/2+(c.dy||0);
     if(c.glaze)glazeTop(x,y,c.glaze);
     if(c.ing){ctx.save();ctx.translate(cx,cy);ctx.scale(c.sc||1,c.sc||1);
-      ctx.font=`${Math.round(CELL*.62)}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
-      ctx.shadowColor='rgba(74,31,61,.4)';ctx.shadowBlur=8;ctx.fillText('🥔',0,CELL*.03);ctx.restore();continue}
+      ctx.shadowColor='rgba(0,0,0,.5)';ctx.shadowBlur=10;
+      ctx.font=`${Math.round(CELL*.66)}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText('🥔',0,CELL*.04);ctx.restore();continue}
     drawPiece(ctx,c,cx,cy,CELL);
   }
   for(let y=0;y<B.rows;y++)for(let x=0;x<B.cols;x++){const c=at(B,x,y);if(c&&c.glaze&&!c.ing)glazeTop(x,y,c.glaze)}
   // hint ring
-  if(G.hint&&!G.busy){const t=(performance.now()%1200)/1200,[hx,hy]=G.hint;
-    ctx.strokeStyle='rgba(255,207,74,'+(.4+.5*Math.sin(t*6.28))+')';ctx.lineWidth=5;
-    roundRect(ctx,hx*CELL+3,hy*CELL+3,CELL*2-6,CELL*2-6,CELL*.3);ctx.stroke()}
+  if(G.hint&&!G.busy&&G.showHint){const t=(performance.now()%1100)/1100,a=.55+.45*Math.sin(t*6.28),[hx,hy]=G.hint;
+    ctx.save();ctx.setLineDash([]);ctx.shadowColor='#ffd54a';ctx.shadowBlur=14;
+    ctx.strokeStyle='rgba(255,213,74,'+a+')';ctx.lineWidth=6;
+    roundRect(ctx,hx*CELL+4,hy*CELL+4,CELL*2-8,CELL*2-8,CELL*.34);ctx.stroke();ctx.restore()}
   // the twist pointer follows your finger
   if(G.pt&&!G.busy){const[px,py]=G.pt;ctx.save();ctx.translate((px+1)*CELL,(py+1)*CELL);
-    ctx.rotate(performance.now()/500);ctx.strokeStyle='rgba(74,31,61,.75)';ctx.lineWidth=4;ctx.setLineDash([6,6]);
+    ctx.rotate(performance.now()/500);ctx.strokeStyle='rgba(255,255,255,.8)';ctx.lineWidth=4;ctx.setLineDash([6,6]);
     ctx.beginPath();ctx.arc(0,0,CELL*.62,0,7);ctx.stroke();ctx.restore()}
 }
 let lastT=performance.now();
-function frame(t){const dt=Math.min(.05,(t-lastT)/1000);lastT=t;draw();fxTick(dt);requestAnimationFrame(frame)}
+function frame(t){const dt=Math.min(.05,(t-lastT)/1000);lastT=t;
+  if(G&&!G.busy&&!G.over&&!G.showHint&&t-G.idleT>9000&&G.hint)G.showHint=true;
+  draw();fxTick(dt);requestAnimationFrame(frame)}
 requestAnimationFrame(frame);
 
 // simple tween helper used for all board animations
@@ -662,7 +730,7 @@ const easeBack=p=>{const c=1.7;return 1+ (c+1)*Math.pow(p-1,3)+c*Math.pow(p-1,2)
 const FLOSS_MAX=60;
 function startGame(lv,endless){
   G={lv,endless:!!endless,B:makeBoard(lv,endless),moves:lv.moves,score:0,floss:0,busy:false,over:false,
-     got:{color:{},glaze:0,ing:0,spec:0},pt:null,hint:null,hintT:performance.now(),tool:null,combo:0,ingOut:0,ingNeed:0};
+     got:{color:{},glaze:0,ing:0,spec:0},pt:null,hint:null,showHint:false,idleT:performance.now(),tool:null,combo:0,ingOut:0,ingNeed:0};
   const io=lv.obj.find(o=>o.t==='ing');G.ingNeed=io?io.n:0;
   if(S.items.cloud>0&&!endless){ // a booster you bought: start with a floss cloud on the board
     const i=rnd(G.B.g.length);G.B.g[i].sp='cloud';S.items.cloud--;save();toast(L('🍥 You started with a floss cloud!','🍥 Du startede med en spindsky!'))}
@@ -671,25 +739,32 @@ function startGame(lv,endless){
   if(G.ingNeed)spawnIng(Math.min(2,G.ingNeed),4);
 }
 function gameHud(){
-  $('#moves').textContent=G.endless?G.moves:G.moves;
+  $('#moves').textContent=G.moves;
   $('#movesW').classList.toggle('low',G.moves<=5);
   $('#flossBar').firstElementChild.style.width=(G.floss/FLOSS_MAX*100)+'%';
   $('#flossW').classList.toggle('full',G.floss>=FLOSS_MAX);
+  // the star bar fills towards 1, 2 and 3 stars
+  const t=G.lv.obj[0].n,max=G.endless?Math.max(1,G.score):t*2.1;
+  $('#starFill').style.width=clamp(G.score/max*100,0,100)+'%';
+  const st=G.endless?0:starFor(G.lv,G.score);
+  [1,2,3].forEach(k=>$('#starBar .s'+k).classList.toggle('on',st>=k));
 }
 function objBar(){
   const box=$('#objs');box.innerHTML='';
+  if(G.endless){box.innerHTML=`<div class="obj"><i>🏆</i>${N(G.score)}</div>`;return}
   G.lv.obj.forEach(o=>{
     const el=document.createElement('div');el.className='obj';
-    let ic='🏆',now=0,need=o.n;
-    if(o.t==='score'){ic='🏆';now=G.score}
-    else if(o.t==='color'){ic=PIECES[o.c].e;now=G.got.color[o.c]||0}
-    else if(o.t==='glaze'){ic='🧁';now=G.got.glaze}
-    else if(o.t==='ing'){ic='🥔';now=G.got.ing}
-    else if(o.t==='spec'){ic='💥';now=G.got.spec}
-    if(now>=need)el.classList.add('done');
-    el.innerHTML=`<i>${ic}</i>${now>=need?'✔':Math.min(now,need)+'/'+need}`;
+    let now=0;
+    if(o.t==='score')now=G.score;else if(o.t==='color')now=G.got.color[o.c]||0;
+    else if(o.t==='glaze')now=G.got.glaze;else if(o.t==='ing')now=G.got.ing;else now=G.got.spec;
+    if(now>=o.n)el.classList.add('done');
+    const txt=now>=o.n?'✔':(o.t==='score'?N(now)+'/'+N(o.n):Math.min(now,o.n)+'/'+o.n);
+    if(o.t==='color'){ // show the real candy, not an emoji
+      const c=document.createElement('canvas');c.width=c.height=52;const g=c.getContext('2d');
+      drawCandy(g,o.c,26,26,58);el.appendChild(c);
+      el.insertAdjacentHTML('beforeend',txt);
+    }else el.innerHTML=`<i>${o.t==='score'?'🏆':o.t==='glaze'?'🧁':o.t==='ing'?'🥔':'💥'}</i>${txt}`;
     box.appendChild(el)});
-  if(G.endless){const el=document.createElement('div');el.className='obj';el.innerHTML=`<i>🏆</i>${N(G.score)}`;box.innerHTML='';box.appendChild(el)}
 }
 const objDone=()=>G.lv.obj.every(o=>o.t==='score'?G.score>=o.n:o.t==='color'?(G.got.color[o.c]||0)>=o.n:o.t==='glaze'?G.got.glaze>=o.n:o.t==='ing'?G.got.ing>=o.n:G.got.spec>=o.n);
 
@@ -706,9 +781,9 @@ async function doTwist(x,y,silent){
   const m=findMatches(B);
   if(!m.all.size){ // no match: the candies simply stay turned and it costs you nothing,
     SFX.click();   // so you can keep twisting to line something up
-    bump('twists');G.busy=false;findHint();return;
+    bump('twists');G.busy=false;G.showHint=false;findHint();return;
   }
-  SFX.twist();bump('twists');G.moves--;G.combo=0;G.last=idx;
+  SFX.twist();bump('twists');G.moves--;G.combo=0;G.last=idx;G.showHint=false;
   gameHud();
   await resolve();
   G.busy=false;endCheck();
@@ -979,7 +1054,7 @@ function drawBoosters(){
     el.disabled=!(S.items[b.k]>0);
     el.onclick=()=>useBoost(b.k);bar.appendChild(el)});
   const h=document.createElement('button');h.className='boost';h.innerHTML=`<i>💡</i>${L('Hint','Tip')}`;
-  h.onclick=()=>{SFX.click();if(findHint())toast(L('💡 Try the glowing square!','💡 Prøv den firkant, der lyser!'));else toast(L('No twist found – shuffling…','Ingen drejning fundet – blander…'))};
+  h.onclick=()=>{SFX.click();if(findHint()){G.showHint=true;toast(L('💡 Try the glowing square!','💡 Prøv den firkant, der lyser!'))}else toast(L('No twist found – shuffling…','Ingen drejning fundet – blander…'))};
   bar.appendChild(h);
 }
 function useBoost(k){
@@ -1013,7 +1088,7 @@ cv.addEventListener('pointermove',e=>{if(!G||G.busy||G.over)return;
   G.pt=[clamp(Math.round(fx2)-1,0,B.cols-2),clamp(Math.round(fy2)-1,0,B.rows-2)]});
 cv.addEventListener('pointerleave',()=>{if(G)G.pt=null});
 cv.addEventListener('pointerdown',e=>{
-  if(!G||G.busy||G.over)return;e.preventDefault();
+  if(!G||G.busy||G.over)return;e.preventDefault();G.idleT=performance.now();
   if(!AC)SFX.tone(1,.01,'sine',.001);
   const[fx2,fy2]=boardPos(e),B=G.B;
   if(G.tool==='hammer'){const x=clamp(Math.floor(fx2),0,B.cols-1),y=clamp(Math.floor(fy2),0,B.rows-1);hammerAt(x,y);return}
