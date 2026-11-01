@@ -968,6 +968,8 @@ const XY=i=>[i%COLS,Math.floor(i/COLS)];
 const at=(x,y)=>(x<0||y<0||x>=COLS||y>=ROWS)?null:B.g[y*COLS+x];
 const mt=c=>!!c&&c.c>=0&&!c.fixed&&c.sp!=='cloud';   // can be part of a line
 const swp=c=>!!c&&!c.fixed;                           // can be swapped
+const iced=i=>!!B.glaze&&B.glaze[i]>0&&!!B.g[i]&&!B.g[i].ing; // candy frozen in ice
+const swpAt=i=>swp(B.g[i])&&!iced(i);
 function findMatches(){
   const all=new Set(),runs=[];
   for(let y=0;y<ROWS;y++){let run=[];
@@ -985,14 +987,14 @@ const adjacent=(a,b)=>{const[ax,ay]=XY(a),[bx,by]=XY(b);return Math.abs(ax-bx)+M
 function hasMove(){
   for(let i=0;i<B.g.length;i++){const[x,y]=XY(i);
     if(B.g[i]&&B.g[i].sp==='cloud')return true;
-    for(const j of[x<COLS-1?i+1:-1,y<ROWS-1?i+COLS:-1]){if(j<0||!swp(B.g[i])||!swp(B.g[j]))continue;
+    for(const j of[x<COLS-1?i+1:-1,y<ROWS-1?i+COLS:-1]){if(j<0||!swpAt(i)||!swpAt(j))continue;
       swapCells(i,j);const ok=findMatches().all.size>0;swapCells(i,j);if(ok)return true}}
   return false;
 }
 function findHint(){
   B.hint=null;let best=null,bs=-1;
   for(let i=0;i<B.g.length;i++){const[x,y]=XY(i);
-    for(const j of[x<COLS-1?i+1:-1,y<ROWS-1?i+COLS:-1]){if(j<0||!swp(B.g[i])||!swp(B.g[j]))continue;
+    for(const j of[x<COLS-1?i+1:-1,y<ROWS-1?i+COLS:-1]){if(j<0||!swpAt(i)||!swpAt(j))continue;
       swapCells(i,j);const m=findMatches();swapCells(i,j);
       if(!m.all.size)continue;
       // a good tip feeds a hero who is alive
@@ -1000,7 +1002,7 @@ function findHint(){
       if(B.classic)sc+=clHintScore(m.all,i,j);
       else m.all.forEach(k=>{const c=B.g[k===i?j:k===j?i:k];if(c&&B.heroes.some(h=>!h.dead&&h.def.c===c.c))sc+=.6});
       sc+=Math.random()*.5;if(sc>bs){bs=sc;best=[i,j]}}}
-  if(B.classic)B.g.forEach((c,i)=>{if(c&&c.ing){const j=i+COLS;if(j<B.g.length&&swp(B.g[j])&&3.5+Math.random()>bs){bs=3.5;best=[i,j]}}});
+  if(B.classic)B.g.forEach((c,i)=>{if(c&&c.ing){const j=i+COLS;if(j<B.g.length&&swpAt(j)&&3.5+Math.random()>bs){bs=3.5;best=[i,j]}}});
   B.hint=best;return!!best;
 }
 function reshuffle(){
@@ -1021,7 +1023,7 @@ function animSwap(a,b){
   return tween(150,p=>{const e=easeOut(p);ca.dx=dx*e;ca.dy=dy*e;cb.dx=-dx*e;cb.dy=-dy*e}).then(()=>{ca.dx=ca.dy=cb.dx=cb.dy=0});
 }
 async function trySwap(a,b){
-  if(!B||B.busy||B.over||!swp(B.g[a])||!swp(B.g[b]))return;
+  if(!B||B.busy||B.over||!swpAt(a)||!swpAt(b))return;
   B.busy=true;B.sel=null;B.showHint=false;B.idleT=performance.now();
   await animSwap(a,b);swapCells(a,b);
   const ca=B.g[a],cb=B.g[b];
@@ -1128,14 +1130,14 @@ async function gravity(){
   while(changed&&guard++<80){changed=false;
     for(let x=0;x<COLS;x++){
       for(let y=ROWS-1;y>=0;y--){const i=y*COLS+x;if(B.g[i])continue;
-        for(let y2=y-1;y2>=0;y2--){const c=B.g[y2*COLS+x];if(!c)continue;if(c.fixed)break;mv(y2*COLS+x,i);changed=true;break}}
+        for(let y2=y-1;y2>=0;y2--){const c=B.g[y2*COLS+x];if(!c)continue;if(c.fixed||iced(y2*COLS+x))break;mv(y2*COLS+x,i);changed=true;break}}
       let top=0;while(top<ROWS&&!B.g[top*COLS+x])top++;
       for(let y=top-1;y>=0;y--){const c=spawnCell();c.dy=-top*CELL;B.g[y*COLS+x]=c;moved.add(c);changed=true}
     }
     // holes under sugar blocks are filled from the side
     for(let y=ROWS-1;y>0&&!changed;y--)for(let x=0;x<COLS&&!changed;x++){const i=y*COLS+x;if(B.g[i])continue;
       for(const sx of[x-1,x+1]){if(sx<0||sx>=COLS)continue;const src=at(sx,y-1),below=at(sx,y);
-        if(swp(src)&&below){mv((y-1)*COLS+sx,i);changed=true;break}}}
+        if(swpAt((y-1)*COLS+sx)&&below){mv((y-1)*COLS+sx,i);changed=true;break}}}
   }
   if(moved.size){
     moved.forEach(c=>{c.dx0=c.dx||0;c.dy0=c.dy||0});
@@ -1360,7 +1362,7 @@ function drawStage(dt){
   g.lineWidth=4;g.strokeStyle='#9fb6ff';g.stroke();
   for(let i=0;i<COLS*ROWS;i++){const[x,y]=XY(i);g.fillStyle=(x+y)%2?'rgba(10,20,70,.45)':'rgba(10,20,70,.3)';
     g.beginPath();g.arc(BX+x*CELL+CELL/2,BY+y*CELL+CELL/2,CELL*.44,0,7);g.fill();
-    if(B.glaze[i])drawGlaze(g,BX+x*CELL,BY+y*CELL,CELL,B.glaze[i])}
+    }
   // hint after a while
   const idle=!B.busy&&performance.now()-B.idleT>6000;
   if(idle&&B.hint){B.hint.forEach(i=>{const[x,y]=XY(i);g.globalAlpha=.35+.3*Math.sin(t*6);g.fillStyle='#fff';g.beginPath();g.arc(BX+x*CELL+CELL/2,BY+y*CELL+CELL/2,CELL*.47,0,7);g.fill()});g.globalAlpha=1}
@@ -1374,6 +1376,7 @@ function drawStage(dt){
     if(c.sp==='cloud'){drawSpecial(g,'cloud',c.c,cx,cy,CELL,sc);return}
     const spr=candySprite(c.c,CELL),s2=CELL*1.3*sc;g.drawImage(spr,cx-s2/2,cy-s2/2,s2,s2);
     if(c.sp)drawSpecial(g,c.sp,c.c,cx,cy,CELL,sc)});
+  if(B.classic)B.glaze.forEach((l,i)=>{if(l>0){const[x,y]=XY(i);drawGlaze(g,BX+x*CELL,BY+y*CELL,CELL,l)}});
   g.restore();
   // tool hint
   if(B.tool==='hammer'){g.fillStyle='rgba(255,213,74,.95)';g.font='900 13px Nunito,sans-serif';g.textAlign='center';g.fillText('🔨 '+L('Tap a candy to smash it','Tryk på et slik for at smadre det'),W/2,BY-14)}
@@ -1459,7 +1462,7 @@ cv.addEventListener('pointerdown',e=>{
   if(B.busy)return;
   const i=cellAt(px,py);if(i<0){B.sel=null;return}
   if(B.tool==='hammer'){useHammer(i);return}
-  if(!swp(B.g[i])){SFX.no();B.sel=null;return}
+  if(!swpAt(i)){SFX.no();B.sel=null;if(iced(i))toast(L('🧊 Frozen in ice – make a match with it or right next to it to break the ice.','🧊 Frosset i is – lav et match med den eller lige ved siden af for at bryde isen.'),2200);return}
   B.idleT=performance.now();
   if(B.sel!=null&&B.sel!==i&&adjacent(B.sel,i)){trySwap(B.sel,i);return}
   if(B.sel===i){B.sel=null;return}
@@ -1533,12 +1536,12 @@ function genClassic(n){
   lv.t2=Math.round(base*(sg?1.35:1)/100)*100;lv.t3=Math.round(base*(sg?1.8:1.6)/100)*100;
   return lv;
 }
-const GOAL_IC={score:'⭐',glaze:'🩷',blk:'🧊',ing:'🥔'};
+const GOAL_IC={score:'⭐',glaze:'🧊',blk:'🧱',ing:'🥔'};
 const goalIcon=g=>g.k==='col'?PIECES[g.c].e:GOAL_IC[g.k];
 function goalText(g){switch(g.k){
   case'score':return L(`Score ${N(g.n)} points`,`Få ${N(g.n)} point`);
   case'col':return L(`Collect ${g.n} × ${nm(PIECES[g.c])}`,`Saml ${g.n} × ${nm(PIECES[g.c]).toLowerCase()}`);
-  case'glaze':return L('Clean all the sugar glaze','Fjern al sukkerglasuren');
+  case'glaze':return L('Break all the ice','Bryd al isen');
   case'blk':return L('Smash all the sugar blocks','Smadr alle sukkerklodserne');
   case'ing':return L(`Bring ${g.n} potatoes to the bottom`,`Bring ${g.n} kartofler ned til bunden`);}}
 function goalLeft(g){switch(g.k){
@@ -1597,7 +1600,11 @@ function clPre(set,keep){
   hit.forEach(i=>{const c=B.g[i];if(!c)return;c.blk--;c.hitT=1;B.score+=150;const[x,y]=XY(i);sparkleStage(BX+x*CELL+CELL/2,BY+y*CELL+CELL/2,'#fff',9);
     if(c.blk<=0){B.g[i]=null;B.score+=250}});
   if(hit.size)SFX.hit();
-  set.forEach(i=>{if(B.glaze[i]>0){B.glaze[i]--;B.score+=120;const[x,y]=XY(i);sparkleStage(BX+x*CELL+CELL/2,BY+y*CELL+CELL/2,'#ff7ac2',6)}});
+  // ice cracks when a match is in it or right next to it (one layer per match)
+  const ice=new Set();set.forEach(i=>{if(B.glaze[i]>0)ice.add(i);const[x,y]=XY(i);
+    for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=COLS||ny>=ROWS)continue;const k=ny*COLS+nx;if(B.glaze[k]>0&&!set.has(k))ice.add(k)}});
+  ice.forEach(i=>{B.glaze[i]--;B.score+=120;const[x,y]=XY(i);sparkleStage(BX+x*CELL+CELL/2,BY+y*CELL+CELL/2,'#bfefff',7)});
+  if(ice.size)SFX.tone(1400,.08,'triangle',.04,1.5);
 }
 function clScore(per,n,set,keep){
   const pts=n*60*B.combo;B.score+=pts;
@@ -1667,10 +1674,13 @@ async function preClassic(n){
 
 /* ---- classic art ---- */
 function drawGlaze(g,x,y,s,l){
-  roundRect(g,x+2.5,y+2.5,s-5,s-5,s*.22);
-  g.fillStyle=l>=2?'rgba(255,70,165,.72)':'rgba(255,150,210,.5)';g.fill();
-  g.strokeStyle='rgba(255,255,255,.55)';g.lineWidth=2;g.stroke();
-  g.fillStyle='rgba(255,255,255,.35)';roundRect(g,x+s*.18,y+s*.12,s*.4,s*.1,s*.05);g.fill();
+  // a block of ice/glass over the candy – thicker and whiter with two layers
+  roundRect(g,x+2,y+2,s-4,s-4,s*.18);
+  const gr=g.createLinearGradient(x,y,x+s,y+s);
+  gr.addColorStop(0,l>=2?'rgba(225,245,255,.78)':'rgba(200,238,255,.5)');gr.addColorStop(1,l>=2?'rgba(130,200,255,.7)':'rgba(120,200,255,.32)');
+  g.fillStyle=gr;g.fill();g.strokeStyle='rgba(255,255,255,.9)';g.lineWidth=2.5;g.stroke();
+  g.fillStyle='rgba(255,255,255,.75)';g.beginPath();g.moveTo(x+s*.18,y+s*.62);g.lineTo(x+s*.62,y+s*.18);g.lineTo(x+s*.74,y+s*.18);g.lineTo(x+s*.18,y+s*.74);g.closePath();g.fill();
+  if(l>=2){g.strokeStyle='rgba(255,255,255,.85)';g.lineWidth=1.5;g.beginPath();g.moveTo(x+s*.55,y+s*.8);g.lineTo(x+s*.68,y+s*.62);g.lineTo(x+s*.8,y+s*.7);g.stroke()}
 }
 function drawBlock(g,cx,cy,s,c){
   c.hitT=Math.max(0,(c.hitT||0)-.06);
@@ -1916,13 +1926,16 @@ $('#mHelp').onclick=()=>{SFX.click();panel({title:'❓ '+L('How to play','Sådan
   ['👾',L('Monsters count down with every move. At 0 they attack a hero. Armour 🛡️ lowers the damage. Bosses hit everyone! Tap a monster to choose who to attack.','Monstrene tæller ned for hvert træk. Ved 0 angriber de en helt. Rustning 🛡️ mindsker skaden. Bosser rammer alle! Tryk på et monster for at vælge, hvem du angriber.')],
   ['💔',L('If all your heroes fall, the level starts over. Kill every monster in every wave to win.','Falder alle dine helte, starter banen forfra. Dræb alle monstre i alle bølger for at vinde.')],
   ['💥',L('4 in a line = striped candy (clears a row or column). L or T shape = bomb. 5 in a line = floss cloud: swap it with a candy to clear that whole colour.','4 på stribe = stribet slik (rydder en række eller søjle). L- eller T-form = bombe. 5 på stribe = spindsky: byt den med et slik for at rydde hele den farve.')],
-  ['🍬',L('Classic candy (menu): no heroes or monsters. Reach the goals at the top before the moves run out – collect colours, clean pink sugar glaze, smash sugar blocks (match next to them), and bring potatoes to the bottom. A potato can always be pushed one step down, even without a match.','Klassisk slik (menu): ingen helte eller monstre. Nå målene øverst, før trækkene slipper op – saml farver, fjern lyserød sukkerglasur, smadr sukkerklodser (match ved siden af dem) og bring kartofler ned til bunden. En kartoffel kan altid skubbes et felt ned, også uden match.')],
+  ['🍬',L('Classic candy (menu): no heroes or monsters. Reach the goals at the top before the moves run out – collect colours, break the ice (candies frozen in ice can not be moved – match with them or right next to them), smash sugar blocks (match next to them), and bring potatoes to the bottom. A potato can always be pushed one step down, even without a match.','Klassisk slik (menu): ingen helte eller monstre. Nå målene øverst, før trækkene slipper op – saml farver, bryd isen (slik, der er frosset i is, kan ikke flyttes – match med dem eller lige ved siden af), smadr sukkerklodser (match ved siden af dem) og bring kartofler ned til bunden. En kartoffel kan altid skubbes et felt ned, også uden match.')],
   ['🗺️',L('100 campaign levels with a boss every 10 levels. New monsters and stronger weapons as you go. After level 100 you can keep going, start over, or play endless mode.','100 kampagnebaner med en boss hver 10. bane. Nye monstre og stærkere våben undervejs. Efter bane 100 kan du fortsætte, starte forfra eller spille endeløs.')],
   ['🪙',L('Win coins to buy new heroes and upgrade them between levels.','Vind mønter til at købe nye helte og opgradere dem mellem banerne.')]
   ].map(([e,t])=>`<div class="task"><span class="ic">${e}</span><span class="tx">${t}</span></div>`).join('')})};
 
 /* ---- what's new ---- */
 const CHANGELOG=[
+  {v:'2.3.2',d:['1 Nov 2026','1. nov. 2026'],t:['Ice locks candies','Is låser slikket'],i:[
+    ['🧊 The sugar glaze in classic is now ice on top of the candy. A frozen candy can not be moved – make a match with it or right next to it to break the ice (thick ice takes two hits).','🧊 Sukkerglasuren i klassisk er nu is oven på slikket. Et frossent slik kan ikke flyttes – lav et match med det eller lige ved siden af for at bryde isen (tyk is skal rammes to gange).'],
+    ['🧱 Sugar blocks can not be moved either – match right next to them to smash them.','🧱 Sukkerklodser kan heller ikke flyttes – match lige ved siden af dem for at smadre dem.']]},
   {v:'2.3.1',d:['1 Nov 2026','1. nov. 2026'],t:['New prices','Nye priser'],i:[
     ['🛒 Boosters cost more: hammer 450, shuffle 300, potion 750 – and each one gets 20% dearer for every one you already hold.','🛒 Boosters koster mere: hammer 450, bland 300, trylledrik 750 – og hver bliver 20 % dyrere for hver, du allerede har.'],
     ['🥔 Heroes cost more: from 1,300 up to 15,000 coins for the Royal Spud, and upgrades cost more too.','🥔 Helte koster mere: fra 1.300 op til 15.000 mønter for Kongekartoflen, og opgraderinger koster også mere.'],
