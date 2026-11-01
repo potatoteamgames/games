@@ -926,6 +926,7 @@ function startBattle(lv){
   show('scGame');requestAnimationFrame(()=>{layout();nextWave(true)});
   MUSIC.battle=true;
   bhead();
+  if(!S.cnt.swaps)setTimeout(()=>toast(L('👆 Tap a candy, then the one next to it. Matching a hero\'s colour makes that hero attack! ⚡ When a hero glows, tap it for a super attack.','👆 Tryk på et slik og så på det ved siden af. Matcher du en helts farve, angriber helten! ⚡ Når en helt lyser, så tryk på den for et superangreb.'),7000),1400);
 }
 function makeBoard(){
   const g=[];for(let i=0;i<COLS*ROWS;i++)g.push(newCell());B.g=g;
@@ -1110,7 +1111,7 @@ const curTarget=()=>{const al=B.enemies.filter(e=>!e.dead);if(!al.length)return 
 function heroPos(h){const i=B.heroes.indexOf(h),s=heroSlot(i);return[s.x+s.w/2,s.y+s.h*.38]}
 function heroShot(h,dmg,o){
   const t=(o&&o.to)||curTarget();if(!t||dmg<=0)return;
-  const[x,y]=heroPos(h);shoot({from:[x,y],to:t,dmg,kind:'hero',col:h.def.c,big:o&&o.big,hero:h});
+  h.atkT=1;const[x,y]=heroPos(h);shoot({from:[x,y],to:t,dmg,kind:'hero',col:h.def.c,big:o&&o.big,hero:h});
 }
 function boardShot(set,dmg){
   const t=curTarget();if(!t)return;let sx=0,sy=0,n=0;
@@ -1174,13 +1175,13 @@ async function useSkill(h){
   const ab=ABIL[h.def.ab];banner(ab[0]+' '+L(ab[1],ab[2]));
   const al=()=>B.enemies.filter(e=>!e.dead);
   switch(h.def.ab){
-    case'heal':B.heroes.forEach(o=>{if(o.dead)return;const v=Math.round(o.maxHp*.35);o.hp=Math.min(o.maxHp,o.hp+v);floatText(...heroPos(o),'+'+v,'#7dffb0',22)});SFX.heal();break;
+    case'heal':B.heroes.forEach(o=>{if(o.dead)return;const v=Math.round(o.maxHp*.35);o.hp=Math.min(o.maxHp,o.hp+v);floatText(...heroPos(o),'+'+v,'#7dffb0',22)});SFX.heal();heroShot(h,h.atk*2,{big:true});break;
     case'slash':heroShot(h,h.atk*4.5,{big:true});break;
     case'frost':al().forEach(e=>{heroShot(h,h.atk*1.2,{to:e});e.cdLeft+=2;e.frozen=2});break;
     case'arrows':for(let k=0;k<6;k++){const a=al();if(!a.length)break;heroShot(h,h.atk*1.1,{to:pick(a)});await sleep(90)}break;
     case'barrage':al().forEach(e=>heroShot(h,h.atk*2.2,{to:e,big:true}));break;
-    case'shield':B.heroes.forEach(o=>{if(!o.dead)o.shield+=Math.round(o.maxHp*.35)});SFX.shield();break;
-    case'storm':{const spots=[];let g=60;while(spots.length<6&&g--){const i=rnd(B.g.length);if(B.g[i]&&!B.g[i].sp&&!spots.includes(i))spots.push(i)}
+    case'shield':B.heroes.forEach(o=>{if(!o.dead)o.shield+=Math.round(o.maxHp*.35)});SFX.shield();heroShot(h,h.atk*2,{big:true});break;
+    case'storm':{al().forEach(e=>heroShot(h,h.atk*1.2,{to:e}));const spots=[];let g=60;while(spots.length<6&&g--){const i=rnd(B.g.length);if(B.g[i]&&!B.g[i].sp&&!spots.includes(i))spots.push(i)}
       spots.forEach(i=>{B.g[i].sp=pick(['row','col','bomb']);B.g[i].sc=0});await tween(260,p=>spots.forEach(i=>{if(B.g[i])B.g[i].sc=easeBack(p)}));break}
     case'royal':heroShot(h,h.atk*7,{big:true});B.heroes.forEach(o=>{if(o.dead)return;const v=Math.round(o.maxHp*.15);o.hp=Math.min(o.maxHp,o.hp+v);floatText(...heroPos(o),'+'+v,'#7dffb0',20)});SFX.heal();break;
   }
@@ -1332,13 +1333,13 @@ function drawStage(dt){
   g.fillStyle='rgba(20,8,48,.55)';g.fillRect(0,HY,W,HH);
   B.heroes.forEach((h,i)=>{
     const s=heroSlot(i),col=PIECES[h.def.c].c,ready=!h.dead&&h.charge>=h.chMax;
-    h.flash=Math.max(0,h.flash-dt*3);h.hurt=Math.max(0,h.hurt-dt*2);
+    h.flash=Math.max(0,h.flash-dt*3);h.hurt=Math.max(0,h.hurt-dt*2);h.atkT=Math.max(0,(h.atkT||0)-dt*3);
     roundRect(g,s.x,s.y,s.w,s.h,14);
     gr=g.createLinearGradient(0,s.y,0,s.y+s.h);gr.addColorStop(0,h.dead?'#555':shade(col,.15));gr.addColorStop(1,h.dead?'#333':shade(col,-.45));g.fillStyle=gr;g.fill();
     g.lineWidth=ready?4:3;g.strokeStyle=ready?'#ffd54a':'#2a1159';if(ready){g.shadowColor='#ffd54a';g.shadowBlur=14+6*Math.sin(t*6)}g.stroke();g.shadowBlur=0;
     if(h.flash>0){g.globalAlpha=h.flash*.5;g.fillStyle='#ff3b4e';g.fill();g.globalAlpha=1}
     const hs=Math.min(s.w*.8,s.h*.62);
-    drawHero(g,h.def,s.x+s.w/2+(h.hurt?Math.sin(t*50)*3:0),s.y+hs*.5+2,hs,{dead:h.dead,ph:h.ph});
+    drawHero(g,h.def,s.x+s.w/2+(h.hurt?Math.sin(t*50)*3:0),s.y+hs*.5+2-Math.sin((h.atkT||0)*Math.PI)*hs*.22,hs,{dead:h.dead,ph:h.ph});
     if(h.shield>0){g.globalAlpha=.3+.1*Math.sin(t*4);g.strokeStyle='#9be7ff';g.lineWidth=3;g.beginPath();g.arc(s.x+s.w/2,s.y+hs*.5+2,hs*.48,0,7);g.stroke();g.globalAlpha=1}
     // bars
     const bx=s.x+5,bw2=s.w-10;let by=s.y+s.h-27;
@@ -1346,11 +1347,13 @@ function drawStage(dt){
     if(h.hp>0){roundRect(g,bx+1.5,by+1.5,(bw2-3)*h.hp/h.maxHp,8,4);g.fillStyle=h.hp/h.maxHp>.35?'#4ee07c':'#ff4d5e';g.fill()}
     if(h.shield>0){roundRect(g,bx+1.5,by+1.5,Math.min(1,h.shield/h.maxHp)*(bw2-3),3,2);g.fillStyle='#9be7ff';g.fill()}
     g.fillStyle='#fff';g.font=`900 ${s.w<80?8.5:10}px Nunito,sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText(h.dead?'💀':Math.ceil(h.hp)+'/'+h.maxHp,s.x+s.w/2,by+6);
-    by+=13;roundRect(g,bx,by,bw2,9,4);g.fillStyle='#2a1159';g.fill();
-    if(h.charge>0){roundRect(g,bx+1.5,by+1.5,(bw2-3)*Math.min(1,h.charge/h.chMax),6,3);g.fillStyle=ready?'#ffd54a':col;g.fill()}
+    by+=13;roundRect(g,bx,by,bw2,11,5);g.fillStyle='#2a1159';g.fill();
+    if(h.charge>0){roundRect(g,bx+1.5,by+1.5,(bw2-3)*Math.min(1,h.charge/h.chMax),8,4);g.fillStyle=ready?'#ffd54a':col;g.fill()}
+    if(!h.dead){g.fillStyle='#fff';g.font=`900 ${s.w<80?8:9.5}px Nunito,sans-serif`;g.textAlign='center';g.fillText('⚡'+Math.min(h.charge,h.chMax)+'/'+h.chMax,s.x+s.w/2,by+6)}
     // armour + level
     g.font='900 10px Nunito,sans-serif';g.textAlign='left';g.fillStyle='#fff';g.fillText('🛡️'+h.arm,s.x+4,s.y+10);
     g.textAlign='right';g.fillText('Lv'+h.lvl,s.x+s.w-4,s.y+10);
+    {const cs=Math.min(22,s.w*.24);g.drawImage(candySprite(h.def.c,cs),s.x+1,s.y+16,cs*1.3,cs*1.3)}
     if(ready){g.textAlign='center';g.font=`900 ${s.w<80?10:12}px Nunito,sans-serif`;g.fillStyle='#ffd54a';g.strokeStyle='#2a1159';g.lineWidth=3;
       const tx=ABIL[h.def.ab][0]+' '+L('TAP!','TRYK!');g.strokeText(tx,s.x+s.w/2,s.y+s.h*.5);g.fillText(tx,s.x+s.w/2,s.y+s.h*.5)}
   });
@@ -1605,6 +1608,10 @@ $('#mHelp').onclick=()=>{SFX.click();panel({title:'❓ '+L('How to play','Sådan
 
 /* ---- what's new ---- */
 const CHANGELOG=[
+  {v:'2.0.1',d:['1 Nov 2026','1. nov. 2026'],t:['Clearer hero attacks','Tydeligere helteangreb'],i:[
+    ['⚔️ Heroes now jump when they attack, and every skill also hits the monster – even heal and shield.','⚔️ Heltene hopper nu, når de angriber, og alle evner rammer også monsteret – selv heling og skjold.'],
+    ['🍬 Each hero card shows which candy to match, and the ⚡ bar shows how close the super attack is.','🍬 Hvert heltekort viser, hvilket slik du skal matche, og ⚡-bjælken viser, hvor tæt superangrebet er.'],
+    ['👆 A short tip in the first battle explains how to attack.','👆 Et kort tip i første kamp forklarer, hvordan du angriber.']]},
   {v:'2.0',d:['1 Nov 2026','1. nov. 2026'],t:['Candy battle!','Slikkamp!'],i:[
     ['👆 New controls: tap a candy and then the one next to it to swap (or drag). No match? They slide back. Unlimited moves.','👆 Ny styring: tryk på et slik og så på det ved siden af for at bytte (eller træk). Intet match? De glider tilbage. Uendelig mange træk.'],
     ['⚔️ Every match makes your potato heroes attack the sour monsters at the top. Monsters fight back – if all your heroes fall, the level starts over.','⚔️ Hvert match får dine kartoffelhelte til at angribe de sure monstre øverst. Monstrene slår igen – falder alle dine helte, starter banen forfra.'],
