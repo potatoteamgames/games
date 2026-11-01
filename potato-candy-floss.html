@@ -387,7 +387,7 @@ const KEY='potato_floss_v1';
 function defCnt(){return{cleared:0,matches:0,specials:0,levels:0,swaps:0,cascades:0,endless:0,stars:0,coins:0,kills:0,bosses:0,skills:0,dmg:0,heroes:2,upgrades:0,waves:0,clevels:0}}
 function defState(){return{
   v:2,coins:300,xp:0,lvl:1,
-  maxLevel:1,stars:{},cycle:0,campaignDone:false,bestWave:0,cmax:1,cstars:{},
+  maxLevel:1,stars:{},cycle:0,campaignDone:false,bestWave:0,cmax:1,cstars:{},cbest:0,
   heroes:{knight:{lvl:1},medic:{lvl:1}},team:['knight','medic'],
   items:{hammer:2,shuffle:2,potion:1},
   cnt:defCnt(),daily:null,quests:[],qDone:[],ach:{},seenLog:'',newV2:false
@@ -955,7 +955,7 @@ async function nextWave(first){
 function bhead(){
   if(!B)return;
   $('#bPotion').style.display=B.classic?'none':'';
-  if(B.classic){$('#bTitle').textContent=L('Classic · Level ','Klassisk · Bane ')+B.lv.n;$('#bWave').textContent=L('Score ','Point ')+N(B.score);
+  if(B.classic){$('#bTitle').textContent=B.cend?L('Endless classic','Endeløs klassisk'):L('Classic · Level ','Klassisk · Bane ')+B.lv.n;$('#bWave').textContent=L('Score ','Point ')+N(B.score);
     [['bHammer','hammer'],['bShuffle','shuffle']].forEach(([id,k])=>{const b=$('#'+id);$('.num',b).textContent=S.items[k]||0;b.disabled=!(S.items[k]>0);b.classList.toggle('on',B.tool===k)});return}
   $('#bTitle').textContent=B.endless?L('Endless battle','Endeløs kamp'):(L('Level ','Bane ')+B.lv.n+(B.lv.boss?' 👑':''));
   $('#bWave').textContent=B.endless?L(`Wave ${B.wave}`,`Bølge ${B.wave}`):L(`Wave ${B.wave}/${B.waves.length}`,`Bølge ${B.wave}/${B.waves.length}`);
@@ -1061,6 +1061,7 @@ async function resolve(pre){
   while(loops++<40&&!B.over){
     const m=findMatches();if(!m.all.size)break;
     B.combo++;
+    if(B.cend&&B.combo===3)clGiveMoves(1);
     if(B.combo>1){bump('cascades');floatText(BX+CELL*COLS/2,BY+CELL*1.2,L('COMBO x','KOMBO x')+B.combo,'#ffd54a',26)}
     bump('matches',m.runs.length);
     const place=[],used=new Set();
@@ -1113,6 +1114,7 @@ async function clearSet(set,place){
   set.forEach(i=>{const c=B.g[i];if(!c)return;if(keep.has(i)){c.sc=1;return}
     const[x,y]=XY(i);popFx(BX+x*CELL+CELL/2,BY+y*CELL+CELL/2,PIECES[c.c].c);B.g[i]=null});
   place.forEach(pl=>{const c=B.g[pl.i];if(!c)return;c.sp=pl.sp;c.c=pl.c;c.sc=0;bump('specials')});
+  if(B.cend&&place.length)clGiveMoves(place.length);
   if(place.length){SFX.spec();await tween(200,p=>place.forEach(pl=>{const c=B.g[pl.i];if(c)c.sc=easeBack(p)}))}
 }
 function spawnCell(){
@@ -1496,7 +1498,7 @@ $('#bPotion').onclick=()=>{if(!B||B.over||B.busy||B.classic||!(S.items.potion>0)
 $('#gQuit').onclick=async()=>{if(!B||B.over)return;SFX.click();
   const v=await panel({title:'⏸ '+L('Paused','Pause'),sm:true,html:`<p style="text-align:center">${L('Leave this battle? The level starts over next time.','Forlad kampen? Banen starter forfra næste gang.')}</p>`,
     buttons:[{label:'🏳️ '+L('Give up','Giv op'),v:'quit',cls:'pink'},{label:'▶ '+L('Keep playing','Spil videre'),v:'go',cls:'go'}]});
-  if(v==='quit'&&B&&!B.over){B.over=true;MUSIC.battle=false;if(B.classic)openMap('classic');else if(B.endless){const w=B.wave-1;if(w>S.bestWave)S.bestWave=w;save();show('scMenu')}else openMap('battle')}};
+  if(v==='quit'&&B&&!B.over){B.over=true;MUSIC.battle=false;if(B.cend){if(B.score>S.cbest)S.cbest=B.score;save();show('scMenu')}else if(B.classic)openMap('classic');else if(B.endless){const w=B.wave-1;if(w>S.bestWave)S.bestWave=w;save();show('scMenu')}else openMap('battle')}};
 
 /* =====================================================================
    CLASSIC MODE – no heroes, no monsters: reach the goals before the
@@ -1545,18 +1547,31 @@ function goalLeft(g){switch(g.k){
   case'glaze':return B.glaze.reduce((a,b)=>a+b,0);
   case'blk':return B.g.filter(c=>c&&c.fixed).length;
   case'ing':return Math.max(0,B.ingNeed);}}
-const clDone=()=>B.goals.every(g=>goalLeft(g)<=0);
+const clDone=()=>!B.cend&&B.goals.every(g=>goalLeft(g)<=0);
 
+function clGiveMoves(k){B.moves+=k;SFX.coin();floatText(COLX+60,EH*.45,'+'+k+' '+L(k>1?'moves':'move','træk'),'#7dffb0',22);bhead()}
+function startClassicEndless(){startClassic({n:0,classic:true,cend:true,goals:[],glaze:[],blk:[],ing:0,moves:30,t2:1e12,t3:1e12})}
+async function clEndOver(){
+  B.busy=true;B.over=true;SFX.lose();
+  const sc=B.score,best=sc>S.cbest;if(best)S.cbest=sc;
+  const coins=Math.round(sc/120),xp=Math.round(10+sc/250);bump('endless');addXP(xp);addCoins(coins);if(best)confetti(120);
+  const v=await panel({title:'♾️ '+L('Out of moves!','Ingen træk tilbage!'),sm:true,noX:true,
+    html:`<div class="big1">${N(sc)} ${L('points','point')}</div>
+      <p style="text-align:center">${best?'🎉 '+L('New best!','Ny rekord!'):L('Best: ','Bedst: ')+N(S.cbest)}<br>🪙 +${N(coins)} &nbsp; ✨ +${xp} XP</p>`,
+    buttons:[{label:'🏠 '+L('Menu','Menu'),v:'menu'},{label:'🔁 '+L('Again','Igen'),v:'again',cls:'go'}]});
+  if(v==='again')startClassicEndless();else show('scMenu');
+}
 function startClassic(lv){
   closePanels();
   B={classic:true,lv,endless:false,wave:1,waves:[[]],enemies:[],heroes:[],g:[],target:0,busy:true,over:false,sel:null,drag:null,combo:0,turn:0,
      proj:[],floats:[],shake:0,tool:null,hint:null,idleT:performance.now(),moves:lv.moves,score:0,extra:0,ingNeed:lv.ing,
-     goals:lv.goals.map(g=>Object.assign({},g,{left:g.n||0}))};
+     goals:lv.goals.map(g=>Object.assign({},g,{left:g.n||0})),cend:!!lv.cend};
   makeBoard();
   show('scGame');MUSIC.battle=false;
-  requestAnimationFrame(()=>{layout();banner(L('LEVEL ','BANE ')+lv.n);B.busy=false;B.idleT=performance.now();findHint()});
+  requestAnimationFrame(()=>{layout();banner(lv.cend?'♾️ '+L('ENDLESS','ENDELØS'):L('LEVEL ','BANE ')+lv.n);B.busy=false;B.idleT=performance.now();findHint()});
   bhead();
-  if(!S.cnt.clevels)setTimeout(()=>toast(L('🍬 Classic: reach the goals at the top before you run out of moves. Swap two candies next to each other to make lines of 3.','🍬 Klassisk: nå målene øverst, før du løber tør for træk. Byt to slik ved siden af hinanden for at lave 3 på stribe.'),6500),1200);
+  if(lv.cend)setTimeout(()=>toast(L('♾️ Score as much as you can! Special candies and big combos give you moves back.','♾️ Få så mange point som muligt! Specialslik og store kombinationer giver dig træk tilbage.'),6000),1200);
+  else if(!S.cnt.clevels)setTimeout(()=>toast(L('🍬 Classic: reach the goals at the top before you run out of moves. Swap two candies next to each other to make lines of 3.','🍬 Klassisk: nå målene øverst, før du løber tør for træk. Byt to slik ved siden af hinanden for at lave 3 på stribe.'),6500),1200);
 }
 // tips in classic mode go for the goals
 function clHintScore(all,i,j){
@@ -1599,6 +1614,7 @@ function clIngredients(){
 }
 async function clAfter(){
   B.moves--;bhead();
+  if(B.cend){if(B.moves<=0){await clEndOver();return}B.busy=false;B.idleT=performance.now();findHint();return}
   if(clDone()){await clWin();return}
   if(B.moves<=0){await clOut();return}
   B.busy=false;B.idleT=performance.now();findHint();
@@ -1694,7 +1710,12 @@ function drawClassicTop(g,t){
   // score + star bar
   const x0=cx+r+12,x1=COLX+COLW-6,bw=x1-x0,yb=EH*.2;
   g.textAlign='left';g.font=`900 ${Math.round(Math.min(18,EH*.14))}px 'Lilita One',Nunito,sans-serif`;g.fillStyle='#fff';g.fillText(N(B.score)+' '+L('pts','point'),x0,yb);
-  const by=EH*.33,bh=12,p=Math.min(1,B.score/B.lv.t3);
+  const by=EH*.33,bh=12,p=Math.min(1,B.score/(B.cend?Math.max(1000,S.cbest):B.lv.t3));
+  if(B.cend){roundRect(g,x0,by,bw,bh,6);g.fillStyle='rgba(20,8,48,.6)';g.fill();
+    if(p>0){roundRect(g,x0+2,by+2,(bw-4)*p,bh-4,4);g.fillStyle=B.score>S.cbest&&S.cbest?'#ffd54a':'#ff9ed2';g.fill()}
+    g.font=`900 ${Math.round(Math.min(16,EH*.13))}px Nunito,sans-serif`;g.fillStyle='#fff';g.textBaseline='middle';
+    g.fillText('♾️ '+L('Best: ','Bedst: ')+N(Math.max(S.cbest,B.score)),x0,EH*.72);
+    g.font=`700 ${Math.round(Math.min(12,EH*.1))}px Nunito,sans-serif`;g.fillStyle='#e7dcff';g.fillText(L('Specials & big combos = more moves','Specialslik & store kombier = flere træk'),x0,EH*.72+18);return}
   roundRect(g,x0,by,bw,bh,6);g.fillStyle='rgba(20,8,48,.6)';g.fill();
   if(p>0){roundRect(g,x0+2,by+2,(bw-4)*p,bh-4,4);gr=g.createLinearGradient(x0,0,x1,0);gr.addColorStop(0,'#ff9ed2');gr.addColorStop(1,'#ffd54a');g.fillStyle=gr;g.fill()}
   [[.25,0],[B.lv.t2/B.lv.t3,B.lv.t2],[1,B.lv.t3]].forEach(([f,need],k)=>{const sx=x0+bw*f-(k===2?8:0),on=k===0?B.won||clDone():B.score>=need;
@@ -1728,7 +1749,7 @@ function hud(){
   const lv=S.maxLevel;
   $('#mPlayS').textContent=lv>CAMPAIGN?L(`Level ${lv} – beyond the campaign!`,`Bane ${lv} – efter kampagnen!`):L(`Level ${lv} of ${CAMPAIGN}`,`Bane ${lv} af ${CAMPAIGN}`)+(S.cycle?` · 🔁${S.cycle+1}`:'');
   $('#mClassicS').textContent=S.cmax>CL_MAX?L(`Level ${S.cmax} – beyond 100!`,`Bane ${S.cmax} – over 100!`):L(`Level ${S.cmax} of ${CL_MAX} · moves & goals`,`Bane ${S.cmax} af ${CL_MAX} · træk & mål`);
-  $('#mEndS').textContent=L('Best: wave ','Bedst: bølge ')+S.bestWave;
+  $('#mEndS').textContent=L(`Battle: wave ${S.bestWave} · Classic: ${N(S.cbest)} pts`,`Kamp: bølge ${S.bestWave} · Klassisk: ${N(S.cbest)} point`);
   $('#mHeroS').textContent=L(`${Object.keys(S.heroes).length}/${HEROES.length} heroes · buy and upgrade`,`${Object.keys(S.heroes).length}/${HEROES.length} helte · køb og opgradér`);
 }
 // a new hero you can afford, or an upgrade you can afford for someone on the team
@@ -1756,7 +1777,12 @@ $('#mClassic').onclick=()=>{SFX.click();openMap('classic')};
 $('#mapBack').onclick=()=>{SFX.click();show('scMenu')};
 $('#mapHeroes').onclick=()=>{SFX.click();openHeroes()};
 $('#mHeroes').onclick=()=>{SFX.click();openHeroes()};
-$('#mEndless').onclick=()=>{SFX.click();startEndless()};
+$('#mEndless').onclick=async()=>{SFX.click();
+  const v=await panel({title:'♾️ '+L('Endless','Endeløs'),sm:true,
+    html:`<div class="task"><span class="ic">⚔️</span><span class="tx"><b>${L('Endless battle','Endeløs kamp')}</b><small>${L('Your heroes against wave after wave of monsters.','Dine helte mod bølge efter bølge af monstre.')} ${L('Best: wave ','Bedst: bølge ')+S.bestWave}</small></span></div>
+      <div class="task"><span class="ic">🍬</span><span class="tx"><b>${L('Endless classic','Endeløs klassisk')}</b><small>${L('No monsters – score as much as you can. Specials and combos give moves back.','Ingen monstre – få så mange point som muligt. Specialslik og kombier giver træk tilbage.')} ${L('Best: ','Bedst: ')+N(S.cbest)}</small></span></div>`,
+    buttons:[{label:'⚔️ '+L('Battle','Kamp'),v:'b',cls:'pink'},{label:'🍬 '+L('Classic','Klassisk'),v:'c',cls:'go'}]});
+  if(v==='b')startEndless();else if(v==='c')startClassicEndless()};
 function startEndless(){startBattle({endless:true,n:0})}
 function lvlDesc(n){const lv=genLevel(n),last=lv.waves[lv.waves.length-1];
   if(lv.boss){const b=last.find(e=>e.boss);return'👑 '+nm(b.def)}
@@ -1878,7 +1904,7 @@ $('#mTro').onclick=()=>{SFX.click();panel({title:'🏆 '+L('Trophies','Trofæer'
   ACH.map(a=>`<div class="task ${S.ach[a[0]]?'rdy':''}"><span class="ic ${S.ach[a[0]]?'':'off'}">${a[1]}</span><span class="tx"><b>${L(a[2],a[3])}</b><small>${L(a[4],a[5])}</small></span>${S.ach[a[0]]?'✅':''}</div>`).join('')})};
 $('#mStats').onclick=()=>{SFX.click();const c=S.cnt,row=(e,en,da,v)=>`<div class="task"><span class="ic">${e}</span><span class="tx"><b>${L(en,da)}</b></span><b>${v}</b></div>`;
   panel({title:'📊 '+L('Stats','Statistik'),html:[row('🏁','Highest battle level','Højeste kampbane',S.maxLevel-1),row('🍬','Highest classic level','Højeste klassiske bane',S.cmax-1),row('🔁','Campaign round','Kampagnerunde',S.cycle+1),row('⭐','Stars','Stjerner',c.stars),
-    row('♾️','Best endless wave','Bedste endeløse bølge',S.bestWave),row('👾','Monsters defeated','Monstre besejret',N(c.kills)),row('👑','Bosses defeated','Bosser besejret',c.bosses),
+    row('♾️','Best endless wave','Bedste endeløse bølge',S.bestWave),row('🍬','Best endless classic','Bedste endeløse klassisk',N(S.cbest)),row('👾','Monsters defeated','Monstre besejret',N(c.kills)),row('👑','Bosses defeated','Bosser besejret',c.bosses),
     row('⚔️','Damage dealt','Skade givet',N(c.dmg)),row('⚡','Hero attacks made','Helteevner brugt',c.skills),row('🍬','Candies cleared','Slik fjernet',N(c.cleared)),
     row('💥','Special candies','Specialslik',c.specials),row('⛓️','Cascades','Kædereaktioner',c.cascades),row('🥔','Heroes','Helte',Object.keys(S.heroes).length+'/'+HEROES.length),row('🪙','Coins earned','Mønter tjent',N(c.coins))].join('')})};
 $('#mHelp').onclick=()=>{SFX.click();panel({title:'❓ '+L('How to play','Sådan spiller du'),html:[
@@ -1895,6 +1921,9 @@ $('#mHelp').onclick=()=>{SFX.click();panel({title:'❓ '+L('How to play','Sådan
 
 /* ---- what's new ---- */
 const CHANGELOG=[
+  {v:'2.3',d:['1 Nov 2026','1. nov. 2026'],t:['Endless classic','Endeløs klassisk'],i:[
+    ['♾️ The Endless button now lets you pick Endless battle or the new Endless classic.','♾️ Endeløs-knappen lader dig nu vælge mellem Endeløs kamp og den nye Endeløs klassisk.'],
+    ['🍬 Endless classic: start with 30 moves and score as much as you can. Every special candy you make and every 3× combo gives moves back.','🍬 Endeløs klassisk: start med 30 træk og få så mange point som muligt. Hvert specialslik, du laver, og hver 3× kombo giver træk tilbage.']]},
   {v:'2.2',d:['1 Nov 2026','1. nov. 2026'],t:['Classic mode!','Klassisk tilstand!'],i:[
     ['🍬 New in the menu: Classic candy – 100 levels (and more) without heroes or monsters, but with a limited number of moves.','🍬 Nyt i menuen: Klassisk slik – 100 baner (og flere) uden helte og monstre, men med et begrænset antal træk.'],
     ['🎯 Goals: score points, collect colours, clean sugar glaze, smash sugar blocks and bring potatoes to the bottom (a potato can always be pushed one step down).','🎯 Mål: få point, saml farver, fjern sukkerglasur, smadr sukkerklodser og bring kartofler ned til bunden (en kartoffel kan altid skubbes et felt ned).'],
@@ -1932,7 +1961,7 @@ $('#mDisc').onclick=()=>{SFX.click();open('https://discord.gg/kZa6F4s5f9','_blan
 
 /* ---- language + sound ---- */
 const STATIC=[
-  ['#mPlayT','Battle campaign','Kampkampagne'],['#mClassicT','Classic candy','Klassisk slik'],['#mHeroT','Heroes','Helte'],['#mEndT','Endless battle','Endeløs kamp'],
+  ['#mPlayT','Battle campaign','Kampkampagne'],['#mClassicT','Classic candy','Klassisk slik'],['#mHeroT','Heroes','Helte'],['#mEndT','Endless','Endeløs'],
   ['#mMisT','Missions','Missioner'],['#mQueT','Quests','Opgaver'],['#mShopT','Shop','Butik'],['#mHelpT','How to play','Sådan spiller du'],
   ['#mTroT','Trophies','Trofæer'],['#mStatsT','Stats','Statistik'],['#mLogT',"What's new",'Nyheder'],
   ['#mapBackT','Menu','Menu'],['#mapHeroT','Heroes','Helte'],
