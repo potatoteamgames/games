@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Potato Candy Floss – Free Match 3 Twist Puzzle Game | Play Online, No Download</title>
+<meta name="description" content="Play Potato Candy Floss free in your browser! A sweet match-3 puzzle where you twist four candies around instead of swapping. Endless levels, missions, quests, boosters and a cosy candy floss world. No download.">
+<meta name="keywords" content="potato candy floss, match 3, match three game, candy game, puzzle game, free puzzle, browser game, twist puzzle, slikspil, puslespil, potato game">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#f7c8e0">
+<meta name="application-name" content="Potato Candy Floss">
+<meta name="apple-mobile-web-app-title" content="Potato Candy Floss">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="canonical" href="https://potatoteamgames.github.io/games/potato-candy-floss.html">
+<meta property="og:url" content="https://potatoteamgames.github.io/games/potato-candy-floss.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Potato Team Games">
+<meta property="og:title" content="Potato Candy Floss – Free Match 3 Twist Puzzle">
+<meta property="og:description" content="Twist four candies at a time in this sweet match-3 puzzle. Endless levels, missions, quests and boosters. Free in your browser.">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Potato Candy Floss – Free Match 3 Twist Puzzle">
+<meta name="twitter:description" content="Twist four candies at a time in this sweet match-3 puzzle. Endless levels, missions and quests. Free, no download.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍬%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"VideoGame","name":"Potato Candy Floss","url":"https://potatoteamgames.github.io/games/potato-candy-floss.html","description":"A free match-3 twist puzzle game with endless levels, missions and quests.","genre":["Puzzle","Match 3","Casual"],"gamePlatform":["Web browser","PC","Mobile"],"applicationCategory":"Game","operatingSystem":"Any","inLanguage":["en","da"],"publisher":{"@type":"Organization","name":"Potato Team Games","url":"https://potatoteamgames.github.io/games/"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#ff7ec2; --pinkD:#d64f99; --pinkL:#ffd3ea;
+  --grape:#8b5cf6; --grapeD:#6d35d6;
+  --cream:#fff6fb; --ink:#4a1f3d; --ink2:#8a5f7a;
+  --mint:#5fe3b0; --mintD:#22a97c; --sun:#ffcf4a; --sunD:#e0a412;
+  --sky:#7cc9ff; --red:#ff5a7a;
+  --card:#ffffff; --line:rgba(74,31,61,.14);
+  --bg1:#ffe3f3; --bg2:#f3d9ff; --bg3:#d9ecff;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{font-family:Nunito,system-ui,sans-serif;font-weight:800;color:var(--ink);overflow:hidden;user-select:none;-webkit-user-select:none;
+  background:radial-gradient(circle at 15% 0,var(--bg1),transparent 55%),radial-gradient(circle at 90% 10%,var(--bg2),transparent 50%),radial-gradient(circle at 50% 100%,var(--bg3),transparent 55%),#fff0f8}
+button{font-family:inherit;font-weight:900;cursor:pointer;border:none;color:inherit}
+h1,h2,h3{font-family:'Lilita One',sans-serif;font-weight:400;margin:0}
+#app{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+
+/* ===== shared bits ===== */
+.btn{background:linear-gradient(#fff,#ffe9f6);color:var(--ink);border:3px solid var(--ink);border-radius:14px;padding:10px 16px;font-size:16px;box-shadow:0 4px 0 var(--ink);transition:transform .1s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.btn:disabled{opacity:.5;box-shadow:0 4px 0 var(--ink);transform:none}
+.btn.go{background:linear-gradient(#8bf0c6,var(--mintD));color:#06331f}
+.btn.pink{background:linear-gradient(#ffa6d6,var(--pinkD));color:#fff}
+.btn.sun{background:linear-gradient(#ffe08a,var(--sunD));color:#4a2f00}
+.btn.sm{padding:6px 10px;font-size:13px;border-width:2px;border-radius:10px;box-shadow:0 3px 0 var(--ink)}
+.btn.big{font-size:20px;padding:14px 22px}
+.hint{color:var(--ink2);font-size:13px;line-height:1.5}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.spacer{flex:1}
+
+/* ===== top bar ===== */
+#bar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:linear-gradient(180deg,#fff,#ffeaf6);border-bottom:4px solid var(--ink);box-shadow:0 3px 0 rgba(74,31,61,.15);z-index:5;flex:0 0 auto}
+#bar .logo{font-family:'Lilita One',sans-serif;font-size:22px;color:var(--pinkD);white-space:nowrap;text-shadow:2px 2px 0 #fff}
+.pill{display:flex;align-items:center;gap:5px;background:#fff;border:3px solid var(--ink);border-radius:999px;padding:3px 11px;font-size:15px;white-space:nowrap;box-shadow:0 3px 0 rgba(74,31,61,.2)}
+.ibtn{width:40px;height:40px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:19px;background:linear-gradient(#fff,#ffe9f6);border:3px solid var(--ink);border-radius:12px;box-shadow:0 3px 0 var(--ink)}
+.ibtn:active{transform:translateY(3px);box-shadow:none}
+.lvlbox{min-width:120px}
+.xpbar{height:7px;background:#f0d6e6;border-radius:999px;overflow:hidden;margin-top:2px;border:1px solid rgba(74,31,61,.15)}
+.xpbar>i{display:block;height:100%;background:linear-gradient(90deg,var(--grape),var(--pink));width:0;transition:width .3s}
+
+/* ===== screens ===== */
+.screen{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;display:none;padding:14px}
+.screen.on{display:block}
+#scGame.on{display:flex;flex-direction:column;padding:0;overflow:hidden}
+
+/* menu */
+.hero{text-align:center;padding:10px 0 4px}
+.hero h1{font-size:clamp(34px,9vw,60px);color:var(--pinkD);text-shadow:3px 3px 0 #fff,6px 6px 0 rgba(214,79,153,.25);line-height:1}
+.hero h1 span{color:var(--grapeD)}
+.hero .cone{font-size:clamp(54px,16vw,100px);line-height:1;filter:drop-shadow(0 8px 10px rgba(214,79,153,.35));animation:bob 2.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-10px) rotate(-5deg)}}
+.hero p{margin:6px auto 0;max-width:460px}
+.menu{display:grid;gap:10px;width:min(430px,100%);margin:14px auto 0}
+.mbig{display:flex;align-items:center;gap:12px;text-align:left;padding:12px 16px;border-radius:18px;border:3px solid var(--ink);box-shadow:0 5px 0 var(--ink);background:linear-gradient(#fff,#ffe9f6)}
+.mbig:active{transform:translateY(3px);box-shadow:0 2px 0 var(--ink)}
+.mbig .ic{font-size:34px;flex:0 0 auto}
+.mbig b{display:block;font-family:'Lilita One',sans-serif;font-weight:400;font-size:21px}
+.mbig small{display:block;color:var(--ink2);font-size:12.5px;font-weight:700;line-height:1.35}
+.mbig.play{background:linear-gradient(#ffa6d6,var(--pinkD));color:#fff}
+.mbig.play small{color:#ffe7f4}
+.mbig.endless{background:linear-gradient(#b89cff,var(--grapeD));color:#fff}
+.mbig.endless small{color:#eee4ff}
+.m4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.m4 button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 2px;font-size:11.5px;border-radius:14px;border:3px solid var(--ink);box-shadow:0 4px 0 var(--ink);background:linear-gradient(#fff,#ffe9f6);position:relative}
+.m4 button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.m4 button i{font-style:normal;font-size:23px}
+.dot{position:absolute;top:-6px;right:-5px;min-width:19px;height:19px;border-radius:999px;background:var(--red);color:#fff;font-size:11px;line-height:19px;border:2px solid var(--ink)}
+
+/* level map */
+.maphead{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.path{width:min(430px,100%);margin:0 auto;display:flex;flex-direction:column-reverse;gap:10px;padding-bottom:16px}
+.node{display:flex;align-items:center;gap:12px;background:#fff;border:3px solid var(--ink);border-radius:18px;padding:9px 12px;box-shadow:0 4px 0 var(--ink);position:relative}
+.node.lock{opacity:.55;filter:grayscale(.6)}
+.node.cur{box-shadow:0 4px 0 var(--ink),0 0 0 4px var(--sun);animation:pulse 1.5s infinite}
+@keyframes pulse{50%{transform:scale(1.02)}}
+.node .n{width:46px;height:46px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-family:'Lilita One',sans-serif;font-size:21px;color:#fff;border-radius:50%;border:3px solid var(--ink);background:linear-gradient(var(--pink),var(--pinkD));box-shadow:inset 0 -3px 0 rgba(0,0,0,.15)}
+.node.done .n{background:linear-gradient(#8bf0c6,var(--mintD));color:#06331f}
+.node.lock .n{background:linear-gradient(#ddd,#999)}
+.node .tx{flex:1;min-width:0}
+.node .tx b{display:block;font-size:14.5px}
+.node .tx small{display:block;color:var(--ink2);font-size:12px;font-weight:700}
+.stars{font-size:15px;letter-spacing:1px;white-space:nowrap}
+
+/* game screen */
+#gtop{display:flex;align-items:center;gap:7px;padding:7px 10px;background:linear-gradient(180deg,#fff,#ffeaf6);border-bottom:3px solid var(--ink);flex:0 0 auto;flex-wrap:wrap}
+.obj{display:flex;align-items:center;gap:4px;background:#fff;border:2px solid var(--ink);border-radius:12px;padding:2px 8px;font-size:14px}
+.obj.done{background:#c8f7e3;border-color:var(--mintD)}
+.obj i{font-style:normal;font-size:18px}
+#moves{font-family:'Lilita One',sans-serif;font-size:26px;line-height:1}
+#movesW{display:flex;flex-direction:column;align-items:center;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:1px 11px;box-shadow:0 3px 0 rgba(74,31,61,.2)}
+#movesW small{font-size:9.5px;letter-spacing:1px;color:var(--ink2)}
+#movesW.low{background:#ffe0e6;border-color:var(--red)}
+#boardWrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;position:relative;padding:8px}
+#board{touch-action:none;border-radius:22px;box-shadow:0 10px 0 rgba(74,31,61,.18),0 14px 34px rgba(74,31,61,.25);border:4px solid var(--ink);background:linear-gradient(160deg,#fff0f8,#ffe2f1)}
+#gbot{flex:0 0 auto;display:flex;gap:8px;align-items:center;justify-content:center;padding:7px 10px 10px;background:linear-gradient(0deg,#fff,#ffeaf6);border-top:3px solid var(--ink);flex-wrap:wrap}
+.boost{position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;padding:5px 11px;font-size:10.5px;border-radius:14px;border:3px solid var(--ink);box-shadow:0 4px 0 var(--ink);background:linear-gradient(#fff,#ffe9f6)}
+.boost i{font-style:normal;font-size:21px}
+.boost:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.boost.on{background:linear-gradient(#ffe08a,var(--sunD));animation:pulse .9s infinite}
+.boost .num{position:absolute;top:-7px;right:-6px;min-width:20px;height:20px;border-radius:999px;background:var(--grapeD);color:#fff;font-size:11px;line-height:20px;border:2px solid var(--ink)}
+.boost:disabled .num{background:#aaa}
+/* floss meter */
+#flossW{display:flex;align-items:center;gap:5px;background:#fff;border:3px solid var(--ink);border-radius:999px;padding:2px 9px 2px 5px;box-shadow:0 3px 0 rgba(74,31,61,.2)}
+#flossBar{width:72px;height:10px;border-radius:999px;background:#f0d6e6;overflow:hidden;border:1px solid rgba(74,31,61,.2)}
+#flossBar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff9ed2,#fff0a8,#9be7ff);transition:width .25s}
+#flossW.full{animation:pulse .7s infinite;background:#fff6c9}
+
+/* panels */
+.ov{position:fixed;inset:0;background:rgba(74,31,61,.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:14px;z-index:60;opacity:0;transition:opacity .18s}
+.ov.in{opacity:1}
+.pn{width:min(460px,100%);max-height:88vh;display:flex;flex-direction:column;background:var(--cream);border:4px solid var(--ink);border-radius:22px;box-shadow:0 12px 0 rgba(74,31,61,.35);overflow:hidden;transform:scale(.9);transition:transform .2s cubic-bezier(.2,1.5,.4,1)}
+.ov.in .pn{transform:scale(1)}
+.pn.sm{width:min(360px,100%)}
+.ph{display:flex;align-items:center;gap:8px;padding:10px 12px;background:linear-gradient(#ffa6d6,var(--pinkD));border-bottom:4px solid var(--ink);color:#fff}
+.ph h2{font-size:21px;flex:1;text-shadow:2px 2px 0 rgba(0,0,0,.18)}
+.ph .x{width:32px;height:32px;border-radius:50%;background:#fff;color:var(--pinkD);border:3px solid var(--ink);font-size:15px;line-height:1}
+.pb{padding:12px;overflow-y:auto}
+.pf{padding:10px 12px;border-top:3px dashed var(--line);display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.task{display:flex;gap:10px;align-items:center;background:#fff;border:3px solid var(--ink);border-radius:16px;padding:8px 10px;margin-bottom:8px;box-shadow:0 3px 0 rgba(74,31,61,.15)}
+.task .ic{font-size:26px;flex:0 0 auto;width:34px;text-align:center}
+.task .tx{flex:1;min-width:0;font-size:14px}
+.task .tx small{display:block;color:var(--ink2);font-size:12px;font-weight:700}
+.task.rdy{background:#e8fff5;border-color:var(--mintD)}
+.prog{height:9px;background:#f0d6e6;border-radius:999px;overflow:hidden;margin-top:4px;border:1px solid rgba(74,31,61,.15)}
+.prog>b{display:block;height:100%;background:linear-gradient(90deg,var(--mint),var(--mintD));width:0}
+.shopg{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:9px}
+.sitem{background:#fff;border:3px solid var(--ink);border-radius:16px;padding:9px;text-align:center;box-shadow:0 3px 0 rgba(74,31,61,.15)}
+.sitem .e{font-size:30px}
+.sitem b{display:block;font-size:14px}
+.sitem small{display:block;color:var(--ink2);font-size:11.5px;font-weight:700;min-height:28px;line-height:1.25;margin:2px 0 5px}
+.big1{text-align:center;font-family:'Lilita One',sans-serif;font-size:30px;color:var(--pinkD)}
+.starsBig{font-size:44px;text-align:center;letter-spacing:4px;line-height:1.1}
+.starsBig .off{opacity:.25}
+
+/* toast + banner */
+#toasts{position:fixed;left:50%;transform:translateX(-50%);top:62px;display:flex;flex-direction:column;gap:6px;z-index:80;pointer-events:none;width:min(92vw,380px)}
+.toast{background:rgba(74,31,61,.9);color:#fff;border-radius:14px;padding:7px 13px;font-size:14px;text-align:center;animation:tin .3s cubic-bezier(.2,1.6,.4,1)}
+@keyframes tin{from{transform:translateY(-14px) scale(.9);opacity:0}}
+.toast.out{opacity:0;transition:opacity .3s}
+#banner{position:fixed;left:0;right:0;top:34%;text-align:center;z-index:70;pointer-events:none;font-family:'Lilita One',sans-serif;font-size:clamp(30px,9vw,56px);color:#fff;text-shadow:0 0 14px var(--pinkD),4px 4px 0 var(--ink);opacity:0}
+#banner.on{animation:bpop 1.5s ease-out}
+@keyframes bpop{0%{opacity:0;transform:scale(.4) rotate(-8deg)}20%{opacity:1;transform:scale(1.12) rotate(2deg)}70%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.05)}}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:75}
+/* loading */
+#load{position:fixed;inset:0;z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  background:radial-gradient(circle at 50% 30%,#ffe3f3,#f3d9ff 60%,#e7e0ff)}
+#load.out{opacity:0;transition:opacity .45s;pointer-events:none}
+#load .cone{font-size:84px;animation:bob 2.2s ease-in-out infinite}
+#ldBarW{width:min(300px,70vw);height:16px;border:3px solid var(--ink);border-radius:999px;background:#fff;overflow:hidden}
+#ldBar{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff9ed2,#ffd36e,#9be7ff);transition:width 1.9s ease-in-out}
+#ldTip{max-width:320px;text-align:center}
+@media (max-width:430px){
+  #bar{padding:6px 8px;gap:6px}
+  #bar .logo{font-size:17px}
+  .pill{font-size:13px;padding:2px 8px;border-width:2px}
+  .ibtn{width:34px;height:34px;font-size:16px;border-width:2px}
+  .lvlbox{min-width:92px}
+  .obj{font-size:12.5px;padding:1px 6px}
+  .obj i{font-size:16px}
+  #moves{font-size:22px}
+  .boost{padding:4px 8px;font-size:9.5px}
+  .boost i{font-size:19px}
+  #flossBar{width:56px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div id="load">
+  <div class="cone">🍬</div>
+  <h1 style="font-size:30px;color:#d64f99">Potato Candy Floss</h1>
+  <div id="ldBarW"><b id="ldBar"></b></div>
+  <p id="ldTxt" class="hint" style="margin:0">Loading…</p>
+  <p id="ldTip" class="hint"></p>
+</div>
+
+<div id="app">
+  <header id="bar">
+    <a class="ibtn" href="./" id="homeBtn" title="All games" aria-label="All games" style="text-decoration:none">🏠</a>
+    <span class="logo" id="logoTxt">Potato Candy Floss</span>
+    <div class="spacer"></div>
+    <div class="pill lvlbox" id="lvlPill"><b style="font-size:13px">Lv <span id="plLvl">1</span></b><div style="flex:1"><div class="xpbar"><i id="xpFill"></i></div></div></div>
+    <div class="pill" id="coinPill">🪙 <b id="coins">0</b></div>
+    <button class="ibtn" id="langBtn" title="Language">🇩🇰</button>
+    <button class="ibtn" id="sndBtn" title="Sound">🔊</button>
+  </header>
+
+  <!-- MENU -->
+  <section class="screen on" id="scMenu">
+    <div class="hero">
+      <div class="cone">🍭</div>
+      <h1>Potato <span>Candy Floss</span></h1>
+      <p class="hint" id="heroTxt">Twist four candies around instead of swapping them!</p>
+    </div>
+    <div class="menu">
+      <button class="mbig play" id="mPlay"><span class="ic">🗺️</span><span class="tx"><b id="mPlayT">Play levels</b><small id="mPlayS">Level 1</small></span></button>
+      <button class="mbig endless" id="mEndless"><span class="ic">♾️</span><span class="tx"><b id="mEndT">Endless floss</b><small id="mEndS">Best: 0</small></span></button>
+      <div class="m4">
+        <button id="mMis"><i>📋</i><span id="mMisT">Missions</span><span class="dot" id="misDot" style="display:none">0</span></button>
+        <button id="mQue"><i>📜</i><span id="mQueT">Quests</span><span class="dot" id="queDot" style="display:none">0</span></button>
+        <button id="mShop"><i>🛒</i><span id="mShopT">Shop</span></button>
+        <button id="mHelp"><i>❓</i><span id="mHelpT">How to play</span></button>
+      </div>
+      <div class="m4">
+        <button id="mTro"><i>🏆</i><span id="mTroT">Trophies</span></button>
+        <button id="mStats"><i>📊</i><span id="mStatsT">Stats</span></button>
+        <button id="mLog"><i>📖</i><span id="mLogT">What's new</span><span class="dot" id="logDot" style="display:none">!</span></button>
+        <button id="mDisc"><i>💬</i><span>Discord</span></button>
+      </div>
+    </div>
+    <p class="hint" style="text-align:center;margin:14px 0 6px">🍬 Potato Team Games</p>
+  </section>
+
+  <!-- LEVEL MAP -->
+  <section class="screen" id="scMap">
+    <div class="maphead">
+      <button class="btn sm" id="mapBack">← <span id="mapBackT">Menu</span></button>
+      <div class="spacer"></div>
+      <span class="pill">⭐ <b id="totStars">0</b></span>
+    </div>
+    <div class="path" id="path"></div>
+    <div style="text-align:center;padding:8px 0 20px"><button class="btn sm" id="moreLv">⬇️ <span id="moreLvT">More levels</span></button></div>
+  </section>
+
+  <!-- GAME -->
+  <section class="screen" id="scGame">
+    <div id="gtop">
+      <button class="ibtn" id="gQuit">✖</button>
+      <div id="movesW"><b id="moves">20</b><small id="movesL">MOVES</small></div>
+      <div id="objs" class="row" style="gap:5px;flex:1"></div>
+      <div id="flossW" title="Floss meter">🍥<div id="flossBar"><i></i></div></div>
+    </div>
+    <div id="boardWrap"><canvas id="board"></canvas></div>
+    <div id="gbot"></div>
+  </section>
+</div>
+
+<div id="toasts"></div>
+<div id="banner"></div>
+<canvas id="fx"></canvas>
+<script>
+'use strict';
+/* =====================================================================
+   POTATO CANDY FLOSS  –  a match-3 where you TWIST four candies at a
+   time instead of swapping two. Endless generated levels, an endless
+   mode, missions, quests, boosters, trophies and a player level.
+   Everything lives in this one file and saves to localStorage.
+   ===================================================================== */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const rnd=n=>Math.floor(Math.random()*n);
+const pick=a=>a[rnd(a.length)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const N=n=>n>=1e6?(n/1e6).toFixed(n>=1e7?0:1)+'M':n>=1e4?(n/1e3).toFixed(0)+'K':n>=1000?(n/1000).toFixed(1)+'K':''+Math.floor(n);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+// a seeded random so every player gets the very same level 37
+const seeded=s=>{let a=s*1664525+1013904223>>>0;return()=>{a^=a<<13;a>>>=0;a^=a>>17;a^=a<<5;a>>>=0;return a/4294967296}};
+
+/* ---------------- language ---------------- */
+const LANG_KEY='potato_floss_lang';
+let LANG=(()=>{try{const v=localStorage.getItem(LANG_KEY);if(v)return v}catch(e){}
+  return(navigator.language||'').toLowerCase().startsWith('da')?'da':'en'})();
+const L=(en,da)=>LANG==='da'?da:en;
+const nm=o=>L(o.en,o.da);
+
+/* ---------------- sound ---------------- */
+let AC=null;
+const SFX={
+  on:true,
+  tone(f,d,t,v,slide,delay){if(!this.on)return;try{
+    if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==='suspended')AC.resume();
+    const t0=AC.currentTime+(delay||0),o=AC.createOscillator(),g=AC.createGain();
+    o.type=t||'sine';o.frequency.setValueAtTime(f,t0);
+    if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(40,f*slide),t0+d);
+    g.gain.setValueAtTime(v||.07,t0);g.gain.exponentialRampToValueAtTime(.0001,t0+d);
+    o.connect(g).connect(AC.destination);o.start(t0);o.stop(t0+d+.03);
+  }catch(e){}},
+  click(){this.tone(620,.05,'triangle',.05)},
+  twist(){this.tone(380,.12,'triangle',.05,2.2)},
+  no(){this.tone(170,.14,'sawtooth',.05,.6)},
+  pop(n){this.tone(520+Math.min(8,n||0)*70,.09,'sine',.07,1.6)},
+  coin(){this.tone(900,.07,'square',.045);this.tone(1300,.1,'square',.04,1,.06)},
+  spec(){[500,700,900,1200].forEach((f,i)=>this.tone(f,.1,'triangle',.05,1,i*.05))},
+  win(){[523,659,784,1047].forEach((f,i)=>this.tone(f,.2,'triangle',.06,1,i*.11))},
+  lose(){[400,330,260].forEach((f,i)=>this.tone(f,.22,'sawtooth',.05,.7,i*.13))},
+  floss(){[300,500,800,1100,1500].forEach((f,i)=>this.tone(f,.14,'sine',.05,1.3,i*.05))}
+};
+
+/* ---------------- candy pieces ---------------- */
+// 7 candy colours; easy levels only use the first few
+const PIECES=[
+  {e:'🍬',en:'Pink floss',da:'Lyserødt spind',c:'#ff7ec2'},
+  {e:'🍭',en:'Lollipop',da:'Slikkepind',c:'#ff5a7a'},
+  {e:'🥔',en:'Potato drop',da:'Kartoffeldrop',c:'#c98a4b'},
+  {e:'🫐',en:'Blueberry',da:'Blåbær',c:'#6c8cff'},
+  {e:'🍋',en:'Lemon drop',da:'Citrondrop',c:'#ffcf4a'},
+  {e:'🍏',en:'Green apple',da:'Grønt æble',c:'#7ddc6a'},
+  {e:'🍇',en:'Grape',da:'Drue',c:'#b07cff'}
+];
+// specials you build by matching more than three
+const SPEC={
+  row:{e:'↔️',en:'Candy stick',da:'Slikstang'},
+  col:{e:'↕️',en:'Candy stick',da:'Slikstang'},
+  bomb:{e:'💥',en:'Sugar bomb',da:'Sukkerbombe'},
+  cloud:{e:'🍥',en:'Floss cloud',da:'Spindsky'}
+};
+
+/* ---------------- save ---------------- */
+const KEY='potato_floss_v1';
+function defState(){return{
+  v:1,coins:200,xp:0,lvl:1,best:0,maxLevel:1,stars:{},
+  items:{hammer:2,shuffle:2,moves:1,cloud:0},
+  cnt:{cleared:0,matches:0,specials:0,levels:0,twists:0,cascades:0,endless:0,big:0,stars:0,coins:0,floss:0},
+  daily:null,quests:[],qDone:[],ach:{},seenLog:'',tips:0
+}}
+let S=defState();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(d&&d.v===1)S=Object.assign(defState(),d,{cnt:Object.assign(defState().cnt,d.cnt||{}),items:Object.assign(defState().items,d.items||{})})}catch(e){}}
+const today=()=>{const d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate()};
+
+/* ---------------- tiny UI helpers ---------------- */
+function toast(msg,ms){const el=document.createElement('div');el.className='toast';el.innerHTML=msg;$('#toasts').appendChild(el);
+  const all=$('#toasts').children;while(all.length>3)all[0].remove();
+  setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),320)},ms||2200)}
+function banner(txt){const b=$('#banner');b.textContent=txt;b.classList.remove('on');void b.offsetWidth;b.classList.add('on')}
+function panel({title='',html='',buttons=[],sm,render,onClose,noX}){
+  return new Promise(res=>{
+    const ov=document.createElement('div');ov.className='ov';
+    ov.innerHTML=`<div class="pn ${sm?'sm':''}"><div class="ph"><h2>${title}</h2>${noX?'':'<button class="x" aria-label="Close">✕</button>'}</div><div class="pb">${html}</div>${buttons.length?'<div class="pf"></div>':''}</div>`;
+    document.body.appendChild(ov);requestAnimationFrame(()=>ov.classList.add('in'));
+    let done=false;const close=v=>{if(done)return;done=true;ov.classList.remove('in');setTimeout(()=>ov.remove(),200);onClose&&onClose(v);res(v)};
+    ov._close=close;const x=$('.x',ov);if(x)x.onclick=()=>{SFX.click();close(null)};
+    if(!noX)ov.addEventListener('pointerdown',e=>{if(e.target===ov)close(null)});
+    const pf=$('.pf',ov);
+    buttons.forEach(b=>{const e=document.createElement('button');e.className='btn '+(b.cls||'');e.innerHTML=b.label;e.disabled=!!b.dis;
+      e.onclick=()=>{SFX.click();close(b.v!==undefined?b.v:true)};pf.appendChild(e)});
+    if(render)render($('.pb',ov),close,ov);
+  });
+}
+const anyPanel=()=>!!$('.ov');
+
+/* confetti + sparkles on the fx canvas */
+const fx=$('#fx'),fctx=fx.getContext('2d');let FP=[];
+function fxSize(){const d=Math.min(2,devicePixelRatio||1);fx.width=innerWidth*d;fx.height=innerHeight*d;fx.style.width=innerWidth+'px';fx.style.height=innerHeight+'px';fctx.setTransform(d,0,0,d,0,0)}
+addEventListener('resize',fxSize);fxSize();
+const CONF=['#ff7ec2','#ffcf4a','#7ddc6a','#6c8cff','#b07cff','#ff5a7a','#5fe3b0','#fff'];
+function confetti(n=90){for(let i=0;i<n&&FP.length<700;i++)FP.push({k:'c',x:Math.random()*innerWidth,y:-20-Math.random()*200,vx:(Math.random()-.5)*3,vy:2+Math.random()*4,r:4+Math.random()*7,c:pick(CONF),a:Math.random()*6,s:(Math.random()-.5)*.3,l:3})}
+function sparkle(x,y,col,n=10){for(let i=0;i<n&&FP.length<700;i++){const a=Math.random()*6.3,sp=1+Math.random()*4;FP.push({k:'s',x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-1,r:2+Math.random()*4,c:col||pick(CONF),l:.5+Math.random()*.4})}}
+function floatTxt(x,y,t,c){FP.push({k:'t',x,y,vx:0,vy:-1.4,t,c:c||'#fff',l:1.1,r:20})}
+function fxTick(dt){
+  fctx.clearRect(0,0,innerWidth,innerHeight);
+  for(let i=FP.length-1;i>=0;i--){const p=FP[i];p.l-=dt;if(p.l<=0){FP.splice(i,1);continue}
+    const al=clamp(p.l*2,0,1);fctx.globalAlpha=al;
+    if(p.k==='c'){p.vy+=.12;p.x+=p.vx;p.y+=p.vy;p.a+=p.s;fctx.save();fctx.translate(p.x,p.y);fctx.rotate(p.a);fctx.fillStyle=p.c;fctx.fillRect(-p.r/2,-p.r/3,p.r,p.r*.66);fctx.restore()}
+    else if(p.k==='s'){p.vy+=.18;p.x+=p.vx;p.y+=p.vy;fctx.fillStyle=p.c;fctx.beginPath();fctx.arc(p.x,p.y,p.r*al,0,7);fctx.fill()}
+    else{p.y+=p.vy;fctx.font='900 '+p.r+'px Nunito,sans-serif';fctx.textAlign='center';fctx.lineWidth=4;fctx.strokeStyle='rgba(74,31,61,.85)';fctx.strokeText(p.t,p.x,p.y);fctx.fillStyle=p.c;fctx.fillText(p.t,p.x,p.y)}
+  }
+  fctx.globalAlpha=1;
+}
+
+/* ---------------- player level / coins ---------------- */
+const xpFor=l=>Math.floor(60*Math.pow(l,1.35));
+function addXP(n){if(!n)return;S.xp+=n;let up=false;
+  while(S.xp>=xpFor(S.lvl)){S.xp-=xpFor(S.lvl);S.lvl++;up=true}
+  if(up){const r=120+S.lvl*25;S.coins+=r;SFX.win();confetti(140);banner(L('LEVEL ','LEVEL ')+S.lvl+'!');toast(L(`🎉 You reached level ${S.lvl}! +${r} 🪙`,`🎉 Du nåede level ${S.lvl}! +${r} 🪙`),3200)}
+  hud();save()}
+function addCoins(n){if(!n)return;S.coins=Math.max(0,S.coins+n);if(n>0)S.cnt.coins+=n;hud();save()}
+function hud(){
+  $('#plLvl').textContent=S.lvl;
+  $('#xpFill').style.width=Math.min(100,S.xp/xpFor(S.lvl)*100)+'%';
+  $('#coins').textContent=N(S.coins);
+  const md=misReady(),qd=queReady();
+  $('#misDot').style.display=md?'':'none';$('#misDot').textContent=md;
+  $('#queDot').style.display=qd?'':'none';$('#queDot').textContent=qd;
+  $('#logDot').style.display=S.seenLog===CHANGELOG[0].v?'none':'';
+  $('#totStars').textContent=Object.values(S.stars).reduce((a,b)=>a+b,0);
+  $('#mPlayS').textContent=L('Level ','Bane ')+S.maxLevel;
+  $('#mEndS').textContent=L('Best: ','Bedst: ')+N(S.best);
+}
+
+/* ---------------- counters, missions, quests, trophies ---------------- */
+function bump(k,n=1){S.cnt[k]=(S.cnt[k]||0)+n;dailyProg(k,n);questProg(k,n);achCheck();save()}
+
+// daily missions: three small tasks that renew every day
+const MIS_POOL=[
+  ['cleared',120,'Clear {n} candies','Fjern {n} slik','🍬'],
+  ['cleared',250,'Clear {n} candies','Fjern {n} slik','🍬'],
+  ['matches',25,'Make {n} matches','Lav {n} kombinationer','✨'],
+  ['specials',4,'Make {n} special candies','Lav {n} specialslik','💥'],
+  ['twists',40,'Twist {n} times','Drej {n} gange','🔄'],
+  ['levels',2,'Finish {n} levels','Gennemfør {n} baner','🏁'],
+  ['big',3,'Match 4 or more {n} times','Lav 4 eller flere {n} gange','🌟'],
+  ['cascades',6,'Make {n} cascades','Lav {n} kædereaktioner','⛓️'],
+  ['floss',2,'Fill the floss meter {n} times','Fyld spindmåleren {n} gange','🍥'],
+  ['endless',1,'Play {n} endless run','Spil {n} endeløs runde','♾️']
+];
+function ensureDaily(){
+  const d=today();if(S.daily&&S.daily.day===d)return;
+  const r=seeded(d),pool=[...MIS_POOL].sort(()=>r()-.5).slice(0,3);
+  S.daily={day:d,t:pool.map(([k,n,en,da,e])=>({k,n,en,da,e,p:0,got:false})),bonus:false};save();
+}
+function dailyProg(k,n){if(!S.daily)return;S.daily.t.forEach(t=>{if(t.k===k&&!t.got)t.p=Math.min(t.n,t.p+n)})}
+const misReady=()=>S.daily?S.daily.t.filter(t=>t.p>=t.n&&!t.got).length+(!S.daily.bonus&&S.daily.t.every(t=>t.got)?1:0):0;
+
+// quests: a long list, three active at a time
+const QUESTS=[
+  ['q1','🍬','Clear 500 candies','Fjern 500 slik','cleared',500,250],
+  ['q2','🍬','Clear 2000 candies','Fjern 2000 slik','cleared',2000,700],
+  ['q3','🍬','Clear 6000 candies','Fjern 6000 slik','cleared',6000,1600],
+  ['q4','🏁','Finish 5 levels','Gennemfør 5 baner','levels',5,300],
+  ['q5','🏁','Finish 20 levels','Gennemfør 20 baner','levels',20,900],
+  ['q6','🏁','Finish 50 levels','Gennemfør 50 baner','levels',50,2200],
+  ['q7','💥','Make 20 special candies','Lav 20 specialslik','specials',20,400],
+  ['q8','💥','Make 75 special candies','Lav 75 specialslik','specials',75,1100],
+  ['q9','🔄','Twist 300 times','Drej 300 gange','twists',300,350],
+  ['q10','🔄','Twist 1500 times','Drej 1500 gange','twists',1500,1200],
+  ['q11','⛓️','Make 50 cascades','Lav 50 kædereaktioner','cascades',50,500],
+  ['q12','⛓️','Make 200 cascades','Lav 200 kædereaktioner','cascades',200,1400],
+  ['q13','⭐','Earn 15 stars','Tjen 15 stjerner','stars',15,600],
+  ['q14','⭐','Earn 45 stars','Tjen 45 stjerner','stars',45,1500],
+  ['q15','⭐','Earn 90 stars','Tjen 90 stjerner','stars',90,3000],
+  ['q16','♾️','Play 3 endless runs','Spil 3 endeløse runder','endless',3,400],
+  ['q17','♾️','Play 10 endless runs','Spil 10 endeløse runder','endless',10,1000],
+  ['q18','🌟','Match 4 or more 40 times','Lav 4 eller flere 40 gange','big',40,650],
+  ['q19','🌟','Match 4 or more 150 times','Lav 4 eller flere 150 gange','big',150,1800],
+  ['q20','🍥','Fill the floss meter 15 times','Fyld spindmåleren 15 gange','floss',15,700],
+  ['q21','🍥','Fill the floss meter 50 times','Fyld spindmåleren 50 gange','floss',50,1900],
+  ['q22','✨','Make 200 matches','Lav 200 kombinationer','matches',200,450],
+  ['q23','✨','Make 800 matches','Lav 800 kombinationer','matches',800,1300],
+  ['q24','🪙','Earn 5000 coins','Tjen 5000 mønter','coins',5000,900]
+];
+const Q=id=>QUESTS.find(q=>q[0]===id);
+function fillQuests(){const open=QUESTS.filter(q=>!S.qDone.includes(q[0])&&!S.quests.some(x=>x.id===q[0])&&S.cnt[q[4]]<q[5]);
+  while(S.quests.length<3&&open.length){const q=open.shift();S.quests.push({id:q[0],s:S.cnt[q[4]]||0})}}
+function questProg(){}
+const qProg=x=>{const q=Q(x.id);return q?clamp((S.cnt[q[4]]||0)-x.s,0,q[5]):0};
+const qGoal=x=>{const q=Q(x.id);return q?q[5]:1};
+const queReady=()=>S.quests.filter(x=>qProg(x)>=qGoal(x)).length;
+
+// trophies
+const ACH=[
+  ['a1','🥇','First sweet','Første slik','Finish level 1','Gennemfør bane 1',()=>S.cnt.levels>=1],
+  ['a2','🎓','Floss student','Spindelev','Finish 10 levels','Gennemfør 10 baner',()=>S.cnt.levels>=10],
+  ['a3','👑','Candy king','Slikkonge','Finish 30 levels','Gennemfør 30 baner',()=>S.cnt.levels>=30],
+  ['a4','🌠','Star catcher','Stjernefanger','Earn 30 stars','Tjen 30 stjerner',()=>S.cnt.stars>=30],
+  ['a5','💥','Boom!','Bum!','Make 25 specials','Lav 25 specialslik',()=>S.cnt.specials>=25],
+  ['a6','⛓️','Chain reaction','Kædereaktion','Make 100 cascades','Lav 100 kædereaktioner',()=>S.cnt.cascades>=100],
+  ['a7','🍥','Floss master','Spindmester','Fill the meter 25 times','Fyld måleren 25 gange',()=>S.cnt.floss>=25],
+  ['a8','♾️','Never ending','Uendelig','Score 5000 in endless','Få 5000 i endeløs',()=>S.best>=5000],
+  ['a9','🍬','Sweet tooth','Slikmund','Clear 3000 candies','Fjern 3000 slik',()=>S.cnt.cleared>=3000],
+  ['a10','🔄','Twister','Drejemester','Twist 1000 times','Drej 1000 gange',()=>S.cnt.twists>=1000]
+];
+function achCheck(){ACH.forEach(a=>{if(!S.ach[a[0]]&&a[6]()){S.ach[a[0]]=1;SFX.spec();confetti(70);toast(`🏆 <b>${L(a[2],a[3])}</b> – ${L(a[4],a[5])}`,3200);addCoins(250)}})}
+
+
+/* =====================================================================
+   LEVELS – made from the level number, so level 37 is the same for all
+   ===================================================================== */
+const OBJ_ICON={score:'🏆',color:null,glaze:'🧁',ing:'🥔',spec:'💥'};
+function genLevel(n){
+  const r=seeded(n*7919+13),d=Math.min(1,(n-1)/60); // d = how hard, 0..1
+  const cols=n<4?7:(n<12?7:8),rows=n<4?7:8;
+  const nc=n<6?4:n<14?5:n<30?6:7;                   // how many candy colours
+  const moves=Math.round(28-10*d+(r()<.5?2:0));
+  const base=Math.round(moves*230+n*120);   // about 20 good moves to reach 1 star
+  const obj=[];
+  const kinds=[];
+  if(n>=3)kinds.push('color');
+  if(n>=6)kinds.push('glaze');
+  if(n>=10)kinds.push('ing');
+  if(n>=16)kinds.push('spec');
+  // every level has a score target; from level 3 it gets one or two extra jobs
+  obj.push({t:'score',n:base});
+  const want=n<3?0:n<20?1:(r()<.45?2:1);
+  const used=[];
+  for(let k=0;k<want&&kinds.length;k++){
+    let t=kinds[Math.floor(r()*kinds.length)];let guard=6;
+    while(used.includes(t)&&guard--)t=kinds[Math.floor(r()*kinds.length)];
+    if(used.includes(t))break;used.push(t);
+    if(t==='color')obj.push({t:'color',c:Math.floor(r()*nc),n:Math.round(22+38*d+r()*10)});
+    else if(t==='glaze')obj.push({t:'glaze',n:Math.round(8+24*d+r()*6)});
+    else if(t==='ing')obj.push({t:'ing',n:Math.round(2+4*d+(r()<.5?1:0))});
+    else obj.push({t:'spec',n:Math.round(2+4*d)});
+  }
+  const glazeN=obj.some(o=>o.t==='glaze')?obj.find(o=>o.t==='glaze').n:Math.round(r()*6*d);
+  return{n,cols,rows,nc,moves,obj,glazeN,double:n>=25&&r()<.4,seed:n*7919+13};
+}
+const starFor=(lv,score)=>{const t=lv.obj[0].n;return score>=t*2.4?3:score>=t*1.6?2:score>=t?1:0};
+
+/* =====================================================================
+   BOARD ENGINE
+   ===================================================================== */
+const cv=$('#board'),ctx=cv.getContext('2d');
+let G=null;          // the running game
+let CELL=48,OX=0,OY=0,DPR=1;
+
+function newCell(nc,r){return{c:Math.floor((r||Math.random)()*nc),sp:null,glaze:0,ing:false,sc:1,dx:0,dy:0,rot:0,born:0}}
+function makeBoard(lv,endless){
+  const r=seeded(lv.seed||Date.now());
+  const B={cols:lv.cols,rows:lv.rows,nc:lv.nc,g:[]};
+  for(let y=0;y<B.rows;y++)for(let x=0;x<B.cols;x++)B.g[y*B.cols+x]=newCell(B.nc,r);
+  // sticky sugar glaze on random tiles (needs a match on top of it to clean)
+  let left=lv.glazeN||0,guard=400;
+  while(left>0&&guard--){const i=Math.floor(r()*B.g.length);if(!B.g[i].glaze){B.g[i].glaze=lv.double&&r()<.4?2:1;left--}}
+  // clear any matches that happened to be there at the start
+  for(let k=0;k<60;k++){const m=findMatches(B);if(!m.all.size)break;m.all.forEach(i=>{B.g[i].c=Math.floor(r()*B.nc)})}
+  return B;
+}
+const at=(B,x,y)=>(x<0||y<0||x>=B.cols||y>=B.rows)?null:B.g[y*B.cols+x];
+const XY=(B,i)=>[i%B.cols,Math.floor(i/B.cols)];
+
+// find every row/column of three or more of the same colour
+function findMatches(B){
+  const all=new Set(),runs=[];
+  for(let y=0;y<B.rows;y++){let run=[];
+    for(let x=0;x<=B.cols;x++){const c=at(B,x,y),prev=run.length?B.g[run[run.length-1]]:null;
+      if(c&&!c.ing&&prev&&c.c===prev.c)run.push(y*B.cols+x);
+      else{if(run.length>=3){runs.push({cells:[...run],dir:'h'});run.forEach(i=>all.add(i))}run=c&&!c.ing?[y*B.cols+x]:[]}}}
+  for(let x=0;x<B.cols;x++){let run=[];
+    for(let y=0;y<=B.rows;y++){const c=at(B,x,y),prev=run.length?B.g[run[run.length-1]]:null;
+      if(c&&!c.ing&&prev&&c.c===prev.c)run.push(y*B.cols+x);
+      else{if(run.length>=3){runs.push({cells:[...run],dir:'v'});run.forEach(i=>all.add(i))}run=c&&!c.ing?[x+y*B.cols]:[]}}}
+  return{all,runs};
+}
+// which special (if any) a run should leave behind
+function specFor(run,crossed){
+  if(crossed)return'bomb';
+  if(run.cells.length>=5)return'cloud';
+  if(run.cells.length===4)return run.dir==='h'?'row':'col';
+  return null;
+}
+
+/* =====================================================================
+   RENDERING – bright, colourful candies
+   ===================================================================== */
+function layout(){
+  const B=G&&G.B;if(!B)return;
+  const w=$('#boardWrap').clientWidth-16,h=$('#boardWrap').clientHeight-16;
+  CELL=Math.max(26,Math.floor(Math.min(w/B.cols,h/B.rows)));
+  DPR=Math.min(2,devicePixelRatio||1);
+  const pw=CELL*B.cols,ph=CELL*B.rows;
+  cv.width=pw*DPR;cv.height=ph*DPR;cv.style.width=pw+'px';cv.style.height=ph+'px';
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+}
+function roundRect(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath()}
+function drawPiece(g,c,cx,cy,sz){
+  const p=PIECES[c.c],R=sz*.44;
+  g.save();g.translate(cx,cy);g.rotate(c.rot||0);g.scale(c.sc||1,c.sc||1);
+  // candy body: bright gradient + shine
+  const gr=g.createRadialGradient(-R*.3,-R*.4,R*.15,0,0,R*1.25);
+  gr.addColorStop(0,'#ffffff');gr.addColorStop(.35,p.c);gr.addColorStop(1,shade(p.c,-.35));
+  g.fillStyle=gr;g.strokeStyle='rgba(74,31,61,.75)';g.lineWidth=Math.max(2,sz*.055);
+  roundRect(g,-R,-R,R*2,R*2,R*.5);g.fill();g.stroke();
+  g.globalAlpha=.5;g.fillStyle='#fff';roundRect(g,-R*.62,-R*.74,R*.85,R*.5,R*.25);g.fill();g.globalAlpha=1;
+  g.font=`${Math.round(sz*.46)}px serif`;g.textAlign='center';g.textBaseline='middle';
+  g.fillText(p.e,0,sz*.03);
+  // special markers
+  if(c.sp==='row'||c.sp==='col'){g.strokeStyle='#fff';g.lineWidth=Math.max(2,sz*.07);g.globalAlpha=.95;
+    for(const o of[-R*.45,0,R*.45]){g.beginPath();if(c.sp==='row'){g.moveTo(-R*.8,o);g.lineTo(R*.8,o)}else{g.moveTo(o,-R*.8);g.lineTo(o,R*.8)}g.stroke()}
+    g.globalAlpha=1;g.font=`${Math.round(sz*.3)}px serif`;g.fillText(c.sp==='row'?'↔️':'↕️',0,-R*.02)}
+  if(c.sp==='bomb'){g.fillStyle='rgba(255,255,255,.9)';g.beginPath();g.arc(0,0,R*.62,0,7);g.fill();
+    g.font=`${Math.round(sz*.42)}px serif`;g.fillText('💥',0,sz*.02)}
+  if(c.sp==='cloud'){const t=performance.now()/360;g.rotate(t);
+    for(let i=0;i<7;i++){g.rotate(Math.PI*2/7);g.fillStyle=PIECES[i%PIECES.length].c;g.globalAlpha=.9;
+      g.beginPath();g.arc(0,-R*.55,R*.3,0,7);g.fill()}
+    g.globalAlpha=1;g.rotate(-t);g.font=`${Math.round(sz*.38)}px serif`;g.fillText('🍥',0,sz*.02)}
+  g.restore();
+}
+function shade(hex,f){const n=parseInt(hex.slice(1),16),r=n>>16,gg=(n>>8)&255,b=n&255;
+  const k=v=>clamp(Math.round(f<0?v*(1+f):v+(255-v)*f),0,255);
+  return`rgb(${k(r)},${k(gg)},${k(b)})`}
+function draw(){
+  const B=G&&G.B;if(!B)return;
+  const w=CELL*B.cols,h=CELL*B.rows;
+  ctx.clearRect(0,0,w,h);
+  // checker background
+  for(let y=0;y<B.rows;y++)for(let x=0;x<B.cols;x++){
+    ctx.fillStyle=(x+y)%2?'rgba(255,255,255,.55)':'rgba(255,214,238,.55)';
+    ctx.fillRect(x*CELL,y*CELL,CELL,CELL)}
+  // glaze under the candies
+  for(let y=0;y<B.rows;y++)for(let x=0;x<B.cols;x++){const c=at(B,x,y);if(!c||!c.glaze)continue;
+    const gx=x*CELL,gy=y*CELL;
+    ctx.fillStyle=c.glaze>1?'rgba(255,170,220,.92)':'rgba(255,255,255,.85)';
+    roundRect(ctx,gx+2,gy+2,CELL-4,CELL-4,CELL*.22);ctx.fill();
+    ctx.strokeStyle=c.glaze>1?'#d64f99':'#ffb3dd';ctx.lineWidth=3;ctx.stroke();
+    ctx.fillStyle=c.glaze>1?'rgba(214,79,153,.35)':'rgba(255,160,215,.35)';
+    for(let k=0;k<3;k++)ctx.fillRect(gx+5+k*CELL*.3,gy+CELL*.18,CELL*.1,CELL*.64)}
+  // the candies
+  for(let y=0;y<B.rows;y++)for(let x=0;x<B.cols;x++){const c=at(B,x,y);if(!c)continue;
+    const cx=x*CELL+CELL/2+(c.dx||0),cy=y*CELL+CELL/2+(c.dy||0);
+    if(c.ing){ctx.save();ctx.translate(cx,cy);ctx.scale(c.sc||1,c.sc||1);
+      ctx.font=`${Math.round(CELL*.62)}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.shadowColor='rgba(74,31,61,.4)';ctx.shadowBlur=8;ctx.fillText('🥔',0,CELL*.03);ctx.restore();continue}
+    drawPiece(ctx,c,cx,cy,CELL);
+  }
+  // hint ring
+  if(G.hint&&!G.busy){const t=(performance.now()%1200)/1200,[hx,hy]=G.hint;
+    ctx.strokeStyle='rgba(255,207,74,'+(.4+.5*Math.sin(t*6.28))+')';ctx.lineWidth=5;
+    roundRect(ctx,hx*CELL+3,hy*CELL+3,CELL*2-6,CELL*2-6,CELL*.3);ctx.stroke()}
+  // the twist pointer follows your finger
+  if(G.pt&&!G.busy){const[px,py]=G.pt;ctx.save();ctx.translate((px+1)*CELL,(py+1)*CELL);
+    ctx.rotate(performance.now()/500);ctx.strokeStyle='rgba(74,31,61,.75)';ctx.lineWidth=4;ctx.setLineDash([6,6]);
+    ctx.beginPath();ctx.arc(0,0,CELL*.62,0,7);ctx.stroke();ctx.restore()}
+}
+let lastT=performance.now();
+function frame(t){const dt=Math.min(.05,(t-lastT)/1000);lastT=t;draw();fxTick(dt);requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+
+// simple tween helper used for all board animations
+function tween(ms,fn){return new Promise(res=>{const t0=performance.now();
+  const step=()=>{const p=clamp((performance.now()-t0)/ms,0,1);fn(p);if(p<1)requestAnimationFrame(step);else res()};step()})}
+const easeOut=p=>1-Math.pow(1-p,3);
+const easeBack=p=>{const c=1.7;return 1+ (c+1)*Math.pow(p-1,3)+c*Math.pow(p-1,2)};
+
+
+/* =====================================================================
+   PLAYING A GAME
+   ===================================================================== */
+const FLOSS_MAX=60;
+function startGame(lv,endless){
+  G={lv,endless:!!endless,B:makeBoard(lv,endless),moves:lv.moves,score:0,floss:0,busy:false,over:false,
+     got:{color:{},glaze:0,ing:0,spec:0},pt:null,hint:null,hintT:performance.now(),tool:null,combo:0,ingOut:0,ingNeed:0};
+  const io=lv.obj.find(o=>o.t==='ing');G.ingNeed=io?io.n:0;
+  if(S.items.cloud>0&&!endless){ // a booster you bought: start with a floss cloud on the board
+    const i=rnd(G.B.g.length);G.B.g[i].sp='cloud';S.items.cloud--;save();toast(L('🍥 You started with a floss cloud!','🍥 Du startede med en spindsky!'))}
+  show('scGame');layout();objBar();gameHud();drawBoosters();
+  banner(endless?L('ENDLESS!','ENDELØS!'):L('LEVEL ','BANE ')+lv.n);
+  if(G.ingNeed)spawnIng(true);
+}
+function gameHud(){
+  $('#moves').textContent=G.endless?G.moves:G.moves;
+  $('#movesW').classList.toggle('low',G.moves<=5);
+  $('#flossBar').firstElementChild.style.width=(G.floss/FLOSS_MAX*100)+'%';
+  $('#flossW').classList.toggle('full',G.floss>=FLOSS_MAX);
+}
+function objBar(){
+  const box=$('#objs');box.innerHTML='';
+  G.lv.obj.forEach(o=>{
+    const el=document.createElement('div');el.className='obj';
+    let ic='🏆',now=0,need=o.n;
+    if(o.t==='score'){ic='🏆';now=G.score}
+    else if(o.t==='color'){ic=PIECES[o.c].e;now=G.got.color[o.c]||0}
+    else if(o.t==='glaze'){ic='🧁';now=G.got.glaze}
+    else if(o.t==='ing'){ic='🥔';now=G.got.ing}
+    else if(o.t==='spec'){ic='💥';now=G.got.spec}
+    if(now>=need)el.classList.add('done');
+    el.innerHTML=`<i>${ic}</i>${now>=need?'✔':Math.min(now,need)+'/'+need}`;
+    box.appendChild(el)});
+  if(G.endless){const el=document.createElement('div');el.className='obj';el.innerHTML=`<i>🏆</i>${N(G.score)}`;box.innerHTML='';box.appendChild(el)}
+}
+const objDone=()=>G.lv.obj.every(o=>o.t==='score'?G.score>=o.n:o.t==='color'?(G.got.color[o.c]||0)>=o.n:o.t==='glaze'?G.got.glaze>=o.n:o.t==='ing'?G.got.ing>=o.n:G.got.spec>=o.n);
+
+/* ---- the twist: rotate four candies clockwise ---- */
+async function doTwist(x,y,silent){
+  const B=G.B;if(G.busy||G.over)return;
+  const idx=[y*B.cols+x,y*B.cols+x+1,(y+1)*B.cols+x+1,(y+1)*B.cols+x];
+  if(idx.some(i=>!B.g[i]||B.g[i].ing)){SFX.no();shake(idx);return} // potatoes are too heavy to twist
+  G.busy=true;G.hint=null;
+  await animTwist(idx);
+  const cells=idx.map(i=>B.g[i]);
+  B.g[idx[1]]=cells[0];B.g[idx[2]]=cells[1];B.g[idx[3]]=cells[2];B.g[idx[0]]=cells[3];
+  idx.forEach(i=>{B.g[i].dx=0;B.g[i].dy=0;B.g[i].rot=0});
+  const m=findMatches(B);
+  if(!m.all.size){ // nothing happened – twist back, and it costs you nothing
+    await animTwist(idx,true);
+    const c2=idx.map(i=>B.g[i]);
+    B.g[idx[0]]=c2[1];B.g[idx[1]]=c2[2];B.g[idx[2]]=c2[3];B.g[idx[3]]=c2[0];
+    idx.forEach(i=>{B.g[i].dx=0;B.g[i].dy=0;B.g[i].rot=0});
+    SFX.no();shake(idx);G.busy=false;return;
+  }
+  SFX.twist();bump('twists');G.moves--;G.combo=0;G.last=idx;
+  gameHud();
+  await resolve();
+  G.busy=false;endCheck();
+}
+function shake(idx){const B=G.B;idx.forEach(i=>{const c=B.g[i];if(!c)return;let t=0;
+  const id=setInterval(()=>{t++;c.dx=Math.sin(t)*3;if(t>7){clearInterval(id);c.dx=0}},16)})}
+function animTwist(idx,back){
+  const B=G.B,[x0,y0]=XY(B,idx[0]),cx=(x0+1)*CELL,cy=(y0+1)*CELL;
+  const start=idx.map(i=>{const[x,y]=XY(B,i);return{c:B.g[i],ax:x*CELL+CELL/2-cx,ay:y*CELL+CELL/2-cy}});
+  const dir=back?-1:1;
+  return tween(190,p=>{const a=easeOut(p)*Math.PI/2*dir;
+    start.forEach(o=>{const s=Math.sin(a),c2=Math.cos(a);
+      o.c.dx=o.ax*c2-o.ay*s-o.ax;o.c.dy=o.ax*s+o.ay*c2-o.ay;o.c.rot=a*.5})});
+}
+
+/* ---- clear matches, drop candies, repeat ---- */
+async function resolve(){
+  const B=G.B;let loops=0;
+  while(loops++<40){
+    const m=findMatches(B);
+    if(!m.all.size)break;
+    G.combo++;
+    if(G.combo>1){bump('cascades');floatBoard(L('CASCADE x','KÆDE x')+G.combo,'#ffcf4a')}
+    bump('matches',m.runs.length);
+    if(m.runs.some(r=>r.cells.length>=4))bump('big');
+    // work out which specials this set of runs leaves behind
+    const place=[];const counted=new Set();
+    m.runs.forEach(run=>{
+      const crossed=run.cells.find(i=>m.runs.some(o=>o!==run&&o.dir!==run.dir&&o.cells.includes(i)));
+      const sp=specFor(run,crossed!=null&&run.cells.length>=3&&crossed!==undefined);
+      if(!sp)return;
+      let spot=crossed!=null?crossed:(G.last&&run.cells.find(i=>G.last.includes(i)));
+      if(spot==null)spot=run.cells[Math.floor(run.cells.length/2)];
+      if(counted.has(spot))return;counted.add(spot);
+      place.push({i:spot,sp,c:B.g[run.cells[0]].c})});
+    await clearSet(B,m.all,place);
+    await gravity();
+  }
+  // the floss meter pays you back with free specials
+  if(G.floss>=FLOSS_MAX){G.floss=0;bump('floss');await flossSpin()}
+  endlessRamp();
+  objBar();gameHud();findHint();
+}
+async function clearSet(B,set,place){
+  const keep=new Set(place.map(p=>p.i));
+  const pend=[];
+  set.forEach(i=>{const c=B.g[i];if(!c)return;
+    if(c.sp&&!keep.has(i))pend.push(i);});
+  // chain: specials inside the match go off too
+  let extra=new Set();
+  pend.forEach(i=>burst(B,i,extra));
+  extra.forEach(i=>set.add(i));
+  let n=0;
+  set.forEach(i=>{const c=B.g[i];if(!c||c.ing)return;n++;
+    scorePop(i,60*Math.min(6,G.combo));
+    if(c.glaze){c.glaze--;G.got.glaze++;sparkleAt(i,'#fff')}
+    G.got.color[c.c]=(G.got.color[c.c]||0)+1});
+  G.score+=n*60*Math.min(6,G.combo);G.floss=Math.min(FLOSS_MAX,G.floss+n);
+  bump('cleared',n);SFX.pop(n);
+  if(G.endless&&n>=4)G.moves++; // endless: big matches give a move back
+  // pop animation
+  await tween(170,p=>{set.forEach(i=>{const c=B.g[i];if(c&&!c.ing&&!keep.has(i))c.sc=1-easeOut(p)})});
+  set.forEach(i=>{const c=B.g[i];if(!c||c.ing)return;if(keep.has(i)){c.sc=1;return}B.g[i]=null});
+  place.forEach(pl=>{const c=B.g[pl.i];if(!c)return;c.sp=pl.sp;c.sc=0;c.c=pl.c;G.got.spec++;bump('specials');SFX.spec();
+    sparkleAt(pl.i,PIECES[pl.c].c,16)});
+  if(place.length)await tween(220,p=>place.forEach(pl=>{const c=B.g[pl.i];if(c)c.sc=easeBack(p)}));
+}
+// a special going off, and anything it hits
+function burst(B,i,out){
+  const c=B.g[i];if(!c||!c.sp||out.has(i))return;out.add(i);
+  const[x,y]=XY(B,i),sp=c.sp;c.sp=null;
+  SFX.spec();
+  const add=j=>{if(j==null||!B.g[j])return;out.add(j);if(B.g[j].sp)burst(B,j,out)};
+  if(sp==='row'){for(let k=0;k<B.cols;k++)add(y*B.cols+k);lineFx(0,y*CELL+CELL/2,B.cols*CELL,y*CELL+CELL/2)}
+  if(sp==='col'){for(let k=0;k<B.rows;k++)add(k*B.cols+x);lineFx(x*CELL+CELL/2,0,x*CELL+CELL/2,B.rows*CELL)}
+  if(sp==='bomb'){for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const nx=x+dx,ny=y+dy;if(nx>=0&&ny>=0&&nx<B.cols&&ny<B.rows)add(ny*B.cols+nx)}sparkleAt(i,'#ffcf4a',26)}
+  if(sp==='cloud'){const col=c.c;B.g.forEach((o,j)=>{if(o&&!o.ing&&o.c===col)add(j)});sparkleAt(i,PIECES[col].c,30)}
+}
+async function gravity(){
+  const B=G.B;let moved=true,guard=0;
+  while(moved&&guard++<40){
+    moved=false;const falls=[];
+    for(let x=0;x<B.cols;x++){
+      let empty=[];
+      for(let y=B.rows-1;y>=0;y--){const i=y*B.cols+x;
+        if(!B.g[i])empty.push(y);
+        else if(empty.length){const ny=empty.shift();const ni=ny*B.cols+x;
+          B.g[ni]=B.g[i];B.g[i]=null;B.g[ni].dy=(y-ny)*-CELL;falls.push(B.g[ni]);empty.push(y);moved=true}}
+      // new candies drop in from above
+      const r=Math.random;
+      for(const y of empty){const i=y*B.cols+x;
+        const spawnIngNow=G.ingNeed&&G.ingOut<Math.min(2,G.ingNeed-G.got.ing)&&y===0&&Math.random()<.14;
+        B.g[i]=newCell(B.nc,r);
+        if(spawnIngNow){B.g[i].ing=true;B.g[i].sp=null;G.ingOut++}
+        B.g[i].dy=-(B.rows)*CELL*.5-CELL;falls.push(B.g[i]);moved=true}
+    }
+    if(falls.length){falls.forEach(c=>c.dy0=c.dy);
+      await tween(200,p=>falls.forEach(c=>{c.dy=c.dy0*(1-easeOut(p))}))}
+    falls.forEach(c=>{c.dy=0;delete c.dy0});
+    // potatoes reaching the bottom row are collected
+    let got=false;
+    for(let x=0;x<B.cols;x++){const i=(B.rows-1)*B.cols+x,c=B.g[i];
+      if(c&&c.ing){G.got.ing++;G.ingOut=Math.max(0,G.ingOut-1);B.g[i]=null;got=true;
+        sparkleAt(i,'#c98a4b',24);scorePop(i,500);G.score+=500;SFX.coin();floatBoard('🥔 +500','#ffcf4a')}}
+    if(got){moved=true;objBar()}
+  }
+}
+function spawnIng(first){const B=G.B;if(!G.ingNeed)return;
+  for(let k=0;k<Math.min(2,G.ingNeed);k++){const x=rnd(B.cols),i=x;if(B.g[i]&&!B.g[i].ing){B.g[i].ing=true;B.g[i].sp=null;G.ingOut++}}
+}
+async function flossSpin(){
+  SFX.floss();banner(L('FLOSS SPIN!','SPINDSNURR!'));confetti(80);
+  const B=G.B,spots=[];let guard=60;
+  while(spots.length<2&&guard--){const i=rnd(B.g.length);const c=B.g[i];if(c&&!c.ing&&!c.sp&&!spots.includes(i))spots.push(i)}
+  spots.forEach(i=>{B.g[i].sp=pick(['row','col','bomb']);B.g[i].sc=0;sparkleAt(i,'#fff',20)});
+  await tween(320,p=>spots.forEach(i=>{if(B.g[i])B.g[i].sc=easeBack(p)}));
+  toast(L('🍥 The floss machine spun up two special candies!','🍥 Spindmaskinen lavede to specialslik!'));
+}
+/* little visual helpers tied to board cells */
+function cellScreen(i){const B=G.B,[x,y]=XY(B,i),r=cv.getBoundingClientRect();
+  return[r.left+x*CELL+CELL/2,r.top+y*CELL+CELL/2]}
+function sparkleAt(i,col,n){const[x,y]=cellScreen(i);sparkle(x,y,col,n||10)}
+function scorePop(i,v){if(Math.random()<.22){const[x,y]=cellScreen(i);floatTxt(x,y,'+'+v,'#fff')}}
+function floatBoard(t,c){const r=cv.getBoundingClientRect();floatTxt(r.left+r.width/2,r.top+r.height*.4,t,c)}
+function lineFx(x1,y1,x2,y2){const r=cv.getBoundingClientRect();
+  for(let k=0;k<=14;k++){const t=k/14;sparkle(r.left+x1+(x2-x1)*t,r.top+y1+(y2-y1)*t,'#fff',3)}}
+
+/* ---- is there a twist that works? (hint + shuffle check) ---- */
+function findHint(){
+  const B=G.B;G.hint=null;
+  for(let y=0;y<B.rows-1;y++)for(let x=0;x<B.cols-1;x++){
+    const idx=[y*B.cols+x,y*B.cols+x+1,(y+1)*B.cols+x+1,(y+1)*B.cols+x];
+    if(idx.some(i=>!B.g[i]||B.g[i].ing))continue;
+    const keep=idx.map(i=>B.g[i]);
+    for(let t=0;t<3;t++){
+      const c=idx.map(i=>B.g[i]);
+      B.g[idx[1]]=c[0];B.g[idx[2]]=c[1];B.g[idx[3]]=c[2];B.g[idx[0]]=c[3];
+      if(findMatches(B).all.size){idx.forEach((i,k)=>B.g[i]=keep[k]);G.hint=[x,y];return true}
+    }
+    idx.forEach((i,k)=>B.g[i]=keep[k]);
+  }
+  return false;
+}
+async function shuffleBoard(quiet){
+  const B=G.B;let guard=30;
+  do{const cells=B.g.filter(c=>c&&!c.ing&&!c.sp);
+    for(let i=cells.length-1;i>0;i--){const j=rnd(i+1);const a=cells[i].c;cells[i].c=cells[j].c;cells[j].c=a}
+  }while(guard--&&(findMatches(B).all.size||!findHint()));
+  if(!quiet)toast(L('🔀 The board was shuffled!','🔀 Brættet blev blandet!'));
+  await tween(240,p=>B.g.forEach(c=>{if(c)c.sc=.6+.4*easeOut(p)}));
+  B.g.forEach(c=>{if(c)c.sc=1});
+}
+
+
+/* =====================================================================
+   WIN / LOSE
+   ===================================================================== */
+function endCheck(){
+  if(G.over)return;
+  if(!G.endless&&objDone()){G.over=true;return winLevel()}
+  if(G.moves<=0){G.over=true;return G.endless?endRun():loseLevel()}
+  if(!findHint())shuffleBoard();
+}
+const STAR=(k,n)=>'⭐'.repeat(k)+`<span class="off">${'⭐'.repeat(n-k)}</span>`;
+async function winLevel(){
+  const lv=G.lv,st=starFor(lv,G.score);
+  // leftover moves pop as free specials, like a sugar rush
+  if(G.moves>0){banner(L('SUGAR RUSH!','SUKKERRUS!'));
+    for(let k=0;k<Math.min(8,G.moves);k++){const B=G.B,i=rnd(B.g.length);
+      if(B.g[i]&&!B.g[i].ing){B.g[i].sp=pick(['row','col','bomb']);sparkleAt(i,'#ffcf4a',12);SFX.spec();await sleep(90)}}
+    const B=G.B,all=new Set();B.g.forEach((c,i)=>{if(c&&c.sp)burst(B,i,all)});
+    if(all.size){await clearSet(B,all,[]);await gravity()}
+    G.score+=G.moves*120;G.moves=0;gameHud()}
+  const prev=S.stars[lv.n]||0,gained=Math.max(0,st-prev);
+  S.stars[lv.n]=Math.max(prev,st);
+  if(gained)bump('stars',gained);
+  if(lv.n>=S.maxLevel)S.maxLevel=lv.n+1;
+  bump('levels');
+  const coins=120+lv.n*12+st*60,xp=40+lv.n*4+st*25;
+  addCoins(coins);addXP(xp);save();
+  SFX.win();confetti(170);
+  await sleep(400);
+  const again=await panel({title:'🎉 '+L('Level ','Bane ')+lv.n+' '+L('done!','klaret!'),sm:true,noX:true,
+    html:`<div class="starsBig">${STAR(st,3)}</div>
+      <div class="big1">${N(G.score)} ${L('points','point')}</div>
+      <p class="hint" style="text-align:center">${L(`You earned <b>${coins} 🪙</b> and <b>${xp} XP</b>.`,`Du fik <b>${coins} 🪙</b> og <b>${xp} XP</b>.`)}${st<3?'<br>'+L('Score more points for extra stars!','Få flere point for flere stjerner!'):''}</p>`,
+    buttons:[{label:'🔁 '+L('Again','Igen'),v:'again'},{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'▶ '+L('Next','Næste'),cls:'go',v:'next'}]});
+  if(again==='again')startGame(genLevel(lv.n));
+  else if(again==='next')startGame(genLevel(lv.n+1));
+  else openMap();
+}
+async function loseLevel(){
+  SFX.lose();
+  const miss=G.lv.obj.filter(o=>o.t==='score'?G.score<o.n:o.t==='color'?(G.got.color[o.c]||0)<o.n:o.t==='glaze'?G.got.glaze<o.n:o.t==='ing'?G.got.ing<o.n:G.got.spec<o.n);
+  const cost=200;
+  const v=await panel({title:'😿 '+L('Out of moves','Ingen træk tilbage'),sm:true,noX:true,
+    html:`<p style="text-align:center">${L('You still need:','Du mangler stadig:')}</p>
+      <div style="text-align:center;font-size:17px">${miss.map(o=>o.t==='score'?`🏆 ${N(o.n-G.score)}`:o.t==='color'?`${PIECES[o.c].e} ${o.n-(G.got.color[o.c]||0)}`:o.t==='glaze'?`🧁 ${o.n-G.got.glaze}`:o.t==='ing'?`🥔 ${o.n-G.got.ing}`:`💥 ${o.n-G.got.spec}`).join(' · ')}</div>
+      <p class="hint" style="text-align:center;margin-top:10px">${L('Buy 5 more moves and keep going?','Køb 5 træk mere og spil videre?')}</p>`,
+    buttons:[{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'🔁 '+L('Try again','Prøv igen'),v:'again'},{label:`🪙 ${cost} · +5 ${L('moves','træk')}`,cls:'go',v:'buy',dis:S.coins<cost}]});
+  if(v==='buy'){addCoins(-cost);G.moves+=5;G.over=false;gameHud();toast(L('+5 moves!','+5 træk!'))}
+  else if(v==='again')startGame(genLevel(G.lv.n));
+  else openMap();
+}
+async function endRun(){
+  SFX.lose();const sc=G.score,best=sc>S.best;
+  if(best)S.best=sc;
+  bump('endless');
+  const coins=Math.floor(sc/40),xp=Math.floor(sc/60);
+  addCoins(coins);addXP(xp);save();
+  if(best){confetti(150);banner(L('NEW BEST!','NY REKORD!'))}
+  await sleep(350);
+  const v=await panel({title:'♾️ '+L('Run over','Runden er slut'),sm:true,noX:true,
+    html:`<div class="big1">${N(sc)} ${L('points','point')}</div>
+      <p style="text-align:center">${best?'🏆 '+L('New best score!','Ny rekord!'):L('Best: ','Bedst: ')+N(S.best)}</p>
+      <p class="hint" style="text-align:center">${L(`You earned <b>${coins} 🪙</b> and <b>${xp} XP</b>.`,`Du fik <b>${coins} 🪙</b> og <b>${xp} XP</b>.`)}</p>`,
+    buttons:[{label:'🏠 '+L('Menu','Menu'),v:'menu'},{label:'🔁 '+L('Again','Igen'),cls:'go',v:'again'}]});
+  if(v==='again')startEndless();else show('scMenu');
+}
+
+/* =====================================================================
+   ENDLESS MODE – no level to finish, big matches give moves back
+   ===================================================================== */
+function startEndless(){
+  const lv={n:0,cols:8,rows:8,nc:5,moves:30,obj:[{t:'score',n:1e12}],glazeN:0,seed:Date.now()&65535};
+  startGame(lv,true);
+  toast(L('♾️ Big matches give moves back. Keep the floss flowing!','♾️ Store kombinationer giver træk tilbage. Hold spindet i gang!'),3600);
+}
+// endless gets harder the better you do
+function endlessRamp(){
+  if(!G||!G.endless)return;
+  const want=G.score>12000?7:G.score>6000?6:5;
+  if(want>G.B.nc){G.B.nc=want;toast(L('🌈 A new candy colour joined!','🌈 En ny slikfarve kom med!'))}
+  if(G.score>3000&&Math.random()<.1){const i=rnd(G.B.g.length);if(G.B.g[i]&&!G.B.g[i].glaze)G.B.g[i].glaze=1}
+}
+
+/* =====================================================================
+   BOOSTERS
+   ===================================================================== */
+const BOOST=[
+  {k:'hammer',e:'🔨',en:'Hammer',da:'Hammer',d:['Tap a candy to smash it.','Tryk på et slik for at smadre det.'],price:150},
+  {k:'shuffle',e:'🔀',en:'Shuffle',da:'Bland',d:['Mix all the candies around.','Bland alle slikkene rundt.'],price:120},
+  {k:'moves',e:'➕',en:'+5 moves',da:'+5 træk',d:['Five extra moves, right now.','Fem ekstra træk med det samme.'],price:200},
+  {k:'cloud',e:'🍥',en:'Floss cloud start',da:'Start med spindsky',d:['Begin your next level with a floss cloud.','Start næste bane med en spindsky.'],price:260}
+];
+function drawBoosters(){
+  const bar=$('#gbot');bar.innerHTML='';
+  BOOST.filter(b=>b.k!=='cloud').forEach(b=>{
+    const el=document.createElement('button');el.className='boost'+(G.tool===b.k?' on':'');
+    el.innerHTML=`<i>${b.e}</i>${L(b.en,b.da)}<span class="num">${S.items[b.k]||0}</span>`;
+    el.disabled=!(S.items[b.k]>0);
+    el.onclick=()=>useBoost(b.k);bar.appendChild(el)});
+  const h=document.createElement('button');h.className='boost';h.innerHTML=`<i>💡</i>${L('Hint','Tip')}`;
+  h.onclick=()=>{SFX.click();if(findHint())toast(L('💡 Try the glowing square!','💡 Prøv den firkant, der lyser!'));else toast(L('No twist found – shuffling…','Ingen drejning fundet – blander…'))};
+  bar.appendChild(h);
+}
+function useBoost(k){
+  if(G.busy||G.over)return;
+  if(!(S.items[k]>0)){toast(L('You have none left – buy some in the 🛒 Shop!','Du har ingen tilbage – køb flere i 🛒 Butikken!'));SFX.no();return}
+  SFX.click();
+  if(k==='hammer'){G.tool=G.tool==='hammer'?null:'hammer';drawBoosters();
+    if(G.tool)toast(L('🔨 Tap a candy to smash it.','🔨 Tryk på et slik for at smadre det.'))}
+  else if(k==='shuffle'){S.items.shuffle--;save();shuffleBoard();drawBoosters()}
+  else if(k==='moves'){S.items.moves--;G.moves+=5;save();gameHud();drawBoosters();toast(L('➕ 5 more moves!','➕ 5 træk mere!'));SFX.coin()}
+}
+async function hammerAt(x,y){
+  const B=G.B,i=y*B.cols+x,c=B.g[i];if(!c)return;
+  S.items.hammer--;G.tool=null;save();drawBoosters();
+  G.busy=true;SFX.spec();sparkleAt(i,'#fff',22);
+  const set=new Set();if(c.sp)burst(B,i,set);set.add(i);
+  await clearSet(B,set,[]);await gravity();await resolve();
+  G.busy=false;endCheck();
+}
+
+/* =====================================================================
+   INPUT
+   ===================================================================== */
+function boardPos(e){
+  const B=G.B,r=cv.getBoundingClientRect();
+  const px=(e.clientX-r.left)/(r.width/(B.cols*CELL)),py=(e.clientY-r.top)/(r.height/(B.rows*CELL));
+  return[px/CELL,py/CELL];
+}
+cv.addEventListener('pointermove',e=>{if(!G||G.busy||G.over)return;
+  const[fx2,fy2]=boardPos(e),B=G.B;
+  G.pt=[clamp(Math.round(fx2)-1,0,B.cols-2),clamp(Math.round(fy2)-1,0,B.rows-2)]});
+cv.addEventListener('pointerleave',()=>{if(G)G.pt=null});
+cv.addEventListener('pointerdown',e=>{
+  if(!G||G.busy||G.over)return;e.preventDefault();
+  if(!AC)SFX.tone(1,.01,'sine',.001);
+  const[fx2,fy2]=boardPos(e),B=G.B;
+  if(G.tool==='hammer'){const x=clamp(Math.floor(fx2),0,B.cols-1),y=clamp(Math.floor(fy2),0,B.rows-1);hammerAt(x,y);return}
+  const x=clamp(Math.round(fx2)-1,0,B.cols-2),y=clamp(Math.round(fy2)-1,0,B.rows-2);
+  doTwist(x,y);
+});
+addEventListener('resize',()=>{layout()});
+
+
+/* =====================================================================
+   SCREENS & MENUS
+   ===================================================================== */
+function show(id){$$('.screen').forEach(s2=>s2.classList.toggle('on',s2.id===id));
+  if(id==='scGame')requestAnimationFrame(layout);
+  if(id!=='scGame'&&G)G.over=true;
+  hud()}
+function openMap(){
+  show('scMap');const path=$('#path');path.innerHTML='';
+  const top=Math.max(8,Math.min(S.maxLevel+4,S.maxLevel+4));
+  for(let n=1;n<=top;n++)path.appendChild(nodeEl(n));
+  const cur=$('.node.cur');if(cur)setTimeout(()=>cur.scrollIntoView({block:'center'}),40);
+}
+function nodeEl(n){
+  const lv=genLevel(n),st=S.stars[n]||0,lock=n>S.maxLevel,cur=n===S.maxLevel;
+  const el=document.createElement('div');
+  el.className='node'+(lock?' lock':'')+(st?' done':'')+(cur?' cur':'');
+  el.innerHTML=`<div class="n">${n}</div><div class="tx"><b>${objText(lv)}</b><small>${lv.moves} ${L('moves','træk')} · ${lv.nc} ${L('colours','farver')}</small></div>
+    <div class="stars">${lock?'🔒':STAR(st,3)}</div>`;
+  if(!lock)el.onclick=()=>{SFX.click();startGame(lv)};
+  else el.onclick=()=>toast(L('Finish the level before this one first!','Klar banen før denne først!'));
+  return el;
+}
+function objText(lv){
+  return lv.obj.map(o=>o.t==='score'?`🏆 ${N(o.n)}`:o.t==='color'?`${PIECES[o.c].e} ${o.n}`:o.t==='glaze'?`🧁 ${o.n}`:o.t==='ing'?`🥔 ${o.n}`:`💥 ${o.n}`).join(' · ');
+}
+$('#mapBack').onclick=()=>{SFX.click();show('scMenu')};
+$('#moreLv').onclick=()=>{SFX.click();const path=$('#path'),have=path.children.length;
+  for(let n=have+1;n<=have+8;n++)path.appendChild(nodeEl(n))};
+$('#mPlay').onclick=()=>{SFX.click();openMap()};
+$('#mEndless').onclick=()=>{SFX.click();startEndless()};
+$('#gQuit').onclick=async()=>{SFX.click();
+  if(G&&!G.over&&await panel({title:L('Leave the level?','Forlad banen?'),sm:true,html:`<p>${L('Your progress in this level is lost.','Din fremgang på banen går tabt.')}</p>`,
+    buttons:[{label:L('Stay','Bliv'),v:0},{label:L('Leave','Forlad'),cls:'pink',v:1}]})!==1)return;
+  if(G)G.over=true;show(G&&G.endless?'scMenu':'scMap');if(G&&!G.endless)openMap()};
+
+/* ---- missions ---- */
+$('#mMis').onclick=()=>{SFX.click();openMissions()};
+function openMissions(){
+  ensureDaily();
+  panel({title:'📋 '+L('Daily missions','Daglige missioner'),render:(b)=>{const draw=()=>{
+    const all=S.daily.t.every(t=>t.got);
+    b.innerHTML=`<p class="hint">${L('Three new missions every day. Finish all three for a bonus!','Tre nye missioner hver dag. Klar alle tre og få en bonus!')}</p>`+
+      S.daily.t.map((t,i)=>{const done=t.p>=t.n,rew=60+i*40;
+        return`<div class="task ${done&&!t.got?'rdy':''}"><div class="ic">${t.e}</div><div class="tx">${L(t.en,t.da).replace('{n}',t.n)}
+          <small>${Math.min(t.p,t.n)}/${t.n} · 🪙 ${rew}</small><div class="prog"><b style="width:${Math.min(100,t.p/t.n*100)}%"></b></div></div>
+          ${t.got?'<span style="font-size:22px">✅</span>':done?`<button class="btn sm go" data-c="${i}">${L('Claim','Hent')}</button>`:''}</div>`}).join('')+
+      `<div class="task ${all&&!S.daily.bonus?'rdy':''}"><div class="ic">🎁</div><div class="tx">${L('All three missions','Alle tre missioner')}<small>🪙 300 + 150 XP</small></div>
+        ${S.daily.bonus?'<span style="font-size:22px">✅</span>':all?`<button class="btn sm go" data-c="bonus">${L('Claim','Hent')}</button>`:'<span style="font-size:20px">🔒</span>'}</div>`;
+    $$('[data-c]',b).forEach(x=>x.onclick=()=>{const k=x.dataset.c;
+      if(k==='bonus'){S.daily.bonus=true;addCoins(300);addXP(150)}
+      else{const t=S.daily.t[+k];t.got=true;addCoins(60+ +k*40);addXP(40)}
+      SFX.coin();confetti(50);save();draw();hud()})};draw()}});
+}
+/* ---- quests ---- */
+$('#mQue').onclick=()=>{SFX.click();openQuests()};
+function openQuests(){
+  fillQuests();save();
+  panel({title:'📜 '+L('Quests','Opgaver'),render:(b)=>{const draw=()=>{
+    fillQuests();
+    b.innerHTML=`<p class="hint">${L(`Three quests at a time – ${QUESTS.length} in total. A new one starts when you finish one.`,`Tre opgaver ad gangen – ${QUESTS.length} i alt. Der kommer en ny, når du klarer en.`)}</p>`+
+      (S.quests.length?S.quests.map((x,i)=>{const q=Q(x.id);if(!q)return'';const p=qProg(x),done=p>=q[5];
+        return`<div class="task ${done?'rdy':''}"><div class="ic">${q[1]}</div><div class="tx">${L(q[2],q[3])}
+          <small>${Math.min(p,q[5])}/${q[5]} · 🪙 ${q[6]}</small><div class="prog"><b style="width:${Math.min(100,p/q[5]*100)}%"></b></div></div>
+          ${done?`<button class="btn sm go" data-q="${i}">${L('Claim','Hent')}</button>`:`<button class="btn sm" data-skip="${i}" title="${L('Swap this quest','Byt denne opgave')}">🔄</button>`}</div>`}).join('')
+        :`<p class="hint">${L('All quests done – you are a true floss master! 🍥','Alle opgaver klaret – du er en rigtig spindmester! 🍥')}</p>`)+
+      `<p class="hint">${L('Finished','Klaret')}: ${S.qDone.length}/${QUESTS.length}</p>`;
+    $$('[data-q]',b).forEach(x=>x.onclick=()=>{const i=+x.dataset.q,it=S.quests[i],q=Q(it.id);
+      S.qDone.push(it.id);S.quests.splice(i,1);addCoins(q[6]);addXP(Math.round(q[6]/3));SFX.coin();confetti(60);
+      toast(`📜 ${L('Quest done','Opgave klaret')}: +${q[6]} 🪙`);save();draw();hud()});
+    $$('[data-skip]',b).forEach(x=>x.onclick=()=>{const i=+x.dataset.skip;S.quests.splice(i,1);SFX.click();fillQuests();save();draw()})};draw()}});
+}
+/* ---- shop ---- */
+$('#mShop').onclick=()=>{SFX.click();openShop()};
+function openShop(){
+  panel({title:'🛒 '+L('Candy shop','Slikbutikken'),render:(b)=>{const draw=()=>{
+    b.innerHTML=`<p class="hint">${L('Earn coins by finishing levels, missions and quests.','Tjen mønter ved at klare baner, missioner og opgaver.')}</p>
+      <div class="shopg">${BOOST.map((x,i)=>`<div class="sitem"><div class="e">${x.e}</div><b>${L(x.en,x.da)}</b><small>${L(x.d[0],x.d[1])}</small>
+        <div class="hint" style="margin-bottom:5px">${L('You have','Du har')}: <b>${S.items[x.k]||0}</b></div>
+        <button class="btn sm go" data-b="${i}" ${S.coins<x.price?'disabled':''}>🪙 ${x.price}</button></div>`).join('')}</div>`;
+    $$('[data-b]',b).forEach(x=>x.onclick=()=>{const it=BOOST[+x.dataset.b];if(S.coins<it.price)return;
+      addCoins(-it.price);S.items[it.k]=(S.items[it.k]||0)+1;SFX.coin();save();draw();if(G&&!G.over)drawBoosters()})};draw()}});
+}
+/* ---- trophies, stats, help, changelog ---- */
+$('#mTro').onclick=()=>{SFX.click();
+  panel({title:'🏆 '+L('Trophies','Trofæer'),html:`<p class="hint">${L('Little goals to chase while you play.','Små mål at jagte, mens du spiller.')}</p>`+
+    ACH.map(a=>{const got=S.ach[a[0]];return`<div class="task ${got?'rdy':''}" style="${got?'':'opacity:.65'}"><div class="ic">${got?a[1]:'🔒'}</div>
+      <div class="tx">${L(a[2],a[3])}<small>${L(a[4],a[5])}</small></div>${got?'<span style="font-size:20px">✅</span>':''}</div>`}).join('')})};
+$('#mStats').onclick=()=>{SFX.click();const c=S.cnt;
+  const rows=[['⭐',L('Stars','Stjerner'),Object.values(S.stars).reduce((a,b)=>a+b,0)],['🏁',L('Levels finished','Baner klaret'),c.levels],
+    ['🗺️',L('Highest level','Højeste bane'),S.maxLevel],['♾️',L('Best endless score','Bedste endeløse score'),N(S.best)],
+    ['🍬',L('Candies cleared','Slik fjernet'),N(c.cleared)],['✨',L('Matches','Kombinationer'),N(c.matches)],
+    ['🔄',L('Twists','Drejninger'),N(c.twists)],['💥',L('Specials made','Specialslik lavet'),N(c.specials)],
+    ['⛓️',L('Cascades','Kædereaktioner'),N(c.cascades)],['🍥',L('Floss spins','Spindsnurr'),N(c.floss)],
+    ['🪙',L('Coins earned','Mønter tjent'),N(c.coins)],['🏆',L('Trophies','Trofæer'),Object.keys(S.ach).length+'/'+ACH.length]];
+  panel({title:'📊 '+L('Stats','Statistik'),sm:true,html:rows.map(r=>`<div class="task"><div class="ic">${r[0]}</div><div class="tx">${r[1]}</div><b>${r[2]}</b></div>`).join('')})};
+$('#mHelp').onclick=()=>{SFX.click();openHelp()};
+function openHelp(){
+  panel({title:'❓ '+L('How to play','Sådan spiller du'),html:L(`
+    <div class="task"><div class="ic">🔄</div><div class="tx"><b>Twist, don't swap!</b><small>Tap between four candies and they all spin one step clockwise. That is the big difference from other match-3 games.</small></div></div>
+    <div class="task"><div class="ic">✅</div><div class="tx"><b>Free tries</b><small>A twist that makes no match simply spins back and costs you nothing. Only twists that match cost a move.</small></div></div>
+    <div class="task"><div class="ic">💥</div><div class="tx"><b>Special candies</b><small>Match 4 in a line for a candy stick (clears a row or column), match 5 for a floss cloud (clears a whole colour), and make an L or T shape for a sugar bomb.</small></div></div>
+    <div class="task"><div class="ic">🍥</div><div class="tx"><b>The floss meter</b><small>Every candy you clear fills the meter at the top. When it is full the floss machine spins two free specials onto the board.</small></div></div>
+    <div class="task"><div class="ic">🧁</div><div class="tx"><b>Sugar glaze</b><small>Match on top of a glazed tile to clean it. Pink glaze needs two matches.</small></div></div>
+    <div class="task"><div class="ic">🥔</div><div class="tx"><b>Potatoes</b><small>Some levels ask you to bring potatoes all the way down to the bottom row. You cannot twist a potato, so clear the candies under it.</small></div></div>
+    <div class="task"><div class="ic">⭐</div><div class="tx"><b>Stars</b><small>Beat the target score for 1 star, and score much more for 2 and 3 stars. Levels never run out!</small></div></div>`,`
+    <div class="task"><div class="ic">🔄</div><div class="tx"><b>Drej i stedet for at bytte!</b><small>Tryk mellem fire slik, så drejer de alle ét trin med uret. Det er den store forskel fra andre match-3-spil.</small></div></div>
+    <div class="task"><div class="ic">✅</div><div class="tx"><b>Gratis forsøg</b><small>En drejning, der ikke giver tre ens, drejer bare tilbage og koster ingenting. Kun drejninger, der rammer, koster et træk.</small></div></div>
+    <div class="task"><div class="ic">💥</div><div class="tx"><b>Specialslik</b><small>Fire på stribe giver en slikstang (rydder en række eller kolonne), fem giver en spindsky (rydder en hel farve), og en L- eller T-form giver en sukkerbombe.</small></div></div>
+    <div class="task"><div class="ic">🍥</div><div class="tx"><b>Spindmåleren</b><small>Hvert slik, du fjerner, fylder måleren øverst. Når den er fuld, snurrer spindmaskinen to gratis specialslik frem.</small></div></div>
+    <div class="task"><div class="ic">🧁</div><div class="tx"><b>Sukkerglasur</b><small>Lav tre ens oven på et glaseret felt for at rense det. Lyserød glasur skal rammes to gange.</small></div></div>
+    <div class="task"><div class="ic">🥔</div><div class="tx"><b>Kartofler</b><small>Nogle baner beder dig føre kartofler helt ned i nederste række. Du kan ikke dreje en kartoffel, så fjern slikket under den.</small></div></div>
+    <div class="task"><div class="ic">⭐</div><div class="tx"><b>Stjerner</b><small>Nå målscoren for 1 stjerne, og få meget mere for 2 og 3 stjerner. Banerne slipper aldrig op!</small></div></div>`)});
+}
+const CHANGELOG=[
+  {v:'1.0',d:['1 Nov 2026','1. nov. 2026'],t:['Welcome to Potato Candy Floss!','Velkommen til Potato Candy Floss!'],i:[
+    ['🔄 A brand new match-3 twist: tap between four candies to spin them around instead of swapping two.','🔄 En helt ny match-3-drejning: tryk mellem fire slik for at dreje dem rundt i stedet for at bytte to.'],
+    ['🗺️ Endless levels with score targets, candy colours to collect, sugar glaze to clean and potatoes to rescue.','🗺️ Uendeligt mange baner med målscore, slikfarver at samle, sukkerglasur at rense og kartofler at redde.'],
+    ['♾️ Endless mode where big matches give your moves back.','♾️ Endeløs tilstand, hvor store kombinationer giver træk tilbage.'],
+    ['📋 Daily missions, 📜 quests, 🏆 trophies, a 🛒 booster shop and your own player level.','📋 Daglige missioner, 📜 opgaver, 🏆 trofæer, en 🛒 butik med boosters og dit eget spillerlevel.'],
+    ['🇬🇧🇩🇰 English and Danish.','🇬🇧🇩🇰 Engelsk og dansk.']]}
+];
+$('#mLog').onclick=()=>{SFX.click();openLog()};
+function openLog(){
+  S.seenLog=CHANGELOG[0].v;save();hud();
+  panel({title:'📖 '+L("What's new","Nyheder"),html:CHANGELOG.map((c,k)=>`<div class="task" style="display:block"><b>v${c.v} – ${L(c.t[0],c.t[1])}</b>
+    <small class="hint">${L(c.d[0],c.d[1])}${k===0?' · <span style="color:#d64f99">'+L('NEW','NYT')+'</span>':''}</small>
+    <ul style="margin:6px 0 0;padding-left:20px;font-size:13.5px;line-height:1.5">${c.i.map(x=>`<li>${L(x[0],x[1])}</li>`).join('')}</ul></div>`).join('')});
+}
+$('#mDisc').onclick=()=>{SFX.click();open('https://discord.gg/kZa6F4s5f9','_blank','noopener')};
+
+/* ---- language + sound ---- */
+const STATIC=[
+  ['#mPlayT','Play levels','Spil baner'],['#mEndT','Endless floss','Endeløst spind'],
+  ['#mMisT','Missions','Missioner'],['#mQueT','Quests','Opgaver'],['#mShopT','Shop','Butik'],['#mHelpT','How to play','Sådan spiller du'],
+  ['#mTroT','Trophies','Trofæer'],['#mStatsT','Stats','Statistik'],['#mLogT',"What's new",'Nyheder'],
+  ['#mapBackT','Menu','Menu'],['#moreLvT','More levels','Flere baner'],['#movesL','MOVES','TRÆK'],
+  ['#heroTxt','Twist four candies around instead of swapping them!','Drej fire slik rundt i stedet for at bytte dem!']
+];
+function applyLang(){
+  document.documentElement.lang=LANG;
+  STATIC.forEach(([sel,en,da])=>{const el=$(sel);if(el)el.textContent=L(en,da)});
+  $('#langBtn').textContent=LANG==='da'?'🇬🇧':'🇩🇰';
+  $('#langBtn').title=LANG==='da'?'English':'Dansk';
+  if(G&&!G.over){objBar();drawBoosters()}
+  if($('#scMap').classList.contains('on'))openMap();
+  hud();
+}
+$('#langBtn').onclick=()=>{LANG=LANG==='da'?'en':'da';try{localStorage.setItem(LANG_KEY,LANG)}catch(e){}
+  SFX.click();$$('.ov').forEach(o=>o._close&&o._close(null));$('#toasts').innerHTML='';applyLang()};
+$('#sndBtn').onclick=()=>{SFX.on=!SFX.on;$('#sndBtn').textContent=SFX.on?'🔊':'🔇';
+  try{localStorage.setItem('potato_floss_snd',SFX.on?'1':'0')}catch(e){}if(SFX.on)SFX.click()};
+
+/* =====================================================================
+   BOOT
+   ===================================================================== */
+const TIPS=[
+  ['Tip: a twist that does not match is free – try as many as you like!','Tip: en drejning, der ikke rammer, er gratis – prøv løs!'],
+  ['Tip: match 5 in a line for a floss cloud that clears a whole colour.','Tip: fem på stribe giver en spindsky, der rydder en hel farve.'],
+  ['Tip: two specials next to each other make a huge mess. The good kind!','Tip: to specialslik ved siden af hinanden giver et kæmpe rod. Det gode slags!'],
+  ['Tip: leftover moves turn into free specials when you win.','Tip: træk, du har tilbage, bliver til gratis specialslik, når du vinder.'],
+  ['Tip: daily missions give coins for boosters.','Tip: daglige missioner giver mønter til boosters.']
+];
+async function boot(){
+  load();ensureDaily();fillQuests();
+  try{SFX.on=localStorage.getItem('potato_floss_snd')!=='0'}catch(e){}
+  $('#sndBtn').textContent=SFX.on?'🔊':'🔇';
+  applyLang();hud();
+  const tip=pick(TIPS);$('#ldTip').textContent=L(tip[0],tip[1]);
+  const bar=$('#ldBar'),t0=performance.now(),until=ms=>sleep(Math.max(0,ms-(performance.now()-t0)));
+  const step=(p,txt)=>{bar.style.width=p+'%';$('#ldTxt').textContent=txt};
+  step(15,L('Warming up the floss machine…','Varmer spindmaskinen op…'));
+  await until(1800);step(45,L('Rolling the candies…','Ruller slikkene…'));
+  await until(3800);step(70,L('Mixing the colours…','Blander farverne…'));
+  await until(5800);step(92,L('Sprinkling sugar…','Drysser sukker…'));
+  await until(7400);step(100,L('Ready!','Klar!'));
+  await until(8000);
+  const ld=$('#load');ld.classList.add('out');setTimeout(()=>ld.remove(),500);
+  if(S.seenLog!==CHANGELOG[0].v)setTimeout(openLog,600);
+}
+boot();
+
+</script>
+</body>
+</html>
