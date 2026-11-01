@@ -60,8 +60,8 @@ h1,h2,h3{font-family:'Lilita One',sans-serif;font-weight:400;margin:0}
 .spacer{flex:1}
 
 /* ===== top bar ===== */
-#bar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:linear-gradient(180deg,#fff,#ffeaf6);border-bottom:4px solid var(--ink);box-shadow:0 3px 0 rgba(74,31,61,.15);z-index:5;flex:0 0 auto}
-#bar .logo{font-family:'Lilita One',sans-serif;font-size:22px;color:var(--pinkD);white-space:nowrap;text-shadow:2px 2px 0 #fff}
+#bar{display:flex;align-items:center;gap:8px;padding:8px 12px;flex-wrap:nowrap;overflow:hidden;background:linear-gradient(180deg,#fff,#ffeaf6);border-bottom:4px solid var(--ink);box-shadow:0 3px 0 rgba(74,31,61,.15);z-index:5;flex:0 0 auto}
+#bar .logo{font-family:'Lilita One',sans-serif;font-size:22px;color:var(--pinkD);white-space:nowrap;text-shadow:2px 2px 0 #fff;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .pill{display:flex;align-items:center;gap:5px;background:#fff;border:3px solid var(--ink);border-radius:999px;padding:3px 11px;font-size:15px;white-space:nowrap;box-shadow:0 3px 0 rgba(74,31,61,.2)}
 .ibtn{width:40px;height:40px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:19px;background:linear-gradient(#fff,#ffe9f6);border:3px solid var(--ink);border-radius:12px;box-shadow:0 3px 0 var(--ink)}
 .ibtn:active{transform:translateY(3px);box-shadow:none}
@@ -192,9 +192,12 @@ h1,h2,h3{font-family:'Lilita One',sans-serif;font-weight:400;margin:0}
 #ldBarW{width:min(300px,70vw);height:16px;border:3px solid var(--ink);border-radius:999px;background:#fff;overflow:hidden}
 #ldBar{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff9ed2,#ffd36e,#9be7ff);transition:width 1.9s ease-in-out}
 #ldTip{max-width:320px;text-align:center}
+@media (max-width:560px){#bar .logo{display:none}}
 @media (max-width:430px){
-  #bar{padding:6px 8px;gap:6px}
+  #bar{padding:6px 6px;gap:5px}
   #bar .logo{font-size:17px}
+  .lvlbox{min-width:78px}
+  .pill{padding:2px 7px}
   .pill{font-size:13px;padding:2px 8px;border-width:2px}
   .ibtn{width:34px;height:34px;font-size:16px;border-width:2px}
   .lvlbox{min-width:92px}
@@ -227,6 +230,7 @@ h1,h2,h3{font-family:'Lilita One',sans-serif;font-weight:400;margin:0}
     <div class="pill lvlbox" id="lvlPill"><b style="font-size:13px">Lv <span id="plLvl">1</span></b><div style="flex:1"><div class="xpbar"><i id="xpFill"></i></div></div></div>
     <div class="pill" id="coinPill">🪙 <b id="coins">0</b></div>
     <button class="ibtn" id="langBtn" title="Language">🇩🇰</button>
+    <button class="ibtn" id="musBtn" title="Music">🎵</button>
     <button class="ibtn" id="sndBtn" title="Sound">🔊</button>
   </header>
 
@@ -332,7 +336,51 @@ const SFX={
   spec(){[500,700,900,1200].forEach((f,i)=>this.tone(f,.1,'triangle',.05,1,i*.05))},
   win(){[523,659,784,1047].forEach((f,i)=>this.tone(f,.2,'triangle',.06,1,i*.11))},
   lose(){[400,330,260].forEach((f,i)=>this.tone(f,.22,'sawtooth',.05,.7,i*.13))},
-  floss(){[300,500,800,1100,1500].forEach((f,i)=>this.tone(f,.14,'sine',.05,1.3,i*.05))}
+  floss(){[300,500,800,1100,1500].forEach((f,i)=>this.tone(f,.14,'sine',.05,1.3,i*.05))},
+  land(){this.tone(130+rnd(40),.09,'sine',.045,.7)},
+  star(){[784,1047,1319].forEach((f,i)=>this.tone(f,.26,'triangle',.06,1,i*.08))},
+  glaze(){this.tone(1500,.07,'triangle',.035);this.tone(2100,.09,'sine',.03,1,.04)}
+};
+
+/* ---------------- cosy background music ----------------
+   A slow, soft loop built in the browser: a warm pad, a gentle bass and
+   a few sparkly notes from a pentatonic scale. No files to download. */
+const MUSIC={
+  on:true,id:null,bus:null,next:0,step:0,
+  CH:[[131,[262,311,392]],[110,[220,262,330]],[87.3,[175,220,262]],[98,[196,247,294]]],
+  SCALE:[523,587,659,784,880,1047],
+  ensure(){
+    if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==='suspended')AC.resume();
+    if(!this.bus){this.bus=AC.createGain();this.bus.gain.value=0;this.bus.connect(AC.destination)}
+  },
+  note(f,t,dur,vol,type,pan){
+    const o=AC.createOscillator(),g=AC.createGain();
+    o.type=type||'sine';o.frequency.setValueAtTime(f,t);
+    g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+dur*.25);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.connect(g).connect(this.bus);o.start(t);o.stop(t+dur+.05);
+  },
+  tick(){
+    if(!this.on)return;
+    this.ensure();
+    const beat=.52;                         // slow and calm
+    while(this.next<AC.currentTime+.4){
+      const t=Math.max(this.next,AC.currentTime+.02),s2=this.step,bar=Math.floor(s2/8)%4,[bass,chord]=this.CH[bar];
+      if(s2%8===0){chord.forEach((f,i)=>this.note(f,t,beat*7,.016,'sine'));this.note(bass,t,beat*3.4,.03,'triangle')}
+      if(s2%8===4)this.note(bass*1.5,t,beat*2.4,.018,'triangle');
+      if(s2%2===0&&Math.random()<.55){const f=pick(this.SCALE);
+        this.note(f,t,beat*1.5,.022,'sine');this.note(f*2,t+.14,beat*.9,.008,'sine')}
+      this.next=t+beat;this.step++;
+    }
+  },
+  start(){if(this.id)return;this.ensure();
+    this.next=AC.currentTime+.1;
+    this.bus.gain.cancelScheduledValues(AC.currentTime);
+    this.bus.gain.setTargetAtTime(this.on?1:0,AC.currentTime,.8);
+    this.id=setInterval(()=>this.tick(),120);this.tick()},
+  set(v){this.on=v;try{localStorage.setItem('potato_floss_mus',v?'1':'0')}catch(e){}
+    if(v){this.start()}else if(this.bus)this.bus.gain.setTargetAtTime(0,AC.currentTime,.4)}
 };
 
 /* ---------------- candy pieces ---------------- */
@@ -340,7 +388,7 @@ const SFX={
 const PIECES=[
   {e:'🍬',en:'Pink floss',da:'Lyserødt spind',c:'#ff5fb4'},
   {e:'🌹',en:'Rose drop',da:'Rosendrop',c:'#e1273f'},
-  {e:'🥔',en:'Potato drop',da:'Kartoffeldrop',c:'#c98a4b'},
+  {e:'🍮',en:'Caramel',da:'Karamel',c:'#d08a3a'},
   {e:'🫐',en:'Blueberry',da:'Blåbær',c:'#3f7bff'},
   {e:'🍋',en:'Lemon drop',da:'Citrondrop',c:'#ffc21f'},
   {e:'🍏',en:'Green apple',da:'Grønt æble',c:'#2fcf63'},
@@ -607,15 +655,6 @@ function candyGloss(g,R){
 function drawCandy(g,type,cx,cy,sz,rot,scale){
   const R=sz*.42,p=PIECES[type],col=p.c;
   g.save();g.translate(cx,cy);if(rot)g.rotate(rot);if(scale!=null)g.scale(scale,scale);
-  if(type===2){ // the potato drop keeps its potato shape
-    const gr=g.createRadialGradient(-R*.3,-R*.4,R*.1,0,0,R*1.2);
-    gr.addColorStop(0,'#f2d6ac');gr.addColorStop(.45,col);gr.addColorStop(1,shade(col,-.45));
-    g.fillStyle=gr;g.strokeStyle=shade(col,-.55);g.lineWidth=Math.max(1.5,R*.09);
-    g.beginPath();g.ellipse(0,0,R,R*.84,-.25,0,7);g.fill();g.stroke();
-    g.fillStyle=shade(col,-.4);[[-.35,-.2],[.25,-.35],[.3,.28],[-.2,.35]].forEach(([a,b2])=>{
-      g.beginPath();g.ellipse(R*a,R*b2,R*.11,R*.08,.4,0,7);g.fill()});
-    candyGloss(g,R);g.restore();return;
-  }
   candyBall(g,R,col);
   g.save();g.beginPath();g.arc(0,0,R*.97,0,7);g.clip();
   if(type===0){ // pink lollipop swirl
@@ -625,6 +664,11 @@ function drawCandy(g,type,cx,cy,sz,rot,scale){
     g.strokeStyle='rgba(255,255,255,.85)';g.lineWidth=R*.13;
     for(const k of[.3,.58,.86]){g.beginPath();g.arc(0,0,R*k,k*3,k*3+4.6);g.stroke()}
     g.fillStyle='rgba(255,255,255,.9)';g.beginPath();g.arc(0,0,R*.14,0,7);g.fill();
+  }else if(type===2){ // caramel candy with a cross wrap
+    g.strokeStyle='rgba(255,246,224,.9)';g.lineWidth=R*.2;g.lineCap='round';
+    g.beginPath();g.moveTo(-R*.8,-R*.3);g.lineTo(R*.8,-R*.3);g.moveTo(-R*.8,R*.35);g.lineTo(R*.8,R*.35);g.stroke();
+    g.strokeStyle=shade(col,-.35);g.lineWidth=R*.07;
+    g.beginPath();g.moveTo(-R*.8,-R*.3);g.lineTo(R*.8,-R*.3);g.moveTo(-R*.8,R*.35);g.lineTo(R*.8,R*.35);g.stroke();
   }else if(type===3){ // dotted berry
     g.fillStyle=shade(col,-.4);
     for(let k=0;k<13;k++){const a=k*2.4,rr=R*(.2+.65*((k*37)%10)/10);g.beginPath();g.arc(Math.cos(a)*rr,Math.sin(a)*rr,R*.1,0,7);g.fill()}
@@ -662,6 +706,26 @@ function drawPiece(g,c,cx,cy,sz){
     g.rotate(-t);g.fillStyle='#fff';g.beginPath();g.arc(0,0,R*.3,0,7);g.fill()}
   g.restore();
 }
+// the potato you must bring to the bottom – big, bright and easy to spot
+function drawIngredient(g,cx,cy,sz,sc){
+  const R=sz*.40,t=performance.now()/600;
+  g.save();g.translate(cx,cy);g.scale(sc,sc);
+  g.save();g.rotate(t);g.setLineDash([R*.4,R*.3]);g.strokeStyle='rgba(255,213,74,.95)';g.lineWidth=Math.max(2,R*.13);
+  g.beginPath();g.arc(0,0,R*1.08,0,7);g.stroke();g.restore();
+  const gr=g.createRadialGradient(-R*.3,-R*.4,R*.1,0,0,R*1.2);
+  gr.addColorStop(0,'#ffeccb');gr.addColorStop(.4,'#d79a56');gr.addColorStop(1,'#8a5523');
+  g.fillStyle=gr;g.strokeStyle='#5e360f';g.lineWidth=Math.max(2,R*.1);
+  g.beginPath();g.ellipse(0,0,R*.92,R*.76,-.2,0,7);g.fill();g.stroke();
+  g.fillStyle='#8a5523';[[-.4,-.15],[.2,-.38],[.38,.2],[-.15,.36],[.05,-.02]].forEach(([a,b2])=>{
+    g.beginPath();g.ellipse(R*a,R*b2,R*.1,R*.07,.4,0,7);g.fill()});
+  g.globalAlpha=.6;g.fillStyle='#fff';g.beginPath();g.ellipse(-R*.3,-R*.4,R*.26,R*.14,-.5,0,7);g.fill();g.globalAlpha=1;
+  g.strokeStyle='#2fcf63';g.lineWidth=Math.max(2,R*.11);g.lineCap='round';
+  g.beginPath();g.moveTo(0,-R*.72);g.quadraticCurveTo(R*.12,-R*1.05,R*.34,-R*1.1);g.stroke();
+  g.fillStyle='#2fcf63';g.beginPath();g.ellipse(R*.44,-R*1.08,R*.2,R*.11,-.4,0,7);g.fill();
+  g.fillStyle='rgba(255,213,74,.95)';g.font=`900 ${Math.round(R*.6)}px Nunito,sans-serif`;
+  g.textAlign='center';g.textBaseline='middle';g.fillText('↓',0,R*1.05);
+  g.restore();
+}
 function glazeTop(x,y,lvl){
   const gx=x*CELL,gy=y*CELL;ctx.save();
   ctx.globalAlpha=.42;ctx.fillStyle=lvl>1?'#ff8fd0':'#ffffff';
@@ -694,10 +758,7 @@ function draw(){
   for(let y=0;y<B.rows;y++)for(let x=0;x<B.cols;x++){const c=at(B,x,y);if(!c)continue;
     const cx=x*CELL+CELL/2+(c.dx||0),cy=y*CELL+CELL/2+(c.dy||0);
     if(c.glaze)glazeTop(x,y,c.glaze);
-    if(c.ing){ctx.save();ctx.translate(cx,cy);ctx.scale(c.sc||1,c.sc||1);
-      ctx.shadowColor='rgba(0,0,0,.5)';ctx.shadowBlur=10;
-      ctx.font=`${Math.round(CELL*.66)}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
-      ctx.fillText('🥔',0,CELL*.04);ctx.restore();continue}
+    if(c.ing){drawIngredient(ctx,cx,cy,CELL,c.sc==null?1:c.sc);continue}
     drawPiece(ctx,c,cx,cy,CELL);
   }
   for(let y=0;y<B.rows;y++)for(let x=0;x<B.cols;x++){const c=at(B,x,y);if(c&&c.glaze&&!c.ing)glazeTop(x,y,c.glaze)}
@@ -731,7 +792,7 @@ const FLOSS_MAX=60;
 function startGame(lv,endless){
   G={lv,endless:!!endless,B:makeBoard(lv,endless),moves:lv.moves,score:0,floss:0,busy:false,over:false,
      got:{color:{},glaze:0,ing:0,spec:0},pt:null,hint:null,showHint:false,idleT:performance.now(),tool:null,combo:0,ingOut:0,ingNeed:0};
-  const io=lv.obj.find(o=>o.t==='ing');G.ingNeed=io?io.n:0;
+  const io=lv.obj.find(o=>o.t==='ing');G.ingNeed=io?io.n:0;G.starShown=0;
   if(S.items.cloud>0&&!endless){ // a booster you bought: start with a floss cloud on the board
     const i=rnd(G.B.g.length);G.B.g[i].sp='cloud';S.items.cloud--;save();toast(L('🍥 You started with a floss cloud!','🍥 Du startede med en spindsky!'))}
   show('scGame');layout();objBar();gameHud();drawBoosters();
@@ -747,6 +808,7 @@ function gameHud(){
   const t=G.lv.obj[0].n,max=G.endless?Math.max(1,G.score):t*2.1;
   $('#starFill').style.width=clamp(G.score/max*100,0,100)+'%';
   const st=G.endless?0:starFor(G.lv,G.score);
+  if(st>(G.starShown||0)){G.starShown=st;SFX.star();const b=$('#starBar .s'+st);if(b){const r=b.getBoundingClientRect();sparkle(r.left+r.width/2,r.top+r.height/2,'#ffd54a',18)}}
   [1,2,3].forEach(k=>$('#starBar .s'+k).classList.toggle('on',st>=k));
 }
 function objBar(){
@@ -839,7 +901,7 @@ async function clearSet(B,set,place){
   let n=0;
   set.forEach(i=>{const c=B.g[i];if(!c||c.ing)return;n++;
     scorePop(i,60*Math.min(6,G.combo));
-    if(c.glaze){c.glaze--;G.got.glaze++;sparkleAt(i,'#fff')}
+    if(c.glaze){c.glaze--;G.got.glaze++;sparkleAt(i,'#fff');SFX.glaze()}
     G.got.color[c.c]=(G.got.color[c.c]||0)+1});
   G.score+=n*60*Math.min(6,G.combo);G.floss=Math.min(FLOSS_MAX,G.floss+n);
   bump('cleared',n);SFX.pop(n);
@@ -881,6 +943,7 @@ async function gravity(){
     if(falls.length){falls.forEach(c=>c.dy0=c.dy);
       await tween(200,p=>falls.forEach(c=>{c.dy=c.dy0*(1-easeOut(p))}))}
     falls.forEach(c=>{c.dy=0;delete c.dy0});
+    if(falls.length>2)SFX.land();
     // potatoes reaching the bottom row are collected
     let got=false;
     for(let x=0;x<B.cols;x++){const i=(B.rows-1)*B.cols+x,c=B.g[i];
@@ -1250,6 +1313,10 @@ $('#langBtn').onclick=()=>{LANG=LANG==='da'?'en':'da';try{localStorage.setItem(L
   SFX.click();$$('.ov').forEach(o=>o._close&&o._close(null));$('#toasts').innerHTML='';applyLang()};
 $('#sndBtn').onclick=()=>{SFX.on=!SFX.on;$('#sndBtn').textContent=SFX.on?'🔊':'🔇';
   try{localStorage.setItem('potato_floss_snd',SFX.on?'1':'0')}catch(e){}if(SFX.on)SFX.click()};
+$('#musBtn').onclick=()=>{MUSIC.set(!MUSIC.on);$('#musBtn').textContent=MUSIC.on?'🎵':'🔈';
+  $('#musBtn').style.opacity=MUSIC.on?1:.55;SFX.click()};
+// browsers only allow sound after the first tap
+addEventListener('pointerdown',()=>{if(MUSIC.on)MUSIC.start()},{once:true});
 
 /* =====================================================================
    BOOT
@@ -1263,8 +1330,9 @@ const TIPS=[
 ];
 async function boot(){
   load();ensureDaily();fillQuests();
-  try{SFX.on=localStorage.getItem('potato_floss_snd')!=='0'}catch(e){}
+  try{SFX.on=localStorage.getItem('potato_floss_snd')!=='0';MUSIC.on=localStorage.getItem('potato_floss_mus')!=='0'}catch(e){}
   $('#sndBtn').textContent=SFX.on?'🔊':'🔇';
+  $('#musBtn').textContent=MUSIC.on?'🎵':'🔈';$('#musBtn').style.opacity=MUSIC.on?1:.55;
   applyLang();hud();
   const tip=pick(TIPS);$('#ldTip').textContent=L(tip[0],tip[1]);
   const bar=$('#ldBar'),t0=performance.now(),until=ms=>sleep(Math.max(0,ms-(performance.now()-t0)));
