@@ -134,7 +134,10 @@ h1,h2,h3{font-family:'Lilita One',sans-serif;font-weight:400;margin:0}
 .ov.in .pn{transform:scale(1)}
 .pn.sm{width:min(370px,100%)}
 .ph{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:10px 12px;background:linear-gradient(#ff9ed2,var(--pinkD));border-bottom:4px solid var(--deep2);color:#fff}
-.ph h2{font-size:21px;flex:1;text-shadow:2px 2px 0 rgba(0,0,0,.2)}
+.ph h2{font-size:21px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:2px 2px 0 rgba(0,0,0,.2)}
+.phc{flex:0 0 auto;display:flex;align-items:center;gap:4px;background:#fff;color:var(--ink);border:3px solid var(--deep2);border-radius:999px;padding:2px 10px;font-size:14px;white-space:nowrap;text-shadow:none}
+.ph .home{width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--deep2);font-size:15px;line-height:1;flex:0 0 auto}
+@media (max-width:380px){.ph h2{font-size:18px}.phc{font-size:12.5px;padding:2px 7px}}
 .ph .x{width:32px;height:32px;border-radius:50%;background:#fff;color:var(--pinkD);border:3px solid var(--deep2);font-size:15px;line-height:1}
 .pb{padding:12px;overflow-y:auto;flex:1 1 auto;min-height:0;-webkit-overflow-scrolling:touch}
 .pf{flex:0 0 auto;padding:10px 12px;border-top:3px dashed rgba(42,17,89,.15);display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
@@ -263,6 +266,7 @@ body.ingame .toast{font-size:12.5px;padding:6px 11px;background:rgba(20,8,48,.8)
   <!-- BATTLE -->
   <section class="screen" id="scGame">
     <div id="bhead">
+      <button class="ibtn round" id="gHome" title="Menu" aria-label="Menu">☰</button>
       <button class="ibtn round" id="gQuit" title="Pause">⏸</button>
       <div style="min-width:0"><div id="bTitle">Level 1</div><div id="bWave">Wave 1/1</div></div>
       <div class="spacer"></div>
@@ -293,6 +297,7 @@ const rnd=n=>Math.floor(Math.random()*n);
 const pick=a=>a[rnd(a.length)];
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const N=n=>{n=Math.floor(n);return n>=1e6?(n/1e6).toFixed(n>=1e7?0:1)+'M':n>=1e4?Math.round(n/1e3)+'K':n>=1000?(n/1000).toFixed(1)+'K':''+n};
+const NC2=n=>{n=Math.floor(n);return n<1e6?n.toLocaleString(typeof LANG!=='undefined'&&LANG==='da'?'da-DK':'en-US'):N(n)};
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 // a seeded random, so level 37 looks the same for everyone
 const seeded=s=>{let a=(s*1664525+1013904223)>>>0;return()=>{a^=a<<13;a>>>=0;a^=a>>17;a^=a<<5;a>>>=0;return a/4294967296}};
@@ -413,7 +418,7 @@ function banner(txt){const b=$('#banner');b.textContent=txt;b.classList.remove('
 function panel({title='',html='',buttons=[],sm,render,onClose,noX}){
   return new Promise(res=>{
     const ov=document.createElement('div');ov.className='ov';
-    ov.innerHTML=`<div class="pn ${sm?'sm':''}"><div class="ph"><h2>${title}</h2>${noX?'':'<button class="x" aria-label="Close">✕</button>'}</div><div class="pb">${html}</div>${buttons.length?'<div class="pf"></div>':''}</div>`;
+    ov.innerHTML=`<div class="pn ${sm?'sm':''}"><div class="ph"><h2>${title}</h2><span class="phc">🪙 <b>${NC2(S.coins)}</b></span>${noX?'':'<button class="x" aria-label="Close">✕</button>'}</div><div class="pb">${html}</div>${buttons.length?'<div class="pf"></div>':''}</div>`;
     document.body.appendChild(ov);requestAnimationFrame(()=>ov.classList.add('in'));
     let done=false;const close=v=>{if(done)return;done=true;ov.classList.remove('in');setTimeout(()=>ov.remove(),200);onClose&&onClose(v);res(v)};
     ov._close=close;const x=$('.x',ov);if(x)x.onclick=()=>{SFX.click();close(null)};
@@ -1279,8 +1284,8 @@ async function winBattle(){
       <div class="big1">${L('Level ','Bane ')+n}</div>
       <p style="text-align:center;margin:6px 0">🪙 +${N(coins)} &nbsp; ✨ +${xp} XP</p>
       <p class="hint" style="text-align:center">${st<3?L('Keep more health on your heroes for more stars.','Hold dine helte mere i live for flere stjerner.'):L('Perfect battle!','Perfekt kamp!')}</p>`,
-    buttons:[{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'🥔 '+L('Heroes','Helte'),v:'heroes',cls:'sun'},{label:'▶ '+L('Next','Næste'),v:'next',cls:'go'}]});
-  if(v==='next')preBattle(nxt);else if(v==='heroes'){openMap('battle');openHeroes()}else openMap('battle');
+    buttons:[{label:'☰ '+L('Menu','Menu'),v:'menu'},{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'🥔 '+L('Heroes','Helte'),v:'heroes',cls:'sun'},{label:'▶ '+L('Next','Næste'),v:'next',cls:'go'}]});
+  if(v==='next')preBattle(nxt);else if(v==='heroes'){openMap('battle');openHeroes()}else if(v==='menu')show('scMenu');else openMap('battle');
 }
 async function campaignDone(){
   confetti(260);SFX.win();
@@ -1303,7 +1308,7 @@ async function loseBattle(){
     const v=await panel({title:'♾️ '+L('Battle over','Kampen er slut'),sm:true,noX:true,
       html:`<div class="big1">${L('Waves cleared: ','Bølger klaret: ')+w}</div>
         <p style="text-align:center">${best?'🎉 '+L('New best!','Ny rekord!'):L('Best: ','Bedst: ')+S.bestWave}</p>`,
-      buttons:[{label:'🏠 '+L('Menu','Menu'),v:'menu'},{label:'🥔 '+L('Heroes','Helte'),v:'heroes',cls:'sun'},{label:'🔁 '+L('Again','Igen'),v:'again',cls:'go'}]});
+      buttons:[{label:'☰ '+L('Menu','Menu'),v:'menu'},{label:'🥔 '+L('Heroes','Helte'),v:'heroes',cls:'sun'},{label:'🔁 '+L('Again','Igen'),v:'again',cls:'go'}]});
     if(v==='again')startEndless();else if(v==='heroes'){show('scMenu');openHeroes()}else show('scMenu');
     return;
   }
@@ -1312,8 +1317,8 @@ async function loseBattle(){
     html:`<p style="text-align:center;font-size:40px;margin:0">🥔💫</p>
       <p style="text-align:center">${L('Level ','Bane ')+n+L(' starts over.',' starter forfra.')}<br>🪙 +${c}</p>
       <p class="hint" style="text-align:center">${L('Tip: upgrade or buy heroes, and match the colours of the heroes you have.','Tip: opgradér eller køb helte, og match farverne på de helte, du har.')}</p>`,
-    buttons:[{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'🥔 '+L('Heroes','Helte'),v:'heroes',cls:'sun'},{label:'🔁 '+L('Try again','Prøv igen'),v:'again',cls:'go'}]});
-  if(v==='again')startBattle(genLevel(n));else if(v==='heroes'){openMap('battle');openHeroes()}else openMap('battle');
+    buttons:[{label:'☰ '+L('Menu','Menu'),v:'menu'},{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'🥔 '+L('Heroes','Helte'),v:'heroes',cls:'sun'},{label:'🔁 '+L('Try again','Prøv igen'),v:'again',cls:'go'}]});
+  if(v==='again')startBattle(genLevel(n));else if(v==='heroes'){openMap('battle');openHeroes()}else if(v==='menu')show('scMenu');else openMap('battle');
 }
 
 /* ---- little effects on the stage ---- */
@@ -1508,10 +1513,21 @@ $('#bHammer').onclick=()=>{if(!B||B.over||B.busy)return;SFX.click();B.tool=B.too
 $('#bShuffle').onclick=()=>{if(!B||B.over||B.busy||!(S.items.shuffle>0))return;S.items.shuffle--;save();SFX.swap();B.sel=null;reshuffle();findHint();bhead();toast('🔀 '+L('Shuffled!','Blandet!'))};
 $('#bPotion').onclick=()=>{if(!B||B.over||B.busy||B.classic||!(S.items.potion>0))return;S.items.potion--;save();SFX.heal();
   B.heroes.forEach(h=>{if(h.dead){h.dead=false;h.hp=Math.round(h.maxHp*.4)}else h.hp=Math.min(h.maxHp,h.hp+Math.round(h.maxHp*.5));floatText(...heroPos(h),'💖','#7dffb0',24)});bhead()};
-$('#gQuit').onclick=async()=>{if(!B||B.over)return;SFX.click();
-  const v=await panel({title:'⏸ '+L('Paused','Pause'),sm:true,html:`<p style="text-align:center">${L('Leave this battle? The level starts over next time.','Forlad kampen? Banen starter forfra næste gang.')}</p>`,
-    buttons:[{label:'🏳️ '+L('Give up','Giv op'),v:'quit',cls:'pink'},{label:'▶ '+L('Keep playing','Spil videre'),v:'go',cls:'go'}]});
-  if(v==='quit'&&B&&!B.over){B.over=true;MUSIC.battle=false;if(B.cend){if(B.score>S.cbest)S.cbest=B.score;save();show('scMenu')}else if(B.classic)openMap('classic');else if(B.endless){const w=B.wave-1;if(w>S.bestWave)S.bestWave=w;save();show('scMenu')}else openMap('battle')}};
+// leave the level: to the game menu or back to the map
+function leaveLevel(to){
+  if(B&&!B.over){B.over=true;MUSIC.battle=false;
+    if(B.cend){if(B.score>S.cbest)S.cbest=B.score}else if(B.endless){const w=B.wave-1;if(w>S.bestWave)S.bestWave=w}save()}
+  closePanels();
+  if(to==='menu'||!B||B.cend||B.endless)show('scMenu');else openMap(B.classic?'classic':'battle');
+}
+async function askLeave(){
+  if(!B||B.over)return;SFX.click();
+  const v=await panel({title:'⏸ '+L('Paused','Pause'),sm:true,html:`<p style="text-align:center">${L('Leave this level? It starts over next time.','Forlad banen? Den starter forfra næste gang.')}</p>`,
+    buttons:[{label:'☰ '+L('Menu','Menu'),v:'menu',cls:'pink'},{label:'🗺️ '+L('Map','Kort'),v:'map',dis:!!(B.endless||B.cend)},{label:'▶ '+L('Keep playing','Spil videre'),v:'go',cls:'go'}]});
+  if((v==='menu'||v==='map')&&B&&!B.over)leaveLevel(v);
+}
+$('#gQuit').onclick=askLeave;
+$('#gHome').onclick=askLeave;
 
 /* =====================================================================
    CLASSIC MODE – no heroes, no monsters: reach the goals before the
@@ -1571,7 +1587,7 @@ async function clEndOver(){
   const v=await panel({title:'♾️ '+L('Out of moves!','Ingen træk tilbage!'),sm:true,noX:true,
     html:`<div class="big1">${N(sc)} ${L('points','point')}</div>
       <p style="text-align:center">${best?'🎉 '+L('New best!','Ny rekord!'):L('Best: ','Bedst: ')+N(S.cbest)}<br>🪙 +${N(coins)} &nbsp; ✨ +${xp} XP</p>`,
-    buttons:[{label:'🏠 '+L('Menu','Menu'),v:'menu'},{label:'🔁 '+L('Again','Igen'),v:'again',cls:'go'}]});
+    buttons:[{label:'☰ '+L('Menu','Menu'),v:'menu'},{label:'🔁 '+L('Again','Igen'),v:'again',cls:'go'}]});
   if(v==='again')startClassicEndless();else show('scMenu');
 }
 function startClassic(lv){
@@ -1657,8 +1673,8 @@ async function clWin(){
       <div class="big1">${N(sc)} ${L('points','point')}</div>
       <p style="text-align:center;margin:6px 0">🪙 +${N(coins)} &nbsp; ✨ +${xp} XP</p>
       <p class="hint" style="text-align:center">${st<3?L(`${N(st<2?B.lv.t2:B.lv.t3)} points for the next star.`,`${N(st<2?B.lv.t2:B.lv.t3)} point til næste stjerne.`):L('Perfect!','Perfekt!')}</p>`,
-    buttons:[{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'▶ '+L('Next','Næste'),v:'next',cls:'go'}]});
-  if(v==='next')preClassic(Math.min(n+1,S.cmax));else openMap('classic');
+    buttons:[{label:'☰ '+L('Menu','Menu'),v:'menu'},{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'▶ '+L('Next','Næste'),v:'next',cls:'go'}]});
+  if(v==='next')preClassic(Math.min(n+1,S.cmax));else if(v==='menu')show('scMenu');else openMap('classic');
 }
 async function clOut(){
   B.busy=true;
@@ -1666,10 +1682,10 @@ async function clOut(){
   const left=B.goals.filter(g=>goalLeft(g)>0).map(g=>`<div class="task"><span class="ic">${goalIcon(g)}</span><span class="tx"><b>${goalText(g)}</b><small>${L('Left: ','Mangler: ')+N(goalLeft(g))}</small></span></div>`).join('');
   const v=await panel({title:'😮 '+L('Out of moves!','Ingen træk tilbage!'),sm:true,noX:true,
     html:`<p style="text-align:center;margin-top:0">${L('So close! This is what is left:','Så tæt på! Det her mangler:')}</p>${left}`,
-    buttons:[{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'🔁 '+L('Try again','Prøv igen'),v:'again',cls:'pink'},{label:`+5 ${L('moves','træk')} 🪙${price}`,v:'buy',cls:'go',dis:S.coins<price}]});
+    buttons:[{label:'☰ '+L('Menu','Menu'),v:'menu'},{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'🔁 '+L('Try again','Prøv igen'),v:'again',cls:'pink'},{label:`+5 ${L('moves','træk')} 🪙${price}`,v:'buy',cls:'go',dis:S.coins<price}]});
   if(v==='buy'&&S.coins>=price){S.coins-=price;save();hud();B.moves+=5;B.extra++;bhead();SFX.coin();B.busy=false;B.idleT=performance.now();findHint();return}
   B.over=true;SFX.lose();
-  if(v==='again')startClassic(genClassic(n));else openMap('classic');
+  if(v==='again')startClassic(genClassic(n));else if(v==='menu')show('scMenu');else openMap('classic');
 }
 async function preClassic(n){
   const lv=genClassic(n);
@@ -1758,9 +1774,10 @@ function drawClassicTop(g,t){
    SCREENS
    ===================================================================== */
 function hud(){
+  $$('.phc b').forEach(b=>b.textContent=NC2(S.coins));
   $('#plLvl').textContent=S.lvl;
   $('#xpFill').style.width=Math.min(100,S.xp/xpFor(S.lvl)*100)+'%';
-  $('#coins').textContent=N(S.coins);
+  $('#coins').textContent=NC2(S.coins);
   const md=misReady(),qd=queReady();
   $('#misDot').style.display=md?'':'none';$('#misDot').textContent=md;
   $('#queDot').style.display=qd?'':'none';$('#queDot').textContent=qd;
@@ -1944,6 +1961,9 @@ $('#mHelp').onclick=()=>{SFX.click();panel({title:'❓ '+L('How to play','Sådan
 
 /* ---- what's new ---- */
 const CHANGELOG=[
+  {v:'2.3.4',d:['3 Nov 2026','3. nov. 2026'],t:['Coins and menu everywhere','Mønter og menu overalt'],i:[
+    ['🪙 Every window now shows how many coins you have.','🪙 Alle vinduer viser nu, hvor mange mønter du har.'],
+    ['☰ New menu button in every level, and a Menu button on every win and lose screen – one tap back to the menu.','☰ Ny menuknap i alle baner og en Menu-knap på alle sejrs- og tabsskærme – ét tryk tilbage til menuen.']]},
   {v:'2.3.3',d:['3 Nov 2026','3. nov. 2026'],t:['Better fit on phones','Passer bedre på mobil'],i:[
     ['📱 In battle the monsters, their health bars, the board and the heroes now always fit on the screen – nothing overlaps any more.','📱 I kamp passer monstrene, deres livbjælker, brættet og heltene nu altid på skærmen – intet ligger oven i hinanden længere.'],
     ['💬 Tips during a level are shown over the middle of the board, so they no longer hide the monsters.','💬 Tips under en bane vises midt på brættet, så de ikke længere dækker monstrene.']]},
