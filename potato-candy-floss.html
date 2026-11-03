@@ -42,7 +42,7 @@ body{font-family:Nunito,system-ui,sans-serif;font-weight:800;color:var(--ink);ov
   background:radial-gradient(circle at 50% 0,#7b4fd9,#4b2596 45%,#2a1159)}
 button{font-family:inherit;font-weight:900;cursor:pointer;border:none;color:inherit}
 h1,h2,h3{font-family:'Lilita One',sans-serif;font-weight:400;margin:0}
-#app{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+#app{height:100vh;height:100dvh;height:var(--appH,100dvh);display:flex;flex-direction:column;overflow:hidden}
 
 /* ===== shared bits ===== */
 .btn{background:linear-gradient(#fff,#efe6ff);color:var(--ink);border:3px solid var(--ink);border-radius:14px;padding:10px 16px;font-size:16px;box-shadow:0 4px 0 var(--ink);transition:transform .1s}
@@ -134,7 +134,10 @@ h1,h2,h3{font-family:'Lilita One',sans-serif;font-weight:400;margin:0}
 .ov.in .pn{transform:scale(1)}
 .pn.sm{width:min(370px,100%)}
 .ph{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:10px 12px;background:linear-gradient(#ff9ed2,var(--pinkD));border-bottom:4px solid var(--deep2);color:#fff}
-.ph h2{font-size:21px;flex:1;text-shadow:2px 2px 0 rgba(0,0,0,.2)}
+.ph h2{font-size:21px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:2px 2px 0 rgba(0,0,0,.2)}
+.phc{flex:0 0 auto;display:flex;align-items:center;gap:4px;background:#fff;color:var(--ink);border:3px solid var(--deep2);border-radius:999px;padding:2px 10px;font-size:14px;white-space:nowrap;text-shadow:none}
+.ph .home{width:32px;height:32px;border-radius:50%;background:#fff;border:3px solid var(--deep2);font-size:15px;line-height:1;flex:0 0 auto}
+@media (max-width:380px){.ph h2{font-size:18px}.phc{font-size:12.5px;padding:2px 7px}}
 .ph .x{width:32px;height:32px;border-radius:50%;background:#fff;color:var(--pinkD);border:3px solid var(--deep2);font-size:15px;line-height:1}
 .pb{padding:12px;overflow-y:auto;flex:1 1 auto;min-height:0;-webkit-overflow-scrolling:touch}
 .pf{flex:0 0 auto;padding:10px 12px;border-top:3px dashed rgba(42,17,89,.15);display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
@@ -168,6 +171,9 @@ h1,h2,h3{font-family:'Lilita One',sans-serif;font-weight:400;margin:0}
 
 /* toast + banner */
 #toasts{position:fixed;left:50%;transform:translateX(-50%);top:62px;display:flex;flex-direction:column;gap:6px;z-index:80;pointer-events:none;width:min(92vw,380px)}
+/* during a level the tips sit over the middle of the board, so monsters, health bars and heroes stay visible */
+body.ingame #toasts{top:auto;bottom:var(--toastB,120px);width:min(86vw,320px)}
+body.ingame .toast{font-size:11.5px;line-height:1.3;padding:4px 10px;background:rgba(20,8,48,.72);border-radius:10px;pointer-events:auto}
 .toast{background:rgba(20,8,48,.88);color:#fff;border-radius:14px;padding:7px 13px;font-size:14px;text-align:center;animation:tin .3s cubic-bezier(.2,1.6,.4,1)}
 @keyframes tin{from{transform:translateY(-14px) scale(.9);opacity:0}}
 .toast.out{opacity:0;transition:opacity .3s}
@@ -260,11 +266,12 @@ h1,h2,h3{font-family:'Lilita One',sans-serif;font-weight:400;margin:0}
   <!-- BATTLE -->
   <section class="screen" id="scGame">
     <div id="bhead">
+      <button class="ibtn round" id="gHome" title="Menu" aria-label="Menu">☰</button>
       <button class="ibtn round" id="gQuit" title="Pause">⏸</button>
       <div style="min-width:0"><div id="bTitle">Level 1</div><div id="bWave">Wave 1/1</div></div>
       <div class="spacer"></div>
       <button class="bst" id="bHammer" title="Hammer">🔨<span class="num">0</span></button>
-      <button class="bst" id="bShuffle" title="Shuffle">🔀<span class="num">0</span></button>
+      <button class="bst" id="bBag" title="Boosters">🎒<span class="num">0</span></button>
       <button class="bst" id="bPotion" title="Potion">🧪<span class="num">0</span></button>
     </div>
     <div id="stageWrap"><canvas id="stage"></canvas></div>
@@ -290,6 +297,7 @@ const rnd=n=>Math.floor(Math.random()*n);
 const pick=a=>a[rnd(a.length)];
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const N=n=>{n=Math.floor(n);return n>=1e6?(n/1e6).toFixed(n>=1e7?0:1)+'M':n>=1e4?Math.round(n/1e3)+'K':n>=1000?(n/1000).toFixed(1)+'K':''+n};
+const NC2=n=>{n=Math.floor(n);return n<1e6?n.toLocaleString(typeof LANG!=='undefined'&&LANG==='da'?'da-DK':'en-US'):N(n)};
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 // a seeded random, so level 37 looks the same for everyone
 const seeded=s=>{let a=(s*1664525+1013904223)>>>0;return()=>{a^=a<<13;a>>>=0;a^=a>>17;a^=a<<5;a>>>=0;return a/4294967296}};
@@ -389,7 +397,7 @@ function defState(){return{
   v:2,coins:300,xp:0,lvl:1,
   maxLevel:1,stars:{},cycle:0,campaignDone:false,bestWave:0,cmax:1,cstars:{},cbest:0,
   heroes:{knight:{lvl:1},medic:{lvl:1}},team:['knight','medic'],
-  items:{hammer:2,shuffle:2,potion:1},
+  items:{hammer:2,shuffle:2,potion:1,rocketH:1,rocketV:1,rocketX:0,bomb:1},
   cnt:defCnt(),daily:null,quests:[],qDone:[],ach:{},seenLog:'',newV2:false
 }}
 let S=defState();
@@ -404,13 +412,15 @@ const today=()=>{const d=new Date();return d.getFullYear()*10000+(d.getMonth()+1
 const sumObj=o=>Object.values(o||{}).reduce((a,b)=>a+b,0),totalStars=()=>sumObj(S.stars)+sumObj(S.cstars);
 /* ---------------- tiny UI helpers ---------------- */
 function toast(msg,ms){const el=document.createElement('div');el.className='toast';el.innerHTML=msg;$('#toasts').appendChild(el);
-  const all=$('#toasts').children;while(all.length>3)all[0].remove();
+  const inGame=document.body.classList.contains('ingame');
+  if(inGame){ms=Math.min(ms||2000,3200);el.onclick=()=>el.remove()}   // in a level: one small note at a time, tap to hide
+  const all=$('#toasts').children;while(all.length>(inGame?1:3))all[0].remove();
   setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),320)},ms||2200)}
 function banner(txt){const b=$('#banner');b.textContent=txt;b.classList.remove('on');void b.offsetWidth;b.classList.add('on')}
 function panel({title='',html='',buttons=[],sm,render,onClose,noX}){
   return new Promise(res=>{
     const ov=document.createElement('div');ov.className='ov';
-    ov.innerHTML=`<div class="pn ${sm?'sm':''}"><div class="ph"><h2>${title}</h2>${noX?'':'<button class="x" aria-label="Close">✕</button>'}</div><div class="pb">${html}</div>${buttons.length?'<div class="pf"></div>':''}</div>`;
+    ov.innerHTML=`<div class="pn ${sm?'sm':''}"><div class="ph"><h2>${title}</h2><span class="phc">🪙 <b>${NC2(S.coins)}</b></span>${noX?'':'<button class="x" aria-label="Close">✕</button>'}</div><div class="pb">${html}</div>${buttons.length?'<div class="pf"></div>':''}</div>`;
     document.body.appendChild(ov);requestAnimationFrame(()=>ov.classList.add('in'));
     let done=false;const close=v=>{if(done)return;done=true;ov.classList.remove('in');setTimeout(()=>ov.remove(),200);onClose&&onClose(v);res(v)};
     ov._close=close;const x=$('.x',ov);if(x)x.onclick=()=>{SFX.click();close(null)};
@@ -716,9 +726,20 @@ function drawCandy(g,type,cx,cy,sz,sc,rot){
   }
   g.restore();
 }
+function drawRocket(g,x,y,a,s){
+  g.save();g.translate(x,y);g.rotate(a);const L2=s*.5,R2=s*.16;
+  g.fillStyle='#ffb02e';g.beginPath();g.moveTo(-L2,0);g.lineTo(-L2-s*.32*(1+Math.random()*.4),-R2*.7);g.lineTo(-L2-s*.32*(1+Math.random()*.4),R2*.7);g.closePath();g.fill();
+  g.fillStyle='#e0203f';g.beginPath();g.moveTo(-L2*.7,-R2);g.lineTo(-L2*1.05,-R2*1.9);g.lineTo(-L2*.35,-R2);g.fill();g.beginPath();g.moveTo(-L2*.7,R2);g.lineTo(-L2*1.05,R2*1.9);g.lineTo(-L2*.35,R2);g.fill();
+  g.fillStyle='#f4f6ff';g.strokeStyle='#2a1159';g.lineWidth=Math.max(1.5,s*.04);roundRect(g,-L2,-R2,L2*1.5,R2*2,R2*.6);g.fill();g.stroke();
+  g.fillStyle='#e0203f';g.beginPath();g.moveTo(L2*.5,-R2);g.quadraticCurveTo(L2*1.05,0,L2*.5,R2);g.closePath();g.fill();g.stroke();
+  g.fillStyle='#2fb6ff';g.beginPath();g.arc(0,0,R2*.55,0,7);g.fill();g.stroke();
+  g.restore();
+}
 function drawSpecial(g,sp,col,cx,cy,sz,sc){
   const R=sz*.4;g.save();g.translate(cx,cy);if(sc!=null)g.scale(sc,sc);
   if(sp==='row'||sp==='col'){
+    g.fillStyle='rgba(20,8,48,.45)';g.beginPath();g.arc(0,0,R*.78,0,7);g.fill();drawRocket(g,0,0,sp==='row'?0:-Math.PI/2,R*1.9);
+  }else if(false){
     g.strokeStyle='#fff';g.lineWidth=R*.2;g.lineCap='round';g.shadowColor='#fff';g.shadowBlur=8;
     g.beginPath();if(sp==='row'){g.moveTo(-R*.95,0);g.lineTo(R*.95,0)}else{g.moveTo(0,-R*.95);g.lineTo(0,R*.95)}g.stroke();
     g.fillStyle='#fff';const a=R*.32;
@@ -904,20 +925,25 @@ function candySprite(type,sz){
   return c;
 }
 function layout(){
-  const r=$('#stageWrap').getBoundingClientRect();if(!r.width)return;
+  const r=$('#stageWrap').getBoundingClientRect();if(!r.width||!r.height)return;
   W=r.width;H=r.height;DPR=Math.min(2,devicePixelRatio||1);
   cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0);
   COLW=Math.min(W-12,640);COLX=(W-COLW)/2;
-  EH=B&&B.classic?clamp(H*.17,104,150):clamp(H*.25,112,230);HH=B&&B.classic?0:clamp(H*.19,96,165);
-  const availH=H-EH-HH-14;
-  CELL=Math.max(26,Math.floor(Math.min(COLW/COLS,availH/ROWS)));
-  if(B&&B.classic){EH=clamp(H-CELL*ROWS-24,104,200)}
-  BX=Math.round((W-CELL*COLS)/2);BY=B&&B.classic?Math.round(EH+(H-EH-CELL*ROWS)/2):Math.round(EH+(availH-CELL*ROWS)/2+7);HY=H-HH;
+  const cl=B&&B.classic,GAP=12;
+  // smallest sizes first, so the monsters, the board and the heroes always fit on the screen
+  EH=cl?clamp(H*.16,96,130):clamp(H*.2,100,190);HH=cl?0:clamp(H*.15,82,130);
+  CELL=Math.max(22,Math.floor(Math.min(COLW/COLS,(H-EH-HH-GAP*2)/ROWS)));
+  let extra=H-EH-HH-GAP*2-CELL*ROWS;
+  if(extra>0){const e1=Math.min(extra*.6,(cl?200:240)-EH);EH+=e1;extra-=e1;
+    if(!cl){const h1=Math.min(extra*.6,160-HH);HH+=h1;extra-=h1}}
+  EH=Math.round(EH);HH=Math.round(HH);
+  BX=Math.round((W-CELL*COLS)/2);BY=Math.round(EH+GAP+Math.max(0,extra)/2);HY=H-HH;
+  document.documentElement.style.setProperty('--toastB',Math.round(innerHeight-r.top-(BY+CELL*ROWS)+10)+'px');
   SPR={};placeEnemies();
 }
 function placeEnemies(){
   if(!B)return;const list=B.enemies,n=Math.max(1,list.length),slot=COLW/n;
-  list.forEach((e,i)=>{e.sz=Math.min(EH*.78,slot*.85,e.boss?200:165)*(e.boss?1.12:1);e.x=COLX+slot*(i+.5);e.y=EH*.46});
+  list.forEach((e,i)=>{e.sz=Math.min((EH-18)*(e.boss?.82:.75),slot*.85,e.boss?210:165);e.x=COLX+slot*(i+.5);e.y=(EH-18)*.5+4});
 }
 const heroSlot=i=>{const sw=COLW/4;return{x:COLX+sw*i+4,y:HY+6,w:sw-8,h:HH-12}};
 
@@ -935,7 +961,7 @@ function startBattle(lv){
   show('scGame');requestAnimationFrame(()=>{layout();nextWave(true)});
   MUSIC.battle=true;
   bhead();
-  if(!S.cnt.swaps)setTimeout(()=>toast(L('👆 Tap a candy, then the one next to it. Candies in your heroes\' colours charge them up ⚡. All the other colours hit the monster! When a hero glows, drag it onto a monster to attack.','👆 Tryk på et slik og så på det ved siden af. Slik i dine heltes farver lader dem op ⚡. Alle de andre farver rammer monsteret! Når en helt lyser, så træk den op på et monster for at angribe.'),8000),1400);
+  if(!S.cnt.swaps)setTimeout(()=>toast(L('👆 Swap candies · hero colours charge ⚡ · other colours hit','👆 Byt slik · heltefarver lader op ⚡ · andre farver rammer'),3200),1200);
 }
 function makeBoard(){
   const g=[];for(let i=0;i<COLS*ROWS;i++)g.push(newCell());B.g=g;
@@ -959,11 +985,16 @@ function bhead(){
   if(!B)return;
   $('#bPotion').style.display=B.classic?'none':'';
   if(B.classic){$('#bTitle').textContent=B.cend?L('Endless classic','Endeløs klassisk'):L('Classic · Level ','Klassisk · Bane ')+B.lv.n;$('#bWave').textContent=L('Score ','Point ')+N(B.score);
-    [['bHammer','hammer'],['bShuffle','shuffle']].forEach(([id,k])=>{const b=$('#'+id);$('.num',b).textContent=S.items[k]||0;b.disabled=!(S.items[k]>0);b.classList.toggle('on',B.tool===k)});return}
+    bootBtns();return}
   $('#bTitle').textContent=B.endless?L('Endless battle','Endeløs kamp'):(L('Level ','Bane ')+B.lv.n+(B.lv.boss?' 👑':''));
   $('#bWave').textContent=B.endless?L(`Wave ${B.wave}`,`Bølge ${B.wave}`):L(`Wave ${B.wave}/${B.waves.length}`,`Bølge ${B.wave}/${B.waves.length}`);
-  [['bHammer','hammer'],['bShuffle','shuffle'],['bPotion','potion']].forEach(([id,k])=>{const b=$('#'+id);$('.num',b).textContent=S.items[k]||0;
-    b.disabled=!(S.items[k]>0);b.classList.toggle('on',B.tool===k)});
+  bootBtns();
+}
+const bagCount=()=>['rocketH','rocketV','rocketX','bomb','shuffle'].reduce((a,k)=>a+(S.items[k]||0),0);
+function bootBtns(){
+  const h=$('#bHammer');$('.num',h).textContent=S.items.hammer||0;h.disabled=!(S.items.hammer>0);h.classList.toggle('on',B.tool==='hammer');
+  const g=$('#bBag');$('.num',g).textContent=bagCount();g.classList.toggle('on',!!B.tool&&B.tool!=='hammer');
+  const p=$('#bPotion');$('.num',p).textContent=S.items.potion||0;p.disabled=!(S.items.potion>0);
 }
 
 /* ---- the match-3 board ---- */
@@ -1036,8 +1067,13 @@ async function trySwap(a,b){
     const cloud=ca.sp==='cloud'?a:b,other=cloud===a?b:a,oc=B.g[other],set=new Set([cloud]);
     if(oc.sp==='cloud'){B.g.forEach((c,i)=>{if(c)set.add(i)});B.g[cloud].sp=null;pre=set;cloudFx(cloud)}
     else if(oc.c>=0){B.g.forEach((c,i)=>{if(mt(c)&&c.c===oc.c)set.add(i)});B.g[cloud].sp=null;pre=set;cloudFx(cloud)}
-  }else if(ca.sp&&cb.sp){ // two specials together go off at once
-    pre=new Set([a,b]);
+  }else if(ca.sp&&cb.sp){ // two specials together make an extra big blast
+    const rk=v=>v==='row'||v==='col',[bx,by]=XY(b),set=new Set([a,b]);
+    if(rk(ca.sp)&&rk(cb.sp)){ca.sp=cb.sp=null;lineSet(set,bx,by,'h');lineSet(set,bx,by,'v');launchRockets(bx,by,['h','v']);banner('✴️ '+L('CROSS ROCKET!','KRYDSRAKET!'))}
+    else if((rk(ca.sp)&&cb.sp==='bomb')||(ca.sp==='bomb'&&rk(cb.sp))){ca.sp=cb.sp=null;
+      for(let d=-1;d<=1;d++){if(by+d>=0&&by+d<ROWS)lineSet(set,bx,by+d,'h');if(bx+d>=0&&bx+d<COLS)lineSet(set,bx+d,by,'v')}launchRockets(bx,by,['h','v']);banner('💥 '+L('MEGA ROCKETS!','MEGA-RAKETTER!'))}
+    else if(ca.sp==='bomb'&&cb.sp==='bomb'){ca.sp=cb.sp=null;radiusSet(set,bx,by,3);banner('💣 '+L('MEGA BOMB!','MEGA-BOMBE!'))}
+    pre=set;
   }
   // a potato may always be pushed one step down (costs a move)
   const spudDown=B.classic&&!pre&&((B.g[b].ing&&XY(b)[1]>XY(a)[1])||(B.g[a].ing&&XY(a)[1]>XY(b)[1]));
@@ -1272,8 +1308,8 @@ async function winBattle(){
       <div class="big1">${L('Level ','Bane ')+n}</div>
       <p style="text-align:center;margin:6px 0">🪙 +${N(coins)} &nbsp; ✨ +${xp} XP</p>
       <p class="hint" style="text-align:center">${st<3?L('Keep more health on your heroes for more stars.','Hold dine helte mere i live for flere stjerner.'):L('Perfect battle!','Perfekt kamp!')}</p>`,
-    buttons:[{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'🥔 '+L('Heroes','Helte'),v:'heroes',cls:'sun'},{label:'▶ '+L('Next','Næste'),v:'next',cls:'go'}]});
-  if(v==='next')preBattle(nxt);else if(v==='heroes'){openMap('battle');openHeroes()}else openMap('battle');
+    buttons:[{label:'☰ '+L('Menu','Menu'),v:'menu'},{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'🥔 '+L('Heroes','Helte'),v:'heroes',cls:'sun'},{label:'▶ '+L('Next','Næste'),v:'next',cls:'go'}]});
+  if(v==='next')preBattle(nxt);else if(v==='heroes'){openMap('battle');openHeroes()}else if(v==='menu')show('scMenu');else openMap('battle');
 }
 async function campaignDone(){
   confetti(260);SFX.win();
@@ -1296,7 +1332,7 @@ async function loseBattle(){
     const v=await panel({title:'♾️ '+L('Battle over','Kampen er slut'),sm:true,noX:true,
       html:`<div class="big1">${L('Waves cleared: ','Bølger klaret: ')+w}</div>
         <p style="text-align:center">${best?'🎉 '+L('New best!','Ny rekord!'):L('Best: ','Bedst: ')+S.bestWave}</p>`,
-      buttons:[{label:'🏠 '+L('Menu','Menu'),v:'menu'},{label:'🥔 '+L('Heroes','Helte'),v:'heroes',cls:'sun'},{label:'🔁 '+L('Again','Igen'),v:'again',cls:'go'}]});
+      buttons:[{label:'☰ '+L('Menu','Menu'),v:'menu'},{label:'🥔 '+L('Heroes','Helte'),v:'heroes',cls:'sun'},{label:'🔁 '+L('Again','Igen'),v:'again',cls:'go'}]});
     if(v==='again')startEndless();else if(v==='heroes'){show('scMenu');openHeroes()}else show('scMenu');
     return;
   }
@@ -1305,8 +1341,8 @@ async function loseBattle(){
     html:`<p style="text-align:center;font-size:40px;margin:0">🥔💫</p>
       <p style="text-align:center">${L('Level ','Bane ')+n+L(' starts over.',' starter forfra.')}<br>🪙 +${c}</p>
       <p class="hint" style="text-align:center">${L('Tip: upgrade or buy heroes, and match the colours of the heroes you have.','Tip: opgradér eller køb helte, og match farverne på de helte, du har.')}</p>`,
-    buttons:[{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'🥔 '+L('Heroes','Helte'),v:'heroes',cls:'sun'},{label:'🔁 '+L('Try again','Prøv igen'),v:'again',cls:'go'}]});
-  if(v==='again')startBattle(genLevel(n));else if(v==='heroes'){openMap('battle');openHeroes()}else openMap('battle');
+    buttons:[{label:'☰ '+L('Menu','Menu'),v:'menu'},{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'🥔 '+L('Heroes','Helte'),v:'heroes',cls:'sun'},{label:'🔁 '+L('Try again','Prøv igen'),v:'again',cls:'go'}]});
+  if(v==='again')startBattle(genLevel(n));else if(v==='heroes'){openMap('battle');openHeroes()}else if(v==='menu')show('scMenu');else openMap('battle');
 }
 
 /* ---- little effects on the stage ---- */
@@ -1329,8 +1365,8 @@ function drawStage(dt){
   for(let k=0;k<26;k++){const sx=(k*137.5)%W,sy=(k*61.3)%(EH*.6);g.globalAlpha=.25+.25*Math.sin(t*1.5+k);g.fillStyle='#fff';g.beginPath();g.arc(sx,sy,1.3+(k%3)*.5,0,7);g.fill()}
   g.globalAlpha=1;
   const hill=(yy,col,amp,ph)=>{g.fillStyle=col;g.beginPath();g.moveTo(0,EH);for(let x=0;x<=W;x+=12)g.lineTo(x,yy+Math.sin(x/70+ph)*amp);g.lineTo(W,EH);g.closePath();g.fill()};
-  hill(EH*.72,'#7b3fd1',8,0);hill(EH*.84,'#ff7ac2',6,2);
-  g.fillStyle='#e05aa8';g.fillRect(0,EH*.9,W,EH*.1+2);
+  hill(EH-44,'#7b3fd1',8,0);hill(EH-26,'#ff7ac2',6,2);
+  g.fillStyle='#e05aa8';g.fillRect(0,EH-16,W,18);
   // monsters
   if(B.classic)drawClassicTop(g,t);
   const alive=B.enemies.filter(e=>!e.dead).length;
@@ -1338,23 +1374,23 @@ function drawStage(dt){
     e.flash=Math.max(0,e.flash-dt*4);e.shake=Math.max(0,e.shake-dt*3);if(e.attackT)e.attackT=Math.max(0,e.attackT-dt*2.5);
     if(e.dead)e.deadT+=dt;if(e.dead&&e.deadT>.7)return;
     const ey=e.y-(e.enter||0)*EH-(e.attackT?Math.sin(e.attackT*Math.PI)*-12:0);
-    g.fillStyle='rgba(0,0,0,.25)';g.beginPath();g.ellipse(e.x,EH*.86,e.sz*.36,e.sz*.07,0,0,7);g.fill();
+    g.fillStyle='rgba(0,0,0,.25)';g.beginPath();g.ellipse(e.x,EH-20,e.sz*.36,e.sz*.07,0,0,7);g.fill();
     if(e.flash>0)g.filter=`brightness(${1+e.flash*1.2})`;
     drawMonster(g,e,e.x,ey,e.sz,{ph:e.ph||0});g.filter='none';
     if(e.frozen>0){g.globalAlpha=.35;g.fillStyle='#bfefff';g.beginPath();g.arc(e.x,ey,e.sz*.45,0,7);g.fill();g.globalAlpha=1;
       g.font=`${Math.round(e.sz*.22)}px sans-serif`;g.textAlign='center';g.fillText('❄️',e.x+e.sz*.3,ey-e.sz*.3)}
     if(e.dead)return;
     // target arrow
-    if(alive>1&&B.enemies[B.target]===e){g.fillStyle='#ffd54a';g.strokeStyle='#2a1159';g.lineWidth=2;const ay=ey-e.sz*.6+Math.sin(t*5)*3;
+    if(alive>1&&B.enemies[B.target]===e){g.fillStyle='#ffd54a';g.strokeStyle='#2a1159';g.lineWidth=2;const ay=Math.max(14,ey-e.sz*.6)+Math.sin(t*5)*3;
       g.beginPath();g.moveTo(e.x,ay+10);g.lineTo(e.x-9,ay-4);g.lineTo(e.x+9,ay-4);g.closePath();g.fill();g.stroke()}
     // health bar + name
-    const bw=Math.max(56,e.sz*.9),bx=e.x-bw/2,by=EH*.9;
+    const bw=Math.max(56,e.sz*.9),bx=e.x-bw/2,by=EH-14;
     roundRect(g,bx,by,bw,11,6);g.fillStyle='#2a1159';g.fill();
     const p=e.hp/e.maxHp;if(p>0){roundRect(g,bx+2,by+2,(bw-4)*p,7,4);g.fillStyle=p>.5?'#4ee07c':p>.25?'#ffc53a':'#ff4d5e';g.fill()}
     g.font=`900 ${Math.max(9,Math.min(12,bw/8))}px Nunito,sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillStyle='#fff';
     g.fillText(N(e.hp)+'/'+N(e.maxHp),e.x,by+5.5);
     // attack countdown
-    const cx=e.x+e.sz*.4,cy=ey-e.sz*.32,danger=e.cdLeft<=1;
+    const cx=Math.min(W-14,e.x+e.sz*.4),cy=Math.max(14,ey-e.sz*.32),danger=e.cdLeft<=1;
     g.beginPath();g.arc(cx,cy,12,0,7);g.fillStyle=danger?'#ff3b4e':'#2a1159';g.fill();g.strokeStyle='#fff';g.lineWidth=2;g.stroke();
     g.fillStyle='#fff';g.font='900 13px Nunito,sans-serif';g.fillText(e.cdLeft,cx,cy+1);
     if(e.boss){g.font=`900 11px Nunito,sans-serif`;g.fillStyle='#ffd54a';g.strokeStyle='#2a1159';g.lineWidth=3;g.strokeText(nm(e.def),e.x,by-8);g.fillText(nm(e.def),e.x,by-8)}
@@ -1382,7 +1418,11 @@ function drawStage(dt){
   if(B.classic)B.glaze.forEach((l,i)=>{if(l>0){const[x,y]=XY(i);drawGlaze(g,BX+x*CELL,BY+y*CELL,CELL,l)}});
   g.restore();
   // tool hint
-  if(B.tool==='hammer'){g.fillStyle='rgba(255,213,74,.95)';g.font='900 13px Nunito,sans-serif';g.textAlign='center';g.fillText('🔨 '+L('Tap a candy to smash it','Tryk på et slik for at smadre det'),W/2,BY-14)}
+  if(B.tool&&TOOLS[B.tool]){const tl=TOOLS[B.tool],txt=tl.e+' '+L(...tl.hint);g.font='900 12px Nunito,sans-serif';g.textAlign='center';g.textBaseline='middle';
+    const tw=Math.min(W-16,g.measureText(txt).width+20);roundRect(g,W/2-tw/2,BY-6-22,tw,20,10);g.fillStyle='rgba(255,213,74,.95)';g.fill();g.fillStyle='#2a1159';g.fillText(txt,W/2,BY-6-12,W-24)}
+  (B.rockets||[]).forEach(r=>{r.t+=dt*2.6;const d=r.t*Math.max(W,H);drawRocket(g,r.x+Math.cos(r.a)*d,r.y+Math.sin(r.a)*d,r.a,CELL*.9)});
+  B.rockets=(B.rockets||[]).filter(r=>r.t<1);
+  if(B.bombDrop){const bd=B.bombDrop;bd.t+=dt;const s2=CELL*(1.1+Math.sin(bd.t*30)*.08);g.font=`${Math.round(s2)}px sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText('💣',bd.x,bd.y-Math.max(0,1-bd.t*4)*CELL*2)}
   // heroes
   if(!B.classic)g.fillStyle='rgba(20,8,48,.55)',g.fillRect(0,HY,W,HH);
   B.heroes.forEach((h,i)=>{
@@ -1419,7 +1459,7 @@ function drawStage(dt){
   (B.beams||[]).forEach(b=>{b.t+=dt*3;g.globalAlpha=Math.max(0,1-b.t);g.strokeStyle='#fff';g.lineWidth=CELL*.5*(1-b.t);g.shadowColor='#fff';g.shadowBlur=20;
     g.beginPath();g.moveTo(b.x1,b.y1);g.lineTo(b.x2,b.y2);g.stroke();g.shadowBlur=0});
   B.beams=(B.beams||[]).filter(b=>b.t<1);
-  (B.rings||[]).forEach(r=>{r.t+=dt*2.5;g.globalAlpha=Math.max(0,1-r.t);g.strokeStyle=r.col;g.lineWidth=6;g.beginPath();g.arc(r.x,r.y,CELL*(r.big?4:1.6)*r.t,0,7);g.stroke()});
+  (B.rings||[]).forEach(r=>{r.t+=dt*2.5;if(r.t<=0)return;g.globalAlpha=Math.max(0,1-r.t);g.strokeStyle=r.col;g.lineWidth=6;g.beginPath();g.arc(r.x,r.y,Math.max(0,CELL*(r.big?4:1.6)*r.t),0,7);g.stroke()});
   B.rings=(B.rings||[]).filter(r=>r.t<1);g.globalAlpha=1;
   // a hero being dragged onto a monster
   if(B.hdrag&&B.hdrag.moved){const d=B.hdrag,h=d.h,[hx,hy]=heroPos(h),e=enemyAt(d.x,d.y);
@@ -1464,7 +1504,7 @@ cv.addEventListener('pointerdown',e=>{
     const ab=ABIL[h.def.ab];toast(`${ab[0]} <b>${nm(h.def)}</b>: ${L(ab[3],ab[4])}<br><small>${L(`Charges from ${nm(PIECES[h.def.c])} candies (${Math.floor(h.charge)}/${h.chMax}). When full: ${HITS} attacks – drag the hero onto a monster.`,`Lader op af ${nm(PIECES[h.def.c]).toLowerCase()} (${Math.floor(h.charge)}/${h.chMax}). Når den er fuld: ${HITS} angreb – træk helten op på et monster.`)}</small>`,3500);return}
   if(B.busy)return;
   const i=cellAt(px,py);if(i<0){B.sel=null;return}
-  if(B.tool==='hammer'){useHammer(i);return}
+  if(B.tool){useTool(i);return}
   if(!swpAt(i)){SFX.no();B.sel=null;if(iced(i))toast(L('🧊 Frozen in ice – make a match with it or right next to it to break the ice.','🧊 Frosset i is – lav et match med den eller lige ved siden af for at bryde isen.'),2200);return}
   B.idleT=performance.now();
   if(B.sel!=null&&B.sel!==i&&adjacent(B.sel,i)){trySwap(B.sel,i);return}
@@ -1490,6 +1530,36 @@ addEventListener('pointerup',e=>{if(!B)return;B.drag=null;
 addEventListener('pointercancel',()=>{if(B){B.drag=null;B.hdrag=null}});
 
 /* ---- boosters ---- */
+function lineSet(set,x,y,dir){
+  if(dir==='h'){for(let k=0;k<COLS;k++)set.add(y*COLS+k);beamFx(BX,BY+y*CELL+CELL/2,BX+COLS*CELL,BY+y*CELL+CELL/2)}
+  else{for(let k=0;k<ROWS;k++)set.add(k*COLS+x);beamFx(BX+x*CELL+CELL/2,BY,BX+x*CELL+CELL/2,BY+ROWS*CELL)}
+}
+function radiusSet(set,x,y,r){
+  for(let dy=-r;dy<=r;dy++)for(let dx=-r;dx<=r;dx++){if(dx*dx+dy*dy>r*r+1)continue;const nx=x+dx,ny=y+dy;if(nx>=0&&ny>=0&&nx<COLS&&ny<ROWS)set.add(ny*COLS+nx)}
+  B.rings=(B.rings||[]).concat([{x:BX+x*CELL+CELL/2,y:BY+y*CELL+CELL/2,t:0,col:'#ff9a1f',big:1},{x:BX+x*CELL+CELL/2,y:BY+y*CELL+CELL/2,t:-.15,col:'#ffd54a',big:1}]);
+  B.shake=Math.max(B.shake,.9);
+}
+// rockets fly out of the cell to both ends of the line
+function launchRockets(x,y,dirs){
+  const cx=BX+x*CELL+CELL/2,cy=BY+y*CELL+CELL/2;B.rockets=B.rockets||[];
+  dirs.forEach(d=>{if(d==='h'){B.rockets.push({x:cx,y:cy,a:0,t:0},{x:cx,y:cy,a:Math.PI,t:0})}else{B.rockets.push({x:cx,y:cy,a:-Math.PI/2,t:0},{x:cx,y:cy,a:Math.PI/2,t:0})}});
+  SFX.tone(220,.35,'sawtooth',.04,4);SFX.noise(.3,.08,3000);
+}
+async function useTool(i){
+  const k=B.tool;
+  if(!(S.items[k]>0)){B.tool=null;bhead();return}
+  S.items[k]--;save();B.tool=null;B.busy=true;B.sel=null;bhead();
+  const[x,y]=XY(i),set=new Set([i]);
+  if(k==='hammer')SFX.hit();
+  if(k==='rocketH'||k==='rocketX'){lineSet(set,x,y,'h')}
+  if(k==='rocketV'||k==='rocketX'){lineSet(set,x,y,'v')}
+  if(k.startsWith('rocket')){launchRockets(x,y,k==='rocketH'?['h']:k==='rocketV'?['v']:['h','v']);await sleep(260)}
+  if(k==='bomb'){B.bombDrop={x:BX+x*CELL+CELL/2,y:BY+y*CELL+CELL/2,t:0};SFX.tone(600,.25,'square',.03,.5);await sleep(420);B.bombDrop=null;
+    SFX.noise(.5,.25,900);SFX.tone(90,.5,'sawtooth',.07,.4);radiusSet(set,x,y,2)}
+  B.last=[i];B.combo=1;await clearSet(set,[]);await gravity();await resolve(null);
+  await waitShots();if(await waveCheck())return;if(B.classic)bhead();
+  B.busy=false;B.idleT=performance.now();findHint();
+}
 async function useHammer(i){
   if(!(S.items.hammer>0)){B.tool=null;bhead();return}
   S.items.hammer--;save();B.tool=null;B.busy=true;B.sel=null;bhead();SFX.hit();
@@ -1498,13 +1568,38 @@ async function useHammer(i){
   B.busy=false;B.idleT=performance.now();findHint();
 }
 $('#bHammer').onclick=()=>{if(!B||B.over||B.busy)return;SFX.click();B.tool=B.tool==='hammer'?null:'hammer';bhead()};
-$('#bShuffle').onclick=()=>{if(!B||B.over||B.busy||!(S.items.shuffle>0))return;S.items.shuffle--;save();SFX.swap();B.sel=null;reshuffle();findHint();bhead();toast('🔀 '+L('Shuffled!','Blandet!'))};
+function doShuffle(){if(!B||B.over||B.busy||!(S.items.shuffle>0))return;S.items.shuffle--;save();SFX.swap();B.sel=null;reshuffle();findHint();bhead();toast('🔀 '+L('Shuffled!','Blandet!'),1200)}
+// the booster bag: rockets, bomb and shuffle (buy more right here)
+$('#bBag').onclick=()=>{if(!B||B.over||B.busy)return;SFX.click();
+  if(B.tool&&B.tool!=='hammer'){B.tool=null;bhead();return}
+  panel({title:'🎒 '+L('Boosters','Boosters'),sm:true,render:(b,close)=>{const draw=()=>{
+    b.innerHTML=`<p class="hint" style="margin:0 0 8px">${L('Pick a booster, then tap the board. Boosters never cost a move or a turn.','Vælg en booster og tryk så på brættet. Boosters koster aldrig et træk eller en tur.')}</p><div class="shopg"></div>`;
+    ['rocketH','rocketV','rocketX','bomb','shuffle'].forEach(k=>{const it=SHOP.find(x=>x[0]===k),have=S.items[k]||0,price=shopPrice(it[2],k);
+      const d=document.createElement('div');d.className='sitem';
+      d.innerHTML=`<div class="e">${k==='rocketV'?'<span style="display:inline-block;transform:rotate(-45deg)">🚀</span>':k==='rocketH'?'<span style="display:inline-block;transform:rotate(45deg)">🚀</span>':it[1]}</div><b>${L(it[3],it[4])} (${have})</b><small>${L(it[5],it[6])}</small>`;
+      const use=document.createElement('button');use.className='btn sm go';use.textContent=L('Use','Brug');use.disabled=!have;
+      use.onclick=()=>{close();if(k==='shuffle')doShuffle();else{B.tool=k;B.sel=null;bhead();SFX.pick()}};
+      const buy=document.createElement('button');buy.className='btn sm';buy.style.marginTop='5px';buy.textContent='🪙 '+price;buy.disabled=S.coins<price;
+      buy.onclick=()=>{if(S.coins<price)return;S.coins-=price;S.items[k]=have+1;SFX.coin();save();hud();bhead();draw()};
+      d.appendChild(use);d.appendChild(document.createElement('br'));d.appendChild(buy);$('.shopg',b).appendChild(d)});
+  };draw()}})};
 $('#bPotion').onclick=()=>{if(!B||B.over||B.busy||B.classic||!(S.items.potion>0))return;S.items.potion--;save();SFX.heal();
   B.heroes.forEach(h=>{if(h.dead){h.dead=false;h.hp=Math.round(h.maxHp*.4)}else h.hp=Math.min(h.maxHp,h.hp+Math.round(h.maxHp*.5));floatText(...heroPos(h),'💖','#7dffb0',24)});bhead()};
-$('#gQuit').onclick=async()=>{if(!B||B.over)return;SFX.click();
-  const v=await panel({title:'⏸ '+L('Paused','Pause'),sm:true,html:`<p style="text-align:center">${L('Leave this battle? The level starts over next time.','Forlad kampen? Banen starter forfra næste gang.')}</p>`,
-    buttons:[{label:'🏳️ '+L('Give up','Giv op'),v:'quit',cls:'pink'},{label:'▶ '+L('Keep playing','Spil videre'),v:'go',cls:'go'}]});
-  if(v==='quit'&&B&&!B.over){B.over=true;MUSIC.battle=false;if(B.cend){if(B.score>S.cbest)S.cbest=B.score;save();show('scMenu')}else if(B.classic)openMap('classic');else if(B.endless){const w=B.wave-1;if(w>S.bestWave)S.bestWave=w;save();show('scMenu')}else openMap('battle')}};
+// leave the level: to the game menu or back to the map
+function leaveLevel(to){
+  if(B&&!B.over){B.over=true;MUSIC.battle=false;
+    if(B.cend){if(B.score>S.cbest)S.cbest=B.score}else if(B.endless){const w=B.wave-1;if(w>S.bestWave)S.bestWave=w}save()}
+  closePanels();
+  if(to==='menu'||!B||B.cend||B.endless)show('scMenu');else openMap(B.classic?'classic':'battle');
+}
+async function askLeave(){
+  if(!B||B.over)return;SFX.click();
+  const v=await panel({title:'⏸ '+L('Paused','Pause'),sm:true,html:`<p style="text-align:center">${L('Leave this level? It starts over next time.','Forlad banen? Den starter forfra næste gang.')}</p>`,
+    buttons:[{label:'☰ '+L('Menu','Menu'),v:'menu',cls:'pink'},{label:'🗺️ '+L('Map','Kort'),v:'map',dis:!!(B.endless||B.cend)},{label:'▶ '+L('Keep playing','Spil videre'),v:'go',cls:'go'}]});
+  if((v==='menu'||v==='map')&&B&&!B.over)leaveLevel(v);
+}
+$('#gQuit').onclick=askLeave;
+$('#gHome').onclick=askLeave;
 
 /* =====================================================================
    CLASSIC MODE – no heroes, no monsters: reach the goals before the
@@ -1564,7 +1659,7 @@ async function clEndOver(){
   const v=await panel({title:'♾️ '+L('Out of moves!','Ingen træk tilbage!'),sm:true,noX:true,
     html:`<div class="big1">${N(sc)} ${L('points','point')}</div>
       <p style="text-align:center">${best?'🎉 '+L('New best!','Ny rekord!'):L('Best: ','Bedst: ')+N(S.cbest)}<br>🪙 +${N(coins)} &nbsp; ✨ +${xp} XP</p>`,
-    buttons:[{label:'🏠 '+L('Menu','Menu'),v:'menu'},{label:'🔁 '+L('Again','Igen'),v:'again',cls:'go'}]});
+    buttons:[{label:'☰ '+L('Menu','Menu'),v:'menu'},{label:'🔁 '+L('Again','Igen'),v:'again',cls:'go'}]});
   if(v==='again')startClassicEndless();else show('scMenu');
 }
 function startClassic(lv){
@@ -1576,8 +1671,8 @@ function startClassic(lv){
   show('scGame');MUSIC.battle=false;
   requestAnimationFrame(()=>{layout();banner(lv.cend?'♾️ '+L('ENDLESS','ENDELØS'):L('LEVEL ','BANE ')+lv.n);B.busy=false;B.idleT=performance.now();findHint()});
   bhead();
-  if(lv.cend)setTimeout(()=>toast(L('♾️ Score as much as you can! Special candies and big combos give you moves back.','♾️ Få så mange point som muligt! Specialslik og store kombinationer giver dig træk tilbage.'),6000),1200);
-  else if(!S.cnt.clevels)setTimeout(()=>toast(L('🍬 Classic: reach the goals at the top before you run out of moves. Swap two candies next to each other to make lines of 3.','🍬 Klassisk: nå målene øverst, før du løber tør for træk. Byt to slik ved siden af hinanden for at lave 3 på stribe.'),6500),1200);
+  if(lv.cend)setTimeout(()=>toast(L('♾️ Specials & combos give moves back','♾️ Specialslik & kombier giver træk tilbage'),3000),1200);
+  else if(!S.cnt.clevels)setTimeout(()=>toast(L('🎯 Reach the goals before the moves run out','🎯 Nå målene, før trækkene slipper op'),3000),1200);
 }
 // tips in classic mode go for the goals
 function clHintScore(all,i,j){
@@ -1650,8 +1745,8 @@ async function clWin(){
       <div class="big1">${N(sc)} ${L('points','point')}</div>
       <p style="text-align:center;margin:6px 0">🪙 +${N(coins)} &nbsp; ✨ +${xp} XP</p>
       <p class="hint" style="text-align:center">${st<3?L(`${N(st<2?B.lv.t2:B.lv.t3)} points for the next star.`,`${N(st<2?B.lv.t2:B.lv.t3)} point til næste stjerne.`):L('Perfect!','Perfekt!')}</p>`,
-    buttons:[{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'▶ '+L('Next','Næste'),v:'next',cls:'go'}]});
-  if(v==='next')preClassic(Math.min(n+1,S.cmax));else openMap('classic');
+    buttons:[{label:'☰ '+L('Menu','Menu'),v:'menu'},{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'▶ '+L('Next','Næste'),v:'next',cls:'go'}]});
+  if(v==='next')preClassic(Math.min(n+1,S.cmax));else if(v==='menu')show('scMenu');else openMap('classic');
 }
 async function clOut(){
   B.busy=true;
@@ -1659,10 +1754,10 @@ async function clOut(){
   const left=B.goals.filter(g=>goalLeft(g)>0).map(g=>`<div class="task"><span class="ic">${goalIcon(g)}</span><span class="tx"><b>${goalText(g)}</b><small>${L('Left: ','Mangler: ')+N(goalLeft(g))}</small></span></div>`).join('');
   const v=await panel({title:'😮 '+L('Out of moves!','Ingen træk tilbage!'),sm:true,noX:true,
     html:`<p style="text-align:center;margin-top:0">${L('So close! This is what is left:','Så tæt på! Det her mangler:')}</p>${left}`,
-    buttons:[{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'🔁 '+L('Try again','Prøv igen'),v:'again',cls:'pink'},{label:`+5 ${L('moves','træk')} 🪙${price}`,v:'buy',cls:'go',dis:S.coins<price}]});
+    buttons:[{label:'☰ '+L('Menu','Menu'),v:'menu'},{label:'🗺️ '+L('Map','Kort'),v:'map'},{label:'🔁 '+L('Try again','Prøv igen'),v:'again',cls:'pink'},{label:`+5 ${L('moves','træk')} 🪙${price}`,v:'buy',cls:'go',dis:S.coins<price}]});
   if(v==='buy'&&S.coins>=price){S.coins-=price;save();hud();B.moves+=5;B.extra++;bhead();SFX.coin();B.busy=false;B.idleT=performance.now();findHint();return}
   B.over=true;SFX.lose();
-  if(v==='again')startClassic(genClassic(n));else openMap('classic');
+  if(v==='again')startClassic(genClassic(n));else if(v==='menu')show('scMenu');else openMap('classic');
 }
 async function preClassic(n){
   const lv=genClassic(n);
@@ -1751,9 +1846,10 @@ function drawClassicTop(g,t){
    SCREENS
    ===================================================================== */
 function hud(){
+  $$('.phc b').forEach(b=>b.textContent=NC2(S.coins));
   $('#plLvl').textContent=S.lvl;
   $('#xpFill').style.width=Math.min(100,S.xp/xpFor(S.lvl)*100)+'%';
-  $('#coins').textContent=N(S.coins);
+  $('#coins').textContent=NC2(S.coins);
   const md=misReady(),qd=queReady();
   $('#misDot').style.display=md?'':'none';$('#misDot').textContent=md;
   $('#queDot').style.display=qd?'':'none';$('#queDot').textContent=qd;
@@ -1768,11 +1864,12 @@ function hud(){
 // a new hero you can afford, or an upgrade you can afford for someone on the team
 const heroNews=()=>HEROES.some(h=>!S.heroes[h.id]&&S.maxLevel>=h.unlock&&S.coins>=h.price)||
   S.team.some(id=>S.heroes[id]&&S.heroes[id].lvl<HERO_MAX&&S.coins>=upCost(HERO(id),S.heroes[id].lvl));
-function show(id){$$('.screen').forEach(s2=>s2.classList.toggle('on',s2.id===id));
+function show(id){$$('.screen').forEach(s2=>s2.classList.toggle('on',s2.id===id));document.body.classList.toggle('ingame',id==='scGame');
   if(id!=='scGame'){MUSIC.battle=false;if(B&&!B.over)B.over=true}
   if(id==='scGame')requestAnimationFrame(layout);
   hud();scrollTo(0,0)}
 addEventListener('resize',()=>{if($('#scGame').classList.contains('on'))layout()});
+if(window.ResizeObserver)new ResizeObserver(()=>{if($('#scGame').classList.contains('on'))layout()}).observe($('#stageWrap'));
 
 /* ---- menu art: potato heroes facing a gummy bear ---- */
 const ART={g:$('#heroArt').getContext('2d'),e:{def:MONSTERS[0],dead:false,shake:0,flash:0}};
@@ -1883,7 +1980,19 @@ function openHeroes(){
 }
 
 /* ---- booster shop ---- */
+// tools you place on the board: tap the booster, then tap a candy
+const TOOLS={
+  hammer: {e:'🔨',en:'Hammer',da:'Hammer',hint:['Tap a candy to smash it','Tryk på et slik for at smadre det']},
+  rocketH:{e:'🚀',en:'Row rocket',da:'Rækkeraket',hint:['Tap a candy – the rocket clears its whole row','Tryk på et slik – raketten rydder hele rækken']},
+  rocketV:{e:'🚀',en:'Column rocket',da:'Søjleraket',hint:['Tap a candy – the rocket clears its whole column','Tryk på et slik – raketten rydder hele søjlen']},
+  rocketX:{e:'✴️',en:'Cross rocket',da:'Krydsraket',hint:['Tap a candy – clears its row AND column','Tryk på et slik – rydder rækken OG søjlen']},
+  bomb:   {e:'💣',en:'Bomb',da:'Bombe',hint:['Tap where the bomb goes – it blows up everything around it','Tryk hvor bomben skal ligge – den sprænger alt omkring sig']}
+};
 const SHOP=[['hammer','🔨',450,'Hammer','Hammer','Smash any candy. No monster turn.','Smadr et slik. Monstrene får ikke en tur.'],
+  ['rocketH','🚀',400,'Row rocket','Rækkeraket','Place it on a candy: clears the whole row.','Sæt den på et slik: rydder hele rækken.'],
+  ['rocketV','🚀',400,'Column rocket','Søjleraket','Place it on a candy: clears the whole column.','Sæt den på et slik: rydder hele søjlen.'],
+  ['rocketX','✴️',650,'Cross rocket','Krydsraket','Clears the row AND the column at once.','Rydder rækken OG søjlen på én gang.'],
+  ['bomb','💣',600,'Bomb','Bombe','Place it anywhere: blows up everything in a big circle.','Sæt den hvor som helst: sprænger alt i en stor cirkel.'],
   ['shuffle','🔀',300,'Shuffle','Bland','Mix the whole board.','Bland hele brættet.'],
   ['potion','🧪',750,'Potion','Trylledrik','The only way to heal in battle: heals every hero by 50% and brings fallen heroes back.','Den eneste måde at hele i kamp: heler alle helte med 50 % og vækker faldne helte.']];
 // boosters cost more the more of them you are already holding
@@ -1928,6 +2037,7 @@ $('#mHelp').onclick=()=>{SFX.click();panel({title:'❓ '+L('How to play','Sådan
   ['⚡',L(`When a hero is fully charged it glows and gets ${HITS} attacks. Grab the hero and drop it on a monster to attack – each attack uses a third of the energy. Every hero has its own extra effect: energy, big hits, freezing and more. Heroes only get health back from potions 🧪, which you buy in the shop.`,`Når en helt er ladet helt op, lyser den og får ${HITS} angreb. Tag fat i helten og slip den på et monster for at angribe – hvert angreb bruger en tredjedel af energien. Hver helt har sin egen ekstra effekt: energi, kæmpeslag, frost og mere. Helte får kun liv igen med trylledrikke 🧪, som du køber i butikken.`)],
   ['👾',L('Monsters count down with every move. At 0 they attack a hero. Armour 🛡️ lowers the damage. Bosses hit everyone! Tap a monster to choose who to attack.','Monstrene tæller ned for hvert træk. Ved 0 angriber de en helt. Rustning 🛡️ mindsker skaden. Bosser rammer alle! Tryk på et monster for at vælge, hvem du angriber.')],
   ['💔',L('If all your heroes fall, the level starts over. Kill every monster in every wave to win.','Falder alle dine helte, starter banen forfra. Dræb alle monstre i alle bølger for at vinde.')],
+  ['🚀',L('Boosters (🎒 in a level): row, column and cross rockets clear whole lines, and the bomb blows up a big circle. Swap two rocket candies together for a cross blast, a rocket and a bomb for mega rockets, two bombs for a mega bomb.','Boosters (🎒 i en bane): række-, søjle- og krydsraketter rydder hele linjer, og bomben sprænger en stor cirkel. Byt to raketslik sammen for et krydsbrag, en raket og en bombe for mega-raketter, to bomber for en mega-bombe.')],
   ['💥',L('4 in a line = striped candy (clears a row or column). L or T shape = bomb. 5 in a line = floss cloud: swap it with a candy to clear that whole colour.','4 på stribe = stribet slik (rydder en række eller søjle). L- eller T-form = bombe. 5 på stribe = spindsky: byt den med et slik for at rydde hele den farve.')],
   ['🍬',L('Classic candy (menu): no heroes or monsters. Reach the goals at the top before the moves run out – collect colours, break the ice (candies frozen in ice can not be moved – match with them or right next to them), smash sugar blocks (match next to them), and bring potatoes to the bottom. A potato can always be pushed one step down, even without a match.','Klassisk slik (menu): ingen helte eller monstre. Nå målene øverst, før trækkene slipper op – saml farver, bryd isen (slik, der er frosset i is, kan ikke flyttes – match med dem eller lige ved siden af), smadr sukkerklodser (match ved siden af dem) og bring kartofler ned til bunden. En kartoffel kan altid skubbes et felt ned, også uden match.')],
   ['🗺️',L('100 campaign levels with a boss every 10 levels. New monsters and stronger weapons as you go. After level 100 you can keep going, start over, or play endless mode.','100 kampagnebaner med en boss hver 10. bane. Nye monstre og stærkere våben undervejs. Efter bane 100 kan du fortsætte, starte forfra eller spille endeløs.')],
@@ -1936,6 +2046,19 @@ $('#mHelp').onclick=()=>{SFX.click();panel({title:'❓ '+L('How to play','Sådan
 
 /* ---- what's new ---- */
 const CHANGELOG=[
+  {v:'2.4',d:['3 Nov 2026','3. nov. 2026'],t:['Rockets and bombs!','Raketter og bomber!'],i:[
+    ['🚀 New boosters: row rocket, column rocket and cross rocket – they clear a whole line, or both lines at once.','🚀 Nye boosters: rækkeraket, søjleraket og krydsraket – de rydder en hel linje eller begge linjer på én gang.'],
+    ['💣 New bomb: buy it, place it anywhere on the board and it blows up everything in a big circle.','💣 Ny bombe: køb den, sæt den hvor som helst på brættet, og den sprænger alt i en stor cirkel.'],
+    ['🎒 The new booster bag in every level holds rockets, bombs and shuffle – and you can buy more right there.','🎒 Den nye boostertaske i alle baner har raketter, bomber og bland – og du kan købe flere direkte derfra.'],
+    ['✴️ Line candies are now rockets. Swap two rockets together for a cross blast, a rocket and a bomb for mega rockets, and two bombs for a mega bomb.','✴️ Stribe-slik er nu raketter. Byt to raketter sammen for et krydsbrag, en raket og en bombe for mega-raketter og to bomber for en mega-bombe.'],
+    ['💬 The info texts during a level are smaller, shorter, sit at the bottom of the board and disappear when you tap them.','💬 Infoteksterne under en bane er mindre og kortere, sidder nederst på brættet og forsvinder, når du trykker på dem.'],
+    ['🎁 Everyone gets a free row rocket, column rocket and bomb to try.','🎁 Alle får en gratis rækkeraket, søjleraket og bombe at prøve.']]},
+  {v:'2.3.4',d:['3 Nov 2026','3. nov. 2026'],t:['Coins and menu everywhere','Mønter og menu overalt'],i:[
+    ['🪙 Every window now shows how many coins you have.','🪙 Alle vinduer viser nu, hvor mange mønter du har.'],
+    ['☰ New menu button in every level, and a Menu button on every win and lose screen – one tap back to the menu.','☰ Ny menuknap i alle baner og en Menu-knap på alle sejrs- og tabsskærme – ét tryk tilbage til menuen.']]},
+  {v:'2.3.3',d:['3 Nov 2026','3. nov. 2026'],t:['Better fit on phones','Passer bedre på mobil'],i:[
+    ['📱 In battle the monsters, their health bars, the board and the heroes now always fit on the screen – nothing overlaps any more.','📱 I kamp passer monstrene, deres livbjælker, brættet og heltene nu altid på skærmen – intet ligger oven i hinanden længere.'],
+    ['💬 Tips during a level are shown over the middle of the board, so they no longer hide the monsters.','💬 Tips under en bane vises midt på brættet, så de ikke længere dækker monstrene.']]},
   {v:'2.3.2',d:['1 Nov 2026','1. nov. 2026'],t:['Ice locks candies','Is låser slikket'],i:[
     ['🧊 The sugar glaze in classic is now ice on top of the candy. A frozen candy can not be moved – make a match with it or right next to it to break the ice (thick ice takes two hits).','🧊 Sukkerglasuren i klassisk er nu is oven på slikket. Et frossent slik kan ikke flyttes – lav et match med det eller lige ved siden af for at bryde isen (tyk is skal rammes to gange).'],
     ['🧱 Sugar blocks can not be moved either – match right next to them to smash them.','🧱 Sukkerklodser kan heller ikke flyttes – match lige ved siden af dem for at smadre dem.']]},
@@ -1993,7 +2116,7 @@ function applyLang(){
   document.documentElement.lang=LANG;
   STATIC.forEach(([sel,en,da])=>{const el=$(sel);if(el)el.textContent=L(en,da)});
   $('#langBtn').textContent=LANG==='da'?'🇬🇧':'🇩🇰';$('#langBtn').title=LANG==='da'?'English':'Dansk';
-  $('#bHammer').title=L('Hammer','Hammer');$('#bShuffle').title=L('Shuffle','Bland');$('#bPotion').title=L('Potion','Trylledrik');
+  $('#bHammer').title=L('Hammer','Hammer');$('#bBag').title=L('Boosters','Boosters');$('#bPotion').title=L('Potion','Trylledrik');
   if($('#scMap').classList.contains('on'))openMap(MAPMODE);
   if(B&&!B.over)bhead();
   hud();
@@ -2011,7 +2134,8 @@ let lastT=performance.now(),artT=0;
 function loop(now){
   const dt=Math.min(.05,(now-lastT)/1000);lastT=now;
   fxTick(dt);
-  if(B&&$('#scGame').classList.contains('on')&&W)drawStage(dt);
+  // a drawing hiccup must never freeze the game
+  if(B&&$('#scGame').classList.contains('on')&&W){try{drawStage(dt)}catch(e){console.warn(e);ctx.restore&&ctx.setTransform(DPR,0,0,DPR,0,0);ctx.globalAlpha=1;ctx.filter='none'}}
   if($('#scMenu').classList.contains('on')&&now-artT>33){artT=now;drawMenuArt()}
   requestAnimationFrame(loop);
 }
