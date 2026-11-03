@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Potato Empire – moved</title>
 <meta name="robots" content="noindex, follow">
@@ -12,5 +13,49 @@
 </head>
 <body>
 <p>Monongoly is now called <a href="potato-empire.html">The Potato Empire</a> 🥔</p>
+<!-- auto-update: always run the newest version, no need to clear the cache -->
+<script>
+(function(){
+  var DA=(navigator.language||'').toLowerCase().indexOf('da')===0;
+  try{if(localStorage.getItem('potato_floss_lang')==='en')DA=false;if(localStorage.getItem('potato_floss_lang')==='da')DA=true}catch(e){}
+  var mine=Date.parse(document.lastModified)||0,shown=false,KEY='ptg_upd_'+location.pathname;
+  function newest(){
+    // ask the server when this page was last changed (never from the cache)
+    return fetch(location.pathname+'?upd='+Date.now(),{method:'HEAD',cache:'no-store'}).then(function(r){
+      var lm=Date.parse(r.headers.get('last-modified')||'');return isNaN(lm)?0:lm});
+  }
+  function fresh(){
+    // refresh the browser's stored copy, then reload
+    fetch(location.href,{cache:'reload'}).catch(function(){}).then(function(){location.reload()});
+  }
+  function banner(){
+    if(shown)return;shown=true;
+    var b=document.createElement('div');
+    b.style.cssText='position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:9999;display:flex;align-items:center;gap:10px;background:#2a1159;color:#fff;font:800 14px Nunito,system-ui,sans-serif;padding:8px 10px 8px 14px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.4);white-space:nowrap;max-width:94vw';
+    b.innerHTML='<span>✨ '+(DA?'Ny version klar':'New version ready')+'</span>';
+    var go=document.createElement('button');go.textContent=DA?'Opdater':'Update';
+    go.style.cssText='border:0;border-radius:999px;background:#ffd54a;color:#2a1159;font:900 14px Nunito,system-ui,sans-serif;padding:6px 14px;cursor:pointer';
+    go.onclick=fresh;b.appendChild(go);
+    var x=document.createElement('button');x.textContent='✕';x.setAttribute('aria-label','Close');
+    x.style.cssText='border:0;background:none;color:#fff;font:900 14px system-ui;cursor:pointer;padding:4px';
+    x.onclick=function(){b.remove()};b.appendChild(x);
+    document.body.appendChild(b);
+  }
+  function check(atStart){
+    if(!mine||location.protocol.indexOf('http')!==0)return;
+    newest().then(function(lm){
+      if(!lm||lm<=mine+2000)return;
+      // opened from an old stored copy: get the new one straight away (only once, so it can never loop)
+      var last=0;try{last=+sessionStorage.getItem(KEY)||0}catch(e){}
+      if(atStart&&Date.now()-last>60000){try{sessionStorage.setItem(KEY,Date.now())}catch(e){}fresh();return}
+      banner();
+    }).catch(function(){});
+  }
+  check(true);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)check(false)});
+  addEventListener('pageshow',function(e){if(e.persisted)check(false)});
+  setInterval(function(){if(!document.hidden)check(false)},10*60*1000);
+})();
+</script>
 </body>
 </html>
