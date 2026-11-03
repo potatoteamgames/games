@@ -976,7 +976,7 @@ function startBattle(lv){
   show('scGame');requestAnimationFrame(()=>{layout();nextWave(true)});
   MUSIC.battle=true;
   bhead();
-  if(!S.cnt.swaps)setTimeout(()=>toast(L('👆 Swap candies · hero colours charge ⚡ · other colours hit','👆 Byt slik · heltefarver lader op ⚡ · andre farver rammer'),3200),1200);
+  if(!S.cnt.swaps)setTimeout(()=>toast(L('👆 Swipe a candy · hero colours charge ⚡ · other colours hit','👆 Swipe et slik · heltefarver lader op ⚡ · andre farver rammer'),3200),1200);
 }
 function makeBoard(){
   const g=[];for(let i=0;i<COLS*ROWS;i++)g.push(newCell());B.g=g;
@@ -1523,8 +1523,8 @@ cv.addEventListener('pointerdown',e=>{
   if(!swpAt(i)){SFX.no();B.sel=null;if(iced(i))toast(L('🧊 Frozen in ice – make a match with it or right next to it to break the ice.','🧊 Frosset i is – lav et match med den eller lige ved siden af for at bryde isen.'),2200);return}
   B.idleT=performance.now();
   if(B.sel!=null&&B.sel!==i&&adjacent(B.sel,i)){trySwap(B.sel,i);return}
-  if(B.sel===i){B.sel=null;return}
-  B.sel=i;SFX.pick();B.drag={i,x:px,y:py};
+  // swipe like Candy Crush: put your finger on a candy and swipe towards the one to swap with
+  B.drag={i,x:px,y:py,wasSel:B.sel===i};if(B.sel!==i)SFX.pick();B.sel=i;
   try{cv.setPointerCapture(e.pointerId)}catch(_){}
 });
 function enemyAt(px,py){let best=null,bd=1e9;
@@ -1532,17 +1532,26 @@ function enemyAt(px,py){let best=null,bd=1e9;
   return best&&(bd<best.sz*.75||py<EH)?best:null}
 cv.addEventListener('pointermove',e=>{
   if(B&&B.hdrag){const[px,py]=evPos(e),d=B.hdrag;d.x=px;d.y=py;if(Math.hypot(px-d.sx,py-d.sy)>12)d.moved=true;return}
-  if(!B||!B.drag||B.busy)return;const[px,py]=evPos(e),dx=px-B.drag.x,dy=py-B.drag.y;
-  if(Math.max(Math.abs(dx),Math.abs(dy))<CELL*.38)return;
-  const[x,y]=XY(B.drag.i);let nx=x,ny=y;if(Math.abs(dx)>Math.abs(dy))nx+=Math.sign(dx);else ny+=Math.sign(dy);
-  const from=B.drag.i;B.drag=null;
-  if(nx>=0&&ny>=0&&nx<COLS&&ny<ROWS)trySwap(from,ny*COLS+nx);
+  if(!B||!B.drag||B.busy)return;const[px,py]=evPos(e),dx=px-B.drag.x,dy=py-B.drag.y,c=B.g[B.drag.i];
+  if(Math.max(Math.abs(dx),Math.abs(dy))<SWIPE()){ // the candy follows your finger a little
+    if(c){const h=Math.abs(dx)>=Math.abs(dy);c.dx=h?clamp(dx,-CELL*.3,CELL*.3):0;c.dy=h?0:clamp(dy,-CELL*.3,CELL*.3)}return}
+  swipeFrom(B.drag,dx,dy);
 });
-addEventListener('pointerup',e=>{if(!B)return;B.drag=null;
+const SWIPE=()=>Math.max(10,CELL*.22);
+function swipeFrom(d,dx,dy){
+  B.drag=null;const c=B.g[d.i];if(c){c.dx=0;c.dy=0}
+  const[x,y]=XY(d.i);let nx=x,ny=y;if(Math.abs(dx)>Math.abs(dy))nx+=Math.sign(dx);else ny+=Math.sign(dy);
+  B.sel=null;
+  if(nx>=0&&ny>=0&&nx<COLS&&ny<ROWS)trySwap(d.i,ny*COLS+nx);else SFX.no();
+}
+addEventListener('pointerup',e=>{if(!B)return;
+  if(B.drag){const d=B.drag;const[px,py]=evPos(e),dx=px-d.x,dy=py-d.y;
+    if(Math.max(Math.abs(dx),Math.abs(dy))>=SWIPE()&&!B.busy)swipeFrom(d,dx,dy);   // a quick flick also counts
+    else{B.drag=null;const c=B.g[d.i];if(c){c.dx=0;c.dy=0}if(d.wasSel)B.sel=null}}
   const d=B.hdrag;if(!d)return;B.hdrag=null;
   if(!d.moved){toast(L(`⬆ Drag ${nm(d.h.def)} up onto a monster to attack! (${hitsLeft(d.h)} left)`,`⬆ Træk ${nm(d.h.def)} op på et monster for at angribe! (${hitsLeft(d.h)} tilbage)`),2600);return}
   const m=enemyAt(d.x,d.y);if(m)heroAttack(d.h,m);else SFX.no()});
-addEventListener('pointercancel',()=>{if(B){B.drag=null;B.hdrag=null}});
+addEventListener('pointercancel',()=>{if(B){if(B.drag){const c=B.g[B.drag.i];if(c){c.dx=0;c.dy=0}}B.drag=null;B.hdrag=null}});
 
 /* ---- boosters ---- */
 function lineSet(set,x,y,dir){
@@ -2049,7 +2058,7 @@ $('#mStats').onclick=()=>{SFX.click();const c=S.cnt,row=(e,en,da,v)=>`<div class
     row('⚔️','Damage dealt','Skade givet',N(c.dmg)),row('⚡','Hero attacks made','Helteevner brugt',c.skills),row('🍬','Candies cleared','Slik fjernet',N(c.cleared)),
     row('💥','Special candies','Specialslik',c.specials),row('⛓️','Cascades','Kædereaktioner',c.cascades),row('🥔','Heroes','Helte',Object.keys(S.heroes).length+'/'+HEROES.length),row('🪙','Coins earned','Mønter tjent',N(c.coins))].join('')})};
 $('#mHelp').onclick=()=>{SFX.click();panel({title:'❓ '+L('How to play','Sådan spiller du'),html:[
-  ['👆',L('Tap a candy, then tap the one next to it to swap them (or just drag). If it makes a line of 3 or more they pop – if not, they slide back. You have unlimited moves.','Tryk på et slik og så på det ved siden af for at bytte dem (eller træk). Giver det 3 eller flere på stribe, popper de – ellers glider de tilbage. Du har uendelig mange træk.')],
+  ['👆',L('Put your finger on a candy and swipe it towards the one next to it to swap them – just like Candy Crush. If it makes a line of 3 or more they pop – if not, they slide back. You have unlimited moves.','Sæt fingeren på et slik og swipe det mod det ved siden af for at bytte dem – ligesom i Candy Crush. Giver det 3 eller flere på stribe, popper de – ellers glider de tilbage. Du har uendelig mange træk.')],
   ['🥔',L('Your potato heroes stand under the board. Candies in a hero\'s colour do not hurt the monsters – they charge that hero ⚡. All the other colours fly up and hit the monster, powered by your team.','Dine kartoffelhelte står under brættet. Slik i en helts farve skader ikke monstrene – de lader helten op ⚡. Alle de andre farver flyver op og rammer monsteret med dit holds styrke.')],
   ['⚡',L(`When a hero is fully charged it glows and gets ${HITS} attacks. Grab the hero and drop it on a monster to attack – each attack uses a third of the energy. Every hero has its own extra effect: energy, big hits, freezing and more. Heroes only get health back from potions 🧪, which you buy in the shop.`,`Når en helt er ladet helt op, lyser den og får ${HITS} angreb. Tag fat i helten og slip den på et monster for at angribe – hvert angreb bruger en tredjedel af energien. Hver helt har sin egen ekstra effekt: energi, kæmpeslag, frost og mere. Helte får kun liv igen med trylledrikke 🧪, som du køber i butikken.`)],
   ['👾',L('Monsters count down with every move. At 0 they attack a hero. Armour 🛡️ lowers the damage. Bosses hit everyone! Tap a monster to choose who to attack.','Monstrene tæller ned for hvert træk. Ved 0 angriber de en helt. Rustning 🛡️ mindsker skaden. Bosser rammer alle! Tryk på et monster for at vælge, hvem du angriber.')],
@@ -2063,6 +2072,8 @@ $('#mHelp').onclick=()=>{SFX.click();panel({title:'❓ '+L('How to play','Sådan
 
 /* ---- what's new ---- */
 const CHANGELOG=[
+  {v:'2.4.4',d:['3 Nov 2026','3. nov. 2026'],t:['Swipe to swap','Swipe for at bytte'],i:[
+    ['👆 Swap candies by swiping, just like Candy Crush: put your finger on a candy and swipe towards the one you want to swap with. A short swipe or a quick flick is enough, and the candy follows your finger.','👆 Byt slik ved at swipe, ligesom i Candy Crush: sæt fingeren på et slik og swipe mod det, du vil bytte med. Et kort swipe eller et hurtigt flick er nok, og slikket følger din finger.']]},
   {v:'2.4.3',d:['3 Nov 2026','3. nov. 2026'],t:['Always the newest version','Altid den nyeste version'],i:[
     ['🔄 The game now checks for a new version by itself. An old stored copy updates at once, and an open tab shows an Update button – no need to clear the cache any more.','🔄 Spillet tjekker nu selv efter en ny version. En gammel gemt kopi opdaterer med det samme, og en åben fane viser en Opdater-knap – du behøver ikke længere slette cache.']]},
   {v:'2.4.2',d:['3 Nov 2026','3. nov. 2026'],t:['Same size on every phone','Samme størrelse på alle telefoner'],i:[
