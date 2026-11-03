@@ -38,6 +38,7 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{font-family:Nunito,system-ui,sans-serif;font-weight:800;color:var(--ink);overflow:hidden;user-select:none;-webkit-user-select:none;
   background:radial-gradient(circle at 50% 0,#7b4fd9,#4b2596 45%,#2a1159)}
 button{font-family:inherit;font-weight:900;cursor:pointer;border:none;color:inherit}
@@ -65,6 +66,9 @@ h1,h2,h3{font-family:'Lilita One',sans-serif;font-weight:400;margin:0}
 .ibtn:active{transform:translateY(3px);box-shadow:none}
 .ibtn.round{border-radius:50%;background:radial-gradient(circle at 35% 28%,#ffe9a8,var(--orange) 55%,var(--orangeD));border:3px solid #7a3c00;box-shadow:0 3px 0 #52280a;color:#fff}
 .lvlbox{min-width:120px}
+#bar>*{flex-shrink:0}
+#bar .pill{flex-shrink:1;min-width:0;overflow:hidden}
+#bar .lvlbox{flex:1 1 auto;min-width:60px}
 .xpbar{height:7px;background:#e3d6f7;border-radius:999px;overflow:hidden;margin-top:2px}
 .xpbar>i{display:block;height:100%;background:linear-gradient(90deg,var(--grape),var(--pink));width:0;transition:width .3s}
 
@@ -259,7 +263,7 @@ body.ingame.short #bWave{font-size:11.5px}
         <button id="mDisc"><i>💬</i><span>Discord</span></button>
       </div>
     </div>
-    <p class="hint" style="text-align:center;margin:14px 0 6px;color:#cbb8f2">🍭 Potato Team Games</p>
+    <p class="hint" style="text-align:center;margin:14px 0 6px;color:#cbb8f2">🍭 Potato Team Games · <span id="verTag"></span></p>
   </section>
 
   <!-- LEVEL MAP -->
@@ -442,7 +446,7 @@ function panel({title='',html='',buttons=[],sm,render,onClose,noX}){
   });
 }
 // the real visible height on phones (the address bar is not part of it)
-function setAppH(){const h=(window.visualViewport&&visualViewport.height)||innerHeight;document.documentElement.style.setProperty('--appH',Math.round(h)+'px');document.body.classList.toggle('short',h<780)}
+function setAppH(){const h=(window.visualViewport&&visualViewport.height)||innerHeight;document.documentElement.style.setProperty('--appH',Math.round(h)+'px');document.body.classList.toggle('short',h<780||h<innerWidth*2.15)}
 setAppH();addEventListener('resize',setAppH);if(window.visualViewport)visualViewport.addEventListener('resize',setAppH);
 const anyPanel=()=>!!$('.ov');
 const closePanels=()=>$$('.ov').forEach(o=>o._close&&o._close(null));
@@ -1879,6 +1883,8 @@ function show(id){$$('.screen').forEach(s2=>s2.classList.toggle('on',s2.id===id)
   if(id==='scGame')requestAnimationFrame(layout);
   hud();scrollTo(0,0)}
 addEventListener('resize',()=>{if($('#scGame').classList.contains('on'))layout()});
+['pageshow','focus','orientationchange'].forEach(ev=>addEventListener(ev,()=>{setAppH();if($('#scGame').classList.contains('on'))setTimeout(layout,60)}));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){setAppH();if($('#scGame').classList.contains('on'))setTimeout(layout,60)}});
 if(window.ResizeObserver)new ResizeObserver(()=>{if($('#scGame').classList.contains('on'))layout()}).observe($('#stageWrap'));
 
 /* ---- menu art: potato heroes facing a gummy bear ---- */
@@ -2056,6 +2062,9 @@ $('#mHelp').onclick=()=>{SFX.click();panel({title:'❓ '+L('How to play','Sådan
 
 /* ---- what's new ---- */
 const CHANGELOG=[
+  {v:'2.4.2',d:['3 Nov 2026','3. nov. 2026'],t:['Same size on every phone','Samme størrelse på alle telefoner'],i:[
+    ['📱 The game no longer gets smaller when a phone uses bigger text or display zoom: slim bars in every level, the top buttons always fit, and the board is resized when you come back to the tab.','📱 Spillet bliver ikke længere mindre, når en telefon bruger større tekst eller skærmzoom: smalle bjælker i alle baner, knapperne øverst passer altid, og brættet tilpasses, når du vender tilbage til fanen.'],
+    ['🏷️ The version number is shown at the bottom of the menu.','🏷️ Versionsnummeret vises nederst i menuen.']]},
   {v:'2.4.1',d:['3 Nov 2026','3. nov. 2026'],t:['Bigger board on small phones','Større bræt på små telefoner'],i:[
     ['📱 On phones with less room the bars at the top get slimmer during a level and the board is made as big as possible – much bigger candies and heroes on short screens.','📱 På telefoner med mindre plads bliver bjælkerne øverst smallere under en bane, og brættet gøres så stort som muligt – meget større slik og helte på korte skærme.']]},
   {v:'2.4',d:['3 Nov 2026','3. nov. 2026'],t:['Rockets and bombs!','Raketter og bomber!'],i:[
@@ -2169,6 +2178,7 @@ async function boot(){
   try{SFX.on=localStorage.getItem('potato_floss_snd')!=='0';MUSIC.on=localStorage.getItem('potato_floss_mus')!=='0'}catch(e){}
   $('#sndBtn').textContent=SFX.on?'🔊':'🔇';
   $('#musBtn').textContent=MUSIC.on?'🎵':'🔈';$('#musBtn').style.opacity=MUSIC.on?1:.55;
+  $('#verTag').textContent='v'+CHANGELOG[0].v;
   applyLang();hud();requestAnimationFrame(loop);
   const tip=pick(TIPS);$('#ldTip').textContent=L(tip[0],tip[1]);
   const bar=$('#ldBar'),t0=performance.now(),until=ms=>sleep(Math.max(0,ms-(performance.now()-t0)));
