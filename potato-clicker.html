@@ -365,25 +365,25 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
   #right{border-left:none;border-top:6px solid #2a1708}
   /* one row of 8 tabs + a slim Extract bar, so the menu itself gets the room */
   /* one row of menu tabs – swipe left/right to see them all – and a slim Extract bar */
-  .tabs{display:block;padding:5px 0 5px;border-bottom-width:3px}
-  .tabs .tabrow{display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;overflow-y:hidden;padding:7px 8px 6px;scroll-snap-type:x proximity;scroll-padding-inline:8px;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-x;
+  .tabs{display:block;padding:1px 0 3px;border-bottom-width:3px}
+  .tabs .tabrow{display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;overflow-y:hidden;padding:5px 8px 4px;scroll-snap-type:x proximity;scroll-padding-inline:8px;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-x;
     -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 10px,#000 calc(100% - 26px),transparent);mask-image:linear-gradient(90deg,transparent 0,#000 10px,#000 calc(100% - 26px),transparent)}
   .tabs .tabrow::-webkit-scrollbar{display:none}
   .tabs{position:relative}
   .tabs.canL .tabrow{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 34px,#000 calc(100% - 34px),transparent);mask-image:linear-gradient(90deg,transparent 0,#000 34px,#000 calc(100% - 34px),transparent)}
   .tabs:not(.canL) .tabrow{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 34px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 34px),transparent)}
   .tabs:not(.canL):not(.canR) .tabrow{-webkit-mask-image:none;mask-image:none}
-  .tabs .tabArrow{position:absolute;top:calc(5px + 7px + 25px - 14px);z-index:3;width:28px;height:28px;padding:0;border-radius:50%;font:900 22px/24px system-ui,sans-serif;
+  .tabs .tabArrow{position:absolute;top:calc(1px + 5px + 23px - 14px);z-index:3;width:28px;height:28px;padding:0;border-radius:50%;font:900 22px/24px system-ui,sans-serif;
     color:var(--ink);background:radial-gradient(circle at 35% 30%,#fff3c4,var(--brass) 60%,var(--brassD));border:2px solid var(--ink);box-shadow:0 2px 0 #2a1708,0 0 10px rgba(255,210,122,.6);
     display:none;align-items:center;justify-content:center;text-shadow:none;cursor:pointer}
   .tabs .tabArrow.l{left:3px}.tabs .tabArrow.r{right:3px;animation:nudgeR 1.4s ease-in-out infinite}
   .tabs.canL .tabArrow.l,.tabs.canR .tabArrow.r{display:flex}
   @keyframes nudgeR{0%,100%{transform:translateX(0)}50%{transform:translateX(3px)}}
-  .tabs .tabrow button{flex:0 0 auto;min-width:78px;font-size:12px;padding:4px 8px 3px;border-radius:9px;scroll-snap-align:start}
+  .tabs .tabrow button{flex:0 0 auto;min-width:78px;font-size:12px;padding:3px 8px 2px;border-radius:9px;scroll-snap-align:start}
   .tabs button .tb{font-size:19px;line-height:1.15}
   .tabs .badge{transform:scale(.85);top:-7px;right:-5px}
-  .tabs .exTab{display:flex;width:calc(100% - 16px);margin:2px 8px 0;padding:4px 6px!important;font-size:11.5px!important}
-  .tabc{padding:6px 8px}
+  .tabs .exTab{display:flex;width:calc(100% - 16px);margin:0 8px;padding:3px 6px!important;font-size:11.5px!important}
+  .tabc{padding:4px 8px 6px}
   .tabc h2{font-size:17px;margin:0 0 5px}
   .tabc h4{margin:6px 0 4px}
   .row .ri{font-size:24px;width:32px}
