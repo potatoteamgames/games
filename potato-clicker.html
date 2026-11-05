@@ -63,9 +63,10 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{color:var(--cream);font-family:Nunito,system-ui,sans-serif;font-weight:800;background:var(--woodD);overflow:hidden;user-select:none;-webkit-user-select:none}
 button{font-family:inherit;font-weight:900;cursor:pointer;border:none;color:inherit}
-#app{display:grid;grid-template-rows:auto minmax(0,1fr);grid-template-columns:minmax(0,1fr);height:100vh;height:100dvh}
+#app{display:grid;grid-template-rows:auto minmax(0,1fr);grid-template-columns:minmax(0,1fr);height:100vh;height:100dvh;height:var(--appH,100dvh)}
 
 /* ===== BANNER ===== */
 #banner{position:relative;display:flex;align-items:center;gap:12px;padding:8px 18px;
@@ -347,7 +348,7 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
   .hbtn{width:38px;height:38px;font-size:17px}
   .homebtn{height:38px;padding:0 9px;font-size:13px;gap:4px}
   .homebtn .hl1{display:none}.homebtn .hl2{display:inline}
-  main{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1.2fr) minmax(0,1fr)}
+  main{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) minmax(0,1.15fr)}
   #left{padding:6px 8px 4px;gap:4px;justify-content:flex-start}
   #potArea{flex:1 1 0;height:auto;min-height:0}
   #count{font-size:clamp(28px,8vw,40px)}
@@ -362,13 +363,32 @@ noscript{position:fixed;inset:0;z-index:99;background:var(--paper);color:var(--i
   #clickInfo{display:none}
   .cactus{font-size:30px}.cactus.c2{font-size:24px}
   #right{border-left:none;border-top:6px solid #2a1708}
-  .tabs{gap:4px;padding:6px}
-  .tabs button{font-size:10px;padding:3px 1px}
-  .tabs button .tb{font-size:16px}
-  .tabc{padding:8px}
+  /* one row of 8 tabs + a slim Extract bar, so the menu itself gets the room */
+  /* one row of menu tabs – swipe left/right to see them all – and a slim Extract bar */
+  .tabs{display:block;padding:1px 0 3px;border-bottom-width:3px}
+  .tabs .tabrow{display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;overflow-y:hidden;padding:5px 8px 4px;scroll-snap-type:x proximity;scroll-padding-inline:8px;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-x;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 10px,#000 calc(100% - 26px),transparent);mask-image:linear-gradient(90deg,transparent 0,#000 10px,#000 calc(100% - 26px),transparent)}
+  .tabs .tabrow::-webkit-scrollbar{display:none}
+  .tabs{position:relative}
+  .tabs.canL .tabrow{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 34px,#000 calc(100% - 34px),transparent);mask-image:linear-gradient(90deg,transparent 0,#000 34px,#000 calc(100% - 34px),transparent)}
+  .tabs:not(.canL) .tabrow{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 34px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 34px),transparent)}
+  .tabs:not(.canL):not(.canR) .tabrow{-webkit-mask-image:none;mask-image:none}
+  .tabs .tabArrow{position:absolute;top:calc(1px + 5px + 23px - 14px);z-index:3;width:28px;height:28px;padding:0;border-radius:50%;font:900 22px/24px system-ui,sans-serif;
+    color:var(--ink);background:radial-gradient(circle at 35% 30%,#fff3c4,var(--brass) 60%,var(--brassD));border:2px solid var(--ink);box-shadow:0 2px 0 #2a1708,0 0 10px rgba(255,210,122,.6);
+    display:none;align-items:center;justify-content:center;text-shadow:none;cursor:pointer}
+  .tabs .tabArrow.l{left:3px}.tabs .tabArrow.r{right:3px;animation:nudgeR 1.4s ease-in-out infinite}
+  .tabs.canL .tabArrow.l,.tabs.canR .tabArrow.r{display:flex}
+  @keyframes nudgeR{0%,100%{transform:translateX(0)}50%{transform:translateX(3px)}}
+  .tabs .tabrow button{flex:0 0 auto;min-width:78px;font-size:12px;padding:3px 8px 2px;border-radius:9px;scroll-snap-align:start}
+  .tabs button .tb{font-size:19px;line-height:1.15}
+  .tabs .badge{transform:scale(.85);top:-7px;right:-5px}
+  .tabs .exTab{display:flex;width:calc(100% - 16px);margin:0 8px;padding:3px 6px!important;font-size:11.5px!important}
+  .tabc{padding:4px 8px 6px}
+  .tabc h2{font-size:17px;margin:0 0 5px}
+  .tabc h4{margin:6px 0 4px}
   .row .ri{font-size:24px;width:32px}
   .row .rn{font-size:14px}
-  #toasts{left:50%;transform:translateX(-50%);top:4px;bottom:auto;width:min(92vw,360px);flex-direction:column;max-width:none}
+  #toasts{left:50%;transform:translateX(-50%);top:calc(var(--banH,52px) + 6px);bottom:auto;width:min(86vw,320px);flex-direction:column;max-width:none}
   .toast{padding:4px 10px;width:100%}
   .toast b{font-size:12px}.toast small{display:none}
   .golden{width:64px;height:64px}
@@ -547,11 +567,19 @@ body.chaos .toast b{color:#4dfcff}
 .langSeg .sbtn{padding:6px 10px}
 .langSeg .sbtn.on{background:linear-gradient(#ffd77a,var(--brassD));color:var(--ink)}
 .tabs button .tl{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tabrow{display:contents}
+.tabArrow{display:none}
 @media (max-width:900px){.langbtn{font-size:19px}}
-@media (max-width:420px){#banner .hbtn,#banner .clbtn{width:34px;height:34px;font-size:16px;border-radius:8px}#banner .clbtn{padding:0}#banner .homebtn{height:34px;padding:0 7px;font-size:12px;border-radius:8px}.tabs button{font-size:9.5px;letter-spacing:-.2px}}
+@media (max-width:420px){#banner .hbtn,#banner .clbtn{width:34px;height:34px;font-size:16px;border-radius:8px}#banner .clbtn{padding:0}#banner .homebtn{height:34px;padding:0 7px;font-size:12px;border-radius:8px}}
 </style>
 </head>
 <body>
+<script>
+(function(){function f(){var h=(window.visualViewport&&visualViewport.height)||innerHeight;document.documentElement.style.setProperty('--appH',Math.round(h)+'px');
+  var b=document.getElementById('banner');if(b)document.documentElement.style.setProperty('--banH',Math.round(b.getBoundingClientRect().height)+'px')}
+  f();addEventListener('resize',f);addEventListener('load',f);if(window.visualViewport)visualViewport.addEventListener('resize',f);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)f()});})();
+</script>
 <noscript>
   <h1>Potato Clicker – Free Idle Clicker Game</h1>
   <p>Potato Clicker is a free Wild West idle clicker game you play right in your browser. Please enable JavaScript to play.</p>
@@ -645,6 +673,9 @@ body.chaos .toast b{color:#4dfcff}
 
     <aside id="right" aria-label="Game menus">
       <nav class="tabs">
+        <button class="tabArrow l" id="tabL" aria-label="Scroll menu left" tabindex="-1">‹</button>
+        <button class="tabArrow r" id="tabR" aria-label="Scroll menu right" tabindex="-1">›</button>
+        <div class="tabrow" id="tabRow">
         <button data-t="mach" class="on"><span class="tb">🏭</span><span class="tl" data-i18n="tMach">Machines</span></button>
         <button data-t="upg"><span class="tb">⬆️</span><span class="tl" data-i18n="tUpg">Upgrades</span><span class="badge" id="bUpg"></span></button>
         <button data-t="shop"><span class="tb">🛒</span><span class="tl" data-i18n="tShop">Shop</span></button>
@@ -653,6 +684,7 @@ body.chaos .toast b{color:#4dfcff}
         <button data-t="look"><span class="tb">🎨</span><span class="tl" data-i18n="tLook">Style</span></button>
         <button data-t="ach"><span class="tb">🏆</span><span class="tl" data-i18n="tAch">Trophies</span></button>
         <button data-t="stats"><span class="tb">📊</span><span class="tl" data-i18n="tStats">Stats</span></button>
+        </div>
         <button id="exTabBtn" class="exTab">🧭 EXTRACT &amp; ✨ REBIRTH <small id="exTabSub"></small></button>
       </nav>
 
@@ -1157,6 +1189,9 @@ $('#scrClose').addEventListener('click',()=>$('#scr').classList.add('hidden'));
 // newest first – add a new entry at the top every time the game is updated
 // t and every item are [English, Danish] pairs, shown in the current language
 const CHANGELOG=[
+  {v:'1.11',date:'5 Nov 2026',t:['Better on phones','Bedre på mobil'],items:[
+    ['📱 The menu tabs (Machines, Upgrades, Shop …) are now one row on phones – swipe left and right, or tap the ‹ › arrows, to see them all. The menu below gets much more room.','📱 Menuknapperne (Maskiner, Opgradér, Butik …) er nu én række på mobil – swipe til højre og venstre, eller tryk på ‹ › pilene, for at se dem alle. Menuen nedenunder får meget mere plads.'],
+    ['💬 Notes now pop up below the top bar instead of covering its buttons.','💬 Beskeder dukker nu op under topbjælken i stedet for at dække dens knapper.']]},
   {v:'1.10',date:'26 Oct 2026',t:['Danish language','Dansk sprog'],items:[
     ['🇩🇰 Potato Clicker can now be played in Danish – switch language with the flag button at the top.','🇩🇰 Potato Clicker kan nu spilles på dansk – skift sprog med flag-knappen øverst.'],
     ['🪙 The Soul Shop and the Rebirth window now explain where souls come from: they build up from all the potatoes you have ever earned, and you collect them with ✨ Rebirth.','🪙 Soul Shop og Rebirth-vinduet forklarer nu, hvor souls kommer fra: de samles op af alle de kartofler, du nogensinde har tjent, og du får dem, når du laver ✨ Rebirth.']]},
@@ -2199,7 +2234,17 @@ $('#impBtn').addEventListener('click',()=>{const s=prompt(L('Paste your save:','
 $('#resetBtn').addEventListener('click',()=>{if(confirm(L('Delete EVERYTHING? This cannot be undone.','Slet ALT? Det kan ikke fortrydes.'))&&confirm(L('Are you really sure? Your potato will be sad 😢','Er du helt sikker? Din kartoffel bliver ked af det 😢'))){S=defState();try{localStorage.removeItem(KEY)}catch(e){}fullRefresh();toast(L('🗑️ Everything deleted','🗑️ Alt er slettet'),L('A brand new start','En helt ny start'))}});
 $('#sndBtn').addEventListener('click',()=>{S.sound=!S.sound;$('#sndBtn').textContent=S.sound?'🔊':'🔇';if(S.sound)snd('buy')});
 $('#saveBtn').addEventListener('click',()=>save(true));
-$$('.tabs button[data-t]').forEach(b=>b.addEventListener('click',()=>{$$('.tabs button[data-t]').forEach(x=>x.classList.toggle('on',x===b));$$('.tabc').forEach(x=>x.classList.toggle('on',x.id==='t-'+b.dataset.t))}));
+(function(){const row=$('#tabRow'),nav=row.parentElement;
+  const sync=()=>{const max=row.scrollWidth-row.clientWidth;nav.classList.toggle('canL',row.scrollLeft>12);nav.classList.toggle('canR',row.scrollLeft<max-12)};
+  row.addEventListener('scroll',sync,{passive:true});addEventListener('resize',sync);setTimeout(sync,50);setTimeout(sync,1200);
+  const step=d=>row.scrollBy({left:d*row.clientWidth*.7,behavior:'smooth'});
+  $('#tabL').addEventListener('click',()=>step(-1));$('#tabR').addEventListener('click',()=>step(1));
+  // show new players that the menu can be swiped: a small push to the right and back
+  let seen=0;try{seen=+localStorage.getItem('pc_tabnudge')||0}catch(e){}
+  if(seen<3&&matchMedia('(max-width:900px)').matches){try{localStorage.setItem('pc_tabnudge',seen+1)}catch(e){}
+    setTimeout(()=>{if(row.scrollWidth>row.clientWidth+4){row.scrollTo({left:70,behavior:'smooth'});setTimeout(()=>row.scrollTo({left:0,behavior:'smooth'}),700)}},2200)}
+})();
+$$('.tabs button[data-t]').forEach(b=>b.addEventListener('click',()=>{try{b.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'})}catch(e){}$$('.tabs button[data-t]').forEach(x=>x.classList.toggle('on',x===b));$$('.tabc').forEach(x=>x.classList.toggle('on',x.id==='t-'+b.dataset.t))}));
 $$('#amtBtns button').forEach(b=>b.addEventListener('click',()=>{S.buyAmt=b.dataset.a==='max'?'max':+b.dataset.a;$$('#amtBtns button').forEach(x=>x.classList.toggle('on',x===b));updMachines()}));
 
 function fullRefresh(){
